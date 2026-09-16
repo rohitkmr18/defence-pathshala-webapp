@@ -182,6 +182,9 @@ st.markdown(final_css, unsafe_allow_html=True)
 # ==========================================
 def reset_test_state():
     """Clears all test progress, timer, and pagination states."""
+    # A new run ID gives question widgets a fresh namespace. This prevents a
+    # previous test's radio-widget values from being restored after a reset.
+    st.session_state['test_run_id'] = st.session_state.get('test_run_id', 0) + 1
     st.session_state['user_answers'] = {}
     st.session_state['checked_questions'] = set()
     st.session_state['error_tags'] = {}
@@ -192,6 +195,7 @@ def reset_test_state():
     st.session_state['auto_submitted'] = False
     st.session_state['current_page'] = 0
     st.session_state['scroll_trigger'] = False
+    st.session_state['review_selected_qid'] = None
 
 def clean_text(text):
     if pd.isna(text):
@@ -254,6 +258,38 @@ def render_pyq_intelligence(row):
     st.info(f"**Explanation:**\n{clean_text(row.get('explanation', ''))}")
 
 
+def start_full_paper():
+    """Starts a clean, timed full-paper attempt."""
+    reset_test_state()
+    st.session_state['exam_started'] = True
+    st.session_state['start_time'] = time.time()
+
+
+def change_mock_page(delta):
+    """Changes the active mock page and requests one browser-side scroll."""
+    st.session_state['current_page'] = max(0, st.session_state['current_page'] + delta)
+    st.session_state['scroll_trigger'] = True
+
+
+def submit_mock():
+    """The only manual transition from an active mock to submitted state."""
+    st.session_state['exam_submitted'] = True
+    st.session_state['scroll_trigger'] = True
+
+
+def reset_for_exam_change():
+    """Resets a test and removes dependent selection widget values."""
+    reset_test_state()
+    st.session_state.pop('year_selection', None)
+    st.session_state.pop('cycle_selection', None)
+
+
+def reset_for_year_change():
+    """Resets a test and removes the cycle selection for the new year."""
+    reset_test_state()
+    st.session_state.pop('cycle_selection', None)
+
+
 # ==========================================
 # --- DATA FETCHING & SESSION LOCKING ---
 # ==========================================
@@ -312,6 +348,10 @@ if 'is_full_paper' not in st.session_state:
     st.session_state['is_full_paper'] = False
 if 'scroll_trigger' not in st.session_state:
     st.session_state['scroll_trigger'] = False
+if 'test_run_id' not in st.session_state:
+    st.session_state['test_run_id'] = 0
+if 'review_selected_qid' not in st.session_state:
+    st.session_state['review_selected_qid'] = None
 
 # ==========================================
 # --- HERO SECTION ---
@@ -349,15 +389,6 @@ selected_exam = st.session_state.get('locked_exam', "CAPF-AC")
 selected_year = st.session_state.get('locked_year', "2025")
 selected_cycle = st.session_state.get('locked_cycle', "I")
 
-# --- UNIFIED DATAFRAME FILTERING ---
-if 'exam' in df.columns and 'year' in df.columns:
-    exam_df = df[(df['exam'] == str(selected_exam).strip()) & (df['year'] == str(selected_year).strip())]
-    if selected_exam == "CDS" and selected_cycle:
-        if 'cycle' in exam_df.columns:
-            exam_df = exam_df[exam_df['cycle'] == str(selected_cycle).strip()]
-else:
-    exam_df = df
-
 # ==========================================
 # --- IMMERSIVE MODE (HIDE UI) LOGIC ---
 # ==========================================
@@ -372,21 +403,37 @@ if not is_active_full_mock:
     with col1:
         exam_options = list(df['exam'].dropna().unique()) if 'exam' in df.columns else ["CAPF-AC", "CDS"]
         default_exam_idx = exam_options.index(st.session_state['locked_exam']) if st.session_state['locked_exam'] in exam_options else 0
-        selected_exam = st.selectbox("Target Exam:", options=exam_options, index=default_exam_idx, key="exam_selection", on_change=reset_test_state)
+        selected_exam = st.selectbox("Target Exam:", options=exam_options, index=default_exam_idx, key="exam_selection", on_change=reset_for_exam_change)
         st.session_state['locked_exam'] = selected_exam
 
     with col2:
         available_years = list(df[df['exam'] == selected_exam]['year'].dropna().unique()) if 'exam' in df.columns and 'year' in df.columns else ["2025", "2026"]
         default_year_idx = available_years.index(st.session_state['locked_year']) if st.session_state['locked_year'] in available_years else 0
-        selected_year = st.selectbox("Exam Year:", options=available_years, index=default_year_idx, key="year_selection", on_change=reset_test_state)
+        selected_year = st.selectbox("Exam Year:", options=available_years, index=default_year_idx, key="year_selection", on_change=reset_for_year_change)
         st.session_state['locked_year'] = selected_year
 
     with col3:
         if selected_exam == "CDS":
-            cycle_options = ["I", "II"]
-            default_cycle_idx = cycle_options.index(st.session_state['locked_cycle']) if st.session_state['locked_cycle'] in cycle_options else 0
-            selected_cycle = st.selectbox("Exam Cycle:", options=cycle_options, index=default_cycle_idx, key="cycle_selection", on_change=reset_test_state)
-            st.session_state['locked_cycle'] = selected_cycle
+            cycle_options = list(
+                df[(df['exam'] == selected_exam) & (df['year'] == selected_year)]['cycle'].dropna().unique()
+            ) if 'cycle' in df.columns else []
+            if cycle_options:
+                default_cycle_idx = cycle_options.index(st.session_state['locked_cycle']) if st.session_state['locked_cycle'] in cycle_options else 0
+                selected_cycle = st.selectbox("Exam Cycle:", options=cycle_options, index=default_cycle_idx, key="cycle_selection", on_change=reset_test_state)
+                st.session_state['locked_cycle'] = selected_cycle
+            else:
+                selected_cycle = ""
+                st.session_state['locked_cycle'] = selected_cycle
+
+    # Filter only after the current widget values have been resolved. Previously
+    # this happened above the widgets, so the first rerun after a selection used
+    # the previous exam/year/cycle and could make CDS II 2026 look unavailable.
+    if 'exam' in df.columns and 'year' in df.columns:
+        exam_df = df[(df['exam'] == str(selected_exam).strip()) & (df['year'] == str(selected_year).strip())]
+        if selected_exam == "CDS" and selected_cycle and 'cycle' in exam_df.columns:
+            exam_df = exam_df[exam_df['cycle'] == str(selected_cycle).strip()]
+    else:
+        exam_df = df
 
     st.markdown("---")
     st.markdown(f"### 📊 Database Overview: {selected_exam} {selected_year}")
@@ -425,16 +472,15 @@ if not is_active_full_mock:
         if 'full_paper_toggle' not in st.session_state:
             st.session_state['full_paper_toggle'] = False
             
-        full_paper = st.checkbox(full_paper_label, value=st.session_state['full_paper_toggle'])
-        
-        if full_paper != st.session_state['full_paper_toggle']:
-            st.session_state['full_paper_toggle'] = full_paper
-            reset_test_state()
-            st.rerun()
+        full_paper = st.checkbox(
+            full_paper_label,
+            key="full_paper_toggle",
+            on_change=reset_test_state
+        )
         
         if not full_paper:
-            selected_subject = st.multiselect("Select Subject", exam_df['subject'].unique() if 'subject' in exam_df.columns else [], default=[], on_change=reset_test_state)
-            selected_difficulty = st.multiselect("Select Difficulty", exam_df['difficulty'].unique() if 'difficulty' in exam_df.columns else [], default=[], on_change=reset_test_state)
+            selected_subject = st.multiselect("Select Subject", exam_df['subject'].unique() if 'subject' in exam_df.columns else [], default=[], key="subject_selection", on_change=reset_test_state)
+            selected_difficulty = st.multiselect("Select Difficulty", exam_df['difficulty'].unique() if 'difficulty' in exam_df.columns else [], default=[], key="difficulty_selection", on_change=reset_test_state)
             
             if 'subject' in exam_df.columns and 'difficulty' in exam_df.columns and selected_subject and selected_difficulty:
                 filtered_df = exam_df[(exam_df['subject'].isin(selected_subject)) & (exam_df['difficulty'].isin(selected_difficulty))]
@@ -442,13 +488,25 @@ if not is_active_full_mock:
                 filtered_df = pd.DataFrame()
             
             st.markdown("---")
-            mode = st.radio("Testing Mode:", ["Instant Feedback (Practice one by one)", "Full Mock Exam (Submit all at the end)"], index=0)
+            mode = st.radio(
+                "Testing Mode:",
+                ["Instant Feedback (Practice one by one)", "Full Mock Exam (Submit all at the end)"],
+                index=0,
+                key="testing_mode",
+                on_change=reset_test_state
+            )
             is_exam_mode = "Full Mock Exam" in mode
         else:
             filtered_df = exam_df
             is_exam_mode = True
 else:
     # IMMERSIVE MODE IS ACTIVE - Setup variables silently without showing the UI
+    if 'exam' in df.columns and 'year' in df.columns:
+        exam_df = df[(df['exam'] == str(selected_exam).strip()) & (df['year'] == str(selected_year).strip())]
+        if selected_exam == "CDS" and selected_cycle and 'cycle' in exam_df.columns:
+            exam_df = exam_df[exam_df['cycle'] == str(selected_cycle).strip()]
+    else:
+        exam_df = df
     full_paper = True
     filtered_df = exam_df
     is_exam_mode = True
@@ -489,10 +547,12 @@ else:
         </div>
         """, unsafe_allow_html=True)
 
-        if st.button("🚀 Let's Start Test", type="primary", use_container_width=True):
-            st.session_state['exam_started'] = True
-            st.session_state['start_time'] = time.time()
-            st.rerun()
+        st.button(
+            "🚀 Let's Start Test",
+            type="primary",
+            use_container_width=True,
+            on_click=start_full_paper
+        )
     else:
         # ==========================================
         # --- JS FLOATING TIMER INJECTION ---
@@ -575,9 +635,7 @@ else:
             st.error("⏰ **Time Expired!** The 2-hour window has lapsed. Your responses have been automatically submitted.")
 
         if not st.session_state['exam_submitted']:
-            if st.button("🔄 Reset Test / Clear Answers", use_container_width=True):
-                reset_test_state()
-                st.rerun()
+            st.button("🔄 Reset Test / Clear Answers", use_container_width=True, on_click=reset_test_state)
             st.markdown("---")
 
         should_show_analysis = (is_exam_mode and st.session_state['exam_submitted']) or \
@@ -701,96 +759,112 @@ else:
             # --- POST-SUBMISSION NAVIGATION GRID ---
             # ==========================================
             st.markdown("### 🗺️ Question Grid (Click to Jump)")
-            
-            grid_html = '<div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px;">'
-            
-            for _, row in analysis_df.sort_values('q_num').iterrows():
-                q_num = row['q_num']
-                status = row['Status']
-                
-                if status == "Correct":
-                    bg_color = "#22C55E" # Green
-                elif status == "Incorrect":
-                    bg_color = "#EF4444" # Red
-                else:
-                    bg_color = "#94A3B8" # Grey
-                    with st.expander(f"{icon} Q{q_num} | {display_value(row.get('subject'))}", expanded=is_expanded):
-                        cleaned_question = clean_text(row['question'])
-                        st.markdown(f"**Q{q_num}. {cleaned_question}**")
+            ordered_analysis = analysis_df.sort_values(['q_num', 'question_id'], kind='stable').copy()
+            review_qids = ordered_analysis['question_id'].astype(str).tolist()
+            run_id = st.session_state['test_run_id']
+            jump_key = f"jump_to_question_{run_id}"
 
-                        options_dict = {
-                            "A": display_value(row.get("opt_a"), ""),
-                            "B": display_value(row.get("opt_b"), ""),
-                            "C": display_value(row.get("opt_c"), ""),
-                            "D": display_value(row.get("opt_d"), "")
-                        }
+            if st.session_state['review_selected_qid'] not in review_qids:
+                st.session_state['review_selected_qid'] = review_qids[0]
+            if st.session_state.get(jump_key) not in review_qids:
+                st.session_state[jump_key] = st.session_state['review_selected_qid']
 
-                        for opt_letter, opt_text in options_dict.items():
-                            if opt_letter == correct_opt:
-                                st.markdown(
-                                    f"✅ <span style='color:green; font-weight:bold;'>{opt_letter}) {opt_text} (Correct Answer)</span>",
-                                    unsafe_allow_html=True
-                                )
-                            elif opt_letter == user_pick and user_pick != correct_opt:
-                                st.markdown(
-                                    f"❌ <span style='color:red; font-weight:bold;'>{opt_letter}) {opt_text} (Your Answer)</span>",
-                                    unsafe_allow_html=True
-                                )
-                            else:
-                                st.markdown(f"{opt_letter}) {opt_text}")
+            def select_review_question(qid):
+                st.session_state['review_selected_qid'] = qid
+                st.session_state[jump_key] = qid
 
-                        st.markdown("---")
+            def sync_review_question():
+                st.session_state['review_selected_qid'] = st.session_state[jump_key]
 
-                        if status == "Incorrect":
-                            current_tag = st.session_state['error_tags'].get(qid, "Conceptual Gap")
-                            selected_tag = st.selectbox(
-                                "Categorize this mistake:",
-                                ["Conceptual Gap", "Factual Recall Failure", "Silly Mistake / Misread"],
-                                index=["Conceptual Gap", "Factual Recall Failure", "Silly Mistake / Misread"].index(current_tag),
-                                key=f"review_tag_{qid}"
-                            )
-                            st.session_state['error_tags'][qid] = selected_tag
-                            row['Error_Type'] = selected_tag
+            status_icons = {"Correct": "🟢", "Incorrect": "🔴", "Unattempted": "⚪"}
+            st.caption("🟢 Correct · 🔴 Incorrect · ⚪ Unattempted · ➜ Selected")
+            grid_columns = st.columns(10)
+            for position, (_, grid_row) in enumerate(ordered_analysis.iterrows()):
+                grid_qid = str(grid_row['question_id'])
+                is_selected = grid_qid == st.session_state['review_selected_qid']
+                label = f"{'➜ ' if is_selected else ''}{status_icons[grid_row['Status']]} {grid_row['q_num']}"
+                with grid_columns[position % 10]:
+                    st.button(
+                        label,
+                        key=f"review_grid_{run_id}_{grid_qid}",
+                        help=f"Q{grid_row['q_num']}: {grid_row['Status']}",
+                        type="primary" if is_selected else "secondary",
+                        use_container_width=True,
+                        on_click=select_review_question,
+                        args=(grid_qid,)
+                    )
 
-                        render_pyq_intelligence(row)
+            question_labels = {
+                str(row['question_id']): f"Q{row['q_num']} · {row['Status']}"
+                for _, row in ordered_analysis.iterrows()
+            }
+            st.selectbox(
+                "Jump to Question",
+                options=review_qids,
+                format_func=lambda qid: question_labels[qid],
+                key=jump_key,
+                on_change=sync_review_question
+            )
+
+            review_row = ordered_analysis[
+                ordered_analysis['question_id'].astype(str) == st.session_state['review_selected_qid']
+            ].iloc[0].copy()
+            review_qid = str(review_row['question_id'])
+            review_status = review_row['Status']
+            review_user_pick = review_row['User_Choice']
+            review_correct_opt = str(review_row['final_opt']).strip()
+
+            st.markdown("### 🔎 Detailed Review")
+            with st.expander(
+                f"{status_icons[review_status]} Q{review_row['q_num']} | {display_value(review_row.get('subject'))}",
+                expanded=True
+            ):
+                st.markdown(f"**Q{review_row['q_num']}. {clean_text(review_row['question'])}**")
+                for opt_letter in ("A", "B", "C", "D"):
+                    opt_text = display_value(review_row.get(f"opt_{opt_letter.lower()}"), "")
+                    if opt_letter == review_correct_opt:
+                        st.markdown(f"✅ **{opt_letter}) {opt_text}** (Correct Answer)")
+                    elif opt_letter == review_user_pick:
+                        st.markdown(f"❌ **{opt_letter}) {opt_text}** (Your Answer)")
+                    else:
+                        st.markdown(f"{opt_letter}) {opt_text}")
+
+                if review_status == "Incorrect":
+                    error_options = ["Conceptual Gap", "Factual Recall Failure", "Silly Mistake / Misread"]
+                    current_tag = st.session_state['error_tags'].get(review_qid, "Conceptual Gap")
+                    selected_tag = st.selectbox(
+                        "Categorize this mistake:",
+                        error_options,
+                        index=error_options.index(current_tag) if current_tag in error_options else 0,
+                        key=f"review_tag_{run_id}_{review_qid}"
+                    )
+                    st.session_state['error_tags'][review_qid] = selected_tag
+                    review_row['Error_Type'] = selected_tag
+
+                render_pyq_intelligence(review_row)
 
         # ==========================================
         # --- ACTIVE TEST RENDERING (PAGINATED) ---
         # ==========================================
         elif not st.session_state['exam_submitted']:
             
-            # --- BULLETPROOF SCROLL INJECTION ---
-            if st.session_state.get('scroll_trigger'):
-                scroll_js = """
-                <script>
-                    var parentDoc = window.parent.document;
-                    var viewContainer = parentDoc.querySelector('[data-testid="stAppViewContainer"]') || parentDoc.querySelector('.main');
-                    if (viewContainer) {
-                        viewContainer.scrollTo({top: 0, behavior: 'smooth'});
-                    } else {
-                        parentDoc.documentElement.scrollTo({top: 0, behavior: 'smooth'});
-                    }
-                </script>
-                """
-                components.html(scroll_js, height=0, width=0)
-                st.session_state['scroll_trigger'] = False
-
             # ==========================================
             # --- ACTIVE TEST NAVIGATOR GRID ---
             # ==========================================
             if full_paper:
                 with st.expander("📊 Active Navigator Grid (Click to Jump)", expanded=False):
                     
-                    def jump_to_page(q_num):
-                        st.session_state['current_page'] = (q_num - 1) // 5
+                    def jump_to_page(position):
+                        st.session_state['current_page'] = position // 5
                         st.session_state['scroll_trigger'] = True 
                     
                     st.markdown('<div class="active-grid-wrapper">', unsafe_allow_html=True)
                     cols = st.columns(10)
                     
-                    for i, row in filtered_df.reset_index().iterrows():
+                    run_id = st.session_state['test_run_id']
+                    for i, row in filtered_df.reset_index(drop=True).iterrows():
                         qid = str(row['question_id'])
-                        q_num = i + 1 
+                        q_num = row['q_num']
                         
                         if qid in st.session_state['marked_for_review']:
                             btn_label = f"🔴 {q_num}"
@@ -805,10 +879,10 @@ else:
                         with cols[i % 10]:
                             st.button(
                                 label=btn_label,
-                                key=f"nav_btn_{qid}",
+                                key=f"nav_btn_{run_id}_{qid}",
                                 type=btn_type,
                                 on_click=jump_to_page,
-                                args=(q_num,),
+                                args=(i,),
                                 use_container_width=True
                             )
                     
@@ -823,6 +897,23 @@ else:
             start_idx = st.session_state['current_page'] * questions_per_page
             end_idx = start_idx + questions_per_page
             page_df = filtered_df.iloc[start_idx:end_idx]
+
+            st.markdown('<div id="question-area-top" class="anchor-offset"></div>', unsafe_allow_html=True)
+            if st.session_state.get('scroll_trigger'):
+                scroll_js = """
+                <script>
+                    const parentDoc = window.parent.document;
+                    const target = parentDoc.getElementById('question-area-top');
+                    if (target) {
+                        target.scrollIntoView({block: 'start', behavior: 'smooth'});
+                    } else {
+                        const container = parentDoc.querySelector('[data-testid="stAppViewContainer"]');
+                        if (container) container.scrollTo({top: 0, behavior: 'smooth'});
+                    }
+                </script>
+                """
+                components.html(scroll_js, height=0, width=0)
+                st.session_state['scroll_trigger'] = False
 
             for index, row in page_df.iterrows():
                 qid = str(row['question_id'])
@@ -846,7 +937,7 @@ else:
                     "Select Option:",
                     options,
                     index=saved_index,
-                    key=f"radio_{qid}",
+                    key=f"radio_{st.session_state['test_run_id']}_{qid}",
                     label_visibility="collapsed"
                 )
 
@@ -855,14 +946,14 @@ else:
                 
                 if full_paper:
                     is_marked = qid in st.session_state['marked_for_review']
-                    mark_review = st.checkbox("📌 Mark for Review", value=is_marked, key=f"review_{qid}")
+                    mark_review = st.checkbox("📌 Mark for Review", value=is_marked, key=f"review_{st.session_state['test_run_id']}_{qid}")
                     if mark_review:
                         st.session_state['marked_for_review'].add(qid)
                     elif qid in st.session_state['marked_for_review']:
                         st.session_state['marked_for_review'].discard(qid)
 
                 if not is_exam_mode:
-                    if st.button(f"Check Answer", key=f"btn_check_{qid}"):
+                    if st.button(f"Check Answer", key=f"btn_check_{st.session_state['test_run_id']}_{qid}"):
                         if qid in st.session_state['user_answers']:
                             st.session_state['checked_questions'].add(qid)
                         else:
@@ -880,7 +971,7 @@ else:
                                 "Categorize this mistake:",
                                 ["Conceptual Gap", "Factual Recall Failure", "Silly Mistake / Misread"],
                                 index=["Conceptual Gap", "Factual Recall Failure", "Silly Mistake / Misread"].index(current_tag),
-                                key=f"tag_{qid}"
+                                key=f"tag_{st.session_state['test_run_id']}_{qid}"
                             )
                             st.session_state['error_tags'][qid] = selected_tag
                             feedback_row['Error_Type'] = selected_tag
@@ -896,21 +987,17 @@ else:
                 col_prev, col_spacer, col_next = st.columns([1, 2, 1])
                 with col_prev:
                     if st.session_state['current_page'] > 0:
-                        if st.button("⬅️ Previous Page", use_container_width=True):
-                            st.session_state['current_page'] -= 1
-                            st.session_state['scroll_trigger'] = True
-                            st.rerun()
+                        st.button("⬅️ Previous Page", use_container_width=True, on_click=change_mock_page, args=(-1,))
                 with col_next:
                     if st.session_state['current_page'] < total_pages - 1:
-                        if st.button("Next Page ➡️", use_container_width=True):
-                            st.session_state['current_page'] += 1
-                            st.session_state['scroll_trigger'] = True
-                            st.rerun()
+                        st.button("Next Page ➡️", use_container_width=True, on_click=change_mock_page, args=(1,))
                 st.markdown(f"<div style='text-align: center; color: gray;'>Page {st.session_state['current_page'] + 1} of {total_pages}</div>", unsafe_allow_html=True)
                 st.markdown("---")
 
             if is_exam_mode and not st.session_state['exam_submitted']:
-                if st.button("🚀 Submit Mock Test & Generate Analysis", type="primary", use_container_width=True):
-                    st.session_state['exam_submitted'] = True
-                    st.session_state['scroll_trigger'] = True # Forces window to top on submit too
-                    st.rerun()
+                st.button(
+                    "🚀 Submit Mock Test & Generate Analysis",
+                    type="primary",
+                    use_container_width=True,
+                    on_click=submit_mock
+                )
