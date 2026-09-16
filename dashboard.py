@@ -191,7 +191,6 @@ def reset_test_state():
     st.session_state['marked_for_review'] = set()
     st.session_state['exam_submitted'] = False
     st.session_state['exam_started'] = False
-    st.session_state['is_full_paper'] = False
     st.session_state['start_time'] = None
     st.session_state['auto_submitted'] = False
     st.session_state['current_page'] = 0
@@ -259,72 +258,66 @@ def render_pyq_intelligence(row):
     st.info(f"**Explanation:**\n{clean_text(row.get('explanation', ''))}")
 
 
-def clean_revision_text(text):
-    """Extracts learning-oriented text while suppressing answer-validation statements."""
-    text = re.sub(r"\s+", " ", str(text or "")).strip()
-    if not text:
-        return ""
-
-    sentences = re.split(r"(?<=[.!?])\s+", text)
-    learning = []
-    validation_only = re.compile(
-        r"^(?:the\s+)?(?:correct\s+)?(?:answer|option)\s+(?:is|was)\s+(?:option\s+)?[A-D]\.?$",
-        re.IGNORECASE,
-    )
-    statement_only = re.compile(
-        r"^statement\s+\d+\s+is\s+(?:correct|incorrect)\.?$",
-        re.IGNORECASE,
-    )
-
-    for sentence in sentences:
-        sentence = sentence.strip().strip("-").strip()
-        if not sentence:
-            continue
-
-        # Convert common answer-validation + explanation constructions into the
-        # actual learning point.
-        sentence = re.sub(
-            r"^(?:the\s+)?(?:correct\s+)?answer\s+(?:is|was)\s+(?:option\s+)?[A-D]\s*(?:because|as|since)\s+",
-            "", sentence, flags=re.IGNORECASE
-        )
-        sentence = re.sub(
-            r"^statement\s+\d+\s+is\s+(?:correct|incorrect)\s*(?:because|as|since)\s+",
-            "", sentence, flags=re.IGNORECASE
-        )
-        sentence = re.sub(
-            r"^option\s+[A-D]\s+is\s+(?:correct|incorrect)\s*(?:because|as|since)\s+",
-            "", sentence, flags=re.IGNORECASE
-        )
-        sentence = re.sub(
-            r"^statement\s+\d+\s+(?:is|was)\s+(?:correct|incorrect)\s*[-:–—]?\s*",
-            "", sentence, flags=re.IGNORECASE
-        )
-
-        if not sentence or validation_only.fullmatch(sentence) or statement_only.fullmatch(sentence):
-            continue
-
-        # Avoid leaving behind a bare answer marker after cleaning.
-        if re.fullmatch(r"(?:correct\s+answer|answer|option)\s*[:=-]?\s*[A-D]", sentence, re.IGNORECASE):
-            continue
-
-        learning.append(sentence.rstrip(".") + ".")
-
-    if learning:
-        point = " ".join(learning)
-        return f"{point[:300]}{'…' if len(point) > 300 else ''}"
-
-    return ""
-
-
 def revision_bullet(row):
-    """Produces a compact deterministic learning point from existing PYQ data."""
-    explanation = clean_revision_text(row.get('explanation', ''))
-    if explanation:
-        return explanation
+    """Build a compact revision point from substantive explanation content only.
+
+    Answer-key framing (e.g. "Statement 1 is correct" or "Option B is correct")
+    is removed while retaining the conceptual/factual explanation that follows.
+    This is deterministic and uses only the existing PYQ data.
+    """
+    raw = display_value(row.get("explanation"), "").strip()
+    if raw:
+        # Normalize line breaks without destroying sentence boundaries.
+        text = re.sub(r"\s+", " ", raw).strip()
+
+        # Remove common answer-key clauses while preserving what they explain.
+        prefix_patterns = [
+            r"^(?:the )?(?:correct|incorrect) (?:answer|option) is\s*[^.;:]+(?:[.;:]\s*|$)",
+            r"^(?:hence|therefore|thus),?\s*(?:the )?(?:correct )?(?:answer|option)(?: is)?\s*[^.;:]+(?:[.;:]\s*|$)",
+            r"^(?:only )?(?:statement(?:s)?|option)\s*[A-D0-9 ,&-]+\s+is\s+(?:correct|incorrect)\s*(?:because)?\s*",
+            r"^(?:both|all) statements?\s+are\s+(?:correct|incorrect)\s*(?:because)?\s*",
+            r"^(?:(?:and\s+)?(?:statement(?:s)?\s+[A-D0-9 ,&-]+|both statements|all statements)\s+(?:is|are)\s+(?:correct|incorrect)\s*(?:because)?\s*)+",
+        ]
+
+        # Split on sentence boundaries so standalone answer-validation sentences
+        # can be discarded while substantive sentences are retained.
+        sentences = [part.strip() for part in re.split(r"(?<=[.!?])\s+", text) if part.strip()]
+        cleaned_parts = []
+        answer_only = re.compile(
+            r"^(?:(?:statement(?:s)?\s+[A-D0-9 ,&-]+|both statements|all statements|option\s*[A-D]|the answer|the correct answer|the correct option)\s+"
+            r"(?:is|are|was|were)\s+(?:correct|incorrect)(?:\.|\s+and\s+)?)+$",
+            re.IGNORECASE,
+        )
+
+        for sentence in sentences:
+            sentence = sentence.strip()
+            if answer_only.match(sentence):
+                continue
+
+            # Strip answer-validation framing at the start of a substantive sentence.
+            previous = None
+            while previous != sentence:
+                previous = sentence
+                for pattern in prefix_patterns:
+                    sentence = re.sub(pattern, "", sentence, flags=re.IGNORECASE).strip()
+            if sentence and not answer_only.match(sentence):
+                cleaned_parts.append(sentence)
+
+        knowledge = " ".join(cleaned_parts).strip()
+        knowledge = re.sub(r"\s+([,.;:])", r"\1", knowledge)
+        knowledge = re.sub(r"^[.;:,\s]+", "", knowledge)
+
+        if knowledge:
+            # Avoid unnecessarily long bullets while retaining complete sentences.
+            if len(knowledge) > 320:
+                cutoff = knowledge.rfind(".", 0, 320)
+                knowledge = knowledge[:cutoff + 1] if cutoff > 120 else knowledge[:320].rstrip() + "…"
+            return knowledge if knowledge.endswith((".", "!", "?", "…")) else knowledge + "."
 
     topic = display_value(row.get('topic'), '')
     subtopic = display_value(row.get('subtopic'), '')
     return " — ".join(part for part in (topic, subtopic) if part) or "Review this question's core concept."
+
 
 def render_revision_notes(analysis_df):
     """Renders subject-wise, concise revision notes without external AI calls."""
@@ -372,13 +365,6 @@ def hide_revision_notes():
     st.session_state['show_revision_notes'] = False
 
 
-def check_instant_answer(question_id):
-    """Marks exactly one instant-feedback question as checked."""
-    question_id = str(question_id)
-    if question_id in st.session_state.get('user_answers', {}):
-        st.session_state.setdefault('checked_questions', set()).add(question_id)
-
-
 def go_back_to_pre_test():
     """Leaves results without submitting or retaining the completed attempt."""
     reset_test_state()
@@ -386,25 +372,27 @@ def go_back_to_pre_test():
 
 
 def go_home():
-    """Returns to the same clean selection state used on a fresh application launch."""
+    """Return to the exact initial application state without deleting the master database."""
     reset_test_state()
 
-    # Restore the application's initial database defaults. These are deliberately
-    # kept separate from master_db so the Google Sheet is not re-downloaded.
+    # Restore the same defaults used on a fresh browser session. Removing the
+    # widget keys is important because Streamlit otherwise preserves their UI state.
     st.session_state['locked_exam'] = "CAPF-AC"
     st.session_state['locked_year'] = "2025"
     st.session_state['locked_cycle'] = "I"
 
-    # Remove widget state so Streamlit recreates the controls with their initial
-    # values instead of reviving the user's previous filters/selections.
     for key in (
         'exam_selection', 'year_selection', 'cycle_selection',
         'subject_selection', 'difficulty_selection', 'testing_mode',
-        'full_paper_toggle'
+        'full_paper_toggle', 'is_full_paper'
     ):
         st.session_state.pop(key, None)
 
-    st.session_state['is_full_paper'] = False
+    st.session_state['show_revision_notes'] = False
+    st.session_state['review_selected_qid'] = None
+    st.session_state['current_page'] = 0
+    st.session_state['scroll_trigger'] = False
+
 
 def reset_for_exam_change():
     """Resets a test and removes dependent selection widget values."""
@@ -781,12 +769,14 @@ else:
         if st.session_state['auto_submitted']:
             st.error("⏰ **Time Expired!** The 2-hour window has lapsed. Your responses have been automatically submitted.")
 
-        if not st.session_state['exam_submitted']:
+        if full_paper and not st.session_state['exam_submitted']:
             st.button("🔄 Reset Test / Clear Answers", use_container_width=True, on_click=reset_test_state)
             st.markdown("---")
 
-        should_show_analysis = (is_exam_mode and st.session_state['exam_submitted']) or \
-                               (not is_exam_mode and len(st.session_state['checked_questions']) > 0)
+        # Comprehensive analysis belongs only to submitted Full Mock / Full Paper
+        # workflows. Instant Feedback is strictly question-level and never enters
+        # this branch, even after one or more questions have been checked.
+        should_show_analysis = is_exam_mode and st.session_state['exam_submitted']
 
         # ==========================================
         # --- PHASE 1: POST-TEST HIERARCHY ---
@@ -1095,13 +1085,10 @@ else:
                         st.session_state['marked_for_review'].discard(qid)
 
                 if not is_exam_mode:
-                    if st.button(
-                        "Check Answer",
-                        key=f"btn_check_{st.session_state['test_run_id']}_{qid}",
-                        on_click=check_instant_answer,
-                        args=(qid,)
-                    ):
-                        if qid not in st.session_state['user_answers']:
+                    if st.button(f"Check Answer", key=f"btn_check_{st.session_state['test_run_id']}_{qid}"):
+                        if qid in st.session_state['user_answers']:
+                            st.session_state['checked_questions'].add(qid)
+                        else:
                             st.warning("Select an option first.")
 
                     if qid in st.session_state['checked_questions']:
@@ -1109,6 +1096,7 @@ else:
                         feedback_row = row.copy()
                         feedback_row['User_Choice'] = user_pick
                         feedback_row['Status'] = "Correct" if user_pick == correct_opt else "Incorrect"
+
                         render_pyq_intelligence(feedback_row)
 
                 st.divider()
@@ -1125,7 +1113,7 @@ else:
                 st.markdown(f"<div style='text-align: center; color: gray;'>Page {st.session_state['current_page'] + 1} of {total_pages}</div>", unsafe_allow_html=True)
                 st.markdown("---")
 
-            if is_exam_mode and not st.session_state['exam_submitted']:
+            if is_exam_mode and full_paper and not st.session_state['exam_submitted']:
                 st.button(
                     "🚀 Submit Mock Test & Generate Analysis",
                     type="primary",
