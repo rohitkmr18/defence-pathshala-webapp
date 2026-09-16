@@ -1113,7 +1113,7 @@ else:
                 st.markdown(f"<div style='text-align: center; color: gray;'>Page {st.session_state['current_page'] + 1} of {total_pages}</div>", unsafe_allow_html=True)
                 st.markdown("---")
 
-            if is_exam_mode and full_paper and not st.session_state['exam_submitted']:
+            if is_exam_mode and not st.session_state['exam_submitted']:
                 st.button(
                     "🚀 Submit Mock Test & Generate Analysis",
                     type="primary",
