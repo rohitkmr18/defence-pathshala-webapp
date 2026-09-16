@@ -6,6 +6,7 @@ import streamlit.components.v1 as components
 import base64
 import requests
 import io
+import re
 
 # ==========================================
 # --- PAGE CONFIG ---
@@ -187,10 +188,10 @@ def reset_test_state():
     st.session_state['test_run_id'] = st.session_state.get('test_run_id', 0) + 1
     st.session_state['user_answers'] = {}
     st.session_state['checked_questions'] = set()
-    st.session_state['error_tags'] = {}
     st.session_state['marked_for_review'] = set()
     st.session_state['exam_submitted'] = False
     st.session_state['exam_started'] = False
+    st.session_state['is_full_paper'] = False
     st.session_state['start_time'] = None
     st.session_state['auto_submitted'] = False
     st.session_state['current_page'] = 0
@@ -251,7 +252,6 @@ def render_pyq_intelligence(row):
         st.success("🎯 **Status:** Correct")
     elif status == "Incorrect":
         st.error("🚨 **Status:** Incorrect")
-        st.markdown(f"**Error Type:** {display_value(row.get('Error_Type'), ERROR_TYPE_FALLBACK)}")
     else:
         st.warning("⚠️ **Status:** Unattempted")
 
@@ -259,30 +259,72 @@ def render_pyq_intelligence(row):
     st.info(f"**Explanation:**\n{clean_text(row.get('explanation', ''))}")
 
 
-ERROR_TYPE_FALLBACK = "Unrecognised"
-ERROR_TYPE_OPTIONS = ["Conceptual Gap", "Factual Recall Failure", "Silly Mistake / Misread"]
+def clean_revision_text(text):
+    """Extracts learning-oriented text while suppressing answer-validation statements."""
+    text = re.sub(r"\s+", " ", str(text or "")).strip()
+    if not text:
+        return ""
 
+    sentences = re.split(r"(?<=[.!?])\s+", text)
+    learning = []
+    validation_only = re.compile(
+        r"^(?:the\s+)?(?:correct\s+)?(?:answer|option)\s+(?:is|was)\s+(?:option\s+)?[A-D]\.?$",
+        re.IGNORECASE,
+    )
+    statement_only = re.compile(
+        r"^statement\s+\d+\s+is\s+(?:correct|incorrect)\.?$",
+        re.IGNORECASE,
+    )
 
-def resolve_error_type(row, question_id):
-    """Returns the one authoritative error type for an incorrect question."""
-    for column in ("Error_Type", "error_type"):
-        value = display_value(row.get(column), "")
-        if value and value != ERROR_TYPE_FALLBACK:
-            return value
-    return st.session_state['error_tags'].get(question_id, ERROR_TYPE_FALLBACK)
+    for sentence in sentences:
+        sentence = sentence.strip().strip("-").strip()
+        if not sentence:
+            continue
+
+        # Convert common answer-validation + explanation constructions into the
+        # actual learning point.
+        sentence = re.sub(
+            r"^(?:the\s+)?(?:correct\s+)?answer\s+(?:is|was)\s+(?:option\s+)?[A-D]\s*(?:because|as|since)\s+",
+            "", sentence, flags=re.IGNORECASE
+        )
+        sentence = re.sub(
+            r"^statement\s+\d+\s+is\s+(?:correct|incorrect)\s*(?:because|as|since)\s+",
+            "", sentence, flags=re.IGNORECASE
+        )
+        sentence = re.sub(
+            r"^option\s+[A-D]\s+is\s+(?:correct|incorrect)\s*(?:because|as|since)\s+",
+            "", sentence, flags=re.IGNORECASE
+        )
+        sentence = re.sub(
+            r"^statement\s+\d+\s+(?:is|was)\s+(?:correct|incorrect)\s*[-:–—]?\s*",
+            "", sentence, flags=re.IGNORECASE
+        )
+
+        if not sentence or validation_only.fullmatch(sentence) or statement_only.fullmatch(sentence):
+            continue
+
+        # Avoid leaving behind a bare answer marker after cleaning.
+        if re.fullmatch(r"(?:correct\s+answer|answer|option)\s*[:=-]?\s*[A-D]", sentence, re.IGNORECASE):
+            continue
+
+        learning.append(sentence.rstrip(".") + ".")
+
+    if learning:
+        point = " ".join(learning)
+        return f"{point[:300]}{'…' if len(point) > 300 else ''}"
+
+    return ""
 
 
 def revision_bullet(row):
-    """Produces a compact deterministic revision point from existing PYQ data."""
-    explanation = clean_text(row.get('explanation', '')).replace('  \n', ' ').strip()
+    """Produces a compact deterministic learning point from existing PYQ data."""
+    explanation = clean_revision_text(row.get('explanation', ''))
     if explanation:
-        sentence = explanation.split('. ')[0].strip().rstrip('.')
-        if sentence:
-            return f"{sentence[:240]}{'…' if len(sentence) > 240 else ''}."
+        return explanation
+
     topic = display_value(row.get('topic'), '')
     subtopic = display_value(row.get('subtopic'), '')
     return " — ".join(part for part in (topic, subtopic) if part) or "Review this question's core concept."
-
 
 def render_revision_notes(analysis_df):
     """Renders subject-wise, concise revision notes without external AI calls."""
@@ -330,6 +372,13 @@ def hide_revision_notes():
     st.session_state['show_revision_notes'] = False
 
 
+def check_instant_answer(question_id):
+    """Marks exactly one instant-feedback question as checked."""
+    question_id = str(question_id)
+    if question_id in st.session_state.get('user_answers', {}):
+        st.session_state.setdefault('checked_questions', set()).add(question_id)
+
+
 def go_back_to_pre_test():
     """Leaves results without submitting or retaining the completed attempt."""
     reset_test_state()
@@ -337,12 +386,25 @@ def go_back_to_pre_test():
 
 
 def go_home():
-    """Returns to the initial selection view and clears test-specific state."""
+    """Returns to the same clean selection state used on a fresh application launch."""
     reset_test_state()
-    st.session_state['full_paper_toggle'] = False
-    st.session_state.pop('subject_selection', None)
-    st.session_state.pop('difficulty_selection', None)
 
+    # Restore the application's initial database defaults. These are deliberately
+    # kept separate from master_db so the Google Sheet is not re-downloaded.
+    st.session_state['locked_exam'] = "CAPF-AC"
+    st.session_state['locked_year'] = "2025"
+    st.session_state['locked_cycle'] = "I"
+
+    # Remove widget state so Streamlit recreates the controls with their initial
+    # values instead of reviving the user's previous filters/selections.
+    for key in (
+        'exam_selection', 'year_selection', 'cycle_selection',
+        'subject_selection', 'difficulty_selection', 'testing_mode',
+        'full_paper_toggle'
+    ):
+        st.session_state.pop(key, None)
+
+    st.session_state['is_full_paper'] = False
 
 def reset_for_exam_change():
     """Resets a test and removes dependent selection widget values."""
@@ -398,8 +460,6 @@ if 'user_answers' not in st.session_state:
     st.session_state['user_answers'] = {}
 if 'checked_questions' not in st.session_state:
     st.session_state['checked_questions'] = set()
-if 'error_tags' not in st.session_state:
-    st.session_state['error_tags'] = {}
 if 'marked_for_review' not in st.session_state:
     st.session_state['marked_for_review'] = set()
 if 'exam_submitted' not in st.session_state:
@@ -755,8 +815,7 @@ else:
                 row_dict.update({
                     'User_Choice': user_pick,
                     'Status': status,
-                    'Sort_Val': sort_val,
-                    'Error_Type': resolve_error_type(row, qid) if status == "Incorrect" else "N/A"
+                    'Sort_Val': sort_val
                 })
                 records.append(row_dict)
 
@@ -811,27 +870,8 @@ else:
                 mistakes_df = analysis_df[analysis_df['Status'] == "Incorrect"]
                 if not mistakes_df.empty:
                     st.dataframe(
-                        mistakes_df[['q_num', 'subject', 'topic', 'User_Choice', 'final_opt', 'Error_Type']],
+                        mistakes_df[['q_num', 'subject', 'topic', 'User_Choice', 'final_opt']],
                         use_container_width=True
-                    )
-                    error_counts = mistakes_df['Error_Type'].fillna(ERROR_TYPE_FALLBACK).replace('', ERROR_TYPE_FALLBACK).value_counts()
-                    fig_errors = px.pie(
-                        values=error_counts.values,
-                        names=error_counts.index,
-                        hole=0.5,
-                        title="Mistake Type Distribution"
-                    )
-                    fig_errors.update_traces(textposition='inside', textinfo='label+value')
-                    fig_errors.update_layout(
-                        dragmode=False,
-                        margin=dict(t=50, b=20, l=10, r=10),
-                        showlegend=True
-                    )
-                    st.plotly_chart(
-                        fig_errors,
-                        use_container_width=True,
-                        config={'displayModeBar': False},
-                        key=f"error_type_chart_{st.session_state['test_run_id']}"
                     )
                 else:
                     st.success("🎯 No errors recorded in this test set!")
@@ -845,17 +885,6 @@ else:
                     weak_subjects = subj_summary[subj_summary['Accuracy %'] < 60].index.tolist()
                     if weak_subjects:
                         roadmap_points.append(f"📚 **Priority Revision:** Focus on **{', '.join(weak_subjects)}** (<60% accuracy).")
-
-                if not mistakes_df.empty:
-                    error_counts = mistakes_df['Error_Type'].value_counts()
-                    if not error_counts.empty:
-                        top_error = error_counts.idxmax()
-                        if top_error == "Conceptual Gap":
-                            roadmap_points.append("🧠 **Theory Re-anchoring:** 'Conceptual Gap' is dominant. Re-read standard sources for these topics.")
-                        elif top_error == "Factual Recall Failure":
-                            roadmap_points.append("📝 **Active Recall Drill:** Build 1-page cheat sheets for dates/articles.")
-                        elif top_error == "Silly Mistake / Misread":
-                            roadmap_points.append("🔍 **Question Decoupling:** Highlight 'NOT' and 'INCORRECT' before answering.")
 
                 if not roadmap_points:
                     roadmap_points.append("🔥 **Maintain Consistency:** Excellent performance! Continue timed drills.")
@@ -953,18 +982,6 @@ else:
                                 st.markdown(f"❌ **{opt_letter}) {opt_text}** (Your Answer)")
                             else:
                                 st.markdown(f"{opt_letter}) {opt_text}")
-
-                        if status == "Incorrect":
-                            error_type = resolve_error_type(review_row, review_qid)
-                            review_row['Error_Type'] = error_type
-                            if error_type == ERROR_TYPE_FALLBACK:
-                                selected_tag = st.selectbox(
-                                    "Categorize this mistake:",
-                                    ERROR_TYPE_OPTIONS,
-                                    key=f"review_tag_{run_id}_{review_qid}"
-                                )
-                                st.session_state['error_tags'][review_qid] = selected_tag
-                                review_row['Error_Type'] = selected_tag
 
                         render_pyq_intelligence(review_row)
 
@@ -1078,10 +1095,13 @@ else:
                         st.session_state['marked_for_review'].discard(qid)
 
                 if not is_exam_mode:
-                    if st.button(f"Check Answer", key=f"btn_check_{st.session_state['test_run_id']}_{qid}"):
-                        if qid in st.session_state['user_answers']:
-                            st.session_state['checked_questions'].add(qid)
-                        else:
+                    if st.button(
+                        "Check Answer",
+                        key=f"btn_check_{st.session_state['test_run_id']}_{qid}",
+                        on_click=check_instant_answer,
+                        args=(qid,)
+                    ):
+                        if qid not in st.session_state['user_answers']:
                             st.warning("Select an option first.")
 
                     if qid in st.session_state['checked_questions']:
@@ -1089,21 +1109,6 @@ else:
                         feedback_row = row.copy()
                         feedback_row['User_Choice'] = user_pick
                         feedback_row['Status'] = "Correct" if user_pick == correct_opt else "Incorrect"
-
-                        if feedback_row['Status'] == "Incorrect":
-                            error_type = resolve_error_type(feedback_row, qid)
-                            feedback_row['Error_Type'] = error_type
-                            if error_type == ERROR_TYPE_FALLBACK:
-                                selected_tag = st.selectbox(
-                                    "Categorize this mistake:",
-                                    ERROR_TYPE_OPTIONS,
-                                    key=f"tag_{st.session_state['test_run_id']}_{qid}"
-                                )
-                                st.session_state['error_tags'][qid] = selected_tag
-                                feedback_row['Error_Type'] = selected_tag
-                        else:
-                            feedback_row['Error_Type'] = "N/A"
-
                         render_pyq_intelligence(feedback_row)
 
                 st.divider()
