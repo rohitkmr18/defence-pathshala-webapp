@@ -1044,7 +1044,7 @@ st.markdown(f"""
     font-weight:700;
     color:#0F172A;
     box-shadow:0 2px 4px rgba(0,0,0,0.02);
-">🧠 Built by:  UPSC CAPF AC AIR 163 &nbsp;|&nbsp; IIT Kanpur Graduate &nbsp;|&nbsp; Qualified CDS-AFA 4 times</div>
+">🧠 Built by:   UPSC CAPF AC AIR 163 &nbsp;|&nbsp; IIT Kanpur Graduate &nbsp;|&nbsp; Qualified CDS-AFA 4 times</div>
 
 <div class="dash-intro">Transform raw PYQs into a tactical, data-driven preparation engine. Stop passive reading and start actively eliminating. This intelligence dashboard analyzes your performance patterns, isolates specific examiner traps, and dynamically builds a personalized syllabus roadmap to maximize your final score.</div>
 """, unsafe_allow_html=True)
@@ -1501,6 +1501,10 @@ else:
     else:
         exam_df = df.copy()
     filtered_df = exam_df
+
+# Streamlit's current render state: used only to control whether the
+# configuration/header UI should be shown above the test arena.
+is_active_full_mock = st.session_state.get('exam_started', False)
 
 # Navigation is hidden during a focused timed test and while Revision Notes are shown.
 is_active_timed_test = full_paper and st.session_state['exam_started'] and not st.session_state['exam_submitted']
