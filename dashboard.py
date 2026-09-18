@@ -230,6 +230,7 @@ def render_pyq_intelligence(row):
     with c1:
         st.markdown(f"**Subject:** {display_value(row.get('subject'))}")
         st.markdown(f"**Topic:** {display_value(row.get('topic'))}")
+        st.markdown(f"**Theme:** {display_value(row.get('theme'))}")
     with c2:
         st.markdown(f"**Subtopic:** {display_value(row.get('subtopic'))}")
         st.markdown(f"**Source:** {display_value(row.get('source'))}")
@@ -260,48 +261,83 @@ def render_pyq_intelligence(row):
 
 
 ERROR_TYPE_FALLBACK = "Unrecognised"
-ERROR_TYPE_OPTIONS = ["Conceptual Gap", "Factual Recall Failure", "Silly Mistake / Misread"]
 
 
-def resolve_error_type(row, question_id):
-    """Returns the one authoritative error type for an incorrect question."""
-    for column in ("Error_Type", "error_type"):
-        value = display_value(row.get(column), "")
-        if value and value != ERROR_TYPE_FALLBACK:
-            return value
-    return st.session_state['error_tags'].get(question_id, ERROR_TYPE_FALLBACK)
+def resolve_error_type(row, question_id=None):
+    """Derive Error Type exclusively from database property P: q_type."""
+    q_type = display_value(row.get("q_type"), "").strip().casefold()
+    if "concept" in q_type:
+        return "Conceptual Gap"
+    if "factual" in q_type or "fact" in q_type:
+        return "Lack of Revision"
+    if "analytical" in q_type or "analytic" in q_type:
+        return "Analytical Error"
+    return ERROR_TYPE_FALLBACK
+
+
+def clean_revision_explanation(text):
+    """Remove answer-key/statement-validation language from revision notes."""
+    text = display_value(text, "")
+    if not text:
+        return ""
+
+    import re
+    # Remove common answer-validation sentences while preserving the substantive explanation.
+    patterns = [
+        r"(?:^|(?<=[.!?])\s*)statement\s*1\s+is\s+(?:in)?correct\.?\s*",
+        r"(?:^|(?<=[.!?])\s*)statement\s*2\s+is\s+(?:in)?correct\.?\s*",
+        r"(?:^|(?<=[.!?])\s*)both\s+statements?\s+are\s+(?:in)?correct\.?\s*",
+        r"(?:^|(?<=[.!?])\s*)only\s+statement\s*[12]\s+is\s+correct\.?\s*",
+        r"(?:^|(?<=[.!?])\s*)statement\s*[12]\s+is\s+the\s+correct\s+answer\.?\s*",
+    ]
+    cleaned = text.replace("\n", " ")
+    for pattern in patterns:
+        cleaned = re.sub(pattern, " ", cleaned, flags=re.IGNORECASE)
+    cleaned = re.sub(r"\s+", " ", cleaned).strip(" .;:-")
+    return cleaned
 
 
 def revision_bullet(row):
-    """Produces a compact deterministic revision point from existing PYQ data."""
-    explanation = clean_text(row.get('explanation', '')).replace('  \n', ' ').strip()
+    """Return the substantive explanation for an incorrect/skipped question."""
+    explanation = clean_revision_explanation(row.get("explanation", ""))
     if explanation:
-        sentence = explanation.split('. ')[0].strip().rstrip('.')
-        if sentence:
-            return f"{sentence[:240]}{'…' if len(sentence) > 240 else ''}."
-    topic = display_value(row.get('topic'), '')
-    subtopic = display_value(row.get('subtopic'), '')
-    return " — ".join(part for part in (topic, subtopic) if part) or "Review this question's core concept."
+        return explanation
+    topic = display_value(row.get("topic"), "")
+    subtopic = display_value(row.get("subtopic"), "")
+    theme = display_value(row.get("theme"), "")
+    return " — ".join(part for part in (topic, subtopic, theme) if part) or "Review the core concept tested by this question."
 
 
 def render_revision_notes(analysis_df):
-    """Renders subject-wise, concise revision notes without external AI calls."""
+    """Compile explanations from incorrect and skipped questions, segregated by subject."""
     st.markdown("## 📚 Revision Notes")
-    st.caption("Quick subject-wise recall points generated from this submitted paper's explanations.")
-    for subject, subject_df in analysis_df.groupby('subject', sort=True):
+    st.caption("Compiled from explanations of incorrect and skipped questions in this paper.")
+
+    revision_df = analysis_df[analysis_df["Status"].isin(["Incorrect", "Unattempted"])].copy()
+    if revision_df.empty:
+        st.success("🎯 No incorrect or skipped questions. No revision notes are required.")
+        st.button("← Go Back to Analysis", type="primary", use_container_width=True, on_click=hide_revision_notes)
+        return
+
+    for subject, subject_df in revision_df.groupby("subject", sort=True):
         st.markdown(f"### {display_value(subject)}")
         seen = set()
-        points = []
-        for _, row in subject_df.iterrows():
+        for _, row in subject_df.sort_values(["q_num", "question_id"], kind="stable").iterrows():
             point = revision_bullet(row)
             normalized = point.casefold()
-            if normalized not in seen:
-                seen.add(normalized)
-                points.append(point)
-        for point in points[:6]:
-            st.markdown(f"- {point}")
-    st.button("← Go Back to Analysis", type="primary", use_container_width=True, on_click=hide_revision_notes)
+            if not point or normalized in seen:
+                continue
+            seen.add(normalized)
+            label = f"Q{display_value(row.get('q_num'))}"
+            topic = display_value(row.get("topic"), "")
+            subtopic = display_value(row.get("subtopic"), "")
+            context = " · ".join(x for x in (topic, subtopic) if x)
+            if context:
+                st.markdown(f"- **{label} — {context}:** {point}")
+            else:
+                st.markdown(f"- **{label}:** {point}")
 
+    st.button("← Go Back to Analysis", type="primary", use_container_width=True, on_click=hide_revision_notes)
 
 def start_full_paper():
     """Starts a clean, timed full-paper attempt."""
@@ -409,12 +445,13 @@ if 'difficulty_category' in df.columns:
 def classify_difficulty(score):
     if pd.isna(score):
         return pd.NA
-    if score < 25:
+    if score < 30:
         return 'Easy'
-    if score < 50:
+    if score < 60:
         return 'Moderate'
     if score < 80:
         return 'Hard'
+    return 'Very Hard'
 
 if 'difficulty_score' in df.columns:
     scored = df['difficulty_score'].notna()
@@ -829,8 +866,7 @@ else:
             st.button("🔄 Reset Test / Clear Answers", use_container_width=True, on_click=reset_test_state)
             st.markdown("---")
 
-        should_show_analysis = (is_exam_mode and st.session_state['exam_submitted']) or \
-                               (not is_exam_mode and len(st.session_state['checked_questions']) > 0)
+        should_show_analysis = is_exam_mode and st.session_state['exam_submitted']
 
         # ==========================================
         # --- PHASE 1: POST-TEST HIERARCHY ---
@@ -915,27 +951,8 @@ else:
                 mistakes_df = analysis_df[analysis_df['Status'] == "Incorrect"]
                 if not mistakes_df.empty:
                     st.dataframe(
-                        mistakes_df[['q_num', 'subject', 'topic', 'User_Choice', 'final_opt', 'Error_Type']],
+                        mistakes_df[['q_num', 'subject', 'theme', 'topic', 'subtopic', 'User_Choice', 'final_opt']],
                         use_container_width=True
-                    )
-                    error_counts = mistakes_df['Error_Type'].fillna(ERROR_TYPE_FALLBACK).replace('', ERROR_TYPE_FALLBACK).value_counts()
-                    fig_errors = px.pie(
-                        values=error_counts.values,
-                        names=error_counts.index,
-                        hole=0.5,
-                        title="Mistake Type Distribution"
-                    )
-                    fig_errors.update_traces(textposition='inside', textinfo='label+value')
-                    fig_errors.update_layout(
-                        dragmode=False,
-                        margin=dict(t=50, b=20, l=10, r=10),
-                        showlegend=True
-                    )
-                    st.plotly_chart(
-                        fig_errors,
-                        use_container_width=True,
-                        config={'displayModeBar': False},
-                        key=f"error_type_chart_{st.session_state['test_run_id']}"
                     )
                 else:
                     st.success("🎯 No errors recorded in this test set!")
@@ -956,10 +973,10 @@ else:
                         top_error = error_counts.idxmax()
                         if top_error == "Conceptual Gap":
                             roadmap_points.append("🧠 **Theory Re-anchoring:** 'Conceptual Gap' is dominant. Re-read standard sources for these topics.")
-                        elif top_error == "Factual Recall Failure":
-                            roadmap_points.append("📝 **Active Recall Drill:** Build 1-page cheat sheets for dates/articles.")
-                        elif top_error == "Silly Mistake / Misread":
-                            roadmap_points.append("🔍 **Question Decoupling:** Highlight 'NOT' and 'INCORRECT' before answering.")
+                        elif top_error == "Lack of Revision":
+                            roadmap_points.append("📝 **Active Recall Drill:** Revisit factual areas represented by the missed questions.")
+                        elif top_error == "Analytical Error":
+                            roadmap_points.append("🔍 **Analytical Practice:** Rework the reasoning chain behind the missed analytical questions.")
 
                 if not roadmap_points:
                     roadmap_points.append("🔥 **Maintain Consistency:** Excellent performance! Continue timed drills.")
@@ -979,60 +996,8 @@ else:
             st.divider()
 
             # ==========================================
-            # --- POST-SUBMISSION NAVIGATION GRID ---
+            # --- DETAILED REVIEW ---
             # ==========================================
-            status_order = {"Incorrect": 0, "Correct": 1, "Unattempted": 2}
-            ordered_analysis = analysis_df.assign(
-                _review_order=analysis_df['Status'].map(status_order)
-            ).sort_values(['_review_order', 'q_num', 'question_id'], kind='stable').copy()
-            review_qids = ordered_analysis['question_id'].astype(str).tolist()
-            run_id = st.session_state['test_run_id']
-            jump_key = f"jump_to_question_{run_id}"
-
-            if st.session_state['review_selected_qid'] not in review_qids:
-                st.session_state['review_selected_qid'] = None
-            if st.session_state.get(jump_key) not in review_qids:
-                st.session_state[jump_key] = None
-
-            def select_review_question(qid):
-                st.session_state['review_selected_qid'] = qid
-                st.session_state[jump_key] = qid
-
-            def sync_review_question():
-                st.session_state['review_selected_qid'] = st.session_state[jump_key]
-
-            status_icons = {"Correct": "🟢", "Incorrect": "🔴", "Unattempted": "⚪"}
-            question_labels = {
-                str(row['question_id']): f"Q{row['q_num']} · {row['Status']}"
-                for _, row in ordered_analysis.iterrows()
-            }
-
-            with st.expander("▸ Question Navigation", expanded=False):
-                st.caption("🟢 Correct · 🔴 Incorrect · ⚪ Skipped · ➜ Selected")
-                grid_columns = st.columns(10)
-                for position, (_, grid_row) in enumerate(ordered_analysis.iterrows()):
-                    grid_qid = str(grid_row['question_id'])
-                    is_selected = grid_qid == st.session_state['review_selected_qid']
-                    label = f"{'➜ ' if is_selected else ''}{status_icons[grid_row['Status']]} {grid_row['q_num']}"
-                    with grid_columns[position % 10]:
-                        st.button(
-                            label,
-                            key=f"review_grid_{run_id}_{grid_qid}",
-                            help=f"Q{grid_row['q_num']}: {grid_row['Status']}",
-                            type="primary" if is_selected else "secondary",
-                            use_container_width=True,
-                            on_click=select_review_question,
-                            args=(grid_qid,)
-                        )
-
-                st.selectbox(
-                    "Jump to Question",
-                    options=[None] + review_qids,
-                    format_func=lambda qid: "Select a question" if qid is None else question_labels[qid],
-                    key=jump_key,
-                    on_change=sync_review_question
-                )
-
             st.markdown("### 🔎 Detailed Review")
             for status, heading in (("Incorrect", "INCORRECT"), ("Correct", "CORRECT"), ("Unattempted", "SKIPPED / UNATTEMPTED")):
                 status_rows = ordered_analysis[ordered_analysis['Status'] == status]
@@ -1046,7 +1011,7 @@ else:
                     review_correct_opt = str(review_row['final_opt']).strip()
                     with st.expander(
                         f"{status_icons[status]} Q{review_row['q_num']} | {display_value(review_row.get('subject'))}",
-                        expanded=review_qid == st.session_state['review_selected_qid']
+                        expanded=False
                     ):
                         st.markdown(f"**Q{review_row['q_num']}. {clean_text(review_row['question'])}**")
                         for opt_letter in ("A", "B", "C", "D"):
@@ -1057,18 +1022,6 @@ else:
                                 st.markdown(f"❌ **{opt_letter}) {opt_text}** (Your Answer)")
                             else:
                                 st.markdown(f"{opt_letter}) {opt_text}")
-
-                        if status == "Incorrect":
-                            error_type = resolve_error_type(review_row, review_qid)
-                            review_row['Error_Type'] = error_type
-                            if error_type == ERROR_TYPE_FALLBACK:
-                                selected_tag = st.selectbox(
-                                    "Categorize this mistake:",
-                                    ERROR_TYPE_OPTIONS,
-                                    key=f"review_tag_{run_id}_{review_qid}"
-                                )
-                                st.session_state['error_tags'][review_qid] = selected_tag
-                                review_row['Error_Type'] = selected_tag
 
                         render_pyq_intelligence(review_row)
 
@@ -1195,16 +1148,7 @@ else:
                         feedback_row['Status'] = "Correct" if user_pick == correct_opt else "Incorrect"
 
                         if feedback_row['Status'] == "Incorrect":
-                            error_type = resolve_error_type(feedback_row, qid)
-                            feedback_row['Error_Type'] = error_type
-                            if error_type == ERROR_TYPE_FALLBACK:
-                                selected_tag = st.selectbox(
-                                    "Categorize this mistake:",
-                                    ERROR_TYPE_OPTIONS,
-                                    key=f"tag_{st.session_state['test_run_id']}_{qid}"
-                                )
-                                st.session_state['error_tags'][qid] = selected_tag
-                                feedback_row['Error_Type'] = selected_tag
+                            feedback_row['Error_Type'] = resolve_error_type(feedback_row, qid)
                         else:
                             feedback_row['Error_Type'] = "N/A"
 
