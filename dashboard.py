@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from groq import groq
+from groq import Groq
 import plotly.express as px
 import time
 import streamlit.components.v1 as components
@@ -544,25 +544,7 @@ def render_revision_notes(analysis_df):
         use_container_width=True,
         on_click=hide_revision_notes
     )
-    for subject, subject_df in revision_df.groupby("subject", sort=True):
-        st.markdown(f"### {display_value(subject)}")
-        seen = set()
-        for _, row in subject_df.sort_values(["q_num", "question_id"], kind="stable").iterrows():
-            point = revision_bullet(row)
-            normalized = point.casefold()
-            if not point or normalized in seen:
-                continue
-            seen.add(normalized)
-            label = f"Q{display_value(row.get('q_num'))}"
-            topic = display_value(row.get("topic"), "")
-            subtopic = display_value(row.get("subtopic"), "")
-            context = " · ".join(x for x in (topic, subtopic) if x)
-            if context:
-                st.markdown(f"- **{label} — {context}:** {point}")
-            else:
-                st.markdown(f"- **{label}:** {point}")
 
-    st.button("← Go Back to Analysis", type="primary", use_container_width=True, on_click=hide_revision_notes)
 
 def start_full_paper():
     """Starts a clean, timed full-paper attempt."""
