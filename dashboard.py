@@ -198,6 +198,8 @@ def reset_test_state():
     st.session_state['scroll_trigger'] = False
     st.session_state['review_selected_qid'] = None
     st.session_state['show_revision_notes'] = False
+    st.session_state['practice_filters_applied'] = False
+    st.session_state['practice_filter_signature'] = None
 
 def clean_text(text):
     if pd.isna(text):
@@ -686,6 +688,10 @@ if 'review_selected_qid' not in st.session_state:
     st.session_state['review_selected_qid'] = None
 if 'show_revision_notes' not in st.session_state:
     st.session_state['show_revision_notes'] = False
+if 'practice_filters_applied' not in st.session_state:
+    st.session_state['practice_filters_applied'] = False
+if 'practice_filter_signature' not in st.session_state:
+    st.session_state['practice_filter_signature'] = None
 
 # ==========================================
 # --- HERO SECTION ---
@@ -935,58 +941,305 @@ if not is_active_full_mock:
         full_paper_label = "Begin 120-question timed assessment (2 hours)" if selected_exam == "CDS" else "Begin 125-question timed assessment (2 hours)"
         st.markdown("### ⏱️ Attempt Full Paper")
         st.caption("Start a complete, timed assessment using every question in the selected paper.")
-        
-        # Use a secondary persistent state flag to manage the checkbox safely
+
         if 'full_paper_toggle' not in st.session_state:
             st.session_state['full_paper_toggle'] = False
-            
+
         full_paper = st.checkbox(
             full_paper_label,
             key="full_paper_toggle",
             on_change=reset_test_state
         )
-        
+
         if not full_paper:
-            st.markdown("<div style='text-align:center; color:#64748B; font-weight:800; margin:20px 0 8px;'>OR</div>", unsafe_allow_html=True)
-            st.markdown("#### FILTER PRACTICE SET")
-            st.caption("Choose a focused set of questions. These controls are optional alternatives to the timed full paper.")
-            selected_subject = st.multiselect("Select Subject", exam_df['subject'].unique() if 'subject' in exam_df.columns else [], default=[], key="subject_selection", on_change=reset_test_state)
-            difficulty_order = ['Easy', 'Moderate', 'Hard', 'Very Hard']
-            if 'difficulty_category' in exam_df.columns:
-                available_difficulties = [
-                    x for x in difficulty_order
-                    if x in exam_df['difficulty_category'].dropna().astype(str).str.strip().unique()
-                ]
-            else:
-                available_difficulties = []
-            selected_difficulty = st.multiselect(
-                "Select Difficulty",
-                available_difficulties,
-                default=[],
-                key="difficulty_selection",
-                on_change=reset_test_state
+            st.markdown(
+                "<div style='text-align:center; color:#64748B; font-weight:800; margin:20px 0 8px;'>OR</div>",
+                unsafe_allow_html=True
             )
-            
-            if 'subject' in exam_df.columns and 'difficulty_category' in exam_df.columns and selected_subject and selected_difficulty:
-                filtered_df = exam_df[
-                    exam_df['subject'].isin(selected_subject) &
-                    exam_df['difficulty_category'].astype(str).str.strip().isin(selected_difficulty)
-                ]
+            st.markdown("#### FILTER PRACTICE SET")
+            st.caption(
+                "Build a custom PYQ practice set across subjects, topics, exams, years, "
+                "cycles and difficulty. Questions appear only after you click Let's Go."
+            )
+
+            # --------------------------------------------------------
+            # PRACTICE SET FILTER FORM
+            # --------------------------------------------------------
+            with st.form("practice_filter_form", clear_on_submit=False):
+                practice_col1, practice_col2 = st.columns(2)
+
+                with practice_col1:
+                    practice_exam_options = sorted(
+                        df['exam'].dropna().astype(str).str.strip().replace("", pd.NA).dropna().unique().tolist()
+                    ) if 'exam' in df.columns else []
+
+                    practice_exam_selection = st.multiselect(
+                        "Select Exam(s)",
+                        options=practice_exam_options,
+                        default=st.session_state.get("practice_exam_selection", []),
+                        key="practice_exam_selection",
+                        help="Leave empty to include questions from every exam in the database."
+                    )
+
+                with practice_col2:
+                    practice_year_options = sorted(
+                        df['year'].dropna().astype(str).str.strip().replace("", pd.NA).dropna().unique().tolist()
+                    ) if 'year' in df.columns else []
+
+                    practice_year_selection = st.multiselect(
+                        "Select Year(s)",
+                        options=practice_year_options,
+                        default=st.session_state.get("practice_year_selection", []),
+                        key="practice_year_selection",
+                        help="Leave empty to include questions from every year."
+                    )
+
+                practice_col3, practice_col4 = st.columns(2)
+
+                with practice_col3:
+                    if 'cycle' in df.columns:
+                        cycle_series = (
+                            df['cycle']
+                            .astype('string')
+                            .str.strip()
+                            .replace({"": pd.NA, "nan": pd.NA, "None": pd.NA})
+                        )
+                        practice_cycle_values = sorted(
+                            cycle_series.dropna().unique().tolist()
+                        )
+                        if cycle_series.isna().any():
+                            practice_cycle_values.append("N/A")
+                    else:
+                        practice_cycle_values = []
+
+                    practice_cycle_selection = st.multiselect(
+                        "Select Cycle(s)",
+                        options=practice_cycle_values,
+                        default=st.session_state.get("practice_cycle_selection", []),
+                        key="practice_cycle_selection",
+                        help="Leave empty to include every cycle. N/A represents exams without a cycle."
+                    )
+
+                with practice_col4:
+                    practice_subject_options = sorted(
+                        df['subject'].dropna().astype(str).str.strip().replace("", pd.NA).dropna().unique().tolist()
+                    ) if 'subject' in df.columns else []
+
+                    practice_subject_selection = st.multiselect(
+                        "Select Subject(s)",
+                        options=practice_subject_options,
+                        default=st.session_state.get("practice_subject_selection", []),
+                        key="practice_subject_selection",
+                        help="Example: select Polity to practice Polity PYQs across multiple exams."
+                    )
+
+                if 'topic' in df.columns:
+                    practice_topic_series = (
+                        df['topic']
+                        .astype('string')
+                        .str.strip()
+                        .replace({"": pd.NA, "nan": pd.NA, "None": pd.NA})
+                    )
+                    if practice_subject_selection:
+                        practice_topic_series = practice_topic_series[
+                            df['subject'].astype(str).str.strip().isin(practice_subject_selection)
+                        ]
+
+                    practice_topic_options = sorted(
+                        practice_topic_series.dropna().unique().tolist()
+                    )
+                else:
+                    practice_topic_options = []
+
+                practice_topic_selection = st.multiselect(
+                    "Select Topic(s)",
+                    options=practice_topic_options,
+                    default=st.session_state.get("practice_topic_selection", []),
+                    key="practice_topic_selection",
+                    help="Leave empty to include every topic within the selected subject(s)."
+                )
+
+                difficulty_order = ['Easy', 'Moderate', 'Hard', 'Very Hard']
+                if 'difficulty_category' in df.columns:
+                    practice_difficulty_values = (
+                        df['difficulty_category']
+                        .astype('string')
+                        .str.strip()
+                        .str.replace(r'\s+', ' ', regex=True)
+                        .dropna()
+                        .unique()
+                        .tolist()
+                    )
+                    available_practice_difficulties = [
+                        x for x in difficulty_order if x in practice_difficulty_values
+                    ]
+                    available_practice_difficulties += [
+                        x for x in sorted(practice_difficulty_values)
+                        if x not in available_practice_difficulties
+                    ]
+                else:
+                    available_practice_difficulties = []
+
+                practice_difficulty_selection = st.multiselect(
+                    "Select Difficulty",
+                    options=available_practice_difficulties,
+                    default=st.session_state.get("practice_difficulty_selection", []),
+                    key="practice_difficulty_selection",
+                    help="Leave empty to include every difficulty."
+                )
+
+                st.markdown("---")
+                practice_mode = st.radio(
+                    "Testing Mode:",
+                    [
+                        "Instant Feedback (Practice one by one)",
+                        "Full Mock Exam (Submit all at the end)"
+                    ],
+                    index=(
+                        1
+                        if st.session_state.get("practice_testing_mode") == "Full Mock Exam (Submit all at the end)"
+                        else 0
+                    ),
+                    key="practice_testing_mode"
+                )
+
+                st.caption(
+                    "Tip: To practice all Polity PYQs across every exam, select **Polity** "
+                    "under Subject and leave Exam, Year, Cycle, Topic and Difficulty empty."
+                )
+
+                apply_practice_filters = st.form_submit_button(
+                    "🚀 Let's Go",
+                    type="primary",
+                    use_container_width=True
+                )
+
+            if apply_practice_filters:
+                st.session_state['practice_filters_applied'] = True
+                st.session_state['practice_filter_signature'] = (
+                    tuple(practice_exam_selection),
+                    tuple(practice_year_selection),
+                    tuple(practice_cycle_selection),
+                    tuple(practice_subject_selection),
+                    tuple(practice_topic_selection),
+                    tuple(practice_difficulty_selection),
+                    practice_mode
+                )
+                # Ensure a newly generated practice set starts from a clean attempt.
+                st.session_state['user_answers'] = {}
+                st.session_state['checked_questions'] = set()
+                st.session_state['error_tags'] = {}
+                st.session_state['marked_for_review'] = set()
+                st.session_state['exam_submitted'] = False
+                st.session_state['exam_started'] = False
+                st.session_state['start_time'] = None
+                st.session_state['auto_submitted'] = False
+                st.session_state['current_page'] = 0
+                st.session_state['scroll_trigger'] = False
+                st.session_state['review_selected_qid'] = None
+                st.session_state['show_revision_notes'] = False
+                st.session_state['test_run_id'] = st.session_state.get('test_run_id', 0) + 1
+
+            # --------------------------------------------------------
+            # BUILD PRACTICE DATASET ONLY AFTER "LET'S GO"
+            # --------------------------------------------------------
+            if st.session_state.get('practice_filters_applied', False):
+                (
+                    applied_exams,
+                    applied_years,
+                    applied_cycles,
+                    applied_subjects,
+                    applied_topics,
+                    applied_difficulties,
+                    applied_mode
+                ) = st.session_state.get(
+                    'practice_filter_signature',
+                    ((), (), (), (), (), (), "Instant Feedback (Practice one by one)")
+                )
+
+                filtered_df = df.copy()
+
+                if applied_exams and 'exam' in filtered_df.columns:
+                    filtered_df = filtered_df[
+                        filtered_df['exam'].astype(str).str.strip().isin(applied_exams)
+                    ]
+
+                if applied_years and 'year' in filtered_df.columns:
+                    filtered_df = filtered_df[
+                        filtered_df['year'].astype(str).str.strip().isin(applied_years)
+                    ]
+
+                if applied_cycles and 'cycle' in filtered_df.columns:
+                    cycle_clean = (
+                        filtered_df['cycle']
+                        .astype('string')
+                        .str.strip()
+                        .replace({"": pd.NA, "nan": pd.NA, "None": pd.NA})
+                    )
+                    cycle_mask = cycle_clean.isin([x for x in applied_cycles if x != "N/A"])
+                    if "N/A" in applied_cycles:
+                        cycle_mask = cycle_mask | cycle_clean.isna()
+                    filtered_df = filtered_df[cycle_mask]
+
+                if applied_subjects and 'subject' in filtered_df.columns:
+                    filtered_df = filtered_df[
+                        filtered_df['subject'].astype(str).str.strip().isin(applied_subjects)
+                    ]
+
+                if applied_topics and 'topic' in filtered_df.columns:
+                    filtered_df = filtered_df[
+                        filtered_df['topic'].astype(str).str.strip().isin(applied_topics)
+                    ]
+
+                if applied_difficulties and 'difficulty_category' in filtered_df.columns:
+                    difficulty_clean = (
+                        filtered_df['difficulty_category']
+                        .astype('string')
+                        .str.strip()
+                        .str.replace(r'\s+', ' ', regex=True)
+                    )
+                    filtered_df = filtered_df[
+                        difficulty_clean.isin(applied_difficulties)
+                    ]
+
+                is_exam_mode = "Full Mock Exam" in applied_mode
+
+                # Make the active practice set visible before the test starts.
+                if not filtered_df.empty:
+                    selected_filter_parts = []
+                    if applied_exams:
+                        selected_filter_parts.append(f"Exam: {', '.join(applied_exams)}")
+                    if applied_years:
+                        selected_filter_parts.append(f"Year: {', '.join(applied_years)}")
+                    if applied_cycles:
+                        selected_filter_parts.append(f"Cycle: {', '.join(applied_cycles)}")
+                    if applied_subjects:
+                        selected_filter_parts.append(f"Subject: {', '.join(applied_subjects)}")
+                    if applied_topics:
+                        selected_filter_parts.append(f"Topic: {', '.join(applied_topics)}")
+                    if applied_difficulties:
+                        selected_filter_parts.append(f"Difficulty: {', '.join(applied_difficulties)}")
+
+                    st.success(
+                        f"✅ Practice set ready — **{len(filtered_df)} questions**"
+                        + (
+                            f"  |  {' · '.join(selected_filter_parts)}"
+                            if selected_filter_parts else "  |  All available PYQs"
+                        )
+                    )
+                else:
+                    st.warning(
+                        "No questions match the selected filters. Modify the filters and click "
+                        "**Let's Go** again."
+                    )
             else:
                 filtered_df = pd.DataFrame()
-            
-            st.markdown("---")
-            mode = st.radio(
-                "Testing Mode:",
-                ["Instant Feedback (Practice one by one)", "Full Mock Exam (Submit all at the end)"],
-                index=0,
-                key="testing_mode",
-                on_change=reset_test_state
-            )
-            is_exam_mode = "Full Mock Exam" in mode
+                is_exam_mode = False
+
         else:
             filtered_df = exam_df
             is_exam_mode = True
+
 else:
     # IMMERSIVE MODE IS ACTIVE - Setup variables silently without showing the UI
     if 'exam' in df.columns and 'year' in df.columns:
@@ -1013,7 +1266,10 @@ if not is_active_timed_test and not st.session_state['show_revision_notes']:
 # --- MAIN CONTENT RENDER (TEST ARENA) ---
 # ==========================================
 if filtered_df.empty and not full_paper:
-    st.info("👆 Select subjects and difficulty levels in the configuration menu above to generate your custom practice set of PYQ.")
+    if st.session_state.get('practice_filters_applied', False):
+        st.info("👆 No questions match the current practice filters. Adjust the filters above and click **Let's Go**.")
+    else:
+        st.info("👆 Configure your practice filters above and click **Let's Go** to generate the question set.")
 elif filtered_df.empty and full_paper:
     st.error(f"🚨 **Dataset Empty:** No rows found in Google Sheet for `{selected_exam}` | Year: `{selected_year}` | Cycle: `{selected_cycle if selected_exam == 'CDS' else 'N/A'}`.")
 else:
