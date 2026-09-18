@@ -428,34 +428,23 @@ if 'master_db' not in st.session_state:
 df = st.session_state['master_db'].copy()
 
 # ==========================================
-# --- DIFFICULTY NORMALIZATION ---
+# --- DIFFICULTY DATA NORMALIZATION ---
 # ==========================================
-# difficulty_score is authoritative. difficulty_category is derived from it
-# so stale/misclassified sheet categories cannot distort the dashboard.
+# IMPORTANT: difficulty_category (database property AC) is the source of truth
+# for the dashboard's difficulty distribution. Do NOT derive/overwrite it from
+# difficulty_score; the category stored in the PYQ database must be reflected
+# exactly in the UI. Only harmless whitespace/casing cleanup is applied.
 if 'difficulty_score' in df.columns:
     df['difficulty_score'] = pd.to_numeric(df['difficulty_score'], errors='coerce')
-    df['difficulty_score'] = df['difficulty_score'].clip(lower=0, upper=100)
 
 if 'difficulty_category' in df.columns:
     df['difficulty_category'] = (
-        df['difficulty_category'].astype(str).str.strip().str.title()
-        .replace({'Nan': pd.NA, 'None': pd.NA, '': pd.NA})
+        df['difficulty_category']
+        .astype('string')
+        .str.strip()
+        .str.replace(r'\s+', ' ', regex=True)
+        .replace({'': pd.NA, 'nan': pd.NA, 'None': pd.NA, 'NaN': pd.NA})
     )
-
-def classify_difficulty(score):
-    if pd.isna(score):
-        return pd.NA
-    if score < 30:
-        return 'Easy'
-    if score < 60:
-        return 'Moderate'
-    if score < 80:
-        return 'Hard'
-    return 'Very Hard'
-
-if 'difficulty_score' in df.columns:
-    scored = df['difficulty_score'].notna()
-    df.loc[scored, 'difficulty_category'] = df.loc[scored, 'difficulty_score'].apply(classify_difficulty)
 
 # ==========================================
 # --- SESSION STATE INITIALIZATION ---
@@ -676,29 +665,63 @@ if not is_active_full_mock:
                 st.plotly_chart(fig_pattern, use_container_width=True, config=chart_config, key=f"pattern_chart_{chart_suffix}")
 
         with c3:
-            if "difficulty_category" in exam_df.columns:
-                difficulty_order = ["Easy", "Moderate", "Hard", "Very Hard"]
-                diff_series = exam_df["difficulty_category"].fillna("Unclassified").astype(str).str.strip()
-                diff_counts = diff_series.value_counts(dropna=True)
-                ordered_labels = [x for x in difficulty_order if x in diff_counts.index]
-                ordered_labels += [x for x in diff_counts.index if x not in ordered_labels]
-                diff_chart_df = diff_counts.reindex(ordered_labels).reset_index()
-                diff_chart_df.columns = ["Difficulty", "Questions"]
+            # Property AC = difficulty_category is authoritative. This chart
+            # counts the category values from the CURRENT selected dataset only.
+            if 'difficulty_category' in exam_df.columns:
+                difficulty_order = ['Easy', 'Moderate', 'Hard', 'Very Hard']
+
+                diff_series = (
+                    exam_df['difficulty_category']
+                    .astype('string')
+                    .str.strip()
+                    .str.replace(r'\s+', ' ', regex=True)
+                )
+                diff_series = diff_series.fillna('Unclassified')
+
+                # Exact category counts from property AC; no score-based
+                # reclassification and no use of the master database.
+                diff_counts = diff_series.value_counts(dropna=False)
+                ordered_labels = [label for label in difficulty_order if label in diff_counts.index]
+                ordered_labels += [
+                    label for label in diff_counts.index
+                    if label not in ordered_labels
+                ]
+
+                diff_chart_df = pd.DataFrame({
+                    'Difficulty': ordered_labels,
+                    'Questions': [int(diff_counts[label]) for label in ordered_labels]
+                })
+
                 if not diff_chart_df.empty:
                     fig_diff = px.pie(
-                        diff_chart_df, names="Difficulty", values="Questions", hole=0.58,
-                        title="Difficulty Distribution"
+                        diff_chart_df,
+                        names='Difficulty',
+                        values='Questions',
+                        hole=0.58,
+                        title='Difficulty Distribution'
                     )
                     fig_diff.update_traces(
-                        textposition="inside", textinfo="percent+label",
-                        hovertemplate="%{label}: %{value} Questions (%{percent})<extra></extra>"
+                        textposition='inside',
+                        textinfo='percent+label',
+                        hovertemplate='%{label}: %{value} Questions (%{percent})<extra></extra>'
                     )
                     fig_diff.update_layout(
-                        showlegend=False, margin=dict(t=55, b=25, l=10, r=10),
-                        height=320, annotations=[dict(text="Difficulty", x=0.5, y=0.5,
-                        font_size=12, showarrow=False)]
+                        showlegend=False,
+                        margin=dict(t=55, b=25, l=10, r=10),
+                        height=320,
+                        annotations=[dict(
+                            text=f"{len(exam_df)}<br>Questions",
+                            x=0.5, y=0.5,
+                            font_size=12,
+                            showarrow=False
+                        )]
                     )
-                    st.plotly_chart(fig_diff, use_container_width=True, config=chart_config, key=f"difficulty_chart_{chart_suffix}")
+                    st.plotly_chart(
+                        fig_diff,
+                        use_container_width=True,
+                        config=chart_config,
+                        key=f"difficulty_chart_{chart_suffix}"
+                    )
 
     st.markdown("---")
     with st.expander("⚙️ Configure Mocks", expanded=True):
