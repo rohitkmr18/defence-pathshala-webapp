@@ -26,7 +26,7 @@ Stop passive reading and start actively eliminating. The Defence Pathshala PYQ I
 ## 📂 Repository Structure
 
 ```text
-├── app.py                   # Main Streamlit application script
+├── dashboard.py                   # Main Streamlit application script
 ├── PYQ_Intelligence.csv     # Master dataset containing CDS and CAPF questions
 ├── requirements.txt         # Project dependencies
 └── README.md                # Project documentation
