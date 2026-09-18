@@ -624,41 +624,81 @@ if not is_active_full_mock:
     if not exam_df.empty:
         col_m1, col_m2 = st.columns(2)
         col_m1.metric("Total Questions", len(exam_df))
-        col_m2.metric("Active Dataset", f"{selected_exam} {selected_year}")
+        dataset_label = f"{selected_exam} {selected_year}" + (f" {selected_cycle}" if selected_exam == "CDS" and selected_cycle else "")
+        col_m2.metric("Active Dataset", dataset_label)
+
+        # Use a dataset-specific key so Streamlit cannot retain a chart from a
+        # previously selected exam/year/cycle. All charts below are built from
+        # the CURRENT exam_df, never from the master database.
+        chart_suffix = "_".join(str(x).strip().replace(" ", "_") for x in (selected_exam, selected_year, selected_cycle or "NA"))
+        chart_config = {"displayModeBar": False, "responsive": True}
 
         c1, c2, c3 = st.columns(3)
-        chart_config = {'displayModeBar': False}
+
         with c1:
-            if 'subject' in exam_df.columns:
-                fig_sub = px.pie(exam_df, names='subject', hole=0.5, title="")
-                fig_sub.update_traces(textposition='inside', textinfo='label+value', hovertemplate="%{label}: %{value} Questions<extra></extra>")
-                fig_sub.update_layout(dragmode=False, showlegend=False, margin=dict(t=20, b=20, l=10, r=10), annotations=[dict(text="Subject", x=0.5, y=0.5, font_size=12, showarrow=False, font_weight="bold")])
-                st.plotly_chart(fig_sub, use_container_width=True, config=chart_config, key="global_subject_chart")
+            if "subject" in exam_df.columns:
+                subject_counts = (
+                    exam_df["subject"].fillna("Unclassified").astype(str).str.strip()
+                    .replace({"": "Unclassified", "nan": "Unclassified"})
+                    .value_counts()
+                    .sort_values(ascending=True)
+                )
+                subject_chart = subject_counts.rename_axis("Subject").reset_index(name="Questions")
+                fig_sub = px.bar(
+                    subject_chart, x="Questions", y="Subject", orientation="h",
+                    title="Questions by Subject", text="Questions"
+                )
+                fig_sub.update_traces(textposition="outside", cliponaxis=False, hovertemplate="%{y}: %{x} Questions<extra></extra>")
+                fig_sub.update_layout(
+                    showlegend=False, margin=dict(t=55, b=25, l=10, r=35),
+                    xaxis_title="Questions", yaxis_title="", height=320
+                )
+                st.plotly_chart(fig_sub, use_container_width=True, config=chart_config, key=f"subject_chart_{chart_suffix}")
+
         with c2:
-            if 'q_pattern' in exam_df.columns:
-                fig_pattern = px.pie(exam_df, names='q_pattern', hole=0.5, title="")
-                fig_pattern.update_traces(textposition='inside', textinfo='label+value', hovertemplate="%{label}: %{value} Questions<extra></extra>")
-                fig_pattern.update_layout(dragmode=False, showlegend=False, margin=dict(t=20, b=20, l=10, r=10), annotations=[dict(text="Pattern", x=0.5, y=0.5, font_size=12, showarrow=False, font_weight="bold")])
-                st.plotly_chart(fig_pattern, use_container_width=True, config=chart_config, key="global_pattern_chart")
+            if "q_pattern" in exam_df.columns:
+                pattern_counts = (
+                    exam_df["q_pattern"].fillna("Unclassified").astype(str).str.strip()
+                    .replace({"": "Unclassified", "nan": "Unclassified"})
+                    .value_counts()
+                    .sort_values(ascending=True)
+                )
+                pattern_chart = pattern_counts.rename_axis("Pattern").reset_index(name="Questions")
+                fig_pattern = px.bar(
+                    pattern_chart, x="Questions", y="Pattern", orientation="h",
+                    title="Questions by Pattern", text="Questions"
+                )
+                fig_pattern.update_traces(textposition="outside", cliponaxis=False, hovertemplate="%{y}: %{x} Questions<extra></extra>")
+                fig_pattern.update_layout(
+                    showlegend=False, margin=dict(t=55, b=25, l=10, r=35),
+                    xaxis_title="Questions", yaxis_title="", height=320
+                )
+                st.plotly_chart(fig_pattern, use_container_width=True, config=chart_config, key=f"pattern_chart_{chart_suffix}")
+
         with c3:
-            if 'difficulty_category' in exam_df.columns:
-                difficulty_order = ['Easy', 'Moderate', 'Hard', 'Very Hard']
-                diff_series = exam_df['difficulty_category'].astype('string').str.strip()
+            if "difficulty_category" in exam_df.columns:
+                difficulty_order = ["Easy", "Moderate", "Hard", "Very Hard"]
+                diff_series = exam_df["difficulty_category"].fillna("Unclassified").astype(str).str.strip()
                 diff_counts = diff_series.value_counts(dropna=True)
-                diff_counts = diff_counts.reindex(difficulty_order).dropna()
-                if not diff_counts.empty:
-                    diff_chart_df = diff_counts.rename_axis('difficulty_category').reset_index(name='count')
+                ordered_labels = [x for x in difficulty_order if x in diff_counts.index]
+                ordered_labels += [x for x in diff_counts.index if x not in ordered_labels]
+                diff_chart_df = diff_counts.reindex(ordered_labels).reset_index()
+                diff_chart_df.columns = ["Difficulty", "Questions"]
+                if not diff_chart_df.empty:
                     fig_diff = px.pie(
-                        diff_chart_df,
-                        names='difficulty_category',
-                        values='count',
-                        hole=0.5,
-                        title="",
-                        category_orders={'difficulty_category': difficulty_order}
+                        diff_chart_df, names="Difficulty", values="Questions", hole=0.58,
+                        title="Difficulty Distribution"
                     )
-                    fig_diff.update_traces(textposition='inside', textinfo='label+value', hovertemplate="%{label}: %{value} Questions<extra></extra>")
-                    fig_diff.update_layout(dragmode=False, showlegend=False, margin=dict(t=20, b=20, l=10, r=10), annotations=[dict(text="Difficulty", x=0.5, y=0.5, font_size=12, showarrow=False, font_weight="bold")])
-                    st.plotly_chart(fig_diff, use_container_width=True, config=chart_config, key="global_difficulty_chart")
+                    fig_diff.update_traces(
+                        textposition="inside", textinfo="percent+label",
+                        hovertemplate="%{label}: %{value} Questions (%{percent})<extra></extra>"
+                    )
+                    fig_diff.update_layout(
+                        showlegend=False, margin=dict(t=55, b=25, l=10, r=10),
+                        height=320, annotations=[dict(text="Difficulty", x=0.5, y=0.5,
+                        font_size=12, showarrow=False)]
+                    )
+                    st.plotly_chart(fig_diff, use_container_width=True, config=chart_config, key=f"difficulty_chart_{chart_suffix}")
 
     st.markdown("---")
     with st.expander("⚙️ Configure Mocks", expanded=True):
@@ -902,16 +942,17 @@ else:
 
             analysis_df = pd.DataFrame(records)
 
-            # Ordered review is used by the Detailed Review section below.
-            # Keep the same priority as the dashboard's intended review flow:
-            # Incorrect -> Unattempted -> Correct.
-            if not analysis_df.empty:
-                ordered_analysis = analysis_df.sort_values(
-                    by=['Sort_Val', 'q_num'],
-                    kind='stable'
+            # Ordered review is always defined before any post-submission
+            # rendering. This avoids NameError on Streamlit Cloud and keeps
+            # the intended order: Incorrect -> Unattempted -> Correct.
+            ordered_analysis = analysis_df.copy()
+            if not ordered_analysis.empty:
+                sort_columns = ["Sort_Val"]
+                if "q_num" in ordered_analysis.columns:
+                    sort_columns.append("q_num")
+                ordered_analysis = ordered_analysis.sort_values(
+                    by=sort_columns, kind="stable"
                 ).reset_index(drop=True)
-            else:
-                ordered_analysis = analysis_df.copy()
 
             if is_exam_mode and st.session_state['exam_submitted'] and st.session_state['show_revision_notes']:
                 render_revision_notes(analysis_df)
