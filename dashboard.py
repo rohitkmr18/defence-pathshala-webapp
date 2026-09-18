@@ -998,6 +998,15 @@ else:
                     by=sort_columns, kind="stable"
                 ).reset_index(drop=True)
 
+            # Post-submission review uses these icons for every status.
+            # Keep this local and explicit so the review section never depends
+            # on a variable defined in another rendering branch.
+            status_icons = {
+                "Incorrect": "❌",
+                "Correct": "✅",
+                "Unattempted": "⚪",
+            }
+
             if is_exam_mode and st.session_state['exam_submitted'] and st.session_state['show_revision_notes']:
                 render_revision_notes(analysis_df)
                 st.stop()
