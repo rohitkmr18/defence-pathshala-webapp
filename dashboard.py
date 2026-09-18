@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from groq import groq
 import plotly.express as px
 import time
 import streamlit.components.v1 as components
@@ -306,19 +307,243 @@ def revision_bullet(row):
     subtopic = display_value(row.get("subtopic"), "")
     theme = display_value(row.get("theme"), "")
     return " — ".join(part for part in (topic, subtopic, theme) if part) or "Review the core concept tested by this question."
+# ============================================================
+# DP REVISION INTELLIGENCE ENGINE
+# ============================================================
 
+DP_REVISION_PROMPT = """
+You are the Defence Pathshala Revision Intelligence Engine.
+
+Your task is to transform raw revision notes generated from a
+student's mock-test performance into clear, systematic,
+high-quality revision notes for serious UPSC, CAPF and CDS
+aspirants.
+
+CORE PRINCIPLE:
+
+You are an editor and organizer of the supplied information.
+You are NOT a general knowledge generator.
+
+Use ONLY information contained in the supplied raw revision notes.
+
+You may:
+- reorganize information
+- group related information
+- remove repetition
+- improve wording
+- improve logical flow
+- create headings
+- create tables using supplied information
+- make information easier to revise
+
+You MUST NOT:
+- add outside facts
+- add additional dates
+- add additional locations
+- add additional names
+- add statistics
+- add historical background
+- invent PYQ connections
+- invent examination trends
+- invent exam traps
+- strengthen claims beyond what the source says
+- change question numbering
+
+If the source says something, preserve its factual meaning.
+
+Never reconstruct question-option numbering.
+
+For example, if the source says:
+"Bonin and Kermadec are in the Pacific."
+
+Do not infer that they correspond to option 2 or option 4.
+
+Organize the notes around the underlying concepts rather than
+simply reproducing question-by-question explanations.
+
+Use:
+- clear headings
+- concise bullets
+- compact tables where useful
+- important distinctions
+- rapid-revision points
+
+Only include a common confusion or exam trap when it can be
+directly derived from the supplied information.
+
+Do not manufacture PYQ insights.
+
+At the end, provide a concise "Rapid Revision" section.
+
+Return ONLY the refined revision notes in Markdown.
+"""
+
+
+def refine_revision_notes(raw_notes):
+    """
+    Send raw DP revision notes to Groq and return refined notes.
+
+    If Groq fails for any reason, return the original notes so
+    the existing revision-note system continues to work.
+    """
+
+    try:
+        client = Groq(
+            api_key=st.secrets["GROQ_API_KEY"]
+        )
+
+        response = client.chat.completions.create(
+            model="openai/gpt-oss-20b",
+            messages=[
+                {
+                    "role": "system",
+                    "content": DP_REVISION_PROMPT
+                },
+                {
+                    "role": "user",
+                    "content": raw_notes
+                }
+            ],
+            temperature=0.2
+        )
+
+        refined_notes = response.choices[0].message.content
+
+        if refined_notes and refined_notes.strip():
+            return refined_notes.strip()
+
+        return raw_notes
+
+    except Exception as e:
+        st.warning(
+            "AI refinement was unavailable. Showing the standard "
+            "revision notes instead."
+        )
+
+        return raw_notes
 
 def render_revision_notes(analysis_df):
-    """Compile explanations from incorrect and skipped questions, segregated by subject."""
-    st.markdown("## 📚 Revision Notes")
-    st.caption("Compiled from explanations of incorrect and skipped questions in this paper.")
+    """Generate and display AI-refined revision notes."""
 
-    revision_df = analysis_df[analysis_df["Status"].isin(["Incorrect", "Unattempted"])].copy()
+    st.markdown("## 📚 Revision Notes")
+
+    st.caption(
+        "AI-refined from explanations of incorrect and skipped "
+        "questions in this paper."
+    )
+
+    revision_df = analysis_df[
+        analysis_df["Status"].isin(["Incorrect", "Unattempted"])
+    ].copy()
+
     if revision_df.empty:
-        st.success("🎯 No incorrect or skipped questions. No revision notes are required.")
-        st.button("← Go Back to Analysis", type="primary", use_container_width=True, on_click=hide_revision_notes)
+        st.success(
+            "🎯 No incorrect or skipped questions. "
+            "No revision notes are required."
+        )
+
+        st.button(
+            "← Go Back to Analysis",
+            type="primary",
+            use_container_width=True,
+            on_click=hide_revision_notes
+        )
+
         return
 
+    # --------------------------------------------------------
+    # STEP 1: BUILD RAW REVISION NOTES
+    # --------------------------------------------------------
+
+    raw_sections = []
+
+    for subject, subject_df in revision_df.groupby(
+        "subject",
+        sort=True
+    ):
+
+        subject_lines = [
+            f"### {display_value(subject)}",
+            ""
+        ]
+
+        seen = set()
+
+        for _, row in subject_df.sort_values(
+            ["q_num", "question_id"],
+            kind="stable"
+        ).iterrows():
+
+            point = revision_bullet(row)
+
+            normalized = point.casefold()
+
+            if not point or normalized in seen:
+                continue
+
+            seen.add(normalized)
+
+            label = f"Q{display_value(row.get('q_num'))}"
+
+            topic = display_value(
+                row.get("topic"),
+                ""
+            )
+
+            subtopic = display_value(
+                row.get("subtopic"),
+                ""
+            )
+
+            context = " · ".join(
+                x for x in (topic, subtopic)
+                if x
+            )
+
+            if context:
+                subject_lines.append(
+                    f"- **{label} — {context}:** {point}"
+                )
+            else:
+                subject_lines.append(
+                    f"- **{label}:** {point}"
+                )
+
+        if len(subject_lines) > 2:
+            raw_sections.append(
+                "\n".join(subject_lines)
+            )
+
+    raw_notes = "\n\n".join(raw_sections)
+
+    # --------------------------------------------------------
+    # STEP 2: SEND COMPLETE NOTES TO GROQ
+    # --------------------------------------------------------
+
+    with st.spinner(
+        "🧠 Defence Pathshala is refining your revision notes..."
+    ):
+
+        refined_notes = refine_revision_notes(
+            raw_notes
+        )
+
+    # --------------------------------------------------------
+    # STEP 3: DISPLAY REFINED NOTES
+    # --------------------------------------------------------
+
+    st.markdown(refined_notes)
+
+    # --------------------------------------------------------
+    # STEP 4: RETURN BUTTON
+    # --------------------------------------------------------
+
+    st.button(
+        "← Go Back to Analysis",
+        type="primary",
+        use_container_width=True,
+        on_click=hide_revision_notes
+    )
     for subject, subject_df in revision_df.groupby("subject", sort=True):
         st.markdown(f"### {display_value(subject)}")
         seen = set()
