@@ -11,7 +11,7 @@ import io
 # ==========================================
 # --- PAGE CONFIG ---
 # ==========================================
-st.set_page_config(page_title="Defence Pathshala | PYQ Engine", layout="centered", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Defence Pathshala | PYQ Engine", layout="wide", initial_sidebar_state="collapsed")
 
 # ==========================================
 # --- IMAGE ENCODING & CSS INJECTION ---
@@ -146,9 +146,152 @@ div.stRadio > div[role="radiogroup"] > label:hover {
 
 /* Metric Typography Override */
 [data-testid="stMetricValue"] {
-    font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', sans-serif !important;
+    font-family: 'Manrope', 'Segoe UI', sans-serif !important;
+    font-weight: 800 !important;
     color: #1E3A8A;
 }
+
+/* Premium typography */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+html, body, [class*="css"], .stApp {
+    font-family: 'Manrope', 'Segoe UI', sans-serif !important;
+    letter-spacing: -0.01em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', 'Manrope', sans-serif !important;
+    letter-spacing: -0.025em !important;
+    color: #172033 !important;
+}
+
+/* Premium controls */
+div[data-testid="stMultiSelect"] > div,
+div[data-testid="stSelectbox"] > div {
+    border-radius: 12px !important;
+}
+
+div[data-testid="stMultiSelect"] [data-baseweb="select"] > div,
+div[data-testid="stSelectbox"] [data-baseweb="select"] > div {
+    border: 1px solid #D7DEE9 !important;
+    border-radius: 12px !important;
+    background: #F8FAFC !important;
+    min-height: 50px !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 2px 8px rgba(15,23,42,.04) !important;
+}
+
+div[data-testid="stMultiSelect"] [data-baseweb="select"] > div:focus-within,
+div[data-testid="stSelectbox"] [data-baseweb="select"] > div:focus-within {
+    border-color: #64748B !important;
+    box-shadow: 0 0 0 3px rgba(100,116,139,.12) !important;
+}
+
+/* Premium question cards */
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    border: 1px solid #DCE3EC !important;
+    border-radius: 16px !important;
+    background: linear-gradient(180deg, #FFFFFF 0%, #FBFCFE 100%) !important;
+    box-shadow: 0 8px 24px rgba(15,23,42,.06) !important;
+    padding: 8px 4px !important;
+    margin: 0 0 18px 0 !important;
+}
+
+.question-number {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: .76rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    color: #64748B;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.question-text {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.08rem;
+    line-height: 1.72;
+    font-weight: 700;
+    color: #172033;
+    margin-bottom: 16px;
+}
+
+/* Boxed answer options */
+div[data-testid="stRadio"] > div[role="radiogroup"] {
+    gap: 10px !important;
+}
+
+div[data-testid="stRadio"] > div[role="radiogroup"] > label {
+    padding: 14px 16px !important;
+    margin: 0 !important;
+    background: #FFFFFF !important;
+    border: 1px solid #DCE3EC !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 8px rgba(15,23,42,.035) !important;
+    cursor: pointer !important;
+    transition: all .18s ease !important;
+}
+
+div[data-testid="stRadio"] > div[role="radiogroup"] > label:hover {
+    border-color: #94A3B8 !important;
+    background: #F8FAFC !important;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(15,23,42,.07) !important;
+}
+
+div[data-testid="stRadio"] > div[role="radiogroup"] > label:has(input:checked) {
+    border-color: #475569 !important;
+    background: #F1F5F9 !important;
+    box-shadow: 0 0 0 2px rgba(71,85,105,.08) !important;
+}
+
+/* Filter panel */
+.filter-panel {
+    background: linear-gradient(135deg, #F8FAFC 0%, #EEF2F7 100%);
+    border: 1px solid #DCE3EC;
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin: 4px 0 18px 0;
+}
+.filter-panel-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #172033;
+}
+.filter-panel-subtitle {
+    color: #64748B;
+    font-size: .88rem;
+    line-height: 1.55;
+    margin-top: 3px;
+}
+.filter-divider {
+    height: 1px;
+    background: #E2E8F0;
+    margin: 20px 0;
+}
+
+/* Buttons */
+div.stButton > button {
+    border-radius: 11px !important;
+    min-height: 44px !important;
+    font-family: 'Manrope', sans-serif !important;
+    font-weight: 700 !important;
+    letter-spacing: .01em !important;
+    transition: all .18s ease !important;
+}
+
+div.stButton > button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(15,23,42,.10) !important;
+}
+
+/* Expander */
+div[data-testid="stExpander"] {
+    border: 1px solid #DCE3EC !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+}
+
 
 /* Anchor offset for smooth scrolling under fixed headers */
 .anchor-offset {
@@ -963,156 +1106,211 @@ if not is_active_full_mock:
             )
 
             # --------------------------------------------------------
-            # PRACTICE SET FILTER FORM
+            # PRACTICE SET FILTERS
             # --------------------------------------------------------
-            with st.form("practice_filter_form", clear_on_submit=False):
-                practice_col1, practice_col2 = st.columns(2)
+            # These controls intentionally live outside a Streamlit form so
+            # dependent filters (especially Topic and Cycle) update immediately.
+            def mark_practice_filters_dirty():
+                """Hide the previously generated set when a filter changes."""
+                st.session_state['practice_filters_applied'] = False
+                st.session_state['practice_filter_signature'] = None
 
-                with practice_col1:
-                    practice_exam_options = sorted(
-                        df['exam'].dropna().astype(str).str.strip().replace("", pd.NA).dropna().unique().tolist()
-                    ) if 'exam' in df.columns else []
+            st.markdown(
+                "<div class='filter-panel'>"
+                "<div class='filter-panel-title'>🎯 Build Your Practice Set</div>"
+                "<div class='filter-panel-subtitle'>"
+                "Query the PYQ database by exam, year, cycle, subject, topic and difficulty. "
+                "Your questions will appear only after you click <strong>Let's Go</strong>."
+                "</div></div>",
+                unsafe_allow_html=True
+            )
 
-                    practice_exam_selection = st.multiselect(
-                        "Select Exam(s)",
-                        options=practice_exam_options,
-                        default=st.session_state.get("practice_exam_selection", []),
-                        key="practice_exam_selection",
-                        help="Leave empty to include questions from every exam in the database."
-                    )
+            practice_col1, practice_col2 = st.columns(2, gap="medium")
 
-                with practice_col2:
-                    practice_year_options = sorted(
-                        df['year'].dropna().astype(str).str.strip().replace("", pd.NA).dropna().unique().tolist()
-                    ) if 'year' in df.columns else []
+            with practice_col1:
+                practice_exam_options = sorted(
+                    df['exam'].dropna().astype(str).str.strip().replace("", pd.NA).dropna().unique().tolist()
+                ) if 'exam' in df.columns else []
 
-                    practice_year_selection = st.multiselect(
-                        "Select Year(s)",
-                        options=practice_year_options,
-                        default=st.session_state.get("practice_year_selection", []),
-                        key="practice_year_selection",
-                        help="Leave empty to include questions from every year."
-                    )
+                practice_exam_selection = st.multiselect(
+                    "Select Exam(s)",
+                    options=practice_exam_options,
+                    default=st.session_state.get("practice_exam_selection", []),
+                    key="practice_exam_selection",
+                    help="Leave empty to include questions from every exam in the database.",
+                    on_change=mark_practice_filters_dirty
+                )
 
-                practice_col3, practice_col4 = st.columns(2)
+            with practice_col2:
+                practice_year_options = sorted(
+                    df['year'].dropna().astype(str).str.strip().replace("", pd.NA).dropna().unique().tolist()
+                ) if 'year' in df.columns else []
 
-                with practice_col3:
-                    if 'cycle' in df.columns:
-                        cycle_series = (
-                            df['cycle']
-                            .astype('string')
-                            .str.strip()
-                            .replace({"": pd.NA, "nan": pd.NA, "None": pd.NA})
-                        )
-                        practice_cycle_values = sorted(
-                            cycle_series.dropna().unique().tolist()
-                        )
-                        if cycle_series.isna().any():
-                            practice_cycle_values.append("N/A")
-                    else:
-                        practice_cycle_values = []
+                practice_year_selection = st.multiselect(
+                    "Select Year(s)",
+                    options=practice_year_options,
+                    default=st.session_state.get("practice_year_selection", []),
+                    key="practice_year_selection",
+                    help="Leave empty to include questions from every year.",
+                    on_change=mark_practice_filters_dirty
+                )
 
-                    practice_cycle_selection = st.multiselect(
-                        "Select Cycle(s)",
-                        options=practice_cycle_values,
-                        default=st.session_state.get("practice_cycle_selection", []),
-                        key="practice_cycle_selection",
-                        help="Leave empty to include every cycle. N/A represents exams without a cycle."
-                    )
+            practice_col3, practice_col4 = st.columns(2, gap="medium")
 
-                with practice_col4:
-                    practice_subject_options = sorted(
-                        df['subject'].dropna().astype(str).str.strip().replace("", pd.NA).dropna().unique().tolist()
-                    ) if 'subject' in df.columns else []
+            # Cycle is meaningful for CDS. Do not clutter the interface with
+            # a cycle selector when CAPF (or another non-CDS exam) is selected.
+            show_practice_cycle = "CDS" in practice_exam_selection
 
-                    practice_subject_selection = st.multiselect(
-                        "Select Subject(s)",
-                        options=practice_subject_options,
-                        default=st.session_state.get("practice_subject_selection", []),
-                        key="practice_subject_selection",
-                        help="Example: select Polity to practice Polity PYQs across multiple exams."
-                    )
+            with practice_col3:
+                if show_practice_cycle and 'cycle' in df.columns:
+                    cycle_source = df.copy()
+                    cycle_source['exam'] = cycle_source['exam'].astype(str).str.strip()
+                    cycle_source['year'] = cycle_source['year'].astype(str).str.strip()
+                    cycle_source = cycle_source[cycle_source['exam'].eq("CDS")]
 
-                if 'topic' in df.columns:
-                    practice_topic_series = (
-                        df['topic']
+                    if practice_year_selection:
+                        cycle_source = cycle_source[
+                            cycle_source['year'].isin(practice_year_selection)
+                        ]
+
+                    cycle_series = (
+                        cycle_source['cycle']
                         .astype('string')
                         .str.strip()
                         .replace({"": pd.NA, "nan": pd.NA, "None": pd.NA})
                     )
-                    if practice_subject_selection:
-                        practice_topic_series = practice_topic_series[
-                            df['subject'].astype(str).str.strip().isin(practice_subject_selection)
-                        ]
+                    practice_cycle_values = sorted(cycle_series.dropna().unique().tolist())
+                    if cycle_series.isna().any():
+                        practice_cycle_values.append("N/A")
 
-                    practice_topic_options = sorted(
-                        practice_topic_series.dropna().unique().tolist()
+                    valid_previous_cycles = [
+                        x for x in st.session_state.get("practice_cycle_selection", [])
+                        if x in practice_cycle_values
+                    ]
+
+                    practice_cycle_selection = st.multiselect(
+                        "Select Cycle(s)",
+                        options=practice_cycle_values,
+                        default=valid_previous_cycles,
+                        key="practice_cycle_selection",
+                        help="CDS cycles only. Leave empty to include every selected CDS cycle.",
+                        on_change=mark_practice_filters_dirty
                     )
                 else:
-                    practice_topic_options = []
+                    # Clear stale CDS cycle selections when the user switches
+                    # back to CAPF or another non-CDS-only selection.
+                    st.session_state['practice_cycle_selection'] = []
+                    practice_cycle_selection = []
 
-                practice_topic_selection = st.multiselect(
-                    "Select Topic(s)",
-                    options=practice_topic_options,
-                    default=st.session_state.get("practice_topic_selection", []),
-                    key="practice_topic_selection",
-                    help="Leave empty to include every topic within the selected subject(s)."
+            with practice_col4:
+                practice_subject_options = sorted(
+                    df['subject'].dropna().astype(str).str.strip().replace("", pd.NA).dropna().unique().tolist()
+                ) if 'subject' in df.columns else []
+
+                practice_subject_selection = st.multiselect(
+                    "Select Subject(s)",
+                    options=practice_subject_options,
+                    default=st.session_state.get("practice_subject_selection", []),
+                    key="practice_subject_selection",
+                    help="Example: select Polity to practice Polity PYQs across multiple exams.",
+                    on_change=mark_practice_filters_dirty
                 )
 
-                difficulty_order = ['Easy', 'Moderate', 'Hard', 'Very Hard']
-                if 'difficulty_category' in df.columns:
-                    practice_difficulty_values = (
-                        df['difficulty_category']
-                        .astype('string')
-                        .str.strip()
-                        .str.replace(r'\s+', ' ', regex=True)
-                        .dropna()
-                        .unique()
-                        .tolist()
-                    )
-                    available_practice_difficulties = [
-                        x for x in difficulty_order if x in practice_difficulty_values
+            # Topic options are dynamically scoped to the currently selected
+            # subject(s). Selecting History therefore shows History topics only.
+            if 'topic' in df.columns:
+                topic_source = df.copy()
+                if practice_subject_selection and 'subject' in topic_source.columns:
+                    topic_source = topic_source[
+                        topic_source['subject'].astype(str).str.strip().isin(practice_subject_selection)
                     ]
-                    available_practice_difficulties += [
-                        x for x in sorted(practice_difficulty_values)
-                        if x not in available_practice_difficulties
-                    ]
-                else:
-                    available_practice_difficulties = []
 
-                practice_difficulty_selection = st.multiselect(
-                    "Select Difficulty",
-                    options=available_practice_difficulties,
-                    default=st.session_state.get("practice_difficulty_selection", []),
-                    key="practice_difficulty_selection",
-                    help="Leave empty to include every difficulty."
+                practice_topic_series = (
+                    topic_source['topic']
+                    .astype('string')
+                    .str.strip()
+                    .replace({"": pd.NA, "nan": pd.NA, "None": pd.NA})
                 )
+                practice_topic_options = sorted(practice_topic_series.dropna().unique().tolist())
+            else:
+                practice_topic_options = []
 
-                st.markdown("---")
-                practice_mode = st.radio(
-                    "Testing Mode:",
-                    [
-                        "Instant Feedback (Practice one by one)",
-                        "Full Mock Exam (Submit all at the end)"
-                    ],
-                    index=(
-                        1
-                        if st.session_state.get("practice_testing_mode") == "Full Mock Exam (Submit all at the end)"
-                        else 0
-                    ),
-                    key="practice_testing_mode"
-                )
+            valid_previous_topics = [
+                x for x in st.session_state.get("practice_topic_selection", [])
+                if x in practice_topic_options
+            ]
 
-                st.caption(
-                    "Tip: To practice all Polity PYQs across every exam, select **Polity** "
-                    "under Subject and leave Exam, Year, Cycle, Topic and Difficulty empty."
-                )
+            practice_topic_selection = st.multiselect(
+                "Select Topic(s)",
+                options=practice_topic_options,
+                default=valid_previous_topics,
+                key="practice_topic_selection",
+                help=(
+                    "Leave empty for all topics. Select a subject first to see only "
+                    "the topics belonging to that subject."
+                ),
+                on_change=mark_practice_filters_dirty
+            )
 
-                apply_practice_filters = st.form_submit_button(
-                    "🚀 Let's Go",
-                    type="primary",
-                    use_container_width=True
+            difficulty_order = ['Easy', 'Moderate', 'Hard', 'Very Hard']
+            if 'difficulty_category' in df.columns:
+                practice_difficulty_values = (
+                    df['difficulty_category']
+                    .astype('string')
+                    .str.strip()
+                    .str.replace(r'\s+', ' ', regex=True)
+                    .dropna()
+                    .unique()
+                    .tolist()
                 )
+                available_practice_difficulties = [
+                    x for x in difficulty_order if x in practice_difficulty_values
+                ]
+                available_practice_difficulties += [
+                    x for x in sorted(practice_difficulty_values)
+                    if x not in available_practice_difficulties
+                ]
+            else:
+                available_practice_difficulties = []
+
+            practice_difficulty_selection = st.multiselect(
+                "Select Difficulty",
+                options=available_practice_difficulties,
+                default=st.session_state.get("practice_difficulty_selection", []),
+                key="practice_difficulty_selection",
+                help="Leave empty to include every difficulty.",
+                on_change=mark_practice_filters_dirty
+            )
+
+            st.markdown("<div class='filter-divider'></div>", unsafe_allow_html=True)
+
+            practice_mode = st.radio(
+                "Testing Mode",
+                [
+                    "Instant Feedback (Practice one by one)",
+                    "Full Mock Exam (Submit all at the end)"
+                ],
+                index=(
+                    1
+                    if st.session_state.get("practice_testing_mode") == "Full Mock Exam (Submit all at the end)"
+                    else 0
+                ),
+                key="practice_testing_mode",
+                horizontal=True,
+                on_change=mark_practice_filters_dirty
+            )
+
+            st.caption(
+                "💡 Example: select **Polity** and leave Exam, Year, Cycle, Topic and Difficulty empty "
+                "to practice all available Polity PYQs across the database."
+            )
+
+            apply_practice_filters = st.button(
+                "🚀 Let's Go",
+                type="primary",
+                use_container_width=True,
+                key="apply_practice_filters"
+            )
 
             if apply_practice_filters:
                 st.session_state['practice_filters_applied'] = True
@@ -1139,6 +1337,7 @@ if not is_active_full_mock:
                 st.session_state['review_selected_qid'] = None
                 st.session_state['show_revision_notes'] = False
                 st.session_state['test_run_id'] = st.session_state.get('test_run_id', 0) + 1
+                st.rerun()
 
             # --------------------------------------------------------
             # BUILD PRACTICE DATASET ONLY AFTER "LET'S GO"
@@ -1693,55 +1892,76 @@ else:
                 q_num = row['q_num']
                 correct_opt = str(row['final_opt']).strip()
 
-                cleaned_question = clean_text(row['question'])
-                st.markdown(f"**Q{q_num}. {cleaned_question}**")
+                with st.container(border=True):
+                    st.markdown(
+                        f"<div class='question-number'>QUESTION {q_num}</div>",
+                        unsafe_allow_html=True
+                    )
+                    st.markdown(
+                        f"<div class='question-text'>{clean_text(row['question'])}</div>",
+                        unsafe_allow_html=True
+                    )
 
-                options = [
-                    f"A) {row['opt_a']}",
-                    f"B) {row['opt_b']}",
-                    f"C) {row['opt_c']}",
-                    f"D) {row['opt_d']}"
-                ]
+                    options = [
+                        f"A) {display_value(row.get('opt_a'), '')}",
+                        f"B) {display_value(row.get('opt_b'), '')}",
+                        f"C) {display_value(row.get('opt_c'), '')}",
+                        f"D) {display_value(row.get('opt_d'), '')}"
+                    ]
 
-                saved_choice = st.session_state['user_answers'].get(qid, None)
-                saved_index = next((idx for idx, opt in enumerate(options) if saved_choice and opt.startswith(saved_choice)), None)
+                    saved_choice = st.session_state['user_answers'].get(qid, None)
+                    saved_index = next(
+                        (idx for idx, opt in enumerate(options)
+                         if saved_choice and opt.startswith(saved_choice)),
+                        None
+                    )
 
-                selected_choice = st.radio(
-                    "Select Option:",
-                    options,
-                    index=saved_index,
-                    key=f"radio_{st.session_state['test_run_id']}_{qid}",
-                    label_visibility="collapsed"
-                )
+                    selected_choice = st.radio(
+                        "Select Option:",
+                        options,
+                        index=saved_index,
+                        key=f"radio_{st.session_state['test_run_id']}_{qid}",
+                        label_visibility="collapsed"
+                    )
 
-                if selected_choice:
-                    st.session_state['user_answers'][qid] = selected_choice[0]
-                
-                if full_paper:
-                    is_marked = qid in st.session_state['marked_for_review']
-                    mark_review = st.checkbox("📌 Mark for Review", value=is_marked, key=f"review_{st.session_state['test_run_id']}_{qid}")
-                    if mark_review:
-                        st.session_state['marked_for_review'].add(qid)
-                    elif qid in st.session_state['marked_for_review']:
-                        st.session_state['marked_for_review'].discard(qid)
+                    if selected_choice:
+                        st.session_state['user_answers'][qid] = selected_choice[0]
 
-                if not is_exam_mode:
-                    if st.button(f"Check Answer", key=f"btn_check_{st.session_state['test_run_id']}_{qid}"):
-                        if qid in st.session_state['user_answers']:
-                            st.session_state['checked_questions'].add(qid)
-                        else:
-                            st.warning("Select an option first.")
+                    if full_paper:
+                        is_marked = qid in st.session_state['marked_for_review']
+                        mark_review = st.checkbox(
+                            "📌 Mark for Review",
+                            value=is_marked,
+                            key=f"review_{st.session_state['test_run_id']}_{qid}"
+                        )
+                        if mark_review:
+                            st.session_state['marked_for_review'].add(qid)
+                        elif qid in st.session_state['marked_for_review']:
+                            st.session_state['marked_for_review'].discard(qid)
 
-                    if qid in st.session_state['checked_questions']:
-                        user_pick = st.session_state['user_answers'].get(qid)
-                        feedback_row = row.copy()
-                        feedback_row['User_Choice'] = user_pick
-                        feedback_row['Status'] = "Correct" if user_pick == correct_opt else "Incorrect"
+                    if not is_exam_mode:
+                        if st.button(
+                            "Check Answer",
+                            key=f"btn_check_{st.session_state['test_run_id']}_{qid}",
+                            type="primary"
+                        ):
+                            if qid in st.session_state['user_answers']:
+                                st.session_state['checked_questions'].add(qid)
+                            else:
+                                st.warning("Select an option first.")
 
-                        if feedback_row['Status'] == "Incorrect":
-                            feedback_row['Error_Type'] = resolve_error_type(feedback_row, qid)
-                        else:
-                            feedback_row['Error_Type'] = "N/A"
+                        if qid in st.session_state['checked_questions']:
+                            user_pick = st.session_state['user_answers'].get(qid)
+                            feedback_row = row.copy()
+                            feedback_row['User_Choice'] = user_pick
+                            feedback_row['Status'] = (
+                                "Correct" if user_pick == correct_opt else "Incorrect"
+                            )
+
+                            if feedback_row['Status'] == "Incorrect":
+                                feedback_row['Error_Type'] = resolve_error_type(feedback_row, qid)
+                            else:
+                                feedback_row['Error_Type'] = "N/A"
 
                         render_pyq_intelligence(feedback_row)
 
