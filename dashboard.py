@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import re
 from groq import Groq
 import plotly.express as px
 import time
@@ -1043,7 +1044,7 @@ st.markdown(f"""
     font-weight:700;
     color:#0F172A;
     box-shadow:0 2px 4px rgba(0,0,0,0.02);
-">🧠 Built by UPSC CAPF AC AIR 163 &nbsp;|&nbsp; IIT Kanpur Graduate &nbsp;|&nbsp; Qualified CDS 4 times</div>
+">🧠 Built by UPSC CAPF AC AIR 163 &nbsp;|&nbsp; IIT Kanpur &nbsp;|&nbsp; CDS ×4</div>
 
 <div class="dash-intro">Transform raw PYQs into a tactical, data-driven preparation engine. Stop passive reading and start actively eliminating. This intelligence dashboard analyzes your performance patterns, isolates specific examiner traps, and dynamically builds a personalized syllabus roadmap to maximize your final score.</div>
 """, unsafe_allow_html=True)
