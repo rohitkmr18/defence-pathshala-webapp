@@ -7,6 +7,7 @@ import streamlit.components.v1 as components
 import base64
 import requests
 import io
+import html
 
 # ==========================================
 # --- PAGE CONFIG ---
@@ -210,9 +211,60 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     font-family: 'Manrope', sans-serif;
     font-size: 1.08rem;
     line-height: 1.72;
-    font-weight: 700;
+    font-weight: 500;
     color: #172033;
     margin-bottom: 16px;
+}
+
+.match-prompt {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.03rem;
+    line-height: 1.65;
+    font-weight: 500;
+    color: #334155;
+    margin: 2px 0 18px 0;
+}
+
+.match-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 10px 0 20px 0;
+}
+.match-column {
+    border: 1px solid #DCE3EC;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #FFFFFF;
+}
+.match-column-header {
+    background: #F1F5F9;
+    border-bottom: 1px solid #DCE3EC;
+    padding: 12px 14px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: .92rem;
+    font-weight: 600;
+    color: #334155;
+}
+.match-row {
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    gap: 8px;
+    padding: 11px 14px;
+    border-bottom: 1px solid #EEF2F7;
+    font-family: 'Manrope', sans-serif;
+    font-size: .94rem;
+    line-height: 1.5;
+    color: #334155;
+}
+.match-row:last-child { border-bottom: none; }
+.match-label {
+    font-family: 'Space Grotesk', sans-serif;
+    color: #64748B;
+    font-weight: 600;
+}
+@media (max-width: 700px) {
+    .match-grid { grid-template-columns: 1fr; }
 }
 
 /* Boxed answer options */
@@ -229,6 +281,7 @@ div[data-testid="stRadio"] > div[role="radiogroup"] > label {
     box-shadow: 0 2px 8px rgba(15,23,42,.035) !important;
     cursor: pointer !important;
     transition: all .18s ease !important;
+    font-weight: 500 !important;
 }
 
 div[data-testid="stRadio"] > div[role="radiogroup"] > label:hover {
@@ -370,16 +423,118 @@ def format_answer(row, option_letter):
     return f"{letter}) {option_text}" if option_text else letter
 
 
+
+def _question_source_text(value):
+    """Return question text with common HTML entities decoded and newlines normalized."""
+    text = display_value(value, "")
+    if not text:
+        return ""
+    text = html.unescape(text)
+    text = text.replace("\\n", "\n")
+    return text.strip()
+
+
+def parse_match_lists(question_text):
+    """Parse UPSC-style List-I/List-II questions when both lists are embedded in the question field."""
+    text = _question_source_text(question_text)
+    if not text or not re.search(r"\bMatch\s+List[- ]I\b", text, flags=re.IGNORECASE):
+        return None
+
+    list1_match = re.search(r"\bList[- ]I\s*\(([^)]*)\)", text, flags=re.IGNORECASE)
+    list2_match = re.search(r"\bList[- ]II\s*\(([^)]*)\)", text, flags=re.IGNORECASE)
+    if not list1_match or not list2_match or list2_match.start() <= list1_match.end():
+        return None
+
+    prompt = text[:list1_match.start()].strip()
+    list1_body = text[list1_match.end():list2_match.start()].strip()
+    list2_body = text[list2_match.end():].strip()
+
+    # Remove trailing instruction text if it was appended to List-II.
+    list2_body = re.split(
+        r"\b(?:select\s+the\s+answer|choose\s+the\s+correct|codes?\s+given|which\s+of\s+the\s+following)\b",
+        list2_body,
+        maxsplit=1,
+        flags=re.IGNORECASE,
+    )[0].strip(" :;-—")
+
+    def parse_items(body, pattern):
+        matches = list(re.finditer(pattern, body, flags=re.IGNORECASE | re.DOTALL))
+        items = []
+        for i, match in enumerate(matches):
+            start = match.end()
+            end = matches[i + 1].start() if i + 1 < len(matches) else len(body)
+            value = re.sub(r"\s+", " ", body[start:end]).strip(" \t\r\n-—;:")
+            if value:
+                items.append((match.group(1).upper(), value))
+        return items
+
+    left_items = parse_items(list1_body, r"(?:^|\s)([A-D])[.)]\s*")
+    right_items = parse_items(list2_body, r"(?:^|\s)([1-9][0-9]*)[.)]\s*")
+
+    if not left_items or not right_items:
+        return None
+
+    return {
+        "prompt": prompt,
+        "list1_title": list1_match.group(1).strip(),
+        "list2_title": list2_match.group(1).strip(),
+        "list1": left_items,
+        "list2": right_items,
+    }
+
+
+def render_question_stem(row):
+    """Render a question normally, or as a two-column UPSC List-I/List-II layout."""
+    question_text = _question_source_text(row.get("question", ""))
+    parsed = parse_match_lists(question_text)
+
+    if not parsed:
+        st.markdown(
+            f"<div class='question-text'>{html.escape(question_text).replace(chr(10), '<br>')}</div>",
+            unsafe_allow_html=True,
+        )
+        return
+
+    prompt = html.escape(parsed["prompt"]).replace("\n", "<br>")
+    st.markdown(f"<div class='match-prompt'>{prompt}</div>", unsafe_allow_html=True)
+
+    left_rows = "".join(
+        f"<div class='match-row'><div class='match-label'>{html.escape(label)}</div>"
+        f"<div>{html.escape(value)}</div></div>"
+        for label, value in parsed["list1"]
+    )
+    right_rows = "".join(
+        f"<div class='match-row'><div class='match-label'>{html.escape(label)}</div>"
+        f"<div>{html.escape(value)}</div></div>"
+        for label, value in parsed["list2"]
+    )
+
+    st.markdown(
+        f"""
+        <div class='match-grid'>
+            <div class='match-column'>
+                <div class='match-column-header'>List-I — {html.escape(parsed['list1_title'])}</div>
+                {left_rows}
+            </div>
+            <div class='match-column'>
+                <div class='match-column-header'>List-II — {html.escape(parsed['list2_title'])}</div>
+                {right_rows}
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
 def render_pyq_intelligence(row):
     st.markdown("#### 🎯 PYQ Intelligence")
     c1, c2 = st.columns(2)
     with c1:
-        st.markdown(f"**Subject:** {display_value(row.get('subject'))}")
-        st.markdown(f"**Topic:** {display_value(row.get('topic'))}")
-        st.markdown(f"**Theme:** {display_value(row.get('theme'))}")
+        st.markdown(f"Subject: {display_value(row.get('subject'))}")
+        st.markdown(f"Topic: {display_value(row.get('topic'))}")
+        st.markdown(f"Theme: {display_value(row.get('theme'))}")
     with c2:
-        st.markdown(f"**Subtopic:** {display_value(row.get('subtopic'))}")
-        st.markdown(f"**Source:** {display_value(row.get('source'))}")
+        st.markdown(f"Subtopic: {display_value(row.get('subtopic'))}")
+        st.markdown(f"Source: {display_value(row.get('source'))}")
 
     st.markdown("#### 📝 Answer Analysis")
     user_choice = display_value(row.get("User_Choice"), "Unattempted")
@@ -389,21 +544,21 @@ def render_pyq_intelligence(row):
 
     a1, a2 = st.columns(2)
     with a1:
-        st.markdown(f"**Your Answer:** {user_answer}")
+        st.markdown(f"Your Answer: {user_answer}")
     with a2:
-        st.markdown(f"**Correct Answer:** {correct_answer}")
+        st.markdown(f"Correct Answer: {correct_answer}")
 
     status = display_value(row.get("Status"))
     if status == "Correct":
-        st.success("🎯 **Status:** Correct")
+        st.success("🎯 Status: Correct")
     elif status == "Incorrect":
-        st.error("🚨 **Status:** Incorrect")
-        st.markdown(f"**Error Type:** {display_value(row.get('Error_Type'), ERROR_TYPE_FALLBACK)}")
+        st.error("🚨 Status: Incorrect")
+        st.markdown(f"Error Type: {display_value(row.get('Error_Type'), ERROR_TYPE_FALLBACK)}")
     else:
-        st.warning("⚠️ **Status:** Unattempted")
+        st.warning("⚠️ Status: Unattempted")
 
     st.markdown("#### 💡 Explanation")
-    st.info(f"**Explanation:**\n{clean_text(row.get('explanation', ''))}")
+    st.info(f"Explanation:\n{clean_text(row.get('explanation', ''))}")
 
 
 ERROR_TYPE_FALLBACK = "Unrecognised"
@@ -976,7 +1131,13 @@ if not is_active_full_mock:
         # previously selected exam/year/cycle. All charts below are built from
         # the CURRENT exam_df, never from the master database.
         chart_suffix = "_".join(str(x).strip().replace(" ", "_") for x in (selected_exam, selected_year, selected_cycle or "NA"))
-        chart_config = {"displayModeBar": False, "responsive": True}
+        chart_config = {
+            "displayModeBar": False,
+            "responsive": True,
+            "scrollZoom": False,
+            "doubleClick": False,
+            "showTips": False
+        }
 
         c1, c2, c3 = st.columns(3)
 
@@ -991,12 +1152,13 @@ if not is_active_full_mock:
                 subject_chart = subject_counts.rename_axis("Subject").reset_index(name="Questions")
                 fig_sub = px.bar(
                     subject_chart, x="Questions", y="Subject", orientation="h",
-                    title="Questions by Subject", text="Questions"
+                    title="Questions by Subject"
                 )
-                fig_sub.update_traces(textposition="outside", cliponaxis=False, hovertemplate="%{y}: %{x} Questions<extra></extra>")
+                fig_sub.update_traces(hovertemplate="%{y}: %{x} Questions<extra></extra>")
                 fig_sub.update_layout(
                     showlegend=False, margin=dict(t=55, b=25, l=10, r=35),
-                    xaxis_title="Questions", yaxis_title="", height=320
+                    xaxis_title="Questions", yaxis_title="", height=320,
+                    dragmode=False
                 )
                 st.plotly_chart(fig_sub, use_container_width=True, config=chart_config, key=f"subject_chart_{chart_suffix}")
 
@@ -1011,12 +1173,13 @@ if not is_active_full_mock:
                 pattern_chart = pattern_counts.rename_axis("Pattern").reset_index(name="Questions")
                 fig_pattern = px.bar(
                     pattern_chart, x="Questions", y="Pattern", orientation="h",
-                    title="Questions by Pattern", text="Questions"
+                    title="Questions by Pattern"
                 )
-                fig_pattern.update_traces(textposition="outside", cliponaxis=False, hovertemplate="%{y}: %{x} Questions<extra></extra>")
+                fig_pattern.update_traces(hovertemplate="%{y}: %{x} Questions<extra></extra>")
                 fig_pattern.update_layout(
                     showlegend=False, margin=dict(t=55, b=25, l=10, r=35),
-                    xaxis_title="Questions", yaxis_title="", height=320
+                    xaxis_title="Questions", yaxis_title="", height=320,
+                    dragmode=False
                 )
                 st.plotly_chart(fig_pattern, use_container_width=True, config=chart_config, key=f"pattern_chart_{chart_suffix}")
 
@@ -1058,19 +1221,14 @@ if not is_active_full_mock:
                     )
                     fig_diff.update_traces(
                         textposition='inside',
-                        textinfo='percent+label',
+                        textinfo='none',
                         hovertemplate='%{label}: %{value} Questions (%{percent})<extra></extra>'
                     )
                     fig_diff.update_layout(
                         showlegend=False,
                         margin=dict(t=55, b=25, l=10, r=10),
                         height=320,
-                        annotations=[dict(
-                            text=f"{len(exam_df)}<br>Questions",
-                            x=0.5, y=0.5,
-                            font_size=12,
-                            showarrow=False
-                        )]
+                        dragmode=False
                     )
                     st.plotly_chart(
                         fig_diff,
@@ -1420,7 +1578,7 @@ if not is_active_full_mock:
                         selected_filter_parts.append(f"Difficulty: {', '.join(applied_difficulties)}")
 
                     st.success(
-                        f"✅ Practice set ready — **{len(filtered_df)} questions**"
+                        f"✅ Practice set ready — {len(filtered_df)} questions"
                         + (
                             f"  |  {' · '.join(selected_filter_parts)}"
                             if selected_filter_parts else "  |  All available PYQs"
@@ -1429,7 +1587,7 @@ if not is_active_full_mock:
                 else:
                     st.warning(
                         "No questions match the selected filters. Modify the filters and click "
-                        "**Let's Go** again."
+                        "Let's Go again."
                     )
             else:
                 filtered_df = pd.DataFrame()
@@ -1803,13 +1961,14 @@ else:
                         f"{status_icons[status]} Q{review_row['q_num']} | {display_value(review_row.get('subject'))}",
                         expanded=False
                     ):
-                        st.markdown(f"**Q{review_row['q_num']}. {clean_text(review_row['question'])}**")
+                        st.markdown(f"<div class='question-number'>QUESTION {review_row['q_num']}</div>", unsafe_allow_html=True)
+                        render_question_stem(review_row)
                         for opt_letter in ("A", "B", "C", "D"):
                             opt_text = display_value(review_row.get(f"opt_{opt_letter.lower()}"), "")
                             if opt_letter == review_correct_opt:
-                                st.markdown(f"✅ **{opt_letter}) {opt_text}** (Correct Answer)")
+                                st.markdown(f"✓ {opt_letter}) {opt_text} — Correct Answer")
                             elif opt_letter == review_user_pick:
-                                st.markdown(f"❌ **{opt_letter}) {opt_text}** (Your Answer)")
+                                st.markdown(f"✕ {opt_letter}) {opt_text} — Your Answer")
                             else:
                                 st.markdown(f"{opt_letter}) {opt_text}")
 
@@ -1897,10 +2056,7 @@ else:
                         f"<div class='question-number'>QUESTION {q_num}</div>",
                         unsafe_allow_html=True
                     )
-                    st.markdown(
-                        f"<div class='question-text'>{clean_text(row['question'])}</div>",
-                        unsafe_allow_html=True
-                    )
+                    render_question_stem(row)
 
                     options = [
                         f"A) {display_value(row.get('opt_a'), '')}",
@@ -1963,7 +2119,7 @@ else:
                             else:
                                 feedback_row['Error_Type'] = "N/A"
 
-                        render_pyq_intelligence(feedback_row)
+                            render_pyq_intelligence(feedback_row)
 
                 st.divider()
             
