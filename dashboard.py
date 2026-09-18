@@ -902,6 +902,17 @@ else:
 
             analysis_df = pd.DataFrame(records)
 
+            # Ordered review is used by the Detailed Review section below.
+            # Keep the same priority as the dashboard's intended review flow:
+            # Incorrect -> Unattempted -> Correct.
+            if not analysis_df.empty:
+                ordered_analysis = analysis_df.sort_values(
+                    by=['Sort_Val', 'q_num'],
+                    kind='stable'
+                ).reset_index(drop=True)
+            else:
+                ordered_analysis = analysis_df.copy()
+
             if is_exam_mode and st.session_state['exam_submitted'] and st.session_state['show_revision_notes']:
                 render_revision_notes(analysis_df)
                 st.stop()
