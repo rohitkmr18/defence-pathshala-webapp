@@ -9,6 +9,7 @@ import base64
 import requests
 import io
 import html
+import json
 
 # ==========================================
 # --- PAGE CONFIG ---
@@ -847,6 +848,497 @@ def render_revision_notes(analysis_df):
     )
 
 
+
+# ============================================================
+# DP STRATEGIC ROADMAP ENGINE
+# Steps 1-3: Performance Profile -> Diagnostics -> Priorities
+# Step 4: Groq converts deterministic signals into student-facing
+# language. Step 5: render the roadmap in the results UI.
+# ============================================================
+
+
+def _roadmap_clean(value):
+    """Return a safe string for roadmap JSON while preserving database values."""
+    if pd.isna(value):
+        return ""
+    return str(value).strip()
+
+
+def _evidence_strength(attempted):
+    attempted = int(attempted or 0)
+    if attempted <= 2:
+        return "low"
+    if attempted <= 7:
+        return "moderate"
+    return "strong"
+
+
+def build_performance_profile(analysis_df, exam, year, cycle, attempt_type="Full Paper"):
+    """Build the deterministic V1 current-mock performance profile."""
+    work = analysis_df.copy()
+    work["Status"] = work["Status"].astype(str).str.strip()
+    work["subject"] = work.get("subject", pd.Series(index=work.index, dtype="object")).map(_roadmap_clean)
+    work["topic"] = work.get("topic", pd.Series(index=work.index, dtype="object")).map(_roadmap_clean)
+    work["subtopic"] = work.get("subtopic", pd.Series(index=work.index, dtype="object")).map(_roadmap_clean)
+    work["Error_Type"] = work.get("Error_Type", pd.Series(index=work.index, dtype="object")).map(_roadmap_clean)
+
+    total = len(work)
+    attempted_df = work[work["Status"] != "Unattempted"]
+    attempted = len(attempted_df)
+    correct = int((work["Status"] == "Correct").sum())
+    incorrect = int((work["Status"] == "Incorrect").sum())
+    unattempted = int((work["Status"] == "Unattempted").sum())
+    attempt_rate = round((attempted / total * 100), 1) if total else 0.0
+    accuracy = round((correct / attempted * 100), 1) if attempted else 0.0
+
+    pos_mark = 0.83 if str(exam).strip() == "CDS" else 2.0
+    neg_mark = 0.27 if str(exam).strip() == "CDS" else 0.667
+    score = round((correct * pos_mark) - (incorrect * neg_mark), 2)
+    max_score = round(total * pos_mark, 2)
+
+    subjects = []
+    if "subject" in work.columns:
+        for subject, g in work.groupby("subject", sort=True):
+            if not subject:
+                continue
+            q = len(g)
+            a = int((g["Status"] != "Unattempted").sum())
+            c = int((g["Status"] == "Correct").sum())
+            ic = int((g["Status"] == "Incorrect").sum())
+            u = int((g["Status"] == "Unattempted").sum())
+            subjects.append({
+                "subject": subject,
+                "questions": q,
+                "attempted": a,
+                "correct": c,
+                "incorrect": ic,
+                "unattempted": u,
+                "attempt_rate": round(a / q * 100, 1) if q else 0.0,
+                "accuracy": round(c / a * 100, 1) if a else 0.0,
+                "evidence_strength": _evidence_strength(a),
+                "error_types": g.loc[g["Status"] == "Incorrect", "Error_Type"].value_counts().to_dict()
+            })
+
+    topics = []
+    topic_cols = [c for c in ["subject", "topic"] if c in work.columns]
+    if topic_cols:
+        for keys, g in work.groupby(topic_cols, sort=True, dropna=False):
+            if not isinstance(keys, tuple):
+                keys = (keys,)
+            subject = _roadmap_clean(keys[0]) if len(keys) > 0 else ""
+            topic = _roadmap_clean(keys[1]) if len(keys) > 1 else ""
+            if not topic:
+                continue
+            q = len(g)
+            a = int((g["Status"] != "Unattempted").sum())
+            c = int((g["Status"] == "Correct").sum())
+            ic = int((g["Status"] == "Incorrect").sum())
+            u = int((g["Status"] == "Unattempted").sum())
+            topics.append({
+                "subject": subject,
+                "topic": topic,
+                "questions": q,
+                "attempted": a,
+                "correct": c,
+                "incorrect": ic,
+                "unattempted": u,
+                "attempt_rate": round(a / q * 100, 1) if q else 0.0,
+                "accuracy": round(c / a * 100, 1) if a else 0.0,
+                "evidence_strength": _evidence_strength(a),
+                "error_types": g.loc[g["Status"] == "Incorrect", "Error_Type"].value_counts().to_dict()
+            })
+
+    error_counts = work.loc[work["Status"] == "Incorrect", "Error_Type"].value_counts().to_dict()
+    error_profile = {}
+    for error_type, count in error_counts.items():
+        if not error_type:
+            continue
+        error_profile[error_type] = {
+            "count": int(count),
+            "percentage_of_incorrect": round(count / incorrect * 100, 1) if incorrect else 0.0
+        }
+
+    question_evidence = []
+    for _, row in work.iterrows():
+        qid = _roadmap_clean(row.get("question_id", row.get("q_num", "")))
+        question_evidence.append({
+            "question_id": qid,
+            "subject": _roadmap_clean(row.get("subject", "")),
+            "topic": _roadmap_clean(row.get("topic", "")),
+            "subtopic": _roadmap_clean(row.get("subtopic", "")),
+            "status": _roadmap_clean(row.get("Status", "")),
+            "error_type": _roadmap_clean(row.get("Error_Type", "")) or None
+        })
+
+    return {
+        "mock": {
+            "exam": _roadmap_clean(exam),
+            "year": _roadmap_clean(year),
+            "cycle": _roadmap_clean(cycle),
+            "attempt_type": attempt_type,
+            "total_questions": total
+        },
+        "overall": {
+            "attempted": attempted,
+            "correct": correct,
+            "incorrect": incorrect,
+            "unattempted": unattempted,
+            "attempt_rate": attempt_rate,
+            "accuracy": accuracy,
+            "score": score,
+            "max_score": max_score
+        },
+        "subjects": subjects,
+        "topics": topics,
+        "error_profile": error_profile,
+        "question_evidence": question_evidence
+    }
+
+
+def diagnose_performance(profile):
+    """Apply deterministic V1 diagnostic rules. No LLM is used here."""
+    overall = profile["overall"]
+    signals = []
+
+    ar = overall["attempt_rate"]
+    acc = overall["accuracy"]
+
+    if ar < 60:
+        signals.append({"signal": "LOW_ATTEMPT_COVERAGE", "scope": "overall", "evidence_strength": "strong"})
+    if ar >= 75 and acc < 60:
+        signals.append({"signal": "HIGH_ATTEMPT_LOW_ACCURACY", "scope": "overall", "evidence_strength": "strong"})
+    elif ar < 60 and acc < 60:
+        signals.append({"signal": "LOW_ATTEMPT_LOW_ACCURACY", "scope": "overall", "evidence_strength": "strong"})
+    elif ar >= 75 and acc >= 75:
+        signals.append({"signal": "STRONG_PAPER_HANDLING", "scope": "overall", "evidence_strength": "strong"})
+
+    subject_signals = []
+    for item in profile["subjects"]:
+        s = []
+        if item["attempted"] >= 3 and item["accuracy"] < 60:
+            s.append("SUBJECT_ACCURACY_GAP")
+        if item["questions"] >= 5 and item["attempt_rate"] < 60:
+            s.append("SUBJECT_COVERAGE_GAP")
+        if item["attempted"] >= 3 and item["accuracy"] >= 75 and item["attempt_rate"] < 60:
+            s.append("SUBJECT_UNDER_ATTEMPTING")
+        if item["attempted"] >= 3 and item["accuracy"] >= 75:
+            s.append("SUBJECT_RELATIVE_STRENGTH")
+        if s:
+            subject_signals.append({
+                "subject": item["subject"],
+                "signals": s,
+                "evidence_strength": item["evidence_strength"]
+            })
+
+    topic_signals = []
+    for item in profile["topics"]:
+        s = []
+        if item["attempted"] >= 3 and item["accuracy"] < 60:
+            s.append("TOPIC_ACCURACY_GAP")
+        if item["questions"] >= 3 and item["attempt_rate"] < 60:
+            s.append("TOPIC_COVERAGE_GAP")
+        if item["attempted"] >= 3 and item["accuracy"] >= 75:
+            s.append("TOPIC_RELATIVE_STRENGTH")
+        if s:
+            topic_signals.append({
+                "subject": item["subject"],
+                "topic": item["topic"],
+                "signals": s,
+                "evidence_strength": item["evidence_strength"]
+            })
+
+    error_signals = []
+    for error_type, data in profile["error_profile"].items():
+        if data["count"] >= 3:
+            error_signals.append({"type": error_type, **data})
+    error_signals.sort(key=lambda x: (-x["count"], x["type"]))
+
+    unattempted_signals = []
+    for item in profile["subjects"]:
+        if item["questions"] >= 5 and item["unattempted"] > 0:
+            unattempted_share = round(item["unattempted"] / item["questions"] * 100, 1)
+            if unattempted_share >= 40:
+                unattempted_signals.append({
+                    "subject": item["subject"],
+                    "unattempted": item["unattempted"],
+                    "questions": item["questions"],
+                    "unattempted_share": unattempted_share
+                })
+
+    return {
+        "overall_signals": signals,
+        "subject_signals": subject_signals,
+        "topic_signals": topic_signals,
+        "error_signals": error_signals,
+        "unattempted_signals": unattempted_signals
+    }
+
+
+def _candidate_score(severity, exposure, evidence):
+    evidence_weight = {"low": 0.5, "moderate": 0.8, "strong": 1.0}.get(evidence, 0.5)
+    return round(float(severity) * float(exposure) * evidence_weight, 4)
+
+
+def build_priority_engine(profile, diagnostics):
+    """Convert diagnostic signals into a maximum of three actionable priorities."""
+    candidates = []
+    overall = profile["overall"]
+
+    # Overall attempt behaviour has the widest exposure, so it is considered first.
+    if any(x["signal"] == "HIGH_ATTEMPT_LOW_ACCURACY" for x in diagnostics["overall_signals"]):
+        candidates.append({
+            "category": "ATTEMPT_BEHAVIOUR", "name": "Attempt Selection & Accuracy",
+            "reason": {"attempt_rate": overall["attempt_rate"], "accuracy": overall["accuracy"]},
+            "supporting_signals": ["HIGH_ATTEMPT_LOW_ACCURACY"],
+            "evidence_strength": "strong", "recommended_intervention": "Attempt-selection and elimination drill",
+            "score": _candidate_score(2, 1.0, "strong")
+        })
+    elif any(x["signal"] == "LOW_ATTEMPT_COVERAGE" for x in diagnostics["overall_signals"]):
+        candidates.append({
+            "category": "ATTEMPT_BEHAVIOUR", "name": "Attempt Coverage",
+            "reason": {"attempt_rate": overall["attempt_rate"], "accuracy": overall["accuracy"]},
+            "supporting_signals": ["LOW_ATTEMPT_COVERAGE"],
+            "evidence_strength": "strong", "recommended_intervention": "Controlled attempt-coverage drill",
+            "score": _candidate_score(2, 1.0, "strong")
+        })
+    elif any(x["signal"] == "LOW_ATTEMPT_LOW_ACCURACY" for x in diagnostics["overall_signals"]):
+        candidates.append({
+            "category": "ATTEMPT_BEHAVIOUR", "name": "Coverage + Accuracy",
+            "reason": {"attempt_rate": overall["attempt_rate"], "accuracy": overall["accuracy"]},
+            "supporting_signals": ["LOW_ATTEMPT_LOW_ACCURACY"],
+            "evidence_strength": "strong", "recommended_intervention": "Foundation review followed by controlled attempt drills",
+            "score": _candidate_score(2, 1.0, "strong")
+        })
+
+    subject_map = {x["subject"]: x for x in profile["subjects"]}
+    selected_subjects = set()
+    for signal in diagnostics["subject_signals"]:
+        item = subject_map.get(signal["subject"])
+        if not item or "SUBJECT_RELATIVE_STRENGTH" in signal["signals"] and len(signal["signals"]) == 1:
+            continue
+        severity = 2 if "SUBJECT_ACCURACY_GAP" in signal["signals"] else 1
+        exposure = item["questions"] / max(profile["mock"]["total_questions"], 1)
+        candidates.append({
+            "category": "SUBJECT", "name": item["subject"],
+            "reason": {k: item[k] for k in ["questions", "attempted", "incorrect", "unattempted", "attempt_rate", "accuracy"]},
+            "supporting_signals": signal["signals"],
+            "evidence_strength": item["evidence_strength"],
+            "recommended_intervention": "Targeted concept/revision/PYQ work based on the dominant error pattern",
+            "score": _candidate_score(severity, exposure, item["evidence_strength"])
+        })
+
+    topic_map = { (x["subject"], x["topic"]): x for x in profile["topics"] }
+    for signal in diagnostics["topic_signals"]:
+        item = topic_map.get((signal["subject"], signal["topic"]))
+        if not item or ("TOPIC_RELATIVE_STRENGTH" in signal["signals"] and len(signal["signals"]) == 1):
+            continue
+        severity = 2 if "TOPIC_ACCURACY_GAP" in signal["signals"] else 1
+        exposure = item["questions"] / max(profile["mock"]["total_questions"], 1)
+        candidates.append({
+            "category": "TOPIC", "name": item["topic"], "subject": item["subject"],
+            "reason": {k: item[k] for k in ["questions", "attempted", "incorrect", "unattempted", "attempt_rate", "accuracy"]},
+            "supporting_signals": signal["signals"],
+            "evidence_strength": item["evidence_strength"],
+            "recommended_intervention": "Focused topic revision followed by targeted PYQ drill",
+            "score": _candidate_score(severity, exposure, item["evidence_strength"])
+        })
+
+    if diagnostics["error_signals"]:
+        top = diagnostics["error_signals"][0]
+        if top["percentage_of_incorrect"] >= 35:
+            intervention = {
+                "Conceptual Gap": "Concept rebuilding + targeted PYQ practice",
+                "Lack of Revision": "Active recall + focused revision drill",
+                "Analytical Error": "Reasoning/elimination drill + targeted PYQs"
+            }.get(top["type"], "Review the associated incorrect questions")
+            candidates.append({
+                "category": "ERROR_TYPE", "name": top["type"],
+                "reason": {"count": top["count"], "percentage_of_incorrect": top["percentage_of_incorrect"]},
+                "supporting_signals": ["DOMINANT_ERROR_TYPE"],
+                "evidence_strength": "strong" if top["count"] >= 8 else "moderate",
+                "recommended_intervention": intervention,
+                "score": _candidate_score(2, top["percentage_of_incorrect"] / 100, "strong" if top["count"] >= 8 else "moderate")
+            })
+
+    # Sort by internal score only. Never expose this score to the student.
+    candidates.sort(key=lambda x: (-x["score"], x["category"], x["name"]))
+
+    priorities = []
+    used_subjects = set()
+    for candidate in candidates:
+        if len(priorities) >= 3:
+            break
+        if candidate["category"] == "SUBJECT":
+            used_subjects.add(candidate["name"])
+        if candidate["category"] == "TOPIC" and candidate.get("subject") in used_subjects:
+            continue
+        if candidate["category"] == "ERROR_TYPE" and any(p["category"] == "SUBJECT" and p["reason"].get("accuracy", 101) < 60 for p in priorities):
+            continue
+        candidate = {k: v for k, v in candidate.items() if k != "score"}
+        candidate["priority"] = len(priorities) + 1
+        priorities.append(candidate)
+
+    maintain = []
+    for item in sorted(profile["subjects"], key=lambda x: (-x["accuracy"], x["subject"])):
+        if item["attempted"] >= 3 and item["accuracy"] >= 75:
+            maintain.append({
+                "subject": item["subject"],
+                "accuracy": item["accuracy"],
+                "attempt_rate": item["attempt_rate"],
+                "evidence_strength": item["evidence_strength"]
+            })
+        if len(maintain) >= 3:
+            break
+
+    return {"priorities": priorities, "maintain": maintain}
+
+
+DP_STRATEGIC_ROADMAP_PROMPT = """
+You are the Defence Pathshala Strategic Roadmap Engine.
+
+Transform the supplied deterministic mock-performance data into a concise,
+student-facing strategic roadmap.
+
+SOURCE OF TRUTH:
+- Use ONLY the supplied JSON.
+- Do not invent statistics, weaknesses, causes, history, trends, resources,
+  study durations, PYQ patterns, or previous performance.
+- This is a SINGLE-MOCK analysis. Never imply longitudinal knowledge.
+- Do not create, reorder, or remove priorities. The Priority Engine has already
+  selected them.
+- Do not calculate or alter numbers. Preserve supplied values exactly.
+- Do not assume why an unattempted question was skipped.
+- Low evidence means the signal is limited; phrase it cautiously.
+- Do not add motivational filler.
+
+Your job is to explain the supplied priorities and turn them into practical
+next actions.
+
+Return ONLY Markdown using exactly this structure:
+
+# 🎯 Strategic Roadmap
+
+## Performance Snapshot
+[2 concise sentences based only on the overall data]
+
+## Your Focus
+### 1. [Priority name]
+**What:** ...
+**Why:** ...
+**Do:** ...
+
+### 2. [Priority name]
+**What:** ...
+**Why:** ...
+**Do:** ...
+
+### 3. [Priority name]
+**What:** ...
+**Why:** ...
+**Do:** ...
+
+## ✓ Maintain
+[1-3 concise bullets. If no maintain areas are supplied, write "No area has enough evidence to be listed as a maintain area in this attempt."]
+
+## → Your Next Move
+[One concrete immediate action derived from Priority 1.]
+
+## ↻ Reassess
+[One concise way to reassess the identified priority using a targeted PYQ/practice set.]
+
+If fewer than three priorities are supplied, omit the unused priority sections.
+"""
+
+
+def generate_strategic_roadmap(profile, diagnostics, priority_output):
+    """Call Groq for language generation; return a deterministic fallback on failure."""
+    payload = {
+        "performance_profile": profile,
+        "diagnostics": diagnostics,
+        "priority_engine": priority_output
+    }
+    fallback = build_rule_based_roadmap(profile, priority_output)
+    try:
+        client = Groq(api_key=st.secrets["GROQ_API_KEY"])
+        response = client.chat.completions.create(
+            model="openai/gpt-oss-20b",
+            messages=[
+                {"role": "system", "content": DP_STRATEGIC_ROADMAP_PROMPT},
+                {"role": "user", "content": json.dumps(payload, ensure_ascii=False)}
+            ],
+            temperature=0.2
+        )
+        text = response.choices[0].message.content
+        return text.strip() if text and text.strip() else fallback
+    except Exception:
+        return fallback
+
+
+def build_rule_based_roadmap(profile, priority_output):
+    """Deterministic fallback so roadmap functionality survives Groq outages."""
+    overall = profile["overall"]
+    lines = [
+        "# 🎯 Strategic Roadmap",
+        "",
+        "## Performance Snapshot",
+        f"You attempted {overall['attempted']} of {overall['mock_total'] if 'mock_total' in overall else profile['mock']['total_questions']} questions ({overall['attempt_rate']}%) with {overall['accuracy']}% accuracy.",
+        f"This roadmap is based only on this {profile['mock']['exam']} mock attempt.",
+        "",
+        "## Your Focus"
+    ]
+    for p in priority_output["priorities"]:
+        reason = p.get("reason", {})
+        evidence = p.get("evidence_strength", "moderate")
+        if p["category"] == "SUBJECT":
+            why = f"{reason.get('attempted', 0)} of {reason.get('questions', 0)} questions were attempted, with {reason.get('accuracy', 0)}% accuracy."
+        elif p["category"] == "TOPIC":
+            why = f"{reason.get('attempted', 0)} of {reason.get('questions', 0)} questions were attempted, with {reason.get('accuracy', 0)}% accuracy."
+        elif p["category"] == "ERROR_TYPE":
+            why = f"{reason.get('count', 0)} incorrect responses ({reason.get('percentage_of_incorrect', 0)}% of incorrect answers) were classified this way."
+        else:
+            why = f"Attempt rate was {reason.get('attempt_rate', 0)}% and accuracy was {reason.get('accuracy', 0)}%."
+        if evidence == "low":
+            why += " Current evidence is limited."
+        lines += [
+            f"### {p['priority']}. {p['name']}",
+            f"**What:** Address this area before moving on to lower-priority signals.",
+            f"**Why:** {why}",
+            f"**Do:** {p.get('recommended_intervention', 'Review the relevant incorrect and unattempted questions and practise the same area again.')}",
+            ""
+        ]
+    lines += ["## ✓ Maintain"]
+    if priority_output["maintain"]:
+        for item in priority_output["maintain"]:
+            lines.append(f"- {item['subject']}: {item['accuracy']}% accuracy in this attempt; maintain through regular mixed practice.")
+    else:
+        lines.append("No area has enough evidence to be listed as a maintain area in this attempt.")
+    if priority_output["priorities"]:
+        first = priority_output["priorities"][0]
+        lines += ["", "## → Your Next Move", f"Start with **{first['name']}**: {first.get('recommended_intervention', 'review the supporting questions and practise the identified area') }.", "", "## ↻ Reassess", "Use a focused PYQ/practice set covering the identified area and compare the new attempt rate and accuracy with this mock."]
+    return "\n".join(lines)
+
+
+def render_strategic_roadmap(analysis_df, exam, year, cycle, attempt_type="Full Paper"):
+    """Render the V1 Strategic Roadmap and cache the Groq result per mock."""
+    profile = build_performance_profile(analysis_df, exam, year, cycle, attempt_type)
+    diagnostics = diagnose_performance(profile)
+    priority_output = build_priority_engine(profile, diagnostics)
+
+    signature_payload = {
+        "mock": profile["mock"],
+        "overall": profile["overall"],
+        "priorities": priority_output["priorities"],
+        "maintain": priority_output["maintain"]
+    }
+    signature = json.dumps(signature_payload, sort_keys=True, default=str)
+    cache = st.session_state.setdefault("strategic_roadmap_cache", {})
+
+    if signature not in cache:
+        with st.spinner("🧠 Building your strategic roadmap..."):
+            cache[signature] = generate_strategic_roadmap(profile, diagnostics, priority_output)
+
+    st.markdown(cache[signature])
+
 def start_full_paper():
     """Starts a clean, timed full-paper attempt."""
     reset_test_state()
@@ -1044,476 +1536,581 @@ st.markdown(f"""
     font-weight:700;
     color:#0F172A;
     box-shadow:0 2px 4px rgba(0,0,0,0.02);
-">🧠 Built by:   UPSC CAPF AC AIR 163 &nbsp;|&nbsp; IIT Kanpur Graduate &nbsp;|&nbsp; Qualified CDS-AFA 4 times</div>
+">🧠 Built by UPSC CAPF AC AIR 163 &nbsp;|&nbsp; IIT Kanpur &nbsp;|&nbsp; CDS ×4</div>
 
 <div class="dash-intro">Transform raw PYQs into a tactical, data-driven preparation engine. Stop passive reading and start actively eliminating. This intelligence dashboard analyzes your performance patterns, isolates specific examiner traps, and dynamically builds a personalized syllabus roadmap to maximize your final score.</div>
 """, unsafe_allow_html=True)
 
 # ==========================================
-# --- DATABASE ANALYTICS & MOCK SELECTION ---
+# --- EXAM, YEAR, & CYCLE SELECTION ---
 # ==========================================
-# The analytics selectors are independent from the Full Paper selector.
-# Analytics supports multi-select so students can compare/inspect several
-# papers at once. Full Paper remains strictly single-paper selection.
 
-if 'analytics_exam_selection' not in st.session_state:
-    st.session_state['analytics_exam_selection'] = []
-if 'analytics_year_selection' not in st.session_state:
-    st.session_state['analytics_year_selection'] = []
-if 'analytics_cycle_selection' not in st.session_state:
-    st.session_state['analytics_cycle_selection'] = []
-if 'full_paper_exam_selection' not in st.session_state:
-    st.session_state['full_paper_exam_selection'] = st.session_state.get('locked_exam', 'CAPF-AC')
-if 'full_paper_year_selection' not in st.session_state:
-    st.session_state['full_paper_year_selection'] = st.session_state.get('locked_year', '2025')
-if 'full_paper_cycle_selection' not in st.session_state:
-    st.session_state['full_paper_cycle_selection'] = st.session_state.get('locked_cycle', 'I')
+# Clean dataframe columns to prevent hidden space bugs
+if 'exam' in df.columns:
+    df['exam'] = df['exam'].astype(str).str.strip()
+if 'year' in df.columns:
+    df['year'] = df['year'].astype(str).str.strip()
+if 'cycle' in df.columns:
+    df['cycle'] = df['cycle'].astype(str).str.strip()
 
-if not st.session_state.get('exam_started', False):
-    # --------------------------------------------------------
-    # DATABASE ANALYTICS PARAMETERS (MULTI-SELECT)
-    # --------------------------------------------------------
-    st.markdown("### 🎯 Database Parameters")
-    st.caption("Select multiple exams, years and CDS cycles to analyse the PYQ database together. These selections control the analytics only.")
+# Initialize permanent session state locks for parameters if not present
+if 'locked_exam' not in st.session_state:
+    st.session_state['locked_exam'] = "CAPF-AC"
+if 'locked_year' not in st.session_state:
+    st.session_state['locked_year'] = "2025"
+if 'locked_cycle' not in st.session_state:
+    st.session_state['locked_cycle'] = "I"
 
-    analytics_col1, analytics_col2, analytics_col3 = st.columns(3, gap="medium")
+selected_exam = st.session_state.get('locked_exam', "CAPF-AC")
+selected_year = st.session_state.get('locked_year', "2025")
+selected_cycle = st.session_state.get('locked_cycle', "I")
 
-    exam_options = sorted(
-        df['exam'].dropna().astype(str).str.strip().replace('', pd.NA).dropna().unique().tolist()
-    ) if 'exam' in df.columns else []
+# ==========================================
+# --- IMMERSIVE MODE (HIDE UI) LOGIC ---
+# ==========================================
+# Rely only on exam_started. Do not rely on the checkbox widget key, 
+# because Streamlit deletes widget keys from memory when they are hidden!
+is_active_full_mock = st.session_state.get('exam_started', False)
 
-    with analytics_col1:
-        previous_exams = [x for x in st.session_state['analytics_exam_selection'] if x in exam_options]
-        analytics_exams = st.multiselect(
-            "Exam(s)",
-            options=exam_options,
-            default=previous_exams,
-            key="analytics_exam_selection",
-            help="Select one or more exams. Leave empty to analyse the entire database."
-        )
+if not is_active_full_mock:
+    st.markdown("### 🎯 Select Database Parameters")
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        exam_options = list(df['exam'].dropna().unique()) if 'exam' in df.columns else ["CAPF-AC", "CDS"]
+        default_exam_idx = exam_options.index(st.session_state['locked_exam']) if st.session_state['locked_exam'] in exam_options else 0
+        selected_exam = st.selectbox("Target Exam:", options=exam_options, index=default_exam_idx, key="exam_selection", on_change=reset_for_exam_change)
+        st.session_state['locked_exam'] = selected_exam
 
-    # Year options depend on the selected exams. Empty exam selection means all exams.
-    analytics_year_source = df.copy()
-    if analytics_exams and 'exam' in analytics_year_source.columns:
-        analytics_year_source = analytics_year_source[
-            analytics_year_source['exam'].astype(str).str.strip().isin(analytics_exams)
-        ]
-    analytics_year_options = sorted(
-        analytics_year_source['year'].dropna().astype(str).str.strip().replace('', pd.NA).dropna().unique().tolist()
-    ) if 'year' in analytics_year_source.columns else []
+    with col2:
+        available_years = list(df[df['exam'] == selected_exam]['year'].dropna().unique()) if 'exam' in df.columns and 'year' in df.columns else ["2025", "2026"]
+        default_year_idx = available_years.index(st.session_state['locked_year']) if st.session_state['locked_year'] in available_years else 0
+        selected_year = st.selectbox("Exam Year:", options=available_years, index=default_year_idx, key="year_selection", on_change=reset_for_year_change)
+        st.session_state['locked_year'] = selected_year
 
-    with analytics_col2:
-        previous_years = [x for x in st.session_state['analytics_year_selection'] if x in analytics_year_options]
-        analytics_years = st.multiselect(
-            "Year(s)",
-            options=analytics_year_options,
-            default=previous_years,
-            key="analytics_year_selection",
-            help="Select one or more years. Leave empty to include every available year."
-        )
+    with col3:
+        if selected_exam == "CDS":
+            cycle_options = list(
+                df[(df['exam'] == selected_exam) & (df['year'] == selected_year)]['cycle'].dropna().unique()
+            ) if 'cycle' in df.columns else []
+            if cycle_options:
+                default_cycle_idx = cycle_options.index(st.session_state['locked_cycle']) if st.session_state['locked_cycle'] in cycle_options else 0
+                selected_cycle = st.selectbox("Exam Cycle:", options=cycle_options, index=default_cycle_idx, key="cycle_selection", on_change=reset_test_state)
+                st.session_state['locked_cycle'] = selected_cycle
+            else:
+                selected_cycle = ""
+                st.session_state['locked_cycle'] = selected_cycle
 
-    # Cycle is displayed only when CDS is included in the analytics selection.
-    show_analytics_cycle = 'CDS' in analytics_exams
-    if show_analytics_cycle and 'cycle' in df.columns:
-        analytics_cycle_source = df.copy()
-        if analytics_exams:
-            analytics_cycle_source = analytics_cycle_source[
-                analytics_cycle_source['exam'].astype(str).str.strip().eq('CDS')
-            ]
-        else:
-            analytics_cycle_source = analytics_cycle_source[
-                analytics_cycle_source['exam'].astype(str).str.strip().eq('CDS')
-            ]
-        if analytics_years:
-            analytics_cycle_source = analytics_cycle_source[
-                analytics_cycle_source['year'].astype(str).str.strip().isin(analytics_years)
-            ]
-        cycle_series = (
-            analytics_cycle_source['cycle'].astype('string').str.strip()
-            .replace({'': pd.NA, 'nan': pd.NA, 'None': pd.NA})
-        )
-        analytics_cycle_options = sorted(cycle_series.dropna().unique().tolist())
-        if cycle_series.isna().any():
-            analytics_cycle_options.append('N/A')
+    # Filter only after the current widget values have been resolved. Previously
+    # this happened above the widgets, so the first rerun after a selection used
+    # the previous exam/year/cycle and could make CDS II 2026 look unavailable.
+    if 'exam' in df.columns and 'year' in df.columns:
+        exam_df = df[(df['exam'] == str(selected_exam).strip()) & (df['year'] == str(selected_year).strip())]
+        if selected_exam == "CDS" and selected_cycle and 'cycle' in exam_df.columns:
+            exam_df = exam_df[exam_df['cycle'] == str(selected_cycle).strip()]
     else:
-        analytics_cycle_options = []
-
-    with analytics_col3:
-        previous_cycles = [x for x in st.session_state['analytics_cycle_selection'] if x in analytics_cycle_options]
-        if show_analytics_cycle and analytics_cycle_options:
-            analytics_cycles = st.multiselect(
-                "CDS Cycle(s)",
-                options=analytics_cycle_options,
-                default=previous_cycles,
-                key="analytics_cycle_selection",
-                help="Applies only to CDS rows. CAPF has no cycle."
-            )
-        else:
-            st.session_state['analytics_cycle_selection'] = []
-            analytics_cycles = []
-
-    # Build the analytics dataset from the multi-select parameters.
-    exam_df = df.copy()
-    if analytics_exams and 'exam' in exam_df.columns:
-        exam_df = exam_df[exam_df['exam'].astype(str).str.strip().isin(analytics_exams)]
-    if analytics_years and 'year' in exam_df.columns:
-        exam_df = exam_df[exam_df['year'].astype(str).str.strip().isin(analytics_years)]
-    if analytics_cycles and 'cycle' in exam_df.columns:
-        cycle_clean = (
-            exam_df['cycle'].astype('string').str.strip()
-            .replace({'': pd.NA, 'nan': pd.NA, 'None': pd.NA})
-        )
-        cycle_mask = cycle_clean.isin([x for x in analytics_cycles if x != 'N/A'])
-        if 'N/A' in analytics_cycles:
-            cycle_mask = cycle_mask | cycle_clean.isna()
-        # A cycle filter is a CDS-specific constraint. Do not accidentally
-        # remove CAPF rows when CDS and CAPF are analysed together.
-        if analytics_exams and set(analytics_exams) == {'CDS'}:
-            exam_df = exam_df[cycle_mask]
-        elif analytics_exams and 'CDS' in analytics_exams:
-            exam_series = exam_df['exam'].astype(str).str.strip()
-            exam_df = exam_df[(exam_series.ne('CDS')) | cycle_mask]
-        else:
-            exam_df = exam_df[cycle_mask]
+        exam_df = df
 
     st.markdown("---")
-    analytics_label_parts = []
-    analytics_label_parts.append(', '.join(analytics_exams) if analytics_exams else 'All Exams')
-    analytics_label_parts.append(', '.join(analytics_years) if analytics_years else 'All Years')
-    if analytics_cycles:
-        analytics_label_parts.append('CDS ' + ', '.join(analytics_cycles))
-    analytics_label = ' · '.join(analytics_label_parts)
-    st.markdown("### 📊 Database Overview")
-    st.caption(f"Analytics scope: {analytics_label}")
+    st.markdown(f"### 📊 Database Overview: {selected_exam} {selected_year}")
 
     if not exam_df.empty:
         col_m1, col_m2 = st.columns(2)
         col_m1.metric("Total Questions", len(exam_df))
-        col_m2.metric("Selected Dataset", analytics_label)
+        dataset_label = f"{selected_exam} {selected_year}" + (f" {selected_cycle}" if selected_exam == "CDS" and selected_cycle else "")
+        col_m2.metric("Active Dataset", dataset_label)
 
-        chart_suffix = "_".join(str(x).strip().replace(' ', '_') for x in (
-            analytics_exams or ['ALL'], analytics_years or ['ALL'], analytics_cycles or ['ALL']
-        ))
+        # Use a dataset-specific key so Streamlit cannot retain a chart from a
+        # previously selected exam/year/cycle. All charts below are built from
+        # the CURRENT exam_df, never from the master database.
+        chart_suffix = "_".join(str(x).strip().replace(" ", "_") for x in (selected_exam, selected_year, selected_cycle or "NA"))
         chart_config = {
-            'displayModeBar': False,
-            'responsive': True,
-            'scrollZoom': False,
-            'doubleClick': False,
-            'showTips': False
+            "displayModeBar": False,
+            "responsive": True,
+            "scrollZoom": False,
+            "doubleClick": False,
+            "showTips": False
         }
 
         c1, c2, c3 = st.columns(3)
+
         with c1:
-            if 'subject' in exam_df.columns:
+            if "subject" in exam_df.columns:
                 subject_counts = (
-                    exam_df['subject'].fillna('Unclassified').astype(str).str.strip()
-                    .replace({'': 'Unclassified', 'nan': 'Unclassified'})
-                    .value_counts().sort_values(ascending=True)
+                    exam_df["subject"].fillna("Unclassified").astype(str).str.strip()
+                    .replace({"": "Unclassified", "nan": "Unclassified"})
+                    .value_counts()
+                    .sort_values(ascending=True)
                 )
-                subject_chart = subject_counts.rename_axis('Subject').reset_index(name='Questions')
-                fig_sub = px.bar(subject_chart, x='Questions', y='Subject', orientation='h', title='Questions by Subject')
-                fig_sub.update_traces(texttemplate='%{x}', textposition='outside', cliponaxis=False,
-                                      hovertemplate='%{y}: %{x} Questions<extra></extra>')
-                fig_sub.update_layout(showlegend=False, margin=dict(t=55, b=25, l=10, r=35),
-                                      xaxis_title='Questions', yaxis_title='', height=320, dragmode=False)
-                st.plotly_chart(fig_sub, use_container_width=True, config=chart_config, key=f'subject_chart_{chart_suffix}')
+                subject_chart = subject_counts.rename_axis("Subject").reset_index(name="Questions")
+                fig_sub = px.bar(
+                    subject_chart, x="Questions", y="Subject", orientation="h",
+                    title="Questions by Subject"
+                )
+                fig_sub.update_traces(hovertemplate="%{y}: %{x} Questions<extra></extra>")
+                fig_sub.update_layout(
+                    showlegend=False, margin=dict(t=55, b=25, l=10, r=35),
+                    xaxis_title="Questions", yaxis_title="", height=320,
+                    dragmode=False
+                )
+                st.plotly_chart(fig_sub, use_container_width=True, config=chart_config, key=f"subject_chart_{chart_suffix}")
 
         with c2:
-            if 'q_pattern' in exam_df.columns:
+            if "q_pattern" in exam_df.columns:
                 pattern_counts = (
-                    exam_df['q_pattern'].fillna('Unclassified').astype(str).str.strip()
-                    .replace({'': 'Unclassified', 'nan': 'Unclassified'})
-                    .value_counts().sort_values(ascending=True)
+                    exam_df["q_pattern"].fillna("Unclassified").astype(str).str.strip()
+                    .replace({"": "Unclassified", "nan": "Unclassified"})
+                    .value_counts()
+                    .sort_values(ascending=True)
                 )
-                pattern_chart = pattern_counts.rename_axis('Pattern').reset_index(name='Questions')
-                fig_pattern = px.bar(pattern_chart, x='Questions', y='Pattern', orientation='h', title='Questions by Pattern')
-                fig_pattern.update_traces(texttemplate='%{x}', textposition='outside', cliponaxis=False,
-                                          hovertemplate='%{y}: %{x} Questions<extra></extra>')
-                fig_pattern.update_layout(showlegend=False, margin=dict(t=55, b=25, l=10, r=35),
-                                          xaxis_title='Questions', yaxis_title='', height=320, dragmode=False)
-                st.plotly_chart(fig_pattern, use_container_width=True, config=chart_config, key=f'pattern_chart_{chart_suffix}')
+                pattern_chart = pattern_counts.rename_axis("Pattern").reset_index(name="Questions")
+                fig_pattern = px.bar(
+                    pattern_chart, x="Questions", y="Pattern", orientation="h",
+                    title="Questions by Pattern"
+                )
+                fig_pattern.update_traces(hovertemplate="%{y}: %{x} Questions<extra></extra>")
+                fig_pattern.update_layout(
+                    showlegend=False, margin=dict(t=55, b=25, l=10, r=35),
+                    xaxis_title="Questions", yaxis_title="", height=320,
+                    dragmode=False
+                )
+                st.plotly_chart(fig_pattern, use_container_width=True, config=chart_config, key=f"pattern_chart_{chart_suffix}")
 
         with c3:
+            # Property AC = difficulty_category is authoritative. This chart
+            # counts the category values from the CURRENT selected dataset only.
             if 'difficulty_category' in exam_df.columns:
                 difficulty_order = ['Easy', 'Moderate', 'Hard', 'Very Hard']
-                diff_series = (exam_df['difficulty_category'].astype('string').str.strip()
-                               .str.replace(r'\s+', ' ', regex=True).fillna('Unclassified'))
+
+                diff_series = (
+                    exam_df['difficulty_category']
+                    .astype('string')
+                    .str.strip()
+                    .str.replace(r'\s+', ' ', regex=True)
+                )
+                diff_series = diff_series.fillna('Unclassified')
+
+                # Exact category counts from property AC; no score-based
+                # reclassification and no use of the master database.
                 diff_counts = diff_series.value_counts(dropna=False)
-                ordered_labels = [x for x in difficulty_order if x in diff_counts.index]
-                ordered_labels += [x for x in diff_counts.index if x not in ordered_labels]
+                ordered_labels = [label for label in difficulty_order if label in diff_counts.index]
+                ordered_labels += [
+                    label for label in diff_counts.index
+                    if label not in ordered_labels
+                ]
+
                 diff_chart_df = pd.DataFrame({
                     'Difficulty': ordered_labels,
-                    'Questions': [int(diff_counts[x]) for x in ordered_labels]
+                    'Questions': [int(diff_counts[label]) for label in ordered_labels]
                 })
+
                 if not diff_chart_df.empty:
-                    fig_diff = px.pie(diff_chart_df, names='Difficulty', values='Questions', hole=0.58,
-                                      title='Difficulty Distribution')
-                    fig_diff.update_traces(textposition='inside', textinfo='label+value+percent',
-                                           hovertemplate='%{label}: %{value} Questions (%{percent})<extra></extra>')
-                    fig_diff.update_layout(showlegend=False, margin=dict(t=55, b=25, l=10, r=10),
-                                           height=320, dragmode=False)
-                    st.plotly_chart(fig_diff, use_container_width=True, config=chart_config,
-                                    key=f'difficulty_chart_{chart_suffix}')
-    else:
-        st.info('No questions match the selected database parameters.')
+                    fig_diff = px.pie(
+                        diff_chart_df,
+                        names='Difficulty',
+                        values='Questions',
+                        hole=0.58,
+                        title='Difficulty Distribution'
+                    )
+                    fig_diff.update_traces(
+                        textposition='inside',
+                        textinfo='none',
+                        hovertemplate='%{label}: %{value} Questions (%{percent})<extra></extra>'
+                    )
+                    fig_diff.update_layout(
+                        showlegend=False,
+                        margin=dict(t=55, b=25, l=10, r=10),
+                        height=320,
+                        dragmode=False
+                    )
+                    st.plotly_chart(
+                        fig_diff,
+                        use_container_width=True,
+                        config=chart_config,
+                        key=f"difficulty_chart_{chart_suffix}"
+                    )
 
-    st.markdown('---')
-    with st.expander('⚙️ Configure Mocks', expanded=True):
-        # --------------------------------------------------------
-        # FULL PAPER: SINGLE PAPER SELECTION
-        # --------------------------------------------------------
-        st.markdown('### ⏱️ Attempt Full Paper')
-        st.caption('Select exactly one UPSC paper, then attempt the complete paper as it was asked.')
-
-        full_col1, full_col2, full_col3 = st.columns(3, gap='medium')
-
-        full_exam_options = exam_options
-        current_full_exam = st.session_state.get('full_paper_exam_selection', 'CAPF-AC')
-        if current_full_exam not in full_exam_options and full_exam_options:
-            current_full_exam = full_exam_options[0]
-            st.session_state['full_paper_exam_selection'] = current_full_exam
-
-        with full_col1:
-            full_paper_exam = st.selectbox(
-                'Exam', options=full_exam_options,
-                index=full_exam_options.index(current_full_exam) if current_full_exam in full_exam_options else 0,
-                key='full_paper_exam_selection'
-            )
-
-        full_year_source = df.copy()
-        if 'exam' in full_year_source.columns:
-            full_year_source = full_year_source[full_year_source['exam'].astype(str).str.strip().eq(full_paper_exam)]
-        full_year_options = sorted(
-            full_year_source['year'].dropna().astype(str).str.strip().replace('', pd.NA).dropna().unique().tolist()
-        ) if 'year' in full_year_source.columns else []
-        current_full_year = st.session_state.get('full_paper_year_selection', '2025')
-        if current_full_year not in full_year_options and full_year_options:
-            current_full_year = full_year_options[-1]
-            st.session_state['full_paper_year_selection'] = current_full_year
-
-        with full_col2:
-            full_paper_year = st.selectbox(
-                'Exam Year', options=full_year_options,
-                index=full_year_options.index(current_full_year) if current_full_year in full_year_options else 0,
-                key='full_paper_year_selection'
-            )
-
-        full_cycle_options = []
-        if full_paper_exam == 'CDS' and 'cycle' in df.columns:
-            full_cycle_source = df[
-                df['exam'].astype(str).str.strip().eq('CDS') &
-                df['year'].astype(str).str.strip().eq(str(full_paper_year).strip())
-            ]
-            full_cycle_options = sorted(
-                full_cycle_source['cycle'].dropna().astype(str).str.strip().replace('', pd.NA).dropna().unique().tolist()
-            )
-
-        if full_paper_exam == 'CDS':
-            current_full_cycle = st.session_state.get('full_paper_cycle_selection', 'I')
-            if current_full_cycle not in full_cycle_options and full_cycle_options:
-                current_full_cycle = full_cycle_options[0]
-                st.session_state['full_paper_cycle_selection'] = current_full_cycle
-            with full_col3:
-                full_paper_cycle = st.selectbox(
-                    'Exam Cycle', options=full_cycle_options,
-                    index=full_cycle_options.index(current_full_cycle) if current_full_cycle in full_cycle_options else 0,
-                    key='full_paper_cycle_selection'
-                )
-        else:
-            st.session_state['full_paper_cycle_selection'] = ''
-            full_paper_cycle = ''
-            with full_col3:
-                st.markdown('**Paper**')
-                st.info(f'{full_paper_exam} {full_paper_year}')
-
-        # This is the only full-paper dataset. It is deliberately independent
-        # of the multi-select analytics dataset above.
-        if 'exam' in df.columns and 'year' in df.columns:
-            full_paper_df = df[
-                df['exam'].astype(str).str.strip().eq(str(full_paper_exam).strip()) &
-                df['year'].astype(str).str.strip().eq(str(full_paper_year).strip())
-            ].copy()
-            if full_paper_exam == 'CDS' and full_paper_cycle and 'cycle' in full_paper_df.columns:
-                full_paper_df = full_paper_df[
-                    full_paper_df['cycle'].astype(str).str.strip().eq(str(full_paper_cycle).strip())
-                ]
-        else:
-            full_paper_df = df.copy()
-
-        full_paper_label = (
-            'Begin 120-question timed assessment (2 hours)'
-            if full_paper_exam == 'CDS'
-            else 'Begin 125-question timed assessment (2 hours)'
-        )
-        if not full_paper_df.empty:
-            st.caption(f'Selected paper: {full_paper_exam} {full_paper_year}' +
-                       (f' {full_paper_cycle}' if full_paper_exam == 'CDS' and full_paper_cycle else '') +
-                       f' · {len(full_paper_df)} questions')
+    st.markdown("---")
+    with st.expander("⚙️ Configure Mocks", expanded=True):
+        full_paper_label = "Begin 120-question timed assessment (2 hours)" if selected_exam == "CDS" else "Begin 125-question timed assessment (2 hours)"
+        st.markdown("### ⏱️ Attempt Full Paper")
+        st.caption("Start a complete, timed assessment using every question in the selected paper.")
 
         if 'full_paper_toggle' not in st.session_state:
             st.session_state['full_paper_toggle'] = False
-        full_paper = st.checkbox(full_paper_label, key='full_paper_toggle', on_change=reset_test_state)
 
-        if full_paper:
-            filtered_df = full_paper_df
-            is_exam_mode = True
-            selected_exam = full_paper_exam
-            selected_year = full_paper_year
-            selected_cycle = full_paper_cycle
-        else:
-            # Practice-set filters remain below and are independent of the
-            # multi-select analytics controls and single-paper full mock.
-            selected_exam = full_paper_exam
-            selected_year = full_paper_year
-            selected_cycle = full_paper_cycle
-            is_exam_mode = False
-            filtered_df = pd.DataFrame()
+        full_paper = st.checkbox(
+            full_paper_label,
+            key="full_paper_toggle",
+            on_change=reset_test_state
+        )
 
-            st.markdown("<div style='text-align:center; color:#64748B; font-weight:800; margin:20px 0 8px;'>OR</div>", unsafe_allow_html=True)
-            st.markdown('#### FILTER PRACTICE SET')
-            st.caption('Build a custom PYQ practice set across subjects, topics, exams, years, cycles and difficulty. Questions appear only after you click Let\'s Go.')
+        if not full_paper:
+            st.markdown(
+                "<div style='text-align:center; color:#64748B; font-weight:800; margin:20px 0 8px;'>OR</div>",
+                unsafe_allow_html=True
+            )
+            st.markdown("#### FILTER PRACTICE SET")
+            st.caption(
+                "Build a custom PYQ practice set across subjects, topics, exams, years, "
+                "cycles and difficulty. Questions appear only after you click Let's Go."
+            )
 
+            # --------------------------------------------------------
+            # PRACTICE SET FILTERS
+            # --------------------------------------------------------
+            # These controls intentionally live outside a Streamlit form so
+            # dependent filters (especially Topic and Cycle) update immediately.
             def mark_practice_filters_dirty():
+                """Hide the previously generated set when a filter changes."""
                 st.session_state['practice_filters_applied'] = False
                 st.session_state['practice_filter_signature'] = None
 
             st.markdown(
-                "<div class='filter-panel'><div class='filter-panel-title'>🎯 Build Your Practice Set</div>"
-                "<div class='filter-panel-subtitle'>Query the PYQ database by exam, year, cycle, subject, topic and difficulty. "
-                "Your questions will appear only after you click <strong>Let's Go</strong>.</div></div>",
+                "<div class='filter-panel'>"
+                "<div class='filter-panel-title'>🎯 Build Your Practice Set</div>"
+                "<div class='filter-panel-subtitle'>"
+                "Query the PYQ database by exam, year, cycle, subject, topic and difficulty. "
+                "Your questions will appear only after you click <strong>Let's Go</strong>."
+                "</div></div>",
                 unsafe_allow_html=True
             )
 
-            practice_col1, practice_col2 = st.columns(2, gap='medium')
-            practice_exam_options = exam_options
-            with practice_col1:
-                practice_exam_selection = st.multiselect('Select Exam(s)', practice_exam_options,
-                    default=[x for x in st.session_state.get('practice_exam_selection', []) if x in practice_exam_options],
-                    key='practice_exam_selection', help='Leave empty to include every exam.', on_change=mark_practice_filters_dirty)
-            with practice_col2:
-                practice_year_source = df.copy()
-                if practice_exam_selection:
-                    practice_year_source = practice_year_source[practice_year_source['exam'].astype(str).str.strip().isin(practice_exam_selection)]
-                practice_year_options = sorted(practice_year_source['year'].dropna().astype(str).str.strip().unique().tolist()) if 'year' in practice_year_source.columns else []
-                practice_year_selection = st.multiselect('Select Year(s)', practice_year_options,
-                    default=[x for x in st.session_state.get('practice_year_selection', []) if x in practice_year_options],
-                    key='practice_year_selection', help='Leave empty to include every year.', on_change=mark_practice_filters_dirty)
+            practice_col1, practice_col2 = st.columns(2, gap="medium")
 
-            practice_col3, practice_col4 = st.columns(2, gap='medium')
-            show_practice_cycle = not practice_exam_selection or 'CDS' in practice_exam_selection
+            with practice_col1:
+                practice_exam_options = sorted(
+                    df['exam'].dropna().astype(str).str.strip().replace("", pd.NA).dropna().unique().tolist()
+                ) if 'exam' in df.columns else []
+
+                practice_exam_selection = st.multiselect(
+                    "Select Exam(s)",
+                    options=practice_exam_options,
+                    default=st.session_state.get("practice_exam_selection", []),
+                    key="practice_exam_selection",
+                    help="Leave empty to include questions from every exam in the database.",
+                    on_change=mark_practice_filters_dirty
+                )
+
+            with practice_col2:
+                practice_year_options = sorted(
+                    df['year'].dropna().astype(str).str.strip().replace("", pd.NA).dropna().unique().tolist()
+                ) if 'year' in df.columns else []
+
+                practice_year_selection = st.multiselect(
+                    "Select Year(s)",
+                    options=practice_year_options,
+                    default=st.session_state.get("practice_year_selection", []),
+                    key="practice_year_selection",
+                    help="Leave empty to include questions from every year.",
+                    on_change=mark_practice_filters_dirty
+                )
+
+            practice_col3, practice_col4 = st.columns(2, gap="medium")
+
+            # Cycle is meaningful for CDS. Do not clutter the interface with
+            # a cycle selector when CAPF (or another non-CDS exam) is selected.
+            show_practice_cycle = "CDS" in practice_exam_selection
+
             with practice_col3:
                 if show_practice_cycle and 'cycle' in df.columns:
-                    cycle_source = df[df['exam'].astype(str).str.strip().eq('CDS')].copy()
+                    cycle_source = df.copy()
+                    cycle_source['exam'] = cycle_source['exam'].astype(str).str.strip()
+                    cycle_source['year'] = cycle_source['year'].astype(str).str.strip()
+                    cycle_source = cycle_source[cycle_source['exam'].eq("CDS")]
+
                     if practice_year_selection:
-                        cycle_source = cycle_source[cycle_source['year'].astype(str).str.strip().isin(practice_year_selection)]
-                    cycle_series = cycle_source['cycle'].astype('string').str.strip().replace({'': pd.NA, 'nan': pd.NA, 'None': pd.NA})
+                        cycle_source = cycle_source[
+                            cycle_source['year'].isin(practice_year_selection)
+                        ]
+
+                    cycle_series = (
+                        cycle_source['cycle']
+                        .astype('string')
+                        .str.strip()
+                        .replace({"": pd.NA, "nan": pd.NA, "None": pd.NA})
+                    )
                     practice_cycle_values = sorted(cycle_series.dropna().unique().tolist())
-                    if cycle_series.isna().any(): practice_cycle_values.append('N/A')
-                    practice_cycle_selection = st.multiselect('Select Cycle(s)', practice_cycle_values,
-                        default=[x for x in st.session_state.get('practice_cycle_selection', []) if x in practice_cycle_values],
-                        key='practice_cycle_selection', help='CDS cycles only. Leave empty for all.', on_change=mark_practice_filters_dirty)
+                    if cycle_series.isna().any():
+                        practice_cycle_values.append("N/A")
+
+                    valid_previous_cycles = [
+                        x for x in st.session_state.get("practice_cycle_selection", [])
+                        if x in practice_cycle_values
+                    ]
+
+                    practice_cycle_selection = st.multiselect(
+                        "Select Cycle(s)",
+                        options=practice_cycle_values,
+                        default=valid_previous_cycles,
+                        key="practice_cycle_selection",
+                        help="CDS cycles only. Leave empty to include every selected CDS cycle.",
+                        on_change=mark_practice_filters_dirty
+                    )
                 else:
+                    # Clear stale CDS cycle selections when the user switches
+                    # back to CAPF or another non-CDS-only selection.
                     st.session_state['practice_cycle_selection'] = []
                     practice_cycle_selection = []
-            with practice_col4:
-                practice_subject_options = sorted(df['subject'].dropna().astype(str).str.strip().unique().tolist()) if 'subject' in df.columns else []
-                practice_subject_selection = st.multiselect('Select Subject(s)', practice_subject_options,
-                    default=[x for x in st.session_state.get('practice_subject_selection', []) if x in practice_subject_options],
-                    key='practice_subject_selection', help='Example: select Polity to practice Polity across exams.', on_change=mark_practice_filters_dirty)
 
+            with practice_col4:
+                practice_subject_options = sorted(
+                    df['subject'].dropna().astype(str).str.strip().replace("", pd.NA).dropna().unique().tolist()
+                ) if 'subject' in df.columns else []
+
+                practice_subject_selection = st.multiselect(
+                    "Select Subject(s)",
+                    options=practice_subject_options,
+                    default=st.session_state.get("practice_subject_selection", []),
+                    key="practice_subject_selection",
+                    help="Example: select Polity to practice Polity PYQs across multiple exams.",
+                    on_change=mark_practice_filters_dirty
+                )
+
+            # Topic options are dynamically scoped to the currently selected
+            # subject(s). Selecting History therefore shows History topics only.
             if 'topic' in df.columns:
                 topic_source = df.copy()
-                if practice_subject_selection:
-                    topic_source = topic_source[topic_source['subject'].astype(str).str.strip().isin(practice_subject_selection)]
-                practice_topic_options = sorted(topic_source['topic'].dropna().astype(str).str.strip().unique().tolist())
+                if practice_subject_selection and 'subject' in topic_source.columns:
+                    topic_source = topic_source[
+                        topic_source['subject'].astype(str).str.strip().isin(practice_subject_selection)
+                    ]
+
+                practice_topic_series = (
+                    topic_source['topic']
+                    .astype('string')
+                    .str.strip()
+                    .replace({"": pd.NA, "nan": pd.NA, "None": pd.NA})
+                )
+                practice_topic_options = sorted(practice_topic_series.dropna().unique().tolist())
             else:
                 practice_topic_options = []
-            practice_topic_selection = st.multiselect('Select Topic(s)', practice_topic_options,
-                default=[x for x in st.session_state.get('practice_topic_selection', []) if x in practice_topic_options],
-                key='practice_topic_selection', help='Topics are automatically limited to the selected subject(s).', on_change=mark_practice_filters_dirty)
+
+            valid_previous_topics = [
+                x for x in st.session_state.get("practice_topic_selection", [])
+                if x in practice_topic_options
+            ]
+
+            practice_topic_selection = st.multiselect(
+                "Select Topic(s)",
+                options=practice_topic_options,
+                default=valid_previous_topics,
+                key="practice_topic_selection",
+                help=(
+                    "Leave empty for all topics. Select a subject first to see only "
+                    "the topics belonging to that subject."
+                ),
+                on_change=mark_practice_filters_dirty
+            )
 
             difficulty_order = ['Easy', 'Moderate', 'Hard', 'Very Hard']
             if 'difficulty_category' in df.columns:
-                diff_values = df['difficulty_category'].astype('string').str.strip().str.replace(r'\s+', ' ', regex=True).dropna().unique().tolist()
-                available_practice_difficulties = [x for x in difficulty_order if x in diff_values] + [x for x in sorted(diff_values) if x not in difficulty_order]
+                practice_difficulty_values = (
+                    df['difficulty_category']
+                    .astype('string')
+                    .str.strip()
+                    .str.replace(r'\s+', ' ', regex=True)
+                    .dropna()
+                    .unique()
+                    .tolist()
+                )
+                available_practice_difficulties = [
+                    x for x in difficulty_order if x in practice_difficulty_values
+                ]
+                available_practice_difficulties += [
+                    x for x in sorted(practice_difficulty_values)
+                    if x not in available_practice_difficulties
+                ]
             else:
                 available_practice_difficulties = []
-            practice_difficulty_selection = st.multiselect('Select Difficulty', available_practice_difficulties,
-                default=[x for x in st.session_state.get('practice_difficulty_selection', []) if x in available_practice_difficulties],
-                key='practice_difficulty_selection', help='Leave empty for every difficulty.', on_change=mark_practice_filters_dirty)
+
+            practice_difficulty_selection = st.multiselect(
+                "Select Difficulty",
+                options=available_practice_difficulties,
+                default=st.session_state.get("practice_difficulty_selection", []),
+                key="practice_difficulty_selection",
+                help="Leave empty to include every difficulty.",
+                on_change=mark_practice_filters_dirty
+            )
 
             st.markdown("<div class='filter-divider'></div>", unsafe_allow_html=True)
-            practice_mode = st.radio('Testing Mode', ['Instant Feedback (Practice one by one)', 'Full Mock Exam (Submit all at the end)'],
-                index=1 if st.session_state.get('practice_testing_mode') == 'Full Mock Exam (Submit all at the end)' else 0,
-                key='practice_testing_mode', horizontal=True, on_change=mark_practice_filters_dirty)
-            st.caption("💡 Example: select Polity and leave Exam, Year, Cycle, Topic and Difficulty empty to practice all available Polity PYQs.")
 
-            if st.button('🚀 Let\'s Go', type='primary', use_container_width=True, key='apply_practice_filters'):
+            practice_mode = st.radio(
+                "Testing Mode",
+                [
+                    "Instant Feedback (Practice one by one)",
+                    "Full Mock Exam (Submit all at the end)"
+                ],
+                index=(
+                    1
+                    if st.session_state.get("practice_testing_mode") == "Full Mock Exam (Submit all at the end)"
+                    else 0
+                ),
+                key="practice_testing_mode",
+                horizontal=True,
+                on_change=mark_practice_filters_dirty
+            )
+
+            st.caption(
+                "💡 Example: select **Polity** and leave Exam, Year, Cycle, Topic and Difficulty empty "
+                "to practice all available Polity PYQs across the database."
+            )
+
+            apply_practice_filters = st.button(
+                "🚀 Let's Go",
+                type="primary",
+                use_container_width=True,
+                key="apply_practice_filters"
+            )
+
+            if apply_practice_filters:
                 st.session_state['practice_filters_applied'] = True
                 st.session_state['practice_filter_signature'] = (
-                    tuple(practice_exam_selection), tuple(practice_year_selection), tuple(practice_cycle_selection),
-                    tuple(practice_subject_selection), tuple(practice_topic_selection), tuple(practice_difficulty_selection), practice_mode
+                    tuple(practice_exam_selection),
+                    tuple(practice_year_selection),
+                    tuple(practice_cycle_selection),
+                    tuple(practice_subject_selection),
+                    tuple(practice_topic_selection),
+                    tuple(practice_difficulty_selection),
+                    practice_mode
                 )
-                reset_test_state()
-                st.session_state['practice_filters_applied'] = True
-                st.session_state['practice_filter_signature'] = (
-                    tuple(practice_exam_selection), tuple(practice_year_selection), tuple(practice_cycle_selection),
-                    tuple(practice_subject_selection), tuple(practice_topic_selection), tuple(practice_difficulty_selection), practice_mode
-                )
+                # Ensure a newly generated practice set starts from a clean attempt.
+                st.session_state['user_answers'] = {}
+                st.session_state['checked_questions'] = set()
+                st.session_state['error_tags'] = {}
+                st.session_state['marked_for_review'] = set()
+                st.session_state['exam_submitted'] = False
+                st.session_state['exam_started'] = False
+                st.session_state['start_time'] = None
+                st.session_state['auto_submitted'] = False
+                st.session_state['current_page'] = 0
+                st.session_state['scroll_trigger'] = False
+                st.session_state['review_selected_qid'] = None
+                st.session_state['show_revision_notes'] = False
+                st.session_state['test_run_id'] = st.session_state.get('test_run_id', 0) + 1
                 st.rerun()
 
+            # --------------------------------------------------------
+            # BUILD PRACTICE DATASET ONLY AFTER "LET'S GO"
+            # --------------------------------------------------------
             if st.session_state.get('practice_filters_applied', False):
-                applied_exams, applied_years, applied_cycles, applied_subjects, applied_topics, applied_difficulties, applied_mode = st.session_state.get(
-                    'practice_filter_signature', ((), (), (), (), (), (), 'Instant Feedback (Practice one by one)')
+                (
+                    applied_exams,
+                    applied_years,
+                    applied_cycles,
+                    applied_subjects,
+                    applied_topics,
+                    applied_difficulties,
+                    applied_mode
+                ) = st.session_state.get(
+                    'practice_filter_signature',
+                    ((), (), (), (), (), (), "Instant Feedback (Practice one by one)")
                 )
-                filtered_df = df.copy()
-                if applied_exams: filtered_df = filtered_df[filtered_df['exam'].astype(str).str.strip().isin(applied_exams)]
-                if applied_years: filtered_df = filtered_df[filtered_df['year'].astype(str).str.strip().isin(applied_years)]
-                if applied_cycles and 'cycle' in filtered_df.columns:
-                    cc = filtered_df['cycle'].astype('string').str.strip().replace({'': pd.NA, 'nan': pd.NA, 'None': pd.NA})
-                    cm = cc.isin([x for x in applied_cycles if x != 'N/A'])
-                    if 'N/A' in applied_cycles: cm = cm | cc.isna()
-                    if applied_exams and set(applied_exams) == {'CDS'}: filtered_df = filtered_df[cm]
-                    elif applied_exams and 'CDS' in applied_exams: filtered_df = filtered_df[(filtered_df['exam'].astype(str).str.strip() != 'CDS') | cm]
-                    else: filtered_df = filtered_df[cm]
-                if applied_subjects: filtered_df = filtered_df[filtered_df['subject'].astype(str).str.strip().isin(applied_subjects)]
-                if applied_topics: filtered_df = filtered_df[filtered_df['topic'].astype(str).str.strip().isin(applied_topics)]
-                if applied_difficulties: filtered_df = filtered_df[filtered_df['difficulty_category'].astype(str).str.strip().isin(applied_difficulties)]
-                is_exam_mode = 'Full Mock Exam' in applied_mode
 
-                if filtered_df.empty:
-                    st.warning('No questions match the selected practice filters. Modify the filters and click Let\'s Go again.')
+                filtered_df = df.copy()
+
+                if applied_exams and 'exam' in filtered_df.columns:
+                    filtered_df = filtered_df[
+                        filtered_df['exam'].astype(str).str.strip().isin(applied_exams)
+                    ]
+
+                if applied_years and 'year' in filtered_df.columns:
+                    filtered_df = filtered_df[
+                        filtered_df['year'].astype(str).str.strip().isin(applied_years)
+                    ]
+
+                if applied_cycles and 'cycle' in filtered_df.columns:
+                    cycle_clean = (
+                        filtered_df['cycle']
+                        .astype('string')
+                        .str.strip()
+                        .replace({"": pd.NA, "nan": pd.NA, "None": pd.NA})
+                    )
+                    cycle_mask = cycle_clean.isin([x for x in applied_cycles if x != "N/A"])
+                    if "N/A" in applied_cycles:
+                        cycle_mask = cycle_mask | cycle_clean.isna()
+                    filtered_df = filtered_df[cycle_mask]
+
+                if applied_subjects and 'subject' in filtered_df.columns:
+                    filtered_df = filtered_df[
+                        filtered_df['subject'].astype(str).str.strip().isin(applied_subjects)
+                    ]
+
+                if applied_topics and 'topic' in filtered_df.columns:
+                    filtered_df = filtered_df[
+                        filtered_df['topic'].astype(str).str.strip().isin(applied_topics)
+                    ]
+
+                if applied_difficulties and 'difficulty_category' in filtered_df.columns:
+                    difficulty_clean = (
+                        filtered_df['difficulty_category']
+                        .astype('string')
+                        .str.strip()
+                        .str.replace(r'\s+', ' ', regex=True)
+                    )
+                    filtered_df = filtered_df[
+                        difficulty_clean.isin(applied_difficulties)
+                    ]
+
+                is_exam_mode = "Full Mock Exam" in applied_mode
+
+                # Make the active practice set visible before the test starts.
+                if not filtered_df.empty:
+                    selected_filter_parts = []
+                    if applied_exams:
+                        selected_filter_parts.append(f"Exam: {', '.join(applied_exams)}")
+                    if applied_years:
+                        selected_filter_parts.append(f"Year: {', '.join(applied_years)}")
+                    if applied_cycles:
+                        selected_filter_parts.append(f"Cycle: {', '.join(applied_cycles)}")
+                    if applied_subjects:
+                        selected_filter_parts.append(f"Subject: {', '.join(applied_subjects)}")
+                    if applied_topics:
+                        selected_filter_parts.append(f"Topic: {', '.join(applied_topics)}")
+                    if applied_difficulties:
+                        selected_filter_parts.append(f"Difficulty: {', '.join(applied_difficulties)}")
+
+                    st.success(
+                        f"✅ Practice set ready — {len(filtered_df)} questions"
+                        + (
+                            f"  |  {' · '.join(selected_filter_parts)}"
+                            if selected_filter_parts else "  |  All available PYQs"
+                        )
+                    )
                 else:
-                    st.success(f'Practice set ready: {len(filtered_df)} questions')
+                    st.warning(
+                        "No questions match the selected filters. Modify the filters and click "
+                        "Let's Go again."
+                    )
+            else:
+                filtered_df = pd.DataFrame()
+                is_exam_mode = False
+
+        else:
+            filtered_df = exam_df
+            is_exam_mode = True
 
 else:
-    # IMMERSIVE MODE: preserve the already-selected single full-paper dataset.
-    selected_exam = st.session_state.get('full_paper_exam_selection', 'CAPF-AC')
-    selected_year = st.session_state.get('full_paper_year_selection', '2025')
-    selected_cycle = st.session_state.get('full_paper_cycle_selection', '')
-    full_paper = True
-    is_exam_mode = True
+    # IMMERSIVE MODE IS ACTIVE - Setup variables silently without showing the UI
     if 'exam' in df.columns and 'year' in df.columns:
-        exam_df = df[(df['exam'].astype(str).str.strip() == str(selected_exam).strip()) &
-                     (df['year'].astype(str).str.strip() == str(selected_year).strip())].copy()
-        if selected_exam == 'CDS' and selected_cycle and 'cycle' in exam_df.columns:
-            exam_df = exam_df[exam_df['cycle'].astype(str).str.strip() == str(selected_cycle).strip()]
+        exam_df = df[(df['exam'] == str(selected_exam).strip()) & (df['year'] == str(selected_year).strip())]
+        if selected_exam == "CDS" and selected_cycle and 'cycle' in exam_df.columns:
+            exam_df = exam_df[exam_df['cycle'] == str(selected_cycle).strip()]
     else:
-        exam_df = df.copy()
+        exam_df = df
+    full_paper = True
     filtered_df = exam_df
+    is_exam_mode = True
 
-# Streamlit's current render state: used only to control whether the
-# configuration/header UI should be shown above the test arena.
-is_active_full_mock = st.session_state.get('exam_started', False)
-
-# Navigation is hidden during a focused timed test and while Revision Notes are shown.
+# Keep navigation out of the focused, timed examination state. Revision Notes
+# has its own return action so the submitted analysis remains intact.
 is_active_timed_test = full_paper and st.session_state['exam_started'] and not st.session_state['exam_submitted']
 if not is_active_timed_test and not st.session_state['show_revision_notes']:
     nav_space, nav_back, nav_home = st.columns([4, 1, 1])
     with nav_back:
-        st.button('← Go Back', key='go_back_button', use_container_width=True, on_click=go_back_to_pre_test)
+        st.button("← Go Back", key="go_back_button", use_container_width=True, on_click=go_back_to_pre_test)
     with nav_home:
-        st.button('⌂ Home', key='home_button', use_container_width=True, on_click=go_home)
+        st.button("⌂ Home", key="home_button", use_container_width=True, on_click=go_home)
 
 # ==========================================
 # --- MAIN CONTENT RENDER (TEST ARENA) ---
@@ -1802,31 +2399,13 @@ else:
                     st.success("🎯 No errors recorded in this test set!")
 
             with tab_roadmap:
-                roadmap_points = []
-                if attempted > 0 and accuracy < 60:
-                    roadmap_points.append("⚠️ **Elimination Discipline:** Overall accuracy below 60%. Restrict speculative guessing.")
-                
-                if 'subj_summary' in locals() and not subj_summary.empty:
-                    weak_subjects = subj_summary[subj_summary['Accuracy %'] < 60].index.tolist()
-                    if weak_subjects:
-                        roadmap_points.append(f"📚 **Priority Revision:** Focus on **{', '.join(weak_subjects)}** (<60% accuracy).")
-
-                if not mistakes_df.empty:
-                    error_counts = mistakes_df['Error_Type'].value_counts()
-                    if not error_counts.empty:
-                        top_error = error_counts.idxmax()
-                        if top_error == "Conceptual Gap":
-                            roadmap_points.append("🧠 **Theory Re-anchoring:** 'Conceptual Gap' is dominant. Re-read standard sources for these topics.")
-                        elif top_error == "Lack of Revision":
-                            roadmap_points.append("📝 **Active Recall Drill:** Revisit factual areas represented by the missed questions.")
-                        elif top_error == "Analytical Error":
-                            roadmap_points.append("🔍 **Analytical Practice:** Rework the reasoning chain behind the missed analytical questions.")
-
-                if not roadmap_points:
-                    roadmap_points.append("🔥 **Maintain Consistency:** Excellent performance! Continue timed drills.")
-
-                for pt in roadmap_points:
-                    st.markdown(f"- {pt}")
+                render_strategic_roadmap(
+                    analysis_df,
+                    selected_exam,
+                    selected_year,
+                    selected_cycle,
+                    attempt_type="Full Paper" if is_exam_mode else "Practice Set"
+                )
 
             if is_exam_mode and st.session_state['exam_submitted']:
                 st.button(
