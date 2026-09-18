@@ -24,7 +24,7 @@ def get_base64_of_bin_file(bin_file):
         return None
 
 # Attempt to read the camo image
-camo_img_base64 = get_base64_of_bin_file('images.jpg')
+camo_img_base64 = get_base64_of_bin_file(str(__import__('pathlib').Path(__file__).resolve().parent / 'images.jpg'))
 
 if camo_img_base64:
     background_css = 'url("data:image/jpeg;base64,' + camo_img_base64 + '")'
@@ -389,7 +389,36 @@ if 'master_db' not in st.session_state:
     with st.spinner("Downloading Tactical Database..."):
         st.session_state['master_db'] = fetch_google_sheet()
 
-df = st.session_state['master_db']
+df = st.session_state['master_db'].copy()
+
+# ==========================================
+# --- DIFFICULTY NORMALIZATION ---
+# ==========================================
+# difficulty_score is authoritative. difficulty_category is derived from it
+# so stale/misclassified sheet categories cannot distort the dashboard.
+if 'difficulty_score' in df.columns:
+    df['difficulty_score'] = pd.to_numeric(df['difficulty_score'], errors='coerce')
+    df['difficulty_score'] = df['difficulty_score'].clip(lower=0, upper=100)
+
+if 'difficulty_category' in df.columns:
+    df['difficulty_category'] = (
+        df['difficulty_category'].astype(str).str.strip().str.title()
+        .replace({'Nan': pd.NA, 'None': pd.NA, '': pd.NA})
+    )
+
+def classify_difficulty(score):
+    if pd.isna(score):
+        return pd.NA
+    if score < 25:
+        return 'Easy'
+    if score < 50:
+        return 'Moderate'
+    if score < 80:
+        return 'Hard'
+
+if 'difficulty_score' in df.columns:
+    scored = df['difficulty_score'].notna()
+    df.loc[scored, 'difficulty_category'] = df.loc[scored, 'difficulty_score'].apply(classify_difficulty)
 
 # ==========================================
 # --- SESSION STATE INITIALIZATION ---
@@ -428,14 +457,59 @@ if 'show_revision_notes' not in st.session_state:
 # ==========================================
 # --- HERO SECTION ---
 # ==========================================
-st.markdown("""
-<div class="hero-banner">
-    <div class="hero-title">DEFENCE PATHSHALA</div>
-    <div class="hero-tagline">PYQ Intelligence Engine</div>
+st.markdown(f"""
+<div style="
+    background:{background_css};
+    background-size:100% 100%;
+    background-position:center;
+    background-repeat:no-repeat;
+    background-color:#4B5320;
+    padding:50px 20px;
+    border-radius:12px;
+    text-align:center;
+    margin-bottom:15px;
+    box-shadow:0 6px 15px rgba(0,0,0,0.5);
+    display:block !important;
+    visibility:visible !important;
+    opacity:1 !important;
+">
+    <div style="
+        font-family:'Black Ops One','Impact','Arial Black',sans-serif;
+        font-weight:400;
+        font-size:2.8rem;
+        line-height:1.2;
+        color:#FFFFFF;
+        letter-spacing:2px;
+        text-transform:uppercase;
+        text-shadow:2px 2px 4px rgba(0,0,0,0.65);
+    ">DEFENCE PATHSHALA</div>
+    <div style="
+        font-family:'Inter','Segoe UI',sans-serif;
+        font-size:1.15rem;
+        color:#FFFFFF;
+        margin-top:8px;
+        font-weight:800;
+        letter-spacing:1.5px;
+        text-transform:uppercase;
+        text-shadow:1px 1px 3px rgba(0,0,0,0.65);
+    ">PYQ INTELLIGENCE ENGINE</div>
 </div>
-""", unsafe_allow_html=True)
 
-st.markdown('<div class="dash-intro">Transform raw PYQs into a tactical, data-driven preparation engine. Stop passive reading and start actively eliminating. This intelligence dashboard analyzes your performance patterns, isolates specific examiner traps, and dynamically builds a personalized syllabus roadmap to maximize your final score.</div>', unsafe_allow_html=True)
+<div style="
+    background:#F8FAFC;
+    border-left:5px solid #F59E0B;
+    padding:14px;
+    border-radius:6px;
+    font-size:0.95rem;
+    text-align:center;
+    margin:20px auto;
+    font-weight:700;
+    color:#0F172A;
+    box-shadow:0 2px 4px rgba(0,0,0,0.02);
+">🧠 Built by UPSC CAPF AC AIR 163 &nbsp;|&nbsp; IIT Kanpur &nbsp;|&nbsp; CDS ×4</div>
+
+<div class="dash-intro">Transform raw PYQs into a tactical, data-driven preparation engine. Stop passive reading and start actively eliminating. This intelligence dashboard analyzes your performance patterns, isolates specific examiner traps, and dynamically builds a personalized syllabus roadmap to maximize your final score.</div>
+""", unsafe_allow_html=True)
 
 # ==========================================
 # --- EXAM, YEAR, & CYCLE SELECTION ---
@@ -532,12 +606,22 @@ if not is_active_full_mock:
         with c3:
             if 'difficulty_category' in exam_df.columns:
                 difficulty_order = ['Easy', 'Moderate', 'Hard', 'Very Hard']
-                diff_counts = exam_df['difficulty_category'].astype(str).str.strip().value_counts()
-                diff_order_present = [x for x in difficulty_order if x in diff_counts.index] + [x for x in diff_counts.index if x not in difficulty_order]
-                fig_diff = px.pie(exam_df, names='difficulty_category', hole=0.5, title="", category_orders={'difficulty_category': diff_order_present})
-                fig_diff.update_traces(textposition='inside', textinfo='label+value', hovertemplate="%{label}: %{value} Questions<extra></extra>")
-                fig_diff.update_layout(dragmode=False, showlegend=False, margin=dict(t=20, b=20, l=10, r=10), annotations=[dict(text="Difficulty", x=0.5, y=0.5, font_size=12, showarrow=False, font_weight="bold")])
-                st.plotly_chart(fig_diff, use_container_width=True, config=chart_config, key="global_difficulty_chart")
+                diff_series = exam_df['difficulty_category'].astype('string').str.strip()
+                diff_counts = diff_series.value_counts(dropna=True)
+                diff_counts = diff_counts.reindex(difficulty_order).dropna()
+                if not diff_counts.empty:
+                    diff_chart_df = diff_counts.rename_axis('difficulty_category').reset_index(name='count')
+                    fig_diff = px.pie(
+                        diff_chart_df,
+                        names='difficulty_category',
+                        values='count',
+                        hole=0.5,
+                        title="",
+                        category_orders={'difficulty_category': difficulty_order}
+                    )
+                    fig_diff.update_traces(textposition='inside', textinfo='label+value', hovertemplate="%{label}: %{value} Questions<extra></extra>")
+                    fig_diff.update_layout(dragmode=False, showlegend=False, margin=dict(t=20, b=20, l=10, r=10), annotations=[dict(text="Difficulty", x=0.5, y=0.5, font_size=12, showarrow=False, font_weight="bold")])
+                    st.plotly_chart(fig_diff, use_container_width=True, config=chart_config, key="global_difficulty_chart")
 
     st.markdown("---")
     with st.expander("⚙️ Configure Mocks", expanded=True):
@@ -561,13 +645,26 @@ if not is_active_full_mock:
             st.caption("Choose a focused set of questions. These controls are optional alternatives to the timed full paper.")
             selected_subject = st.multiselect("Select Subject", exam_df['subject'].unique() if 'subject' in exam_df.columns else [], default=[], key="subject_selection", on_change=reset_test_state)
             difficulty_order = ['Easy', 'Moderate', 'Hard', 'Very Hard']
-            available_difficulties = [x for x in difficulty_order if x in exam_df['difficulty_category'].dropna().astype(str).str.strip().unique()] if 'difficulty_category' in exam_df.columns else []
             if 'difficulty_category' in exam_df.columns:
-                available_difficulties += [x for x in exam_df['difficulty_category'].dropna().astype(str).str.strip().unique() if x not in available_difficulties]
-            selected_difficulty = st.multiselect("Select Difficulty", available_difficulties, default=[], key="difficulty_selection", on_change=reset_test_state)
+                available_difficulties = [
+                    x for x in difficulty_order
+                    if x in exam_df['difficulty_category'].dropna().astype(str).str.strip().unique()
+                ]
+            else:
+                available_difficulties = []
+            selected_difficulty = st.multiselect(
+                "Select Difficulty",
+                available_difficulties,
+                default=[],
+                key="difficulty_selection",
+                on_change=reset_test_state
+            )
             
             if 'subject' in exam_df.columns and 'difficulty_category' in exam_df.columns and selected_subject and selected_difficulty:
-                filtered_df = exam_df[(exam_df['subject'].isin(selected_subject)) & (exam_df['difficulty_category'].astype(str).str.strip().isin(selected_difficulty))]
+                filtered_df = exam_df[
+                    exam_df['subject'].isin(selected_subject) &
+                    exam_df['difficulty_category'].astype(str).str.strip().isin(selected_difficulty)
+                ]
             else:
                 filtered_df = pd.DataFrame()
             
