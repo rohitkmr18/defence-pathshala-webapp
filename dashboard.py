@@ -38,6 +38,25 @@ else:
 # Define the CSS as a standard string
 css_template = """
 <style>
+/* Premium compact Database Overview control bar */
+.overview-filter-panel {
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin:2px 0 4px;
+    padding:0 2px;
+}
+.overview-filter-kicker {
+    font-family:'Space Grotesk', sans-serif;
+    font-size:0.70rem;
+    font-weight:800;
+    letter-spacing:0.12em;
+    color:#64748B;
+}
+.overview-filter-subtitle {
+    font-size:0.82rem;
+    color:#94A3B8;
+}
 /* Base Typography & Negative Space */
 html, body, [class*="css"] {
     font-family: 'Inter', 'Segoe UI', sans-serif;
@@ -1544,7 +1563,7 @@ st.markdown(f"""
     font-weight:700;
     color:#0F172A;
     box-shadow:0 2px 4px rgba(0,0,0,0.02);
-">🧠 Built by UPSC CAPF AC AIR 163 &nbsp;|&nbsp; IIT Kanpur &nbsp;|&nbsp; CDS ×4</div>
+">🧠 Built by:     UPSC CAPF AC AIR 163 &nbsp;|&nbsp; IIT Kanpur Graduate &nbsp;|&nbsp; Qualified CDS-AFA 4 times</div>
 
 <div class="dash-intro">Transform raw PYQs into a tactical, data-driven preparation engine. Stop passive reading and start actively eliminating. This intelligence dashboard analyzes your performance patterns, isolates specific examiner traps, and dynamically builds a personalized syllabus roadmap to maximize your final score.</div>
 """, unsafe_allow_html=True)
@@ -1574,18 +1593,31 @@ if not is_active_full_mock:
     # --- DATABASE OVERVIEW ---
     # ==========================================
     st.markdown("### 📊 Database Overview")
-    st.caption("Analyze any combination of exams, years and CDS cycles. These filters affect analytics only.")
+    st.markdown(
+        "<div class='overview-filter-panel'>"
+        "<div class='overview-filter-kicker'>DATABASE SCOPE</div>"
+        "<div class='overview-filter-subtitle'>Choose the PYQ universe to analyse</div>"
+        "</div>",
+        unsafe_allow_html=True
+    )
 
     overview_exam_options = sorted(
         df["exam"].dropna().astype(str).str.strip().unique().tolist()
     ) if "exam" in df.columns else []
 
-    overview_exams = st.multiselect(
-        "Exam(s)",
-        options=overview_exam_options,
-        default=st.session_state.get("overview_exam_selection", overview_exam_options),
-        key="overview_exam_selection"
-    )
+    # Three controls intentionally share one horizontal row.
+    # The dependency logic is calculated between widgets, but the widgets
+    # themselves remain inside the same three-column visual control bar.
+    filter_col1, filter_col2, filter_col3 = st.columns([1.35, 1.0, 0.95], gap="small", vertical_alignment="bottom")
+
+    with filter_col1:
+        overview_exams = st.multiselect(
+            "Exam(s)",
+            options=overview_exam_options,
+            default=st.session_state.get("overview_exam_selection", overview_exam_options),
+            key="overview_exam_selection",
+            placeholder="Select exam(s)"
+        )
 
     overview_year_source = df.copy()
     if overview_exams and "exam" in overview_year_source.columns:
@@ -1602,12 +1634,14 @@ if not is_active_full_mock:
         if x in overview_year_options
     ]
 
-    overview_years = st.multiselect(
-        "Year(s)",
-        options=overview_year_options,
-        default=valid_overview_years,
-        key="overview_year_selection"
-    )
+    with filter_col2:
+        overview_years = st.multiselect(
+            "Year(s)",
+            options=overview_year_options,
+            default=valid_overview_years,
+            key="overview_year_selection",
+            placeholder="Select year(s)"
+        )
 
     overview_cycle_options = []
     if "CDS" in overview_exams and "cycle" in df.columns:
@@ -1628,12 +1662,14 @@ if not is_active_full_mock:
     ]
 
     if overview_cycle_options:
-        overview_cycles = st.multiselect(
-            "Cycle(s)",
-            options=overview_cycle_options,
-            default=valid_overview_cycles,
-            key="overview_cycle_selection"
-        )
+        with filter_col3:
+            overview_cycles = st.multiselect(
+                "CDS Cycle(s)",
+                options=overview_cycle_options,
+                default=valid_overview_cycles,
+                key="overview_cycle_selection",
+                placeholder="Select cycle(s)"
+            )
     else:
         st.session_state["overview_cycle_selection"] = []
         overview_cycles = []
