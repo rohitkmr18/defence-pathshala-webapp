@@ -912,6 +912,50 @@ else:
         # --- PHASE 1: POST-TEST HIERARCHY ---
         # ==========================================
         if should_show_analysis:
+            # ==========================================
+            # --- POST-SUBMISSION NAVIGATOR GRID ---
+            # ==========================================
+            # Restore the question navigator after submission for Full Mock review.
+            # It is intentionally not shown for Instant Feedback / practice mode.
+            if full_paper:
+                with st.expander("📊 Question Navigator (Click to Jump)", expanded=False):
+                    def jump_to_review_page(position):
+                        st.session_state['current_page'] = position // 5
+                        st.session_state['scroll_trigger'] = True
+
+                    st.markdown('<div class="active-grid-wrapper">', unsafe_allow_html=True)
+                    nav_cols = st.columns(10)
+                    run_id = st.session_state['test_run_id']
+
+                    for i, row in filtered_df.reset_index(drop=True).iterrows():
+                        qid = str(row['question_id'])
+                        q_num = row['q_num']
+                        user_pick = st.session_state['user_answers'].get(qid, "Unattempted")
+                        correct_opt = str(row.get('final_opt', '')).strip()
+
+                        if user_pick == "Unattempted":
+                            btn_label = f"⚪ {q_num}"
+                            btn_type = "secondary"
+                        elif user_pick == correct_opt:
+                            btn_label = f"🟢 {q_num}"
+                            btn_type = "primary"
+                        else:
+                            btn_label = f"🔴 {q_num}"
+                            btn_type = "secondary"
+
+                        with nav_cols[i % 10]:
+                            st.button(
+                                label=btn_label,
+                                key=f"post_nav_btn_{run_id}_{qid}",
+                                type=btn_type,
+                                on_click=jump_to_review_page,
+                                args=(i,),
+                                use_container_width=True
+                            )
+
+                    st.markdown('</div>', unsafe_allow_html=True)
+                    st.caption("🟢 Correct  ·  🔴 Incorrect  ·  ⚪ Skipped")
+
             # 1. Evaluate Dataset First
             records = []
             eval_set = filtered_df if is_exam_mode else filtered_df[filtered_df['question_id'].astype(str).isin(st.session_state['checked_questions'])]
