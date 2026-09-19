@@ -866,8 +866,6 @@ def render_revision_notes(analysis_df):
         on_click=hide_revision_notes
     )
 
-
-
 # ============================================================
 # DP STRATEGIC ROADMAP ENGINE
 # Steps 1-3: Performance Profile -> Diagnostics -> Priorities
@@ -1605,33 +1603,42 @@ if not is_active_full_mock:
         df["exam"].dropna().astype(str).str.strip().unique().tolist()
     ) if "exam" in df.columns else []
 
-    # Three controls intentionally share one horizontal row.
-    # The dependency logic is calculated between widgets, but the widgets
-    # themselves remain inside the same three-column visual control bar.
-    filter_col1, filter_col2, filter_col3 = st.columns([1.35, 1.0, 0.95], gap="small", vertical_alignment="bottom")
+    filter_col1, filter_col2, filter_col3 = st.columns(
+        [1.35, 1.0, 0.95],
+        gap="small",
+        vertical_alignment="bottom"
+    )
 
     with filter_col1:
         overview_exams = st.multiselect(
             "Exam(s)",
             options=overview_exam_options,
-            default=st.session_state.get("overview_exam_selection", overview_exam_options),
             key="overview_exam_selection",
-            placeholder="Select exam(s)"
+            placeholder="Select exam(s)",
+            help="Select one or more exams to analyse."
         )
 
-    overview_year_source = df.copy()
-    if overview_exams and "exam" in overview_year_source.columns:
-        overview_year_source = overview_year_source[
-            overview_year_source["exam"].isin(overview_exams)
-        ]
+    if overview_exams:
+        overview_year_source = df[
+            df["exam"].isin(overview_exams)
+        ].copy()
 
-    overview_year_options = sorted(
-        overview_year_source["year"].dropna().astype(str).str.strip().unique().tolist()
-    ) if "year" in overview_year_source.columns else []
+        overview_year_options = sorted(
+            overview_year_source["year"]
+            .dropna()
+            .astype(str)
+            .str.strip()
+            .unique()
+            .tolist()
+        ) if "year" in overview_year_source.columns else []
+    else:
+        overview_year_options = []
 
     valid_overview_years = [
-        x for x in st.session_state.get("overview_year_selection", overview_year_options)
-        if x in overview_year_options
+        year for year in st.session_state.get(
+            "overview_year_selection", []
+        )
+        if year in overview_year_options
     ]
 
     with filter_col2:
@@ -1640,83 +1647,102 @@ if not is_active_full_mock:
             options=overview_year_options,
             default=valid_overview_years,
             key="overview_year_selection",
-            placeholder="Select year(s)"
+            placeholder=(
+                "Select year(s)"
+                if overview_exams
+                else "Select exam(s) first"
+            ),
+            disabled=not bool(overview_exams),
+            help="Leave empty to include all years for the selected exam(s)."
         )
 
-    overview_cycle_options = []
-    if "CDS" in overview_exams and "cycle" in df.columns:
+    if overview_exams and "CDS" in overview_exams and "cycle" in df.columns:
         overview_cycle_source = df[
             df["exam"].eq("CDS")
         ].copy()
+
         if overview_years:
             overview_cycle_source = overview_cycle_source[
                 overview_cycle_source["year"].isin(overview_years)
             ]
+
         overview_cycle_options = sorted(
-            overview_cycle_source["cycle"].dropna().astype(str).str.strip().unique().tolist()
+            overview_cycle_source["cycle"]
+            .dropna()
+            .astype(str)
+            .str.strip()
+            .unique()
+            .tolist()
         )
+    else:
+        overview_cycle_options = []
 
     valid_overview_cycles = [
-        x for x in st.session_state.get("overview_cycle_selection", overview_cycle_options)
-        if x in overview_cycle_options
+        cycle for cycle in st.session_state.get(
+            "overview_cycle_selection", []
+        )
+        if cycle in overview_cycle_options
     ]
 
-    if overview_cycle_options:
-        with filter_col3:
-            overview_cycles = st.multiselect(
-                "CDS Cycle(s)",
-                options=overview_cycle_options,
-                default=valid_overview_cycles,
-                key="overview_cycle_selection",
-                placeholder="Select cycle(s)"
-            )
-    else:
-        st.session_state["overview_cycle_selection"] = []
-        overview_cycles = []
+    with filter_col3:
+        overview_cycles = st.multiselect(
+            "CDS Cycle(s)",
+            options=overview_cycle_options,
+            default=valid_overview_cycles,
+            key="overview_cycle_selection",
+            placeholder=(
+                "Select cycle(s)"
+                if overview_cycle_options
+                else "Not applicable"
+            ),
+            disabled=not bool(overview_cycle_options),
+            help="Leave empty to include all CDS cycles."
+        )
 
-    # Analytics dataset: NEVER reused for the full-paper test.
+    st.caption(
+        "Select one or more exams. Year and CDS Cycle are optional."
+    )
+
+    # No exam selected means no overview data is displayed.
     overview_df = df.copy()
 
-    if overview_exams:
+    if not overview_exams:
+        overview_df = overview_df.iloc[0:0]
+    else:
         overview_df = overview_df[
             overview_df["exam"].isin(overview_exams)
         ]
-    else:
-        overview_df = overview_df.iloc[0:0]
 
-    if overview_years:
-        overview_df = overview_df[
-            overview_df["year"].isin(overview_years)
-        ]
-    else:
-        overview_df = overview_df.iloc[0:0]
+        # Empty year selection means all years.
+        if overview_years:
+            overview_df = overview_df[
+                overview_df["year"].isin(overview_years)
+            ]
 
-    # CDS cycle filter applies only to CDS rows. CAPF remains unaffected.
-    if overview_cycles and "cycle" in overview_df.columns:
-        overview_df = overview_df[
-            (overview_df["exam"] != "CDS")
-            | (overview_df["cycle"].isin(overview_cycles))
-        ]
+        # Apply cycle filtering only to CDS rows.
+        if overview_cycles and "cycle" in overview_df.columns:
+            overview_df = overview_df[
+                (overview_df["exam"] != "CDS")
+                | (overview_df["cycle"].isin(overview_cycles))
+            ]
 
     if overview_df.empty:
-        st.info("No questions match the selected Database Overview filters.")
+        st.info(
+            "👆 Select one or more exams above to view the database overview. "
+            "Year and CDS Cycle filters are optional."
+        )
     else:
         m1, m2 = st.columns(2)
         m1.metric("Total Questions", len(overview_df))
+
         dataset_columns = ["exam", "year"]
         if "cycle" in overview_df.columns:
             dataset_columns.append("cycle")
-        m2.metric("Datasets Included", overview_df[dataset_columns].drop_duplicates().shape[0])
 
-        chart_config = {
-            "displayModeBar": False,
-            "responsive": True,
-            "scrollZoom": False,
-            "doubleClick": False,
-            "showTips": False
-        }
-
-        c1, c2, c3 = st.columns(3)
+        m2.metric(
+            "Datasets Included",
+            overview_df[dataset_columns].drop_duplicates().shape[0]
+        )
 
         # ------------------------------------------
         # SUBJECT CHART
@@ -2334,7 +2360,7 @@ else:
                 <script>
                     var parentDoc = window.parent.document;
                     var timerDiv = parentDoc.getElementById('floating-timer');
-                    if (!timerDiv) {{
+                    if (!timerDiv) {
                         timerDiv = parentDoc.createElement('div');
                         timerDiv.id = 'floating-timer';
                         timerDiv.style.position = 'fixed';
@@ -2351,19 +2377,19 @@ else:
                         timerDiv.style.fontFamily = 'monospace';
                         timerDiv.style.fontSize = '1.2rem';
                         parentDoc.body.appendChild(timerDiv);
-                    }}
+                    }
                     
                     var remaining = {remaining_time};
                     if (window.timerInterval) clearInterval(window.timerInterval);
                     
-                    window.timerInterval = setInterval(function() {{
-                        if (remaining <= 0) {{
+                    window.timerInterval = setInterval(function() {
+                        if (remaining <= 0) {
                             clearInterval(window.timerInterval);
                             timerDiv.innerHTML = "⏰ Time Expired!";
                             timerDiv.style.color = "#991B1B";
                             timerDiv.style.borderColor = "#FCA5A5";
                             timerDiv.style.backgroundColor = "#FEF2F2";
-                        }} else {{
+                        } else {
                             remaining--;
                             var h = Math.floor(remaining / 3600);
                             var m = Math.floor((remaining % 3600) / 60);
@@ -2373,11 +2399,11 @@ else:
                             var sStr = (s < 10 ? "0"+s : s);
                             timerDiv.innerHTML = "⏳ " + hStr + ":" + mStr + ":" + sStr;
                             
-                            if (remaining < 900) {{
+                            if (remaining < 900) {
                                 timerDiv.style.color = "#991B1B";
                                 timerDiv.style.borderColor = "#FCA5A5";
                                 timerDiv.style.backgroundColor = "#FEF2F2";
-                            }}
+                            }
                         }}
                     }}, 1000);
                 </script>
