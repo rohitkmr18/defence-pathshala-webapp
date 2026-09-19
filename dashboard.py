@@ -2356,10 +2356,11 @@ else:
                     st.session_state['auto_submitted'] = True
                     st.rerun()
                 
-                timer_js = f"""
+                timer_js = """
                 <script>
                     var parentDoc = window.parent.document;
                     var timerDiv = parentDoc.getElementById('floating-timer');
+
                     if (!timerDiv) {
                         timerDiv = parentDoc.createElement('div');
                         timerDiv.id = 'floating-timer';
@@ -2367,7 +2368,7 @@ else:
                         timerDiv.style.top = '70px';
                         timerDiv.style.right = '30px';
                         timerDiv.style.zIndex = '999999';
-                        timerDiv.style.background = 'rgba(255, 255, 255, 0.95)';
+                        timerDiv.style.background = 'rgba(255,255,255,0.95)';
                         timerDiv.style.padding = '12px 20px';
                         timerDiv.style.border = '2px solid #3B82F6';
                         timerDiv.style.borderRadius = '8px';
@@ -2378,10 +2379,13 @@ else:
                         timerDiv.style.fontSize = '1.2rem';
                         parentDoc.body.appendChild(timerDiv);
                     }
-                    
-                    var remaining = {remaining_time};
-                    if (window.timerInterval) clearInterval(window.timerInterval);
-                    
+
+                    var remaining = __REMAINING_TIME__;
+
+                    if (window.timerInterval) {
+                        clearInterval(window.timerInterval);
+                    }
+
                     window.timerInterval = setInterval(function() {
                         if (remaining <= 0) {
                             clearInterval(window.timerInterval);
@@ -2389,25 +2393,34 @@ else:
                             timerDiv.style.color = "#991B1B";
                             timerDiv.style.borderColor = "#FCA5A5";
                             timerDiv.style.backgroundColor = "#FEF2F2";
-                        } else {
-                            remaining--;
-                            var h = Math.floor(remaining / 3600);
-                            var m = Math.floor((remaining % 3600) / 60);
-                            var s = remaining % 60;
-                            var hStr = (h < 10 ? "0"+h : h);
-                            var mStr = (m < 10 ? "0"+m : m);
-                            var sStr = (s < 10 ? "0"+s : s);
-                            timerDiv.innerHTML = "⏳ " + hStr + ":" + mStr + ":" + sStr;
-                            
-                            if (remaining < 900) {
-                                timerDiv.style.color = "#991B1B";
-                                timerDiv.style.borderColor = "#FCA5A5";
-                                timerDiv.style.backgroundColor = "#FEF2F2";
-                            }
-                        }}
-                    }}, 1000);
+                            return;
+                        }
+
+                        remaining--;
+
+                        var h = Math.floor(remaining / 3600);
+                        var m = Math.floor((remaining % 3600) / 60);
+                        var s = remaining % 60;
+
+                        var hStr = h < 10 ? "0" + h : h;
+                        var mStr = m < 10 ? "0" + m : m;
+                        var sStr = s < 10 ? "0" + s : s;
+
+                        timerDiv.innerHTML =
+                            "⏳ " + hStr + ":" + mStr + ":" + sStr;
+
+                        if (remaining < 900) {
+                            timerDiv.style.color = "#991B1B";
+                            timerDiv.style.borderColor = "#FCA5A5";
+                            timerDiv.style.backgroundColor = "#FEF2F2";
+                        }
+                    }, 1000);
                 </script>
-                """
+                """.replace(
+                    "__REMAINING_TIME__",
+                    str(remaining_time)
+                )
+
                 components.html(timer_js, height=0, width=0)
             else:
                 cleanup_js = """
