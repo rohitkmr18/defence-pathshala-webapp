@@ -1744,6 +1744,15 @@ if not is_active_full_mock:
             overview_df[dataset_columns].drop_duplicates().shape[0]
         )
 
+        # Chart columns
+        c1, c2, c3 = st.columns(3)
+
+        chart_config = {
+            "displayModeBar": False,
+            "scrollZoom": False,
+            "doubleClick": False,
+        }
+
         # ------------------------------------------
         # SUBJECT CHART
         # ------------------------------------------
