@@ -1,46 +1,26 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-type HealthResponse = {
-  status: string;
-  service: string;
-  version: string;
-};
+import { getHealth, type HealthResponse } from "@/lib/api";
 
 export default function Home() {
   const [health, setHealth] = useState<HealthResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function checkBackend() {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/health`
-        );
-
-        if (!response.ok) {
-          throw new Error(`Backend returned ${response.status}`);
-        }
-
-        const data: HealthResponse = await response.json();
-        setHealth(data);
-      } catch (err) {
+    getHealth()
+      .then(setHealth)
+      .catch((err) => {
         setError(
           err instanceof Error ? err.message : "Unable to reach backend"
         );
-      }
-    }
-
-    checkBackend();
+      });
   }, []);
 
   return (
     <main className="flex min-h-screen items-center justify-center p-8">
       <div className="w-full max-w-xl rounded-2xl border p-8">
-        <h1 className="text-3xl font-bold">
-          Defence Pathshala
-        </h1>
+        <h1 className="text-3xl font-bold">Defence Pathshala</h1>
 
         <p className="mt-2 text-gray-600">
           UPSC Defence PYQ Intelligence Platform
@@ -64,9 +44,7 @@ export default function Home() {
           )}
 
           {!health && !error && (
-            <p className="mt-3 text-gray-500">
-              Connecting to backend...
-            </p>
+            <p className="mt-3 text-gray-500">Connecting to backend...</p>
           )}
         </div>
       </div>
