@@ -19,7 +19,7 @@ export default function HomePage() {
 
         <div className="flex gap-4">
           <Link
-            href="/practice"
+            href="/dashboard/practice"
             className="rounded-xl bg-blue-600 px-5 py-3 font-medium transition hover:bg-blue-500"
           >
             Targeted Practice
