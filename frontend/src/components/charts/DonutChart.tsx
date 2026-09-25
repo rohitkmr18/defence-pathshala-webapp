@@ -8,6 +8,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   Sector,
+  type PieSectorDataItem,
 } from "recharts";
 
 interface DonutChartProps {
@@ -79,10 +80,9 @@ export default function DonutChart({
                 innerRadius={78}
                 outerRadius={112}
                 paddingAngle={2}
-                activeIndex={activeIndex}
                 onMouseEnter={(_, index) => setActiveIndex(index)}
                 onClick={(_, index) => setActiveIndex(index)}
-                activeShape={(props: any) => (
+                activeShape={(props: PieSectorDataItem) => (
                   <Sector
                     {...props}
                     outerRadius={(props.outerRadius ?? 112) + 8}
@@ -93,14 +93,15 @@ export default function DonutChart({
                   <Cell
                     key={index}
                     fill={COLORS[index % COLORS.length]}
+                    opacity={activeIndex === index ? 1 : 0.7}
                   />
                 ))}
               </Pie>
 
               <Tooltip
-                formatter={(value: number, name: string) => [
-                  `${Number(value)} questions (${(
-                    (Number(value) / total) *
+                formatter={(value, name) => [
+                  `${Number(value ?? 0)} questions (${(
+                    (Number(value ?? 0) / total) *
                     100
                   ).toFixed(1)}%)`,
                   name,

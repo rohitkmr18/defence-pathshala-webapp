@@ -83,3 +83,113 @@ def get_practice_filters() -> PracticeFiltersResponse:
 
     except Exception as exc:  # pragma: no cover - defensive: surfaced via FastAPI
         raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@router.get("/count")
+def get_practice_count(
+    exam: str | None = None,
+    year: str | None = None,
+    cycle: str | None = None,
+    subject: str | None = None,
+    topic: str | None = None,
+) -> dict[str, int]:
+    try:
+        query = supabase.table("questions").select("id", count="exact")
+
+        if exam:
+            exam_vals = [value.strip() for value in exam.split(",") if value.strip()]
+            expanded = []
+            for e in exam_vals:
+                expanded.append(e)
+                if " " in e:
+                    expanded.append(e.replace(" ", "-"))
+                if "-" in e:
+                    expanded.append(e.replace("-", " "))
+            query = query.in_("exam", list(set(expanded)))
+
+        if year:
+            query = query.in_(
+                "year",
+                [int(value.strip()) for value in year.split(",") if value.strip() and value.strip().isdigit()],
+            )
+
+        if cycle:
+            query = query.in_(
+                "cycle",
+                [value.strip() for value in cycle.split(",") if value.strip()],
+            )
+
+        if subject:
+            query = query.in_(
+                "subject",
+                [value.strip() for value in subject.split(",") if value.strip()],
+            )
+
+        if topic:
+            query = query.in_(
+                "topic",
+                [value.strip() for value in topic.split(",") if value.strip()],
+            )
+
+        response = query.execute()
+        return {"count": response.count or 0}
+
+    except Exception as exc:  # pragma: no cover - defensive: surfaced via FastAPI
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@router.get("/questions")
+def get_practice_questions(
+    exam: str | None = None,
+    year: str | None = None,
+    cycle: str | None = None,
+    subject: str | None = None,
+    topic: str | None = None,
+    limit: int = 150,
+) -> dict[str, Any]:
+    try:
+        query = supabase.table("questions").select("*")
+
+        if exam:
+            exam_vals = [value.strip() for value in exam.split(",") if value.strip()]
+            expanded = []
+            for e in exam_vals:
+                expanded.append(e)
+                if " " in e:
+                    expanded.append(e.replace(" ", "-"))
+                if "-" in e:
+                    expanded.append(e.replace("-", " "))
+            query = query.in_("exam", list(set(expanded)))
+
+        if year:
+            query = query.in_(
+                "year",
+                [int(value.strip()) for value in year.split(",") if value.strip() and value.strip().isdigit()],
+            )
+
+        if cycle:
+            query = query.in_(
+                "cycle",
+                [value.strip() for value in cycle.split(",") if value.strip()],
+            )
+
+        if subject:
+            query = query.in_(
+                "subject",
+                [value.strip() for value in subject.split(",") if value.strip()],
+            )
+
+        if topic:
+            query = query.in_(
+                "topic",
+                [value.strip() for value in topic.split(",") if value.strip()],
+            )
+
+        query = query.order("q_num").limit(limit)
+        response = query.execute()
+        rows = response.data or []
+        return {"questions": rows, "total": len(rows)}
+
+    except Exception as exc:  # pragma: no cover - defensive: surfaced via FastAPI
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+

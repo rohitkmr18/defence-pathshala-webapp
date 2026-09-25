@@ -10,22 +10,13 @@ export async function backendGET(path: string) {
     data: { session },
   } = await supabase.auth.getSession();
 
-  if (!session) {
-    return new Response(
-      JSON.stringify({ error: "Unauthorized" }),
-      {
-        status: 401,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+  const headers: Record<string, string> = {};
+  if (session?.access_token) {
+    headers["Authorization"] = `Bearer ${session.access_token}`;
   }
 
   return fetch(`${BACKEND_URL}${path}`, {
-    headers: {
-      Authorization: `Bearer ${session.access_token}`,
-    },
+    headers,
     cache: "no-store",
   });
 }

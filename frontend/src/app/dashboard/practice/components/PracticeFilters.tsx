@@ -172,6 +172,15 @@ export default function PracticeFilters({ onFilterChange }: PracticeFiltersProps
     });
   }, [onFilterChange, selectedExams, selectedYears, selectedCycles, selectedSubjects, selectedTopics]);
 
+  // ── Topics Select All — pure derived state, no extra useState ─────────────
+  const allTopicsSelected =
+    availableTopics.length > 0 &&
+    availableTopics.every((t) => selectedTopics.includes(t));
+
+  function toggleSelectAllTopics() {
+    setSelectedTopics(allTopicsSelected ? [] : availableTopics);
+  }
+
   const cycleOptions = filters?.cycles.CDS ?? [];
 
   function toggleExam(examName: string) {
@@ -381,6 +390,19 @@ export default function PracticeFilters({ onFilterChange }: PracticeFiltersProps
             <label className="mb-3 block text-sm text-slate-500">Topics</label>
 
             <div className="flex flex-wrap gap-3">
+              {/* Select All chip — derived state, no extra useState */}
+              <button
+                type="button"
+                onClick={toggleSelectAllTopics}
+                className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+                  allTopicsSelected
+                    ? "bg-slate-900 text-white"
+                    : "border border-dashed border-slate-300 bg-white text-slate-500 hover:border-slate-400 hover:bg-slate-50"
+                }`}
+              >
+                {allTopicsSelected ? "✓ All Selected" : "Select All"}
+              </button>
+
               {availableTopics.map((topic) => (
                 <button
                   key={topic}
