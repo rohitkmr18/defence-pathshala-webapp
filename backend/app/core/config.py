@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     # Existing auth settings
-    supabase_url: str = Field(alias="SUPABASE_URL")
+    supabase_url: str = Field(alias="https://afhwegrxnvgsqbqadvwr.supabase.co/rest/v1/")
     supabase_jwt_secret: str = Field(alias="SUPABASE_JWT_SECRET")
 
     # New backend-only key
