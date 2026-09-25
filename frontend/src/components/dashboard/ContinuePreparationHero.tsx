@@ -1,5 +1,9 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { computeDashboardSnapshot, MOCK_SAVED_EVENT } from "@/lib/mockHistory";
 
 interface Props {
   name: string;
@@ -13,10 +17,36 @@ export default function ContinuePreparationHero({
   name,
   exam,
   targetYear,
-  accuracy = 0,
-  lastTopic = "Start your first practice",
+  accuracy: initialAccuracy = 0,
+  lastTopic: initialLastTopic = "Start your first practice",
 }: Props) {
   const firstName = name?.trim()?.split(" ")[0] || "Aspirant";
+  const [accuracy, setAccuracy] = useState(initialAccuracy);
+  const [lastTopic, setLastTopic] = useState(initialLastTopic);
+
+  useEffect(() => {
+    const syncAccuracy = () => {
+      const snap = computeDashboardSnapshot();
+      if (snap.mocksCompleted > 0) {
+        setAccuracy(snap.averageAccuracy);
+        if (snap.weakAreas.length > 0) {
+          setLastTopic(`Revise ${snap.weakAreas[0].topic}`);
+        } else if (snap.lastMockTitle && snap.lastMockTitle !== "None") {
+          setLastTopic(snap.lastMockTitle);
+        }
+      }
+    };
+
+    syncAccuracy();
+
+    window.addEventListener(MOCK_SAVED_EVENT, syncAccuracy);
+    window.addEventListener("storage", syncAccuracy);
+
+    return () => {
+      window.removeEventListener(MOCK_SAVED_EVENT, syncAccuracy);
+      window.removeEventListener("storage", syncAccuracy);
+    };
+  }, []);
 
   return (
     <section className="rounded-3xl bg-black p-8 text-white">
@@ -33,7 +63,7 @@ export default function ContinuePreparationHero({
       </p>
 
       <p className="mt-3 max-w-xl text-gray-300">
-        You're preparing for{" "}
+        You&apos;re preparing for{" "}
         <strong>
           {exam}
           {targetYear ? ` ${targetYear}` : ""}

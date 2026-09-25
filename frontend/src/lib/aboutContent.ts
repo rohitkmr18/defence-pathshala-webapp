@@ -58,7 +58,8 @@ export interface AboutPageData {
     credentials: string[];
     bio: string;
     quote: string;
-    avatarPlaceholder: string;
+    image?: string;
+    avatarPlaceholder?: string;
     socials?: {
       linkedin?: string;
       twitter?: string;
@@ -77,6 +78,8 @@ export interface AboutPageData {
   };
 }
 
+export const FEEDBACK_FORM_URL = "https://forms.gle/Qo56WFCq8uMPGdF89";
+
 export const defaultAboutContent: AboutPageData = {
   hero: {
     tagline: "Defence Pathshala",
@@ -90,7 +93,7 @@ export const defaultAboutContent: AboutPageData = {
     },
     ctaSecondary: {
       text: "Help Us Build Better",
-      href: "https://forms.gle/defencepathshala-feedback",
+      href: FEEDBACK_FORM_URL,
     },
   },
 
@@ -170,10 +173,10 @@ export const defaultAboutContent: AboutPageData = {
       "CAPF AC AIR 163",
       "Founder of Defence Pathshala",
     ],
-    bio: "Having cracked UPSC CAPF AC with All India Rank 163 and served as an Assistant Commandant in the Border Security Force (BSF) after graduating from IIT Kanpur, Rohit understands the exact convergence of disciplined operational rigor and analytical exam strategy required to wear the uniform.",
+    bio: "After securing All India Rank 163 in UPSC CAPF AC and serving as a BSF Assistant Commandant after graduating from IIT Kanpur, Rohit combines operational experience with exam-first thinking. He didn't stop at understanding what works—he analyzed hundreds of previous year questions, identified recurring exam patterns, and built Defence Pathshala himself using AI, data analytics, and automation to turn that intelligence into a practical learning platform.",
     quote:
       "UPSC Defence exams don't test memory; they test composure, foundational clarity, and disciplined elimination under time pressure. Defence Pathshala was built to give every aspirant that exact edge.",
-    avatarPlaceholder: "/images/founder-placeholder.png",
+    image: "/images/rohit-kumar.jpg",
   },
 
   roadmap: {
@@ -228,11 +231,11 @@ export const defaultAboutContent: AboutPageData = {
   },
 
   feedback: {
-    heading: "Help Us Build India's Best Defence Platform",
+    heading: "Help Us Build Better",
     description:
-      "Defence Pathshala is built for aspirants. Have an idea for a feature, spotted a question discrepancy, or want a specific study tool? Let us know.",
-    ctaText: "Share Aspirant Feedback",
-    ctaUrl: "https://forms.gle/defencepathshala-feedback",
+      "Your feedback directly shapes Defence Pathshala. Report bugs, suggest features, or tell us what slowed your preparation down.",
+    ctaText: "Open Feedback Form",
+    ctaUrl: "https://forms.gle/EQ62ZwEaZbBRLtFh6",
   },
 };
 

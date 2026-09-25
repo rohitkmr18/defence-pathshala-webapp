@@ -1,10 +1,10 @@
+import Image from "next/image";
 import Link from "next/link";
 import {
   Shield,
   Target,
   Sparkles,
   Database,
-  Newspaper,
   CheckCircle2,
   Award,
   ArrowRight,
@@ -25,7 +25,7 @@ export default async function AboutPage() {
   const iconMap: Record<string, typeof Database> = {
     Database,
     Sparkles,
-    Newspaper,
+    Award,
     Target,
   };
 
@@ -197,28 +197,36 @@ export default async function AboutPage() {
         </section>
 
         {/* 4. Founder Section */}
-        <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white p-8 shadow-[0_10px_30px_rgba(15,23,42,0.04)] sm:p-10">
-          <div className="flex flex-col gap-8 md:flex-row md:items-center">
-            {/* Founder Avatar Placeholder */}
+        <section className="overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-slate-50/50 to-blue-50/30 p-8 shadow-[0_10px_30px_rgba(15,23,42,0.04)] sm:p-10">
+          <div className="flex flex-col gap-8 md:flex-row md:items-start lg:items-center">
+            {/* Founder Circular Image */}
             <div className="flex flex-col items-center text-center shrink-0">
-              <div className="relative flex h-36 w-36 items-center justify-center overflow-hidden rounded-full border-4 border-blue-100 bg-gradient-to-tr from-blue-600 to-indigo-700 text-white shadow-xl">
-                <span className="text-3xl font-black tracking-wider">RK</span>
+              <div className="relative h-44 w-44 sm:h-52 sm:w-52 overflow-hidden rounded-full border-4 border-white bg-slate-100 shadow-xl ring-4 ring-blue-600/10">
+                <Image
+                  src={founder.image || "/images/rohit-kumar.jpg"}
+                  alt={`${founder.name} - ${founder.title}`}
+                  width={300}
+                  height={300}
+                  priority
+                  className="h-full w-full object-cover rounded-full"
+                />
               </div>
-              <span className="mt-3 inline-block rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700">
-                Verified Officer & Alum
+              <span className="mt-3.5 inline-block rounded-full border border-blue-200/80 bg-blue-50 px-3.5 py-1 text-xs font-bold tracking-wide text-blue-700 shadow-2xs">
+                BSF AC · AIR 163 · IIT Kanpur
               </span>
             </div>
 
             {/* Founder Bio & Credentials */}
-            <div className="space-y-4 flex-1">
+            <div className="space-y-5 flex-1">
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-blue-600">
-                  Leadership
-                </p>
-                <h2 className="text-2xl font-black text-slate-900 sm:text-3xl">
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700">
+                  <Award className="h-3.5 w-3.5 text-blue-600" />
+                  <span>Leadership & Vision</span>
+                </div>
+                <h2 className="mt-2.5 text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">
                   {founder.name}
                 </h2>
-                <p className="text-sm font-semibold text-slate-500">
+                <p className="mt-0.5 text-sm font-semibold text-blue-600 sm:text-base">
                   {founder.title}
                 </p>
               </div>
@@ -228,7 +236,7 @@ export default async function AboutPage() {
                 {founder.credentials.map((cred, idx) => (
                   <span
                     key={idx}
-                    className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-bold text-slate-800"
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-800 shadow-2xs"
                   >
                     <GraduationCap className="h-3.5 w-3.5 text-blue-600" />
                     <span>{cred}</span>
@@ -236,11 +244,11 @@ export default async function AboutPage() {
                 ))}
               </div>
 
-              <p className="text-sm leading-relaxed text-slate-600">
+              <p className="text-sm leading-relaxed text-slate-600 sm:text-base">
                 {founder.bio}
               </p>
 
-              <blockquote className="border-l-4 border-blue-600 bg-blue-50/60 p-4 rounded-r-2xl text-xs sm:text-sm font-medium italic text-blue-950">
+              <blockquote className="border-l-4 border-blue-600 bg-white p-4.5 rounded-r-2xl border border-slate-100 text-xs sm:text-sm font-medium italic text-slate-800 shadow-2xs">
                 &ldquo;{founder.quote}&rdquo;
               </blockquote>
             </div>

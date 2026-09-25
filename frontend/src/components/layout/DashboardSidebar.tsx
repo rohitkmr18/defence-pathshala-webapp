@@ -6,7 +6,6 @@ import {
   LayoutDashboard,
   Database,
   Pencil,
-  Newspaper,
   Shield,
   ChevronLeft,
   ChevronRight,
@@ -27,11 +26,6 @@ const items = [
     name: "Targeted Practice",
     href: "/dashboard/practice",
     icon: Pencil,
-  },
-  {
-    name: "Daily Current Affairs",
-    href: "/current-affairs",
-    icon: Newspaper,
   },
   {
     name: "About Defence Pathshala",

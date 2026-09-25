@@ -21,11 +21,11 @@ export default function CurrentAffairsAdminPage() {
           </div>
 
           <Link
-            href="/current-affairs"
+            href="/dashboard"
             className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 shadow-2xs transition hover:bg-slate-50"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
-            <span>View Public Daily Briefs</span>
+            <span>Return to Dashboard</span>
           </Link>
         </div>
 
