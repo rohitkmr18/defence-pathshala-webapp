@@ -67,7 +67,9 @@ export default function MockDebriefHero({
             </span>
             <span className="text-xs text-slate-400 sm:text-sm">/ {metrics.maxMarks}</span>
           </div>
-          <p className="text-[11px] text-slate-500">+2.00 / -0.67 marking</p>
+          <p className="text-[11px] text-slate-500">
+            {metrics.scoringRule?.schemeLabel ?? "+2.00 / -0.67"} marking
+          </p>
         </div>
 
         {/* Accuracy Rate (NEW) */}

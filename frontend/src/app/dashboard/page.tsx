@@ -2,6 +2,7 @@ import { Database, Pencil, Newspaper, Target } from "lucide-react";
 
 import ContinuePreparationHero from "@/components/dashboard/ContinuePreparationHero";
 import QuickActionCard from "@/components/dashboard/QuickActionCard";
+import MockPerformanceHub from "@/components/dashboard/MockPerformanceHub";
 import SectionHeader from "@/components/ui/SectionHeader";
 import StatCard from "@/components/ui/StatCard";
 
@@ -37,7 +38,7 @@ export default async function DashboardPage() {
             <QuickActionCard
               href="/dashboard/question-bank"
               title="PYQ Insights"
-              description="Explore 730 PYQs with subject, topic and ESAC insights."
+              description="Explore 730 PYQs with subject, topic and difficulty insights."
               icon={Database}
               badge="730 PYQs"
             />
@@ -50,9 +51,9 @@ export default async function DashboardPage() {
             />
 
             <QuickActionCard
-              href="/dashboard"
-              title="Current Affairs"
-              description="Today's UPSC-relevant updates."
+              href="/current-affairs"
+              title="Daily Current Affairs"
+              description="Today's UPSC-relevant defence & strategic updates."
               icon={Newspaper}
             />
 
@@ -62,6 +63,18 @@ export default async function DashboardPage() {
               description="Resume revision from your weakest topics."
               icon={Target}
             />
+          </div>
+        </section>
+
+        {/* Live Mock Performance & AI Insights Hub */}
+        <section className="mt-10">
+          <SectionHeader
+            eyebrow="DP Performance Coach"
+            title="Mock Test Analytics & Diagnostics"
+            description="Live performance trajectory, recurring weak spots, and recovery upside across your attempts."
+          />
+          <div className="mt-6">
+            <MockPerformanceHub />
           </div>
         </section>
 

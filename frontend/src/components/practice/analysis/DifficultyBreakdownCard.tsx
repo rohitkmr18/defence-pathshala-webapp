@@ -21,7 +21,8 @@ export default function DifficultyBreakdownCard({
 
   return (
     <AnalysisSection
-      title="Difficulty Matrix (ESAC Audit)"
+      id="difficulty-matrix-section"
+      title="Question Difficulty Matrix"
       subtitle="Accuracy segmented by examiner question difficulty level."
       isEligible={isEligible}
       minThresholdNotice="Difficulty breakdown requires at least 10 questions for meaningful categorization."

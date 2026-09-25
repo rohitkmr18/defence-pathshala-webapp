@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { PracticeQuestion, OptionKey } from "@/lib/practice-types";
 import { computeAnalysisMetrics } from "@/lib/analysis/computeAnalysisMetrics";
+import { saveCompletedMock } from "@/lib/mockHistory";
 import MockDebriefHero from "./MockDebriefHero";
 import NextBestMoveCard from "./NextBestMoveCard";
 import RecoverableMarksCard from "./RecoverableMarksCard";
@@ -32,7 +33,30 @@ export default function FullPaperDebrief({
   totalTimeSpentSeconds,
   onRetake,
 }: FullPaperDebriefProps) {
-  const metrics = computeAnalysisMetrics(questions, answers, totalTimeSpentSeconds);
+  const examName = questions[0]?.exam || examTitle;
+  const metrics = computeAnalysisMetrics(questions, answers, totalTimeSpentSeconds, examName);
+  const savedRef = useRef(false);
+
+  useEffect(() => {
+    if (savedRef.current) return;
+    savedRef.current = true;
+    saveCompletedMock({
+      examTitle,
+      exam: questions[0]?.exam || "Mock",
+      netScore: metrics.netScore,
+      maxMarks: metrics.maxMarks,
+      accuracyRate: metrics.accuracyRate,
+      attemptRate: metrics.attemptRate,
+      correct: metrics.correct,
+      incorrect: metrics.incorrect,
+      skipped: metrics.skipped,
+      total: metrics.total,
+      durationSeconds: totalTimeSpentSeconds,
+      weakTopics: metrics.recoverableTopics.slice(0, 5).map((t) => t.topic),
+      recoverableMarks: metrics.totalRecoverableMarks,
+    });
+  }, [examTitle, metrics, questions, totalTimeSpentSeconds]);
+
   const [showSolutions, setShowSolutions] = useState(false);
   const [solutionFilter, setSolutionFilter] = useState<"all" | "incorrect" | "correct" | "unattempted">("all");
 
@@ -56,13 +80,15 @@ export default function FullPaperDebrief({
         isFiltered={false}
       />
 
-      {/* 2. AI Coach Next Best Move */}
+      {/* 2. DP Coach Next Best Move */}
       <NextBestMoveCard move={metrics.nextBestMove} />
 
       {/* 3. Recoverable Marks */}
       <RecoverableMarksCard
         totalRecoverableMarks={metrics.totalRecoverableMarks}
         topics={metrics.recoverableTopics}
+        answers={answers}
+        scoringRule={metrics.scoringRule}
         isEligible={metrics.eligibility.hasRecoverableMarks}
       />
 

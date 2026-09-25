@@ -12,8 +12,8 @@ export default function StatementRenderer({ text }: { text: string }) {
     <div className="space-y-5">
       {parsed.intro && <QuestionText text={parsed.intro} />}
       <ol className="list-none space-y-4 pl-1">
-        {parsed.items.map((item) => (
-          <li key={`${item.label}-${item.text}`} className="flex gap-4">
+        {parsed.items.map((item, index) => (
+          <li key={`${item.label}-${index}`} className="flex gap-4">
             <span className="w-7 shrink-0 font-semibold text-slate-700">
               {item.label}
             </span>

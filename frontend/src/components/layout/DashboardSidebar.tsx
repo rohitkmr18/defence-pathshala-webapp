@@ -6,8 +6,8 @@ import {
   LayoutDashboard,
   Database,
   Pencil,
-  BarChart3,
-  User,
+  Newspaper,
+  Shield,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -29,14 +29,14 @@ const items = [
     icon: Pencil,
   },
   {
-    name: "Analytics",
-    href: "/dashboard/analytics",
-    icon: BarChart3,
+    name: "Daily Current Affairs",
+    href: "/current-affairs",
+    icon: Newspaper,
   },
   {
-    name: "Profile",
-    href: "/dashboard/profile",
-    icon: User,
+    name: "About Defence Pathshala",
+    href: "/about",
+    icon: Shield,
   },
 ];
 

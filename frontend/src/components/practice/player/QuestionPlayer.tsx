@@ -64,11 +64,23 @@ export default function QuestionPlayer({
     }
   }, [isLast, onComplete, answers]);
 
+  const handleSkip = useCallback(() => {
+    if (!question) return;
+
+    const nextAnswers = { ...answers };
+    delete nextAnswers[question.id];
+
+    if (isLast) {
+      onComplete?.(nextAnswers);
+    } else {
+      setCurrentIndex((i) => i + 1);
+    }
+  }, [answers, isLast, onComplete, question]);
+
   // ── Mode-specific nav logic ─────────────────────────────────────────────────
   //
   // instant:  Check Answer → reveals → Next appears
-  // attempt:  No reveal, Next always available (once an option is selected),
-  //           last question shows "Finish" (placeholder for Milestone 3 submit)
+  // attempt:  Skip is always available; Next appears after an option is selected.
 
   const showCheckAnswer = mode === "instant" && hasAnswer && !isRevealed;
   const showNext =
@@ -80,6 +92,8 @@ export default function QuestionPlayer({
       ? "Finish"
       : "Complete"
     : "Next";
+  const showSkip = mode === "attempt";
+  const skipLabel = isLast ? "Skip & Finish" : "Skip";
 
   // ── Guard ───────────────────────────────────────────────────────────────────
 
@@ -143,6 +157,16 @@ export default function QuestionPlayer({
             >
               <CheckCircle className="h-4 w-4" />
               Check Answer
+            </button>
+          )}
+
+          {showSkip && (
+            <button
+              type="button"
+              onClick={handleSkip}
+              className="rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 active:scale-[0.98]"
+            >
+              {skipLabel}
             </button>
           )}
 

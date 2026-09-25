@@ -1,6 +1,7 @@
 import type { PracticeQuestion, OptionKey } from "@/lib/practice-types";
 import { getCorrectKey } from "@/lib/practice-types";
 import { checkEligibility, SectionEligibility } from "./analysisEligibility";
+import { getScoringRules, ExamScoringRule } from "@/lib/examScoring";
 
 export interface SubjectStat {
   subject: string;
@@ -54,6 +55,14 @@ export interface RecoveryPlanStep {
   recoverableMarks: number;
 }
 
+export interface RecoverableTopicItem {
+  topic: string;
+  subject: string;
+  count: number;
+  marks: number;
+  contributingQuestions: PracticeQuestion[];
+}
+
 export interface AnalysisMetrics {
   total: number;
   correct: number;
@@ -66,7 +75,8 @@ export interface AnalysisMetrics {
   maxMarks: number;
   totalTimeSeconds: number;
   formattedTime: string;
-  
+  scoringRule: ExamScoringRule;
+
   // Sections
   nextBestMove: {
     title: string;
@@ -76,21 +86,21 @@ export interface AnalysisMetrics {
     estimatedMinutes: number;
     reason: string;
   } | null;
-  
+
   totalRecoverableMarks: number;
-  recoverableTopics: { topic: string; subject: string; count: number; marks: number }[];
-  
+  recoverableTopics: RecoverableTopicItem[];
+
   subjects: SubjectStat[];
   topics: TopicStat[];
   difficulties: DifficultyStat[];
   mistakePatterns: MistakePatternItem[];
-  
+
   timeManagement: {
     avgTimePerQuestionSeconds: number;
     paceScore: "Optimal" | "Fast / Rushed" | "Methodical / Slow";
     paceAdvice: string;
   };
-  
+
   recoveryPlan: RecoveryPlanStep[];
   eligibility: SectionEligibility;
 }
@@ -112,16 +122,35 @@ export function formatDuration(seconds: number): string {
 export function computeAnalysisMetrics(
   questions: PracticeQuestion[],
   answers: Record<string, OptionKey>,
-  totalTimeSeconds: number
+  totalTimeSeconds: number,
+  examIdentifier?: string
 ): AnalysisMetrics {
   const total = questions.length;
   let correct = 0;
   let incorrect = 0;
   let skipped = 0;
 
+  // Resolve Exam Scoring Rules (CDS +1.67/-0.56, CAPF +2.00/-0.67, etc.)
+  const sampleExam = examIdentifier || questions[0]?.exam || "CAPF-AC";
+  const scoringRule = getScoringRules(sampleExam);
+  const marksPerCorrect = scoringRule.correctMarks;
+  const penaltyPerWrong = scoringRule.penaltyMarks;
+  const recoverableMultiplier = scoringRule.recoverableSwingPerQuestion;
+
   // Trackers
   const subjectMap = new Map<string, { total: number; correct: number; incorrect: number; skipped: number }>();
-  const topicMap = new Map<string, { subject: string; total: number; correct: number; incorrect: number; skipped: number; easyModerateMisses: number }>();
+  const topicMap = new Map<
+    string,
+    {
+      subject: string;
+      total: number;
+      correct: number;
+      incorrect: number;
+      skipped: number;
+      easyModerateMisses: number;
+      missedQuestions: PracticeQuestion[];
+    }
+  >();
   const themeMissMap = new Map<string, { theme: string; subject: string; count: number }>();
   const difficultyMap = new Map<string, { total: number; attempted: number; correct: number; incorrect: number }>();
 
@@ -155,7 +184,15 @@ export function computeAnalysisMetrics(
     // Topic tracking
     const top = q.topic || "General";
     if (!topicMap.has(top)) {
-      topicMap.set(top, { subject: sub, total: 0, correct: 0, incorrect: 0, skipped: 0, easyModerateMisses: 0 });
+      topicMap.set(top, {
+        subject: sub,
+        total: 0,
+        correct: 0,
+        incorrect: 0,
+        skipped: 0,
+        easyModerateMisses: 0,
+        missedQuestions: [],
+      });
     }
     const topEntry = topicMap.get(top)!;
     topEntry.total++;
@@ -179,6 +216,7 @@ export function computeAnalysisMetrics(
     // Recoverable marks check: Easy or Moderate answered incorrectly
     if (isIncorrect && (rawDiff === "Easy" || rawDiff === "Moderate")) {
       topEntry.easyModerateMisses++;
+      topEntry.missedQuestions.push(q);
     }
 
     // Theme mistake tracking
@@ -195,15 +233,12 @@ export function computeAnalysisMetrics(
   const attemptRate = total > 0 ? Math.round((attempted / total) * 100) : 0;
   const accuracyRate = attempted > 0 ? Math.round((correct / attempted) * 1000) / 10 : 0; // 1 decimal place
 
-  // UPSC Standard Marking
-  const marksPerCorrect = 2.0;
-  const penaltyPerWrong = 0.67;
+  // UPSC Standard Marking computed with exam-aware scoring rules
   const netScore = Math.max(0, Number((correct * marksPerCorrect - incorrect * penaltyPerWrong).toFixed(2)));
-  const maxMarks = total * marksPerCorrect;
+  const maxMarks = Number((total * marksPerCorrect).toFixed(0));
 
-  // Recoverable marks: each missed Easy/Moderate question yields +2.67
-  const recoverableMultiplier = 2.67;
-  const recoverableTopicList: { topic: string; subject: string; count: number; marks: number }[] = [];
+  // Recoverable marks per topic
+  const recoverableTopicList: RecoverableTopicItem[] = [];
   let totalEasyModMisses = 0;
 
   topicMap.forEach((entry, topic) => {
@@ -214,6 +249,7 @@ export function computeAnalysisMetrics(
         subject: entry.subject,
         count: entry.easyModerateMisses,
         marks: Number((entry.easyModerateMisses * recoverableMultiplier).toFixed(2)),
+        contributingQuestions: entry.missedQuestions,
       });
     }
   });
@@ -356,7 +392,7 @@ export function computeAnalysisMetrics(
         title: `High-Yield Topic Left Unattempted: ${t.topic}`,
         description: `Skipped ${t.skipped} out of ${t.total} questions in this core area.`,
         count: t.skipped,
-        impactMarks: t.skipped * marksPerCorrect,
+        impactMarks: Number((t.skipped * marksPerCorrect).toFixed(2)),
       });
     }
   });
@@ -366,7 +402,6 @@ export function computeAnalysisMetrics(
   let paceScore: "Optimal" | "Fast / Rushed" | "Methodical / Slow" = "Optimal";
   let paceAdvice = "Steady time distribution across questions.";
 
-  // Standard UPSC Paper 1 is 120-125 questions in 120 mins (~58s / question)
   if (avgTimePerQuestionSeconds > 0 && avgTimePerQuestionSeconds < 35 && accuracyRate < 65) {
     paceScore = "Fast / Rushed";
     paceAdvice = "Averaged under 35s per question with sub-optimal accuracy. Slow down to avoid misreading negative qualifiers like 'NOT correct'.";
@@ -411,6 +446,7 @@ export function computeAnalysisMetrics(
     maxMarks,
     totalTimeSeconds,
     formattedTime: formatDuration(totalTimeSeconds),
+    scoringRule,
     nextBestMove,
     totalRecoverableMarks,
     recoverableTopics: recoverableTopicList,

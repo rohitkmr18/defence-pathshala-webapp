@@ -16,13 +16,13 @@ export default function NextBestMoveCard({ move }: NextBestMoveCardProps) {
       <div className="absolute -right-6 -top-6 h-28 w-28 rounded-full bg-blue-500/10 blur-2xl" />
 
       <div className="relative">
-        {/* Header with AI Coach tag */}
+        {/* Header with DP Coach tag */}
         <div className="flex items-center gap-2 text-blue-700">
           <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-600 text-white shadow-xs">
             <Sparkles className="h-4 w-4" />
           </div>
           <span className="text-xs font-bold uppercase tracking-wider">
-            AI Coach · Next Best Move
+            DP Coach · Next Best Move
           </span>
         </div>
 
