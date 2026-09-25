@@ -14,6 +14,15 @@ app = FastAPI(
     version="0.1.0",
 )
 
+@app.get("/")
+def root():
+    return {
+        "service": "Defence Pathshala PYQ Intelligence API",
+        "status": "online",
+        "version": "0.1.0",
+        "docs": "/docs",
+        "health": "/health",
+    }
 # -----------------------------
 # Middleware
 # -----------------------------
