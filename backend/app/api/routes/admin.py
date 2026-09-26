@@ -66,11 +66,13 @@ def get_dataset_stats_endpoint(
     from app.services.sync_dataset import get_existing_question_ids
 
     # 1. Supabase database total count
-    res = supabase.table("questions").select("id", count="exact").execute()
+    res = supabase.table("questions").select("id", count="exact").limit(1).execute()
     current_db_count = res.count if res.count is not None else 0
 
     # 2. Existing IDs in Supabase
     existing_ids = get_existing_question_ids()
+    if (current_db_count == 0 or current_db_count is None) and len(existing_ids) > 0:
+        current_db_count = len(existing_ids)
 
     # 3. Sheet data
     active_sheet_id = sheet_id or settings.google_sheet_id or ""
