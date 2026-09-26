@@ -15,24 +15,67 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Defence Pathshala – PYQ Intelligence for UPSC Defence Exams",
+  metadataBase: new URL("https://www.defencepathshala.in"),
+
+  title: {
+    default: "Defence Pathshala | PYQ Intelligence Platform for CDS, CAPF & NDA",
+    template: "%s | Defence Pathshala",
+  },
+
   description:
-    "Practice smarter with AI-powered PYQ analysis for CDS, CAPF AC, NDA and AFCAT. Built by an IIT Kanpur graduate and BSF Officer who cleared CAPF AC with AIR 163.",
+    "Analyze CDS, CAPF and NDA previous year questions with topic-wise filters, full-paper practice, and AI-powered performance analytics.",
+
   keywords: [
-    "UPSC defence exam preparation",
     "CDS PYQ",
-    "CAPF AC preparation",
-    "NDA previous year questions",
-    "AFCAT practice",
-    "defence exam coaching",
-    "PYQ intelligence",
+    "CAPF Previous Year Questions",
+    "NDA PYQ",
+    "Defence Pathshala",
+    "CDS Mock Test",
+    "CAPF AC Preparation",
+    "UPSC CAPF",
+    "Defence Exams",
+    "PYQ Analysis",
   ],
-  authors: [{ name: "Defence Pathshala" }],
+
+  alternates: {
+    canonical: "/",
+  },
+
   openGraph: {
-    title: "Defence Pathshala – PYQ Intelligence",
-    description:
-      "AI-powered PYQ analysis for CDS, CAPF AC, NDA and AFCAT. Built by someone who cleared these exams.",
     type: "website",
+    url: "https://www.defencepathshala.in",
+    title: "Defence Pathshala | PYQ Intelligence Platform",
+    description:
+      "Practice smarter with topic-wise PYQ analysis, full-paper mocks, and performance analytics.",
+    siteName: "Defence Pathshala",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Defence Pathshala",
+      },
+    ],
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Defence Pathshala",
+    description:
+      "CDS • CAPF • NDA PYQ Intelligence Platform",
+    images: ["/og-image.png"],
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
   },
 };
 
@@ -43,13 +86,57 @@ export const viewport: Viewport = {
   themeColor: "#0f172a",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col overscroll-none">{children}</body>
+      <body className="min-h-full flex flex-col overscroll-none">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "EducationalOrganization",
+              name: "Defence Pathshala",
+              url: "https://www.defencepathshala.in",
+              logo: "https://www.defencepathshala.in/logo.png",
+              image: "https://www.defencepathshala.in/og-image.png",
+              description:
+                "AI-powered PYQ Intelligence Platform for CDS, CAPF and NDA aspirants.",
+              slogan: "Learn | Prepare | Serve",
+              sameAs: [
+                "https://www.instagram.com/defencepathshala_",
+                "https://www.youtube.com/@defencepathshala3471",
+              ],
+              knowsAbout: [
+                "CDS Preparation",
+                "CAPF AC Preparation",
+                "NDA Preparation",
+                "Previous Year Questions",
+                "Current Affairs",
+              ],
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "Defence Pathshala",
+              url: "https://www.defencepathshala.in",
+            }),
+          }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

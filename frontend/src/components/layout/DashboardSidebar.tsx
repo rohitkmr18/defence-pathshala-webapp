@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Database,
@@ -10,9 +10,11 @@ import {
   ChevronLeft,
   ChevronRight,
   LogIn,
+  LogOut,
   X,
 } from "lucide-react";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
+import { createClient } from "@/lib/supabase/client";
 
 const items = [
   {
@@ -53,6 +55,15 @@ export default function DashboardSidebar({
   user,
 }: SidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  async function handleSignOut() {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    closeMobile?.();
+    router.push("/");
+    router.refresh();
+  }
 
   return (
     <aside
@@ -162,19 +173,29 @@ export default function DashboardSidebar({
       </nav>
 
       {/* ── Auth CTA at bottom ───────────────────────────────────────────── */}
-      {!collapsed && (
+      {/* ── Auth CTA at bottom ───────────────────────────────────────────── */}
+      {!collapsed ? (
         <div className="border-t border-slate-100 p-4">
           {user ? (
-            <div className="flex items-center gap-2.5 rounded-xl border border-blue-100 bg-blue-50/50 p-3">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white shadow-2xs">
-                {user.email?.slice(0, 2).toUpperCase() ?? "U"}
+            <div className="space-y-2.5">
+              <div className="flex items-center gap-2.5 rounded-xl border border-blue-100 bg-blue-50/50 p-3">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white shadow-2xs">
+                  {user.email?.slice(0, 2).toUpperCase() ?? "U"}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-xs font-bold text-slate-900">
+                    {user.email?.split("@")[0]}
+                  </p>
+                  <p className="text-[10px] font-semibold text-blue-600">Signed in</p>
+                </div>
               </div>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-xs font-bold text-slate-900">
-                  {user.email?.split("@")[0]}
-                </p>
-                <p className="text-[10px] font-semibold text-blue-600">Signed in</p>
-              </div>
+              <button
+                onClick={handleSignOut}
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 shadow-2xs transition hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+              >
+                <LogOut className="h-3.5 w-3.5" />
+                Sign out
+              </button>
             </div>
           ) : (
             <Link
@@ -183,6 +204,35 @@ export default function DashboardSidebar({
             >
               <LogIn className="h-4 w-4 text-blue-600" />
               Login to Practice
+            </Link>
+          )}
+        </div>
+      ) : (
+        /* Collapsed Desktop State */
+        <div className="border-t border-slate-100 p-2 flex flex-col items-center gap-2">
+          {user ? (
+            <>
+              <div
+                title={user.email ?? "User"}
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white shadow-2xs"
+              >
+                {user.email?.slice(0, 2).toUpperCase() ?? "U"}
+              </div>
+              <button
+                onClick={handleSignOut}
+                title="Sign out"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:border-red-200 hover:bg-red-50 hover:text-red-600 transition shadow-2xs"
+              >
+                <LogOut className="h-3.5 w-3.5" />
+              </button>
+            </>
+          ) : (
+            <Link
+              href="/auth/login"
+              title="Log in"
+              className="flex h-8 w-8 items-center justify-center rounded-lg border border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100 transition shadow-2xs"
+            >
+              <LogIn className="h-3.5 w-3.5" />
             </Link>
           )}
         </div>

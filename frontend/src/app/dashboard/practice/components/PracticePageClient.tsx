@@ -26,29 +26,28 @@ export interface ActiveFilters {
 
 function AuthGateBanner({ nextUrl }: { nextUrl: string }) {
   return (
-    <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
+    <div className="rounded-2xl border border-blue-200 bg-blue-50/70 p-5 shadow-xs">
       <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-start gap-3">
-          <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-500 text-white">
+          <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white shadow-2xs">
             <LogIn className="h-4 w-4" />
           </div>
           <div>
             <p className="text-sm font-bold text-slate-900">
-              Sign in to start practice
+              Sign in to attempt Full Paper mocks
             </p>
             <p className="mt-0.5 text-xs text-slate-600">
-              Practice sessions require an account. You can explore the question
-              bank and filters without signing in.
+              Full-length exam simulations require an account to save official rankings and post-mock performance analytics. Targeted filtered practice is completely free without signing in.
             </p>
           </div>
         </div>
         <div className="flex shrink-0 gap-2">
           <Link
             href={`/auth/login?next=${encodeURIComponent(nextUrl)}`}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-slate-900 px-4 py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-slate-700"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-blue-500"
           >
             <LogIn className="h-3.5 w-3.5" />
-            Log In to Practice
+            Log In to Attempt Full Paper
           </Link>
         </div>
       </div>
@@ -183,11 +182,11 @@ export default function PracticePageClient() {
   }
 
   function handleStartLearning() {
-    requireAuth(`/dashboard/practice/session?${buildSessionParams("instant")}`);
+    router.push(`/dashboard/practice/session?${buildSessionParams("instant")}`);
   }
 
   function handleStartPractice() {
-    requireAuth(`/dashboard/practice/session?${buildSessionParams("attempt")}`);
+    router.push(`/dashboard/practice/session?${buildSessionParams("attempt")}`);
   }
 
   const attemptDisabled = countLoading || questionCount === 0;
