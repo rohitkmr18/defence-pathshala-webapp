@@ -95,8 +95,8 @@ export default function OnboardingPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F8F8F7] flex items-center justify-center px-5 py-10">
-      <div className="w-full max-w-2xl rounded-[32px] border border-black/5 bg-white shadow-[0_24px_80px_rgba(0,0,0,0.08)] p-8 md:p-10">
+    <main className="min-h-screen bg-[#F8F8F7] flex items-center justify-center px-4 py-8 sm:px-5 sm:py-10">
+      <div className="w-full max-w-2xl rounded-2xl sm:rounded-[32px] border border-black/5 bg-white shadow-[0_24px_80px_rgba(0,0,0,0.08)] p-6 sm:p-8 md:p-10">
 
         {/* Brand */}
         <div className="flex items-center gap-4 mb-10">

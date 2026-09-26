@@ -122,15 +122,15 @@ export default function QuestionBankExplorer({ meta }: Props) {
       className="rounded-3xl border border-gray-200 bg-white p-8 shadow-sm"
     >
       <div className="mb-8">
-        <p className="text-sm uppercase tracking-[0.2em] text-gray-500">
+        <span className="inline-block rounded-full border border-blue-200/80 bg-blue-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700 shadow-2xs mb-2">
           Explore
-        </p>
+        </span>
 
-        <h2 className="mt-2 text-2xl font-bold">
+        <h2 className="text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">
           Explore PYQ Insights
         </h2>
 
-        <p className="mt-2 text-gray-600">
+        <p className="mt-2 text-sm leading-relaxed text-slate-600 sm:text-base">
           Select multiple exams, years and cycles to compare question patterns.
         </p>
       </div>
@@ -152,7 +152,7 @@ export default function QuestionBankExplorer({ meta }: Props) {
                   type="checkbox"
                   checked={selectedExams.includes(item.value)}
                   onChange={() => setSelectedExams((current) => toggleValue(current, item.value))}
-                  className="h-4 w-4 accent-black"
+                  className="h-4 w-4 accent-blue-600"
                 />
                 <span>{item.label}</span>
               </label>
@@ -176,7 +176,7 @@ export default function QuestionBankExplorer({ meta }: Props) {
                   type="checkbox"
                   checked={activeYears.includes(item)}
                   onChange={() => setSelectedYears((current) => toggleValue(current, item))}
-                  className="h-4 w-4 accent-black"
+                  className="h-4 w-4 accent-blue-600"
                 />
                 <span>{item}</span>
               </label>
@@ -201,7 +201,7 @@ export default function QuestionBankExplorer({ meta }: Props) {
                     type="checkbox"
                     checked={activeCycles.includes(item)}
                     onChange={() => setSelectedCycles((current) => toggleValue(current, item))}
-                    className="h-4 w-4 accent-black"
+                    className="h-4 w-4 accent-blue-600"
                   />
                   <span>{item}</span>
                 </label>
@@ -216,22 +216,22 @@ export default function QuestionBankExplorer({ meta }: Props) {
       </div>
 
       {/* Live Selection Preview */}
-      <div className="mt-8 rounded-2xl border border-gray-200 bg-gray-50 p-5">
-        <p className="text-sm uppercase tracking-[0.2em] text-gray-500">
+      <div className="mt-8 rounded-2xl border border-blue-100 bg-blue-50/40 p-5">
+        <p className="text-xs font-bold uppercase tracking-wider text-blue-700">
           Current Selection
         </p>
 
-        <div className="mt-3 flex flex-wrap gap-3">
-          <span className="rounded-full border px-3 py-1 text-sm">
+        <div className="mt-3 flex flex-wrap gap-2.5">
+          <span className="rounded-full border border-blue-200/80 bg-white px-3.5 py-1 text-xs font-bold text-blue-700 shadow-2xs">
             {selectedExamLabels.length ? selectedExamLabels.join(", ") : "No exams"}
           </span>
 
-          <span className="rounded-full border px-3 py-1 text-sm">
+          <span className="rounded-full border border-blue-200/80 bg-white px-3.5 py-1 text-xs font-bold text-blue-700 shadow-2xs">
             {activeYears.length ? activeYears.join(", ") : "All years"}
           </span>
 
           {activeCycles.length > 0 && (
-            <span className="rounded-full border px-3 py-1 text-sm">
+            <span className="rounded-full border border-blue-200/80 bg-white px-3.5 py-1 text-xs font-bold text-blue-700 shadow-2xs">
               Cycles {activeCycles.join(", ")}
             </span>
           )}
@@ -239,31 +239,31 @@ export default function QuestionBankExplorer({ meta }: Props) {
       </div>
 
       {data && (
-        <section className="mt-8 grid gap-4 md:grid-cols-4">
-          <div className="rounded-2xl border p-5">
-            <p className="text-sm text-gray-500">Questions</p>
-            <p className="mt-2 text-3xl font-bold">
+        <section className="mt-8 grid gap-4 sm:grid-cols-2 md:grid-cols-4">
+          <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm">
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Questions</p>
+            <p className="mt-1.5 text-3xl font-black text-slate-900">
               {data.summary.questions}
             </p>
           </div>
 
-          <div className="rounded-2xl border p-5">
-            <p className="text-sm text-gray-500">Subjects</p>
-            <p className="mt-2 text-3xl font-bold">
+          <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm">
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Subjects</p>
+            <p className="mt-1.5 text-3xl font-black text-blue-600">
               {data.summary.subjects}
             </p>
           </div>
 
-          <div className="rounded-2xl border p-5">
-            <p className="text-sm text-gray-500">Exam</p>
-            <p className="mt-2 text-xl font-semibold">
+          <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm">
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Exam</p>
+            <p className="mt-1.5 truncate text-lg font-bold text-slate-900">
               {selectedExamLabels.join(", ") || "All exams"}
             </p>
           </div>
 
-          <div className="rounded-2xl border p-5">
-            <p className="text-sm text-gray-500">Year</p>
-            <p className="mt-2 text-3xl font-bold">
+          <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm">
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Year</p>
+            <p className="mt-1.5 text-3xl font-black text-slate-900">
               {activeYears.length ? activeYears.join(", ") : "All years"}
             </p>
           </div>
