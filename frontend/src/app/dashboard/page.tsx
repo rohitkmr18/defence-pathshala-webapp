@@ -5,19 +5,30 @@ import QuickActionCard from "@/components/dashboard/QuickActionCard";
 import MockPerformanceHub from "@/components/dashboard/MockPerformanceHub";
 import SectionHeader from "@/components/ui/SectionHeader";
 
-import { getServerProfile } from "@/lib/profile-server";
+import { getSafeProfile } from "@/lib/profile-server";
+
+export const metadata = {
+  title: "Dashboard – Defence Pathshala",
+  description:
+    "Your personal PYQ Intelligence dashboard. Access practice sessions, question bank and analytics.",
+};
 
 export default async function DashboardPage() {
-  const { profile, user } = await getServerProfile();
+  const { profile, user } = await getSafeProfile();
   const primaryExam =
     profile.target_exams?.[0] || "Choose your target exam";
 
+  const displayName =
+    profile.full_name ||
+    user?.email?.split("@")[0] ||
+    "Aspirant";
+
   return (
     <main className="min-h-screen bg-white">
-      <div className="mx-auto max-w-7xl px-6 py-8 lg:px-10">
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
         {/* Hero Banner with live synchronized Accuracy */}
         <ContinuePreparationHero
-          name={profile.full_name || user.email?.split("@")[0] || "Aspirant"}
+          name={displayName}
           exam={primaryExam}
           targetYear={profile.target_year}
           lastTopic="Start your first practice"
@@ -50,7 +61,7 @@ export default async function DashboardPage() {
             <QuickActionCard
               href="/dashboard"
               title="Weak Areas"
-              description="Resume revision from your weakest topics."
+              description="Focus on high-yield revision."
               icon={Target}
             />
           </div>

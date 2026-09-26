@@ -2,36 +2,17 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Lightbulb, ClipboardList } from "lucide-react";
+import { Lightbulb, ClipboardList, LogIn } from "lucide-react";
+import Link from "next/link";
+import { createClient } from "@/lib/supabase/client";
 
 import FullPaperHero, { FullPaperDefinition } from "@/components/practice/FullPaperHero";
 import QuestionCountCard from "@/components/practice/QuestionCountCard";
 import AttemptModeCard from "@/components/practice/AttemptModeCard";
 import PracticeFilters from "./PracticeFilters";
 
-// ─── Exam paper configuration ────────────────────────────────────────────────
-// Static for Milestone 1. Will be served from backend in a future milestone.
 
-interface ExamPaperConfig {
-  questions: number;
-  duration: string;
-  marks: number;
-}
-
-const EXAM_PAPER_CONFIG: Record<string, ExamPaperConfig> = {
-  "CAPF AC": { questions: 125, duration: "2 Hours", marks: 250 },
-  "CDS":     { questions: 120, duration: "2 Hours", marks: 100 },
-  "NDA":     { questions: 120, duration: "2.5 Hours", marks: 300 },
-  "AFCAT":   { questions: 100, duration: "2 Hours", marks: 300 },
-};
-
-const DEFAULT_EXAM_CONFIG: ExamPaperConfig = {
-  questions: 0,
-  duration: "—",
-  marks: 0,
-};
-
-// ─── Active filter shape (passed up from PracticeFilters) ─────────────────────
+// ─── Active filter shape ───────────────────────────────────────────────────────
 
 export interface ActiveFilters {
   exams: string[];
@@ -39,6 +20,40 @@ export interface ActiveFilters {
   cycles: string[];
   subjects: string[];
   topics: string[];
+}
+
+// ─── Auth gate modal / banner ─────────────────────────────────────────────────
+
+function AuthGateBanner({ nextUrl }: { nextUrl: string }) {
+  return (
+    <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
+      <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-start gap-3">
+          <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-500 text-white">
+            <LogIn className="h-4 w-4" />
+          </div>
+          <div>
+            <p className="text-sm font-bold text-slate-900">
+              Sign in to start practice
+            </p>
+            <p className="mt-0.5 text-xs text-slate-600">
+              Practice sessions require an account. You can explore the question
+              bank and filters without signing in.
+            </p>
+          </div>
+        </div>
+        <div className="flex shrink-0 gap-2">
+          <Link
+            href={`/auth/login?next=${encodeURIComponent(nextUrl)}`}
+            className="inline-flex items-center gap-1.5 rounded-xl bg-slate-900 px-4 py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-slate-700"
+          >
+            <LogIn className="h-3.5 w-3.5" />
+            Log In to Practice
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -56,6 +71,17 @@ export default function PracticePageClient() {
 
   const [questionCount, setQuestionCount] = useState<number | null>(null);
   const [countLoading, setCountLoading] = useState(false);
+
+  // Auth state — check once on mount
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [showAuthGate, setShowAuthGate] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      setIsAuthenticated(!!data.user);
+    });
+  }, []);
 
   // ── Fetch question count whenever filters change ───────────────────────────
   useEffect(() => {
@@ -117,26 +143,16 @@ export default function PracticePageClient() {
   // ── Callback from PracticeFilters ─────────────────────────────────────────
   const handleFilterChange = useCallback((filters: ActiveFilters) => {
     setActiveFilters(filters);
+    // Reset auth gate when filters change
+    setShowAuthGate(false);
   }, []);
 
   // ── Derived hero data ──────────────────────────────────────────────────────
   const primaryExam = activeFilters.exams[0] ?? "";
 
-  // Normalize exam key — "CAPF AC 2025" → "CAPF AC"
-  const examConfigKey =
-    Object.keys(EXAM_PAPER_CONFIG).find((key) =>
-      primaryExam.startsWith(key)
-    ) ?? primaryExam;
 
-  const examConfig = EXAM_PAPER_CONFIG[examConfigKey] ?? DEFAULT_EXAM_CONFIG;
 
-  const heroExamLabel = primaryExam
-    ? primaryExam
-    : "Select an Exam";
-
-  const heroReady = Boolean(primaryExam) && examConfig.questions > 0;
-
-  // ── Navigation handlers ────────────────────────────────────────────────────
+  // ── Session URL builder ────────────────────────────────────────────────────
   function buildSessionParams(mode: "instant" | "attempt") {
     const params = new URLSearchParams({ mode });
     if (activeFilters.exams.length)    params.set("exam", activeFilters.exams.join(","));
@@ -147,6 +163,15 @@ export default function PracticePageClient() {
     return params.toString();
   }
 
+  // ── Auth-gated navigation ──────────────────────────────────────────────────
+  function requireAuth(navigateTo: string) {
+    if (isAuthenticated === false) {
+      setShowAuthGate(true);
+      return;
+    }
+    router.push(navigateTo);
+  }
+
   function handleStartFullPaper(paper: FullPaperDefinition) {
     const params = new URLSearchParams();
     params.set("exam", paper.exam);
@@ -154,33 +179,40 @@ export default function PracticePageClient() {
     if (paper.cycle) {
       params.set("cycle", paper.cycle);
     }
-    router.push(`/dashboard/practice/full-paper?${params.toString()}`);
+    requireAuth(`/dashboard/practice/full-paper?${params.toString()}`);
   }
 
   function handleStartLearning() {
-    router.push(`/dashboard/practice/session?${buildSessionParams("instant")}`);
+    requireAuth(`/dashboard/practice/session?${buildSessionParams("instant")}`);
   }
 
   function handleStartPractice() {
-    router.push(`/dashboard/practice/session?${buildSessionParams("attempt")}`);
+    requireAuth(`/dashboard/practice/session?${buildSessionParams("attempt")}`);
   }
 
-  // ── Disable attempt cards if no questions found ────────────────────────────
   const attemptDisabled = countLoading || questionCount === 0;
 
+  // Current page URL for next= redirect
+  const currentUrl = typeof window !== "undefined" ? window.location.pathname + window.location.search : "/dashboard/practice";
+
   return (
-    <div className="space-y-6">
-      {/* ── Section 1: Full Paper Hero ─────────────────────────────────────── */}
+    <div className="space-y-5 sm:space-y-6">
+      {/* ── Auth Gate Banner ─────────────────────────────────────────────── */}
+      {showAuthGate && (
+        <AuthGateBanner nextUrl={currentUrl} />
+      )}
+
+      {/* ── Section 1: Full Paper Hero ─────────────────────────────────── */}
       <FullPaperHero
         onStart={handleStartFullPaper}
         initialExam={primaryExam}
         initialYear={activeFilters.years[0]}
       />
 
-      {/* ── Section 2: Targeted Practice (existing filters) ────────────────── */}
-      <div className="rounded-3xl border border-slate-200 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)]">
-        <div className="border-b border-slate-100 px-8 pt-8 pb-6">
-          <h2 className="text-xl font-bold text-slate-900">
+      {/* ── Section 2: Targeted Practice ────────────────────────────────── */}
+      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+        <div className="border-b border-slate-100 px-5 pt-6 pb-5 sm:px-8 sm:pt-8">
+          <h2 className="text-lg font-bold text-slate-900 sm:text-xl">
             Targeted Practice
           </h2>
           <p className="mt-1 text-sm text-slate-500">
@@ -188,15 +220,15 @@ export default function PracticePageClient() {
           </p>
         </div>
 
-        <div className="px-8 py-6">
+        <div className="px-5 py-5 sm:px-8 sm:py-6">
           <PracticeFilters onFilterChange={handleFilterChange} />
         </div>
       </div>
 
-      {/* ── Section 3: Live Question Count ─────────────────────────────────── */}
+      {/* ── Section 3: Live Question Count ──────────────────────────────── */}
       <QuestionCountCard count={questionCount} loading={countLoading} />
 
-      {/* ── Section 4: Attempt Mode Cards ──────────────────────────────────── */}
+      {/* ── Section 4: Attempt Mode Cards ────────────────────────────────── */}
       {questionCount !== null && questionCount > 0 && !countLoading && (
         <div className="grid gap-4 sm:grid-cols-2">
           <AttemptModeCard

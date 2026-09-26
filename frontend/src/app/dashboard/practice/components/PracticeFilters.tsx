@@ -394,10 +394,10 @@ export default function PracticeFilters({ onFilterChange }: PracticeFiltersProps
               <button
                 type="button"
                 onClick={toggleSelectAllTopics}
-                className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+                className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
                   allTopicsSelected
-                    ? "bg-slate-900 text-white"
-                    : "border border-dashed border-slate-300 bg-white text-slate-500 hover:border-slate-400 hover:bg-slate-50"
+                    ? "bg-blue-600 text-white shadow-2xs"
+                    : "border border-dashed border-blue-200 bg-blue-50/50 text-blue-700 hover:bg-blue-100"
                 }`}
               >
                 {allTopicsSelected ? "✓ All Selected" : "Select All"}
@@ -410,8 +410,8 @@ export default function PracticeFilters({ onFilterChange }: PracticeFiltersProps
                   onClick={() => toggleTopic(topic)}
                   className={`rounded-full px-4 py-2 text-sm transition ${
                     selectedTopics.includes(topic)
-                      ? "bg-slate-900 text-white"
-                      : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-100"
+                      ? "bg-blue-600 text-white shadow-2xs font-medium"
+                      : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
                   }`}
                 >
                   {topic}
