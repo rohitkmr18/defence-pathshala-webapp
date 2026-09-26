@@ -191,3 +191,24 @@ def test_sync_dataset_with_admin_key_dry_run() -> None:
     assert "inserted" in data
     assert "updated" in data
     assert "duration_seconds" in data
+
+
+def test_sync_stats_unauthenticated() -> None:
+    response = client.get("/admin/sync-stats")
+    assert response.status_code == 401
+
+
+def test_sync_stats_with_admin_key() -> None:
+    admin_key = settings.supabase_service_role_key
+    response = client.get(
+        "/admin/sync-stats",
+        headers={"X-Admin-Key": admin_key},
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert "current_db_count" in data
+    assert "incoming_sheet_count" in data
+    assert "new_questions" in data
+    assert "updated_questions" in data
+    assert data["current_db_count"] >= 730
+    assert data["incoming_sheet_count"] >= 730
