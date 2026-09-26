@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.analytics import router as analytics_router
 from app.api.routes.practice import router as practice_router
+from app.api.routes.admin import router as admin_router
 from app.core.security import get_current_user
 from app.core.supabase import supabase
 from app.schemas.profile import ProfileUpdate
@@ -47,6 +48,7 @@ app.add_middleware(
 
 app.include_router(analytics_router)
 app.include_router(practice_router)
+app.include_router(admin_router)
 
 # -----------------------------
 # Health
