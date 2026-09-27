@@ -158,6 +158,13 @@ export default function PracticePageClient() {
     []
   );
 
+  const handleViewAllYears = useCallback(() => {
+    setFilterOverride({
+      type: "all_years",
+      timestamp: Date.now(),
+    });
+  }, []);
+
   const handleFilterChange = useCallback((filters: ActiveFilters) => {
     setActiveFilters(filters);
     // Reset auth gate when filters change
@@ -253,6 +260,7 @@ export default function PracticePageClient() {
         activeFilters={activeFilters}
         allExamsSelected={activeFilters.allExamsSelected}
         onBarClick={handleBarClick}
+        onViewAllYears={handleViewAllYears}
       />
 
       {/* ── Section 4: Practice Mode Cards ────────────────────────────────── */}

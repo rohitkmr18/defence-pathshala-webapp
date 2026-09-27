@@ -24,12 +24,14 @@ interface QuestionDistributionChartProps {
   activeFilters: ActiveFilters;
   allExamsSelected?: boolean;
   onBarClick: (type: "cycle" | "year" | "exam", value: string | number) => void;
+  onViewAllYears?: () => void;
 }
 
 export default function QuestionDistributionChart({
   activeFilters,
   allExamsSelected,
   onBarClick,
+  onViewAllYears,
 }: QuestionDistributionChartProps) {
   const [data, setData] = useState<DistributionItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -40,31 +42,56 @@ export default function QuestionDistributionChart({
   }, []);
 
   // ── Dynamic Grouping Priority ─────────────────────────────────────────────
-  // 1. All Exams Selected -> Year
-  // 2. Cycle (if multiple cycles selected)
-  // 3. Year (if multiple years selected)
-  // 4. Exam (if multiple exams selected)
+  // 1. Single Year selected -> Break down by Exam (or Cycle for single exam like CDS)
+  // 2. All Exams Selected across Multiple Years -> Year-wise aggregation
+  // 3. Dynamic selection: Year -> Cycle -> Exam
   const isAllExams = Boolean(allExamsSelected || activeFilters.allExamsSelected);
+  const selectedYear = activeFilters.years.length === 1 ? activeFilters.years[0] : null;
 
   const groupBy = useMemo<"cycle" | "year" | "exam" | null>(() => {
-    if (isAllExams) {
+    // 1. If a single year is active:
+    if (activeFilters.years.length === 1) {
+      if (activeFilters.exams.length > 1) {
+        return "exam";
+      }
+      if (
+        activeFilters.cycles.length > 1 ||
+        (activeFilters.cycles.length === 0 && activeFilters.exams.includes("CDS"))
+      ) {
+        return "cycle";
+      }
+      if (activeFilters.exams.length === 1) {
+        return "exam";
+      }
+      return null;
+    }
+
+    // 2. If multiple years and all exams are selected -> group by year
+    if (isAllExams && activeFilters.years.length > 1) {
+      return "year";
+    }
+
+    // 3. Multi-selection priorities
+    if (activeFilters.years.length > 1) {
       return "year";
     }
     if (activeFilters.cycles.length > 1) {
       return "cycle";
     }
-    if (activeFilters.years.length > 1) {
-      return "year";
-    }
     if (activeFilters.exams.length > 1) {
       return "exam";
     }
+
+    if (isAllExams) {
+      return "year";
+    }
+
     return null;
   }, [
     isAllExams,
-    activeFilters.cycles.length,
     activeFilters.years.length,
-    activeFilters.exams.length,
+    activeFilters.cycles.length,
+    activeFilters.exams,
   ]);
 
   // ── Fetch distribution data ───────────────────────────────────────────────
@@ -136,9 +163,13 @@ export default function QuestionDistributionChart({
   // Titles based on active grouping
   const title =
     groupBy === "cycle"
-      ? "Question Distribution by Cycle"
+      ? selectedYear
+        ? `Question Distribution by Cycle (${selectedYear})`
+        : "Question Distribution by Cycle"
       : groupBy === "year"
       ? "Question Distribution by Year"
+      : selectedYear
+      ? `Questions in ${selectedYear} by Exam`
       : "Question Distribution by Exam";
 
   const hint =
@@ -146,6 +177,8 @@ export default function QuestionDistributionChart({
       ? "Click any cycle to narrow down practice."
       : groupBy === "year"
       ? "Click any year to focus on that specific year."
+      : activeFilters.subjects.length > 0 || activeFilters.topics.length > 0
+      ? `Showing questions from selected ${activeFilters.topics.length > 0 ? "topic" : "subject"} in ${selectedYear ?? "this year"}.`
       : "Click any exam to narrow down practice.";
 
   const handleBarClick = (entry: any) => {
@@ -166,7 +199,7 @@ export default function QuestionDistributionChart({
 
   return (
     <div className="rounded-3xl border border-slate-200 bg-white p-5 sm:p-6 shadow-sm transition-all dark:border-slate-800 dark:bg-slate-900">
-      <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400">
             <BarChart3 className="h-4 w-4" />
@@ -178,6 +211,16 @@ export default function QuestionDistributionChart({
             <p className="text-xs text-slate-500 dark:text-slate-400">{hint}</p>
           </div>
         </div>
+
+        {selectedYear && onViewAllYears && (
+          <button
+            type="button"
+            onClick={onViewAllYears}
+            className="inline-flex items-center gap-1 self-start rounded-full border border-blue-200 bg-blue-50/60 px-3 py-1 text-xs font-semibold text-blue-700 transition hover:bg-blue-100 dark:border-blue-900/60 dark:bg-blue-950/40 dark:text-blue-300 dark:hover:bg-blue-900/60 sm:self-auto"
+          >
+            <span>&larr; View all years</span>
+          </button>
+        )}
       </div>
 
       <div className="h-56 w-full sm:h-64">

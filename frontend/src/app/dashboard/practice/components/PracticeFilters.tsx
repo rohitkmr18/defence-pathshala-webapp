@@ -13,8 +13,8 @@ type PracticeFiltersResponse = {
 };
 
 export interface FilterOverride {
-  type: "cycle" | "year" | "exam";
-  value: string | number;
+  type: "cycle" | "year" | "exam" | "all_years";
+  value?: string | number;
   timestamp: number;
 }
 
@@ -197,6 +197,22 @@ export default function PracticeFilters({
     if (filterOverride.type === "year") {
       const yearVal = Number(filterOverride.value);
       setSelectedYears([yearVal]);
+
+      // Open all the exams of that year
+      const examsForYear = (filters.exams ?? []).filter((exam) =>
+        (filters.years[exam] ?? []).includes(yearVal)
+      );
+      if (examsForYear.length > 0) {
+        setSelectedExams(examsForYear);
+      }
+      setSelectedCycles([]);
+    } else if (filterOverride.type === "all_years") {
+      const nextYears = Array.from(
+        new Set(
+          selectedExams.flatMap((name) => filters?.years[name] ?? [])
+        )
+      ).sort((a, b) => b - a);
+      setSelectedYears(nextYears);
     } else if (filterOverride.type === "cycle") {
       const cycleVal = String(filterOverride.value);
       setSelectedCycles([cycleVal]);
@@ -210,8 +226,17 @@ export default function PracticeFilters({
         return filtered.length > 0 ? filtered : (nextYears[0] !== undefined ? [nextYears[0]] : []);
       });
 
-      setSelectedSubjects([]);
-      setSelectedTopics([]);
+      // Retain selected subjects/topics if they exist in the selected exam
+      setSelectedSubjects((current) =>
+        current.filter((s) => Boolean(filters.subjects[examVal]?.[s]))
+      );
+      setSelectedTopics((current) =>
+        current.filter((t) =>
+          Object.values(filters.subjects[examVal] ?? {}).some((topics) =>
+            topics.includes(t)
+          )
+        )
+      );
 
       if (examVal === "CDS") {
         setSelectedCycles((current) =>
@@ -221,7 +246,7 @@ export default function PracticeFilters({
         setSelectedCycles([]);
       }
     }
-  }, [filterOverride, filters]);
+  }, [filterOverride, filters, selectedExams]);
 
   function toggleSelectAllExams() {
     if (allExamsSelected) {

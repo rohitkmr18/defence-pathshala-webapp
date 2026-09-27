@@ -155,18 +155,33 @@ export async function GET(request: NextRequest) {
         });
       }
     } else if (groupBy === "exam") {
-      const targetExams = exam
+      const rawExams = exam
         ? exam.split(",").map((e) => e.trim()).filter(Boolean)
-        : Array.from(new Set(rows.map((r) => r.exam).filter(Boolean))).sort();
+        : Array.from(new Set(rows.map((r) => r.exam).filter(Boolean)));
 
-      for (const e of targetExams) {
-        const expandedE = expandExamQuery(e);
+      // Deduplicate by clean UI label (e.g. 'CAPF-AC' and 'CAPF' map to 'CAPF')
+      const examLabelsSeen = new Set<string>();
+      const uniqueExams: Array<{ canonical: string; label: string }> = [];
+
+      for (const e of rawExams) {
+        const label = getExamLabel(e);
+        if (!examLabelsSeen.has(label)) {
+          examLabelsSeen.add(label);
+          uniqueExams.push({ canonical: e, label });
+        }
+      }
+
+      // Sort exams consistently (CDS first, then CAPF, then others)
+      uniqueExams.sort((a, b) => a.label.localeCompare(b.label));
+
+      for (const { canonical, label } of uniqueExams) {
+        const expandedE = expandExamQuery(canonical);
         const count = rows.filter((r) =>
-          expandedE.length > 0 ? expandedE.includes(r.exam) : r.exam === e
+          expandedE.length > 0 ? expandedE.includes(r.exam) : r.exam === canonical
         ).length;
         distribution.push({
-          key: e,
-          label: getExamLabel(e),
+          key: canonical,
+          label,
           count,
         });
       }
