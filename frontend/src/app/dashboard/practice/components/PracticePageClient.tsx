@@ -2,14 +2,18 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Lightbulb, ClipboardList, LogIn } from "lucide-react";
+import { LogIn } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 
 import FullPaperHero, { FullPaperDefinition } from "@/components/practice/FullPaperHero";
 import QuestionCountCard from "@/components/practice/QuestionCountCard";
-import AttemptModeCard from "@/components/practice/AttemptModeCard";
-import PracticeFilters from "./PracticeFilters";
+import QuestionDistributionChart from "@/components/practice/QuestionDistributionChart";
+import {
+  InstantFeedbackCard,
+  AttemptAtOnceCard,
+} from "@/components/practice/AttemptModeCard";
+import PracticeFilters, { type FilterOverride } from "./PracticeFilters";
 
 
 // ─── Active filter shape ───────────────────────────────────────────────────────
@@ -20,6 +24,7 @@ export interface ActiveFilters {
   cycles: string[];
   subjects: string[];
   topics: string[];
+  allExamsSelected?: boolean;
 }
 
 // ─── Auth gate modal / banner ─────────────────────────────────────────────────
@@ -140,6 +145,19 @@ export default function PracticePageClient() {
   }, [activeFilters]);
 
   // ── Callback from PracticeFilters ─────────────────────────────────────────
+  const [filterOverride, setFilterOverride] = useState<FilterOverride | null>(null);
+
+  const handleBarClick = useCallback(
+    (type: "cycle" | "year" | "exam", value: string | number) => {
+      setFilterOverride({
+        type,
+        value,
+        timestamp: Date.now(),
+      });
+    },
+    []
+  );
+
   const handleFilterChange = useCallback((filters: ActiveFilters) => {
     setActiveFilters(filters);
     // Reset auth gate when filters change
@@ -220,32 +238,31 @@ export default function PracticePageClient() {
         </div>
 
         <div className="px-5 py-5 sm:px-8 sm:py-6">
-          <PracticeFilters onFilterChange={handleFilterChange} />
+          <PracticeFilters
+            onFilterChange={handleFilterChange}
+            filterOverride={filterOverride}
+          />
         </div>
       </div>
 
       {/* ── Section 3: Live Question Count ──────────────────────────────── */}
       <QuestionCountCard count={questionCount} loading={countLoading} />
 
-      {/* ── Section 4: Attempt Mode Cards ────────────────────────────────── */}
+      {/* ── Section 3.5: Question Distribution Chart ────────────────────── */}
+      <QuestionDistributionChart
+        activeFilters={activeFilters}
+        allExamsSelected={activeFilters.allExamsSelected}
+        onBarClick={handleBarClick}
+      />
+
+      {/* ── Section 4: Practice Mode Cards ────────────────────────────────── */}
       {questionCount !== null && questionCount > 0 && !countLoading && (
-        <div className="grid gap-4 sm:grid-cols-2">
-          <AttemptModeCard
-            icon={Lightbulb}
-            title="Instant Feedback"
-            description="Learn after every question with explanations. Review themes, subtopics, and difficulty as you go."
-            ctaLabel="Start Learning"
-            variant="outline"
+        <div className="mx-auto w-full max-w-[760px] space-y-6">
+          <InstantFeedbackCard
             onStart={handleStartLearning}
             disabled={attemptDisabled}
           />
-
-          <AttemptModeCard
-            icon={ClipboardList}
-            title="Attempt at Once"
-            description="Finish first. Review everything after submission. A full UPSC-like experience — no mid-session answers."
-            ctaLabel="Start Practice"
-            variant="filled"
+          <AttemptAtOnceCard
             onStart={handleStartPractice}
             disabled={attemptDisabled}
           />

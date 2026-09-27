@@ -12,11 +12,21 @@ type PracticeFiltersResponse = {
   subjects: Record<string, Record<string, string[]>>;
 };
 
-interface PracticeFiltersProps {
-  onFilterChange?: (filters: ActiveFilters) => void;
+export interface FilterOverride {
+  type: "cycle" | "year" | "exam";
+  value: string | number;
+  timestamp: number;
 }
 
-export default function PracticeFilters({ onFilterChange }: PracticeFiltersProps) {
+interface PracticeFiltersProps {
+  onFilterChange?: (filters: ActiveFilters) => void;
+  filterOverride?: FilterOverride | null;
+}
+
+export default function PracticeFilters({
+  onFilterChange,
+  filterOverride,
+}: PracticeFiltersProps) {
   const [filters, setFilters] = useState<PracticeFiltersResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -162,6 +172,12 @@ export default function PracticeFilters({ onFilterChange }: PracticeFiltersProps
     return Array.from(topics).sort((a, b) => a.localeCompare(b));
   }, [filters, selectedExams, selectedSubjects]);
 
+  // ── Exam Select All — pure derived state, no duplicate state ──────────────
+  const allExamsSelected =
+    Boolean(filters?.exams?.length) &&
+    selectedExams.length === (filters?.exams?.length ?? 0) &&
+    Boolean(filters?.exams?.every((exam) => selectedExams.includes(exam)));
+
   // Broadcast filter state to parent whenever selections change
   useEffect(() => {
     onFilterChange?.({
@@ -170,8 +186,65 @@ export default function PracticeFilters({ onFilterChange }: PracticeFiltersProps
       cycles: selectedCycles,
       subjects: selectedSubjects,
       topics: selectedTopics,
+      allExamsSelected,
     });
-  }, [onFilterChange, selectedExams, selectedYears, selectedCycles, selectedSubjects, selectedTopics]);
+  }, [onFilterChange, selectedExams, selectedYears, selectedCycles, selectedSubjects, selectedTopics, allExamsSelected]);
+
+  // ── Override filter from external action (e.g. chart bar click) ───────────
+  useEffect(() => {
+    if (!filterOverride || !filters) return;
+
+    if (filterOverride.type === "year") {
+      const yearVal = Number(filterOverride.value);
+      setSelectedYears([yearVal]);
+    } else if (filterOverride.type === "cycle") {
+      const cycleVal = String(filterOverride.value);
+      setSelectedCycles([cycleVal]);
+    } else if (filterOverride.type === "exam") {
+      const examVal = String(filterOverride.value);
+      setSelectedExams([examVal]);
+
+      const nextYears = filters.years[examVal] ?? [];
+      setSelectedYears((current) => {
+        const filtered = current.filter((y) => nextYears.includes(y));
+        return filtered.length > 0 ? filtered : (nextYears[0] !== undefined ? [nextYears[0]] : []);
+      });
+
+      setSelectedSubjects([]);
+      setSelectedTopics([]);
+
+      if (examVal === "CDS") {
+        setSelectedCycles((current) =>
+          current.length > 0 ? current : (filters.cycles.CDS?.slice(0, 1) ?? [])
+        );
+      } else {
+        setSelectedCycles([]);
+      }
+    }
+  }, [filterOverride, filters]);
+
+  function toggleSelectAllExams() {
+    if (allExamsSelected) {
+      setSelectedExams([]);
+      setSelectedYears([]);
+      setSelectedCycles([]);
+      setSelectedSubjects([]);
+      setSelectedTopics([]);
+    } else {
+      const all = filters?.exams ?? [];
+      setSelectedExams(all);
+
+      const nextYears = Array.from(
+        new Set(all.flatMap((name) => filters?.years[name] ?? []))
+      ).sort((a, b) => b - a);
+
+      setSelectedYears(nextYears);
+      setSelectedSubjects([]);
+      setSelectedTopics([]);
+      // When selecting all exams, leave cycles unselected so questions across all cycles are included without bias
+      setSelectedCycles([]);
+    }
+  }
 
   // ── Topics Select All — pure derived state, no extra useState ─────────────
   const allTopicsSelected =
@@ -306,6 +379,18 @@ export default function PracticeFilters({ onFilterChange }: PracticeFiltersProps
         <div>
           <label className="mb-3 block text-sm text-slate-500">Exam</label>
           <div className="flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={toggleSelectAllExams}
+              className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+                allExamsSelected
+                  ? "bg-blue-600 text-white shadow-2xs"
+                  : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-100"
+              }`}
+            >
+              {allExamsSelected ? "✓ Select All Exams" : "Select All Exams"}
+            </button>
+
             {filters.exams.map((examName) => (
               <button
                 key={examName}
@@ -313,7 +398,7 @@ export default function PracticeFilters({ onFilterChange }: PracticeFiltersProps
                 onClick={() => toggleExam(examName)}
                 className={`rounded-full px-4 py-2 text-sm transition ${
                   selectedExams.includes(examName)
-                    ? "bg-blue-600 text-white"
+                    ? "bg-blue-600 text-white font-medium"
                     : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-100"
                 }`}
               >

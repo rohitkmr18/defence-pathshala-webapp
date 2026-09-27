@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Clock, BookOpen, Target, Award, ChevronDown } from "lucide-react";
+import { Clock, Target, Award } from "lucide-react";
+import PaperSelector from "./PaperSelector";
 
 export interface FullPaperDefinition {
   id: string;
@@ -72,6 +73,28 @@ export const AVAILABLE_FULL_PAPERS: FullPaperDefinition[] = [
     marks: 100,
   },
   {
+    id: "cds-2024-2",
+    exam: "CDS",
+    year: 2024,
+    cycle: "II",
+    label: "CDS II 2024",
+    questions: 120,
+    duration: "2 Hours",
+    durationSeconds: 7200,
+    marks: 100,
+  },
+  {
+    id: "cds-2024-1",
+    exam: "CDS",
+    year: 2024,
+    cycle: "I",
+    label: "CDS I 2024",
+    questions: 120,
+    duration: "2 Hours",
+    durationSeconds: 7200,
+    marks: 100,
+  },
+  {
     id: "capf-2025",
     exam: "CAPF-AC",
     year: 2025,
@@ -127,20 +150,18 @@ export default function FullPaperHero({
         (!initialYear || p.year === initialYear)
     ) || AVAILABLE_FULL_PAPERS[0]!;
 
-  const [selectedPaperId, setSelectedPaperId] = useState<string>(initialPaper.id);
-
-  const selectedPaper =
-    AVAILABLE_FULL_PAPERS.find((p) => p.id === selectedPaperId) || AVAILABLE_FULL_PAPERS[0]!;
+  const [selectedPaper, setSelectedPaper] =
+    useState<FullPaperDefinition>(initialPaper);
 
   return (
-    <div className="rounded-3xl bg-black p-8 text-white shadow-[0_20px_60px_rgba(0,0,0,0.15)]">
+    <div className="rounded-3xl bg-black p-6 sm:p-8 text-white shadow-[0_20px_60px_rgba(0,0,0,0.15)]">
       {/* Header row */}
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
             Attempt Full Paper
           </p>
-          <h2 className="mt-2 text-2xl font-bold text-white">
+          <h2 className="mt-2 text-2xl font-bold text-white sm:text-3xl">
             Exam-like experience
           </h2>
           <p className="mt-1 text-sm text-gray-400">
@@ -148,78 +169,59 @@ export default function FullPaperHero({
           </p>
         </div>
 
-        <span className="rounded-full border border-blue-400/30 bg-blue-500/10 px-3 py-1 text-xs font-semibold text-blue-300">
+        <span className="shrink-0 rounded-full border border-blue-400/30 bg-blue-500/10 px-3 py-1 text-xs font-semibold text-blue-300">
           UPSC Style
         </span>
       </div>
 
-      {/* 2x2 Stats grid matching design mockup */}
-      <div className="mt-7 grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {/* Exam Single Select Option */}
-        <div className="relative rounded-2xl border border-white/10 bg-white/5 p-4 transition hover:border-white/20">
-          <label
-            htmlFor="exam-paper-select"
-            className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-[0.15em] text-gray-400"
-          >
-            <BookOpen className="h-3.5 w-3.5 text-blue-400" />
-            Exam
-          </label>
-          <div className="relative mt-2">
-            <select
-              id="exam-paper-select"
-              value={selectedPaperId}
-              onChange={(e) => setSelectedPaperId(e.target.value)}
-              className="w-full appearance-none rounded-xl border border-white/15 bg-white/10 px-3.5 py-2.5 text-base font-bold text-white focus:border-blue-400 focus:outline-none cursor-pointer pr-10"
-            >
-              {AVAILABLE_FULL_PAPERS.map((paper) => (
-                <option
-                  key={paper.id}
-                  value={paper.id}
-                  className="bg-slate-900 text-white py-1"
-                >
-                  {paper.label}
-                </option>
-              ))}
-            </select>
-            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-          </div>
-        </div>
+      {/* 3-Step Hierarchical Paper Selector (Exam -> Year -> Cycle) with Live Summary */}
+      <div className="mt-7">
+        <PaperSelector
+          papers={AVAILABLE_FULL_PAPERS}
+          selectedPaper={selectedPaper}
+          onSelectPaper={setSelectedPaper}
+          initialExam={initialExam}
+          initialYear={initialYear}
+        />
+      </div>
 
+      {/* 3-Column Stats Grid */}
+      <div className="mt-6 grid grid-cols-3 gap-3 sm:gap-4">
         {/* Time */}
         <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-          <div className="flex items-center gap-2 text-gray-400">
-            <Clock className="h-3.5 w-3.5" />
-            <span className="text-xs font-medium uppercase tracking-[0.15em]">
+          <div className="flex items-center gap-1.5 text-gray-400">
+            <Clock className="h-3.5 w-3.5 text-blue-400" />
+            <span className="text-[11px] font-semibold uppercase tracking-[0.15em]">
               Time
             </span>
           </div>
-          <p className="mt-2.5 text-xl font-bold text-white">
+          <p className="mt-2 text-base sm:text-xl font-bold text-white">
             {selectedPaper.duration}
           </p>
         </div>
 
         {/* Questions */}
         <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-          <div className="flex items-center gap-2 text-gray-400">
-            <Target className="h-3.5 w-3.5" />
-            <span className="text-xs font-medium uppercase tracking-[0.15em]">
+          <div className="flex items-center gap-1.5 text-gray-400">
+            <Target className="h-3.5 w-3.5 text-emerald-400" />
+            <span className="text-[11px] font-semibold uppercase tracking-[0.15em]">
               Questions
             </span>
           </div>
-          <p className="mt-2.5 text-xl font-bold text-white">
+          <p className="mt-2 text-base sm:text-xl font-bold text-white">
             {selectedPaper.questions}
           </p>
         </div>
 
         {/* Marks */}
         <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-          <div className="flex items-center gap-2 text-gray-400">
-            <Award className="h-3.5 w-3.5" />
-            <span className="text-xs font-medium uppercase tracking-[0.15em]">
+          <div className="flex items-center gap-1.5 text-gray-400">
+            <Award className="h-3.5 w-3.5 text-amber-400" />
+            <span className="text-[11px] font-semibold uppercase tracking-[0.15em]">
               Marks
             </span>
           </div>
-          <p className="mt-2.5 text-xl font-bold text-white">
+          <p className="mt-2 text-base sm:text-xl font-bold text-white">
             {selectedPaper.marks}
           </p>
         </div>
@@ -229,7 +231,7 @@ export default function FullPaperHero({
       <button
         type="button"
         onClick={() => onStart(selectedPaper)}
-        className="mt-6 w-full rounded-xl bg-white py-4 text-center text-sm font-bold text-black transition-all hover:bg-gray-100 active:scale-[0.98]"
+        className="mt-6 w-full rounded-xl bg-white py-4 text-center text-sm sm:text-base font-bold text-black transition-all hover:bg-gray-100 active:scale-[0.98] focus-visible:outline-hidden focus-visible:ring-4 focus-visible:ring-white/30"
       >
         Start Full Paper
       </button>

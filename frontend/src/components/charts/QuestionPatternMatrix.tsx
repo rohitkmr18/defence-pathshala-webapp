@@ -4,6 +4,10 @@ import { useMemo } from "react";
 import {
   FileText,
   Brain,
+  CheckCircle,
+  HelpCircle,
+  ListOrdered,
+  Layers,
 } from "lucide-react";
 
 interface QuestionPatternMatrixProps {
@@ -73,6 +77,7 @@ export default function QuestionPatternMatrix({
 
   return (
     <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* ── Card 1: Question Pattern Distribution ─────────────────────── */}
       <div className="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-xs">
         <div className="mb-6">
           <div className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700 shadow-2xs">
@@ -88,7 +93,7 @@ export default function QuestionPatternMatrix({
         </div>
 
         <div className="space-y-4">
-          {sortedPatterns.map((item) => {
+          {sortedPatterns.map((item, idx) => {
             const pct = ((item.value / (totalQuestions || 1)) * 100).toFixed(1);
             const hint = getPatternHint(item.name);
 
@@ -111,6 +116,7 @@ export default function QuestionPatternMatrix({
                   </div>
                 </div>
 
+                {/* Progress bar */}
                 <div className="h-2 w-full rounded-full bg-slate-200 overflow-hidden mb-2">
                   <div
                     className="h-full rounded-full bg-blue-600 transition-all duration-500"
@@ -127,6 +133,7 @@ export default function QuestionPatternMatrix({
         </div>
       </div>
 
+      {/* ── Card 2: Cognitive Question Types ──────────────────────────── */}
       <div className="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-xs">
         <div className="mb-6">
           <div className="inline-flex items-center gap-1.5 rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-bold text-indigo-700 shadow-2xs">
@@ -172,6 +179,7 @@ export default function QuestionPatternMatrix({
                   </div>
                 </div>
 
+                {/* Progress bar */}
                 <div className="h-2 w-full rounded-full bg-slate-200 overflow-hidden mb-2">
                   <div
                     className={`h-full rounded-full ${style.barColor} transition-all duration-500`}
@@ -188,6 +196,7 @@ export default function QuestionPatternMatrix({
           })}
         </div>
 
+        {/* Strategic Takeaway Banner */}
         <div className="mt-5 rounded-2xl border border-indigo-100 bg-indigo-50/50 p-4">
           <p className="text-xs font-bold uppercase tracking-wider text-indigo-800">
             Preparation Strategy
@@ -200,3 +209,4 @@ export default function QuestionPatternMatrix({
     </section>
   );
 }
+

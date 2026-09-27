@@ -12,11 +12,12 @@ import {
   LogIn,
   LogOut,
   X,
+  RefreshCw,
 } from "lucide-react";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
 
-const items = [
+const baseItems = [
   {
     name: "Dashboard",
     href: "/dashboard",
@@ -56,6 +57,23 @@ export default function DashboardSidebar({
 }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
+
+  const isAdmin =
+    user?.email?.toLowerCase() === "rohitcool423@gmail.com" ||
+    (user?.app_metadata as any)?.role === "admin" ||
+    (user?.user_metadata as any)?.role === "admin";
+
+  const items = isAdmin
+    ? [
+        ...baseItems,
+        {
+          name: "Admin Dataset Sync",
+          href: "/dashboard/admin",
+          icon: RefreshCw,
+          isAdminItem: true,
+        },
+      ]
+    : baseItems;
 
   async function handleSignOut() {
     const supabase = createClient();

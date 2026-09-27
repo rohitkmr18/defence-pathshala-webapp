@@ -3,6 +3,7 @@
 import type { PracticeQuestion, OptionKey } from "@/lib/practice-types";
 import { getCorrectKey } from "@/lib/practice-types";
 import MathText from "@/components/common/MathText";
+import SourceFooter from "@/components/question-player/SourceFooter";
 
 interface AnswerRevealProps {
   question: PracticeQuestion;
@@ -134,6 +135,10 @@ export default function AnswerReveal({
               </div>
             </div>
           </div>
+
+          {question.source && (
+            <SourceFooter source={question.source} />
+          )}
         </div>
       </div>
     </div>
