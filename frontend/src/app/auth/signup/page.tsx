@@ -131,14 +131,14 @@ export default function SignupPage() {
             </h1>
 
             <p className="max-w-xs text-sm leading-relaxed text-slate-400">
-              Create your free account and get access to 730+ curated PYQs,
+              Create your free account and get access to 1500+ curated PYQs,
               targeted practice sessions, and performance analytics.
             </p>
 
             <ul className="space-y-3">
               {[
                 "Free to join",
-                "730+ PYQs across 4 exams",
+                "1500+ PYQs across 4 exams",
                 "No coaching centre fluff",
                 "Built by AIR 163 CAPF AC",
               ].map((item) => (

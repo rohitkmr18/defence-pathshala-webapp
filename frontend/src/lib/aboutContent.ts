@@ -127,8 +127,8 @@ export const defaultAboutContent: AboutPageData = {
     features: [
       {
         id: "pyq-analysed",
-        title: "730+ PYQs Analysed",
-        metric: "730+ Verified",
+        title: "1500+ PYQs Analysed",
+        metric: "1500+ Verified",
         description:
           "Every single past question categorized across subject, topic, subtopic, pattern, and examiner traps with verified keys.",
         badge: "Deep Taxonomy",
@@ -189,7 +189,7 @@ export const defaultAboutContent: AboutPageData = {
         status: "completed",
         timeline: "Completed",
         highlights: [
-          "730+ PYQs digitized with 29-column taxonomy",
+          "1500+ PYQs digitized with 29-column taxonomy",
           "Subject, topic, difficulty, and theme categorization",
           "Searchable question bank and student onboarding flow",
         ],

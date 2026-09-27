@@ -319,7 +319,7 @@ export default function ProductShowcase() {
           {/* Top 3 numbers */}
           <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-slate-100 text-center pb-6 border-b border-slate-100 gap-4 sm:gap-0">
             <div className="px-4 py-2">
-              <p className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">730+</p>
+              <p className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">1500+</p>
               <p className="mt-1 text-xs font-bold text-slate-500 uppercase tracking-wider">Official PYQs</p>
             </div>
             <div className="px-4 py-2">

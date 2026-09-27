@@ -46,9 +46,9 @@ export default async function DashboardPage() {
             <QuickActionCard
               href="/dashboard/question-bank"
               title="PYQ Insights"
-              description="Explore 730 PYQs with subject, topic and difficulty insights."
+              description="Explore 1500+ PYQs with subject, topic and difficulty insights."
               icon={Database}
-              badge="730 PYQs"
+              badge="1500+ PYQs"
             />
 
             <QuickActionCard

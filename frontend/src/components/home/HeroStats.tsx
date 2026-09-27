@@ -13,7 +13,7 @@ interface StatItem {
 const STATS: StatItem[] = [
   {
     id: "pyqs",
-    value: "730+",
+    value: "1500+",
     label: "PYQs Analyzed",
     sublabel: "Across CDS, CAPF AC & NDA",
     icon: Database,

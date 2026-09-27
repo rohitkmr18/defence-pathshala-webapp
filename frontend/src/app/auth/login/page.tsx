@@ -208,7 +208,7 @@ export default function LoginPage() {
             </h1>
 
             <p className="max-w-xs text-sm leading-relaxed text-slate-400">
-              Access 730+ PYQs for CDS, CAPF AC, NDA and AFCAT. Track
+              Access 1500+ PYQs for CDS, CAPF AC, NDA and AFCAT. Track
               your progress and target your weak areas.
             </p>
 

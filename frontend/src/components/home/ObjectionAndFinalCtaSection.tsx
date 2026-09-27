@@ -48,7 +48,7 @@ const OBJECTION_CARDS = [
 const FAQS: FAQItem[] = [
   {
     question: "How many previous year questions are available?",
-    answer: "730+ official PYQs across CDS, CAPF AC and NDA.",
+    answer: "1500+ official PYQs across CDS, CAPF AC and NDA.",
   },
   {
     question: "Are the questions official?",
