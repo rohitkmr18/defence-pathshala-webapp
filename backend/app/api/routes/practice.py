@@ -282,17 +282,63 @@ def get_practice_distribution(
                     "count": count,
                 })
         elif group_by == "exam":
-            target_exams = [e.strip() for e in (exam or "").split(",") if e.strip()]
-            if not target_exams:
-                target_exams = sorted({r.get("exam") for r in rows if r.get("exam")})
-            for e in target_exams:
-                expanded_e = expand_exam_query(e) or [e]
-                count = sum(1 for r in rows if r.get("exam") in expanded_e or r.get("exam") == e)
-                distribution.append({
-                    "key": e,
-                    "label": get_exam_label(e),
-                    "count": count,
-                })
+            raw_exams = [e.strip() for e in (exam or "").split(",") if e.strip()]
+            if not raw_exams:
+                raw_exams = sorted({r.get("exam") for r in rows if r.get("exam")})
+
+            # Deduplicate by clean UI label
+            exam_labels_seen: set[str] = set()
+            unique_exams: list[tuple[str, str]] = []
+            for e in raw_exams:
+                label = get_exam_label(e)
+                if label not in exam_labels_seen:
+                    exam_labels_seen.add(label)
+                    unique_exams.append((e, label))
+
+            for canonical, label in unique_exams:
+                expanded_e = expand_exam_query(canonical) or [canonical]
+                exam_rows = [
+                    r for r in rows
+                    if r.get("exam") in expanded_e or r.get("exam") == canonical
+                ]
+
+                # If exam is CDS, split into CDS I and CDS II
+                if "CDS" in canonical.upper():
+                    target_cds_cycles = filter_cycles or ["I", "II"]
+                    for c in target_cds_cycles:
+                        count = sum(
+                            1 for r in exam_rows
+                            if str(r.get("cycle") or "").strip() == c
+                        )
+                        distribution.append({
+                            "key": f"{canonical}:{c}",
+                            "label": f"{label} {c}",
+                            "count": count,
+                        })
+                else:
+                    distribution.append({
+                        "key": canonical,
+                        "label": label,
+                        "count": len(exam_rows),
+                    })
+
+            # Desired presentation order: CDS I, CDS II, CAPF, etc.
+            def get_sort_rank(item_label: str) -> tuple[int, str]:
+                if item_label.startswith("CDS I") and not item_label.startswith("CDS II"):
+                    return (1, item_label)
+                if item_label.startswith("CDS II"):
+                    return (2, item_label)
+                if item_label.startswith("CAPF"):
+                    return (3, item_label)
+                if item_label.startswith("NDA I") and not item_label.startswith("NDA II"):
+                    return (4, item_label)
+                if item_label.startswith("NDA II"):
+                    return (5, item_label)
+                if item_label.startswith("AFCAT"):
+                    return (6, item_label)
+                return (10, item_label)
+
+            distribution.sort(key=lambda x: get_sort_rank(x["label"]))
         else:  # default "year"
             if year:
                 target_years = sorted(

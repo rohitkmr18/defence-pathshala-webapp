@@ -186,17 +186,10 @@ export async function GET(request: NextRequest) {
           )
         ).sort();
 
-        // If exam is CDS or has multiple cycles, show CDS I and CDS II separately
-        if (
-          cyclesInExam.length > 1 ||
-          (canonical.toUpperCase().includes("CDS") && (filterCycles.length === 0 || cyclesInExam.length > 0))
-        ) {
+        // If exam is CDS, show CDS I and CDS II separately
+        if (canonical.toUpperCase().includes("CDS")) {
           const targetExamCycles =
-            filterCycles.length > 0
-              ? filterCycles
-              : cyclesInExam.length > 0
-              ? cyclesInExam
-              : ["I", "II"];
+            filterCycles.length > 0 ? filterCycles : ["I", "II"];
 
           for (const cycleVal of targetExamCycles) {
             const count = examRows.filter(
