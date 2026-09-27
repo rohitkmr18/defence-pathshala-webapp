@@ -4,7 +4,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
-const EXAMS = ["CDS", "CAPF-AC", "NDA", "AFCAT", "UPSC-CSE"];
+const EXAMS = [
+  { id: "CDS", label: "CDS" },
+  { id: "CAPF-AC", label: "CAPF AC" },
+  { id: "NDA", label: "NDA" },
+  { id: "AFCAT", label: "AFCAT" },
+  { id: "UPSC-CSE", label: "UPSC CSE" },
+];
 const YEARS = ["2026", "2027", "2028", "2029", "2030", "2031", "2032"];
 
 export default function OnboardingPage() {
@@ -198,19 +204,19 @@ export default function OnboardingPage() {
 
                 <div className="mt-10 flex flex-wrap gap-4">
                   {EXAMS.map((exam) => {
-                    const selected = selectedExams.includes(exam);
+                    const selected = selectedExams.includes(exam.id);
 
                     return (
                       <motion.button
-                        key={exam}
+                        key={exam.id}
                         type="button"
                         whileHover={{ scale: 1.03, y: -2 }}
                         whileTap={{ scale: 0.97 }}
                         onClick={() =>
                           setSelectedExams((prev) =>
                             selected
-                              ? prev.filter((e) => e !== exam)
-                              : [...prev, exam]
+                              ? prev.filter((e) => e !== exam.id)
+                              : [...prev, exam.id]
                           )
                         }
                         className={`rounded-full px-6 py-3 text-sm font-medium border transition-all ${
@@ -219,7 +225,7 @@ export default function OnboardingPage() {
                             : "bg-white text-black border-gray-300 hover:border-black"
                         }`}
                       >
-                        {selected ? `✓ ${exam}` : exam}
+                        {selected ? `✓ ${exam.label}` : exam.label}
                       </motion.button>
                     );
                   })}
@@ -230,7 +236,13 @@ export default function OnboardingPage() {
 
                   <p className="mt-2 text-xl font-semibold">
                     {selectedExams.length
-                      ? selectedExams.join(", ")
+                      ? selectedExams
+                          .map(
+                            (id) =>
+                              EXAMS.find((e) => e.id === id)?.label ||
+                              id.replace("-", " ")
+                          )
+                          .join(", ")
                       : "None selected"}
                   </p>
                 </div>

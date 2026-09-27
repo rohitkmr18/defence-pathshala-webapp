@@ -30,6 +30,7 @@ export default async function DashboardPage() {
         <ContinuePreparationHero
           name={displayName}
           exam={primaryExam}
+          targetExams={profile.target_exams || []}
           targetYear={profile.target_year}
           lastTopic="Start your first practice"
         />

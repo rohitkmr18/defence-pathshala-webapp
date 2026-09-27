@@ -106,14 +106,20 @@ export async function PATCH(request: NextRequest) {
   // Direct Supabase fallback
   const { full_name, target_year, target_exams } = body;
 
+  const profileUpdates: Record<string, any> = {
+    id: session.user.id,
+    onboarding_completed: true,
+  };
+  if (full_name !== undefined) {
+    profileUpdates.full_name = full_name;
+  }
+  if (target_year !== undefined) {
+    profileUpdates.target_year = target_year;
+  }
+
   await supabase
     .from("profiles")
-    .upsert({
-      id: session.user.id,
-      full_name: full_name ?? null,
-      target_year: target_year ?? null,
-      onboarding_completed: true,
-    });
+    .upsert(profileUpdates);
 
   if (Array.isArray(target_exams)) {
     await supabase

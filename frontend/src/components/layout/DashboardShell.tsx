@@ -10,13 +10,16 @@ import {
   LogIn,
   LogOut,
   ChevronDown,
+  Target,
 } from "lucide-react";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
+import EditTargetModal from "@/components/dashboard/EditTargetModal";
 
 // ─── User avatar / menu ──────────────────────────────────────────────────────
 
 function UserMenu({ user }: { user: SupabaseUser }) {
   const [open, setOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
@@ -54,17 +57,28 @@ function UserMenu({ user }: { user: SupabaseUser }) {
             onClick={() => setOpen(false)}
           />
           {/* Dropdown */}
-          <div className="absolute right-0 top-full z-50 mt-2 w-52 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
+          <div className="absolute right-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
             <div className="border-b border-slate-100 px-4 py-3">
               <p className="text-xs font-semibold text-slate-500">Signed in as</p>
               <p className="mt-0.5 truncate text-sm font-bold text-slate-900">
                 {user.email}
               </p>
             </div>
-            <div className="p-1">
+            <div className="p-1 space-y-0.5">
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  setEditModalOpen(true);
+                }}
+                className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 cursor-pointer"
+              >
+                <Target className="h-4 w-4 text-blue-600" />
+                Edit Target Exams
+              </button>
               <button
                 onClick={handleLogout}
-                className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-50"
+                className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50 cursor-pointer"
               >
                 <LogOut className="h-4 w-4" />
                 Sign out
@@ -73,6 +87,11 @@ function UserMenu({ user }: { user: SupabaseUser }) {
           </div>
         </>
       )}
+
+      <EditTargetModal
+        isOpen={editModalOpen}
+        onClose={() => setEditModalOpen(false)}
+      />
     </div>
   );
 }

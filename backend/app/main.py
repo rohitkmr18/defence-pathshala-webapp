@@ -141,28 +141,28 @@ def update_profile(
     user_id = current_user.get("sub")
 
     try:
-        # Update profile
-        supabase.table("profiles").update(
-            {
-                "full_name": payload.full_name,
-                "target_year": payload.target_year,
-                "onboarding_completed": True,
-            }
-        ).eq("id", user_id).execute()
+        # Update profile selectively
+        update_data = {"onboarding_completed": True}
+        if payload.full_name is not None:
+            update_data["full_name"] = payload.full_name
+        if payload.target_year is not None:
+            update_data["target_year"] = payload.target_year
 
-        # Replace exam preferences
-        supabase.table("user_exam_preferences").delete().eq(
-            "user_id",
-            user_id,
-        ).execute()
+        supabase.table("profiles").update(update_data).eq("id", user_id).execute()
 
-        if payload.target_exams:
-            rows = [
-                {"user_id": user_id, "exam": exam}
-                for exam in payload.target_exams
-            ]
+        # Replace exam preferences if provided
+        if payload.target_exams is not None:
+            supabase.table("user_exam_preferences").delete().eq(
+                "user_id",
+                user_id,
+            ).execute()
 
-            supabase.table("user_exam_preferences").insert(rows).execute()
+            if payload.target_exams:
+                rows = [
+                    {"user_id": user_id, "exam": exam}
+                    for exam in payload.target_exams
+                ]
+                supabase.table("user_exam_preferences").insert(rows).execute()
 
         return {"success": True}
 

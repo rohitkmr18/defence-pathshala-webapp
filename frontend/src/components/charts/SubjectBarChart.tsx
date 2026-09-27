@@ -24,17 +24,23 @@ interface SubjectBarChartProps {
 }
 
 const BLUE_PALETTE = [
-  "#2563EB",
-  "#3B82F6",
-  "#1D4ED8",
-  "#60A5FA",
-  "#1E40AF",
-  "#93C5FD",
-  "#0284C7",
-  "#0EA5E9",
+  "#2563EB", // Primary Royal Blue
+  "#3B82F6", // Bright Blue
+  "#1D4ED8", // Deep Blue
+  "#60A5FA", // Sky Blue
+  "#1E40AF", // Navy Blue
+  "#93C5FD", // Light Blue
+  "#0284C7", // Cyan Deep
+  "#0EA5E9", // Cyan Light
 ];
 
-function CustomTooltip({ active, payload, totalQuestions }: any) {
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: any[];
+  totalQuestions: number;
+}
+
+function CustomTooltip({ active, payload, totalQuestions }: CustomTooltipProps) {
   if (active && payload && payload.length) {
     const item = payload[0].payload;
     const percent = ((item.value / (totalQuestions || 1)) * 100).toFixed(1);
@@ -110,6 +116,7 @@ export default function SubjectBarChart({
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Visual Chart (7 columns on desktop) */}
         <div className="lg:col-span-7">
           <div className="h-[320px] w-full pt-4">
             <ResponsiveContainer width="100%" height="100%">
@@ -182,6 +189,7 @@ export default function SubjectBarChart({
           </div>
         </div>
 
+        {/* Breakdown List (5 columns on desktop) */}
         <div className="lg:col-span-5 space-y-2.5">
           <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
             Detailed Subject Breakdown
@@ -218,6 +226,7 @@ export default function SubjectBarChart({
                       <p className="truncate text-xs sm:text-sm font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
                         {item.name}
                       </p>
+                      {/* Mini visual progress track */}
                       <div className="mt-1 h-1.5 w-24 sm:w-32 rounded-full bg-slate-200 overflow-hidden">
                         <div
                           className="h-full bg-blue-600 rounded-full transition-all duration-500"
@@ -257,3 +266,4 @@ export default function SubjectBarChart({
     </section>
   );
 }
+

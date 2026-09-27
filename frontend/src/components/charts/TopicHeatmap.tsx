@@ -6,7 +6,9 @@ import {
   Flame,
   Search,
   ArrowUpRight,
+  Sparkles,
   Layers,
+  CheckCircle2,
 } from "lucide-react";
 
 interface TopicHeatmapProps {
@@ -57,6 +59,7 @@ export default function TopicHeatmap({
         textMuted: "text-blue-100",
         tag: "High Recurrence",
         tagClass: "bg-blue-500/80 text-white",
+        iconClass: "text-blue-200",
       };
     }
     if (ratio >= 0.5) {
@@ -66,6 +69,7 @@ export default function TopicHeatmap({
         textMuted: "text-blue-700 font-medium",
         tag: "Frequent Yield",
         tagClass: "bg-blue-100 text-blue-800 border border-blue-200",
+        iconClass: "text-blue-600",
       };
     }
     if (ratio >= 0.25) {
@@ -75,6 +79,7 @@ export default function TopicHeatmap({
         textMuted: "text-slate-500",
         tag: "Regularly Tested",
         tagClass: "bg-slate-100 text-slate-700",
+        iconClass: "text-slate-400",
       };
     }
     return {
@@ -83,11 +88,13 @@ export default function TopicHeatmap({
       textMuted: "text-slate-400",
       tag: "Targeted Scope",
       tagClass: "bg-slate-50 text-slate-500",
+      iconClass: "text-slate-400",
     };
   };
 
   return (
     <section className="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-xs">
+      {/* ── Section Header ──────────────────────────────────────────────── */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div>
           <div className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700 shadow-2xs">
@@ -102,6 +109,7 @@ export default function TopicHeatmap({
           </p>
         </div>
 
+        {/* Legend */}
         <div className="flex items-center gap-2 text-xs font-medium text-slate-500 flex-wrap">
           <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
             Yield Density:
@@ -118,7 +126,9 @@ export default function TopicHeatmap({
         </div>
       </div>
 
+      {/* ── Filter & Search Toolbar ─────────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-6 pb-5 border-b border-slate-100">
+        {/* Tier filters */}
         <div className="flex items-center gap-1.5 bg-slate-100/80 p-1 rounded-2xl">
           <button
             type="button"
@@ -155,6 +165,7 @@ export default function TopicHeatmap({
           </button>
         </div>
 
+        {/* Search Input */}
         <div className="relative w-full sm:w-64">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
           <input
@@ -167,6 +178,7 @@ export default function TopicHeatmap({
         </div>
       </div>
 
+      {/* ── Heatmap Cards Grid ──────────────────────────────────────────── */}
       {filteredTopics.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-slate-200 p-8 text-center">
           <Layers className="mx-auto h-8 w-8 text-slate-300 mb-2" />
@@ -209,7 +221,7 @@ export default function TopicHeatmap({
                   </span>
 
                   <Link
-                    href="/dashboard/practice"
+                    href={`/dashboard/practice`}
                     className="inline-flex items-center gap-1 font-bold text-[11px] underline-offset-2 hover:underline group-hover:translate-x-0.5 transition-transform"
                   >
                     <span>Practice</span>
@@ -224,3 +236,4 @@ export default function TopicHeatmap({
     </section>
   );
 }
+

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -13,9 +14,11 @@ import {
   LogOut,
   X,
   RefreshCw,
+  Target,
 } from "lucide-react";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
+import EditTargetModal from "@/components/dashboard/EditTargetModal";
 
 const baseItems = [
   {
@@ -57,6 +60,7 @@ export default function DashboardSidebar({
 }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const [editTargetOpen, setEditTargetOpen] = useState(false);
 
   const isAdmin =
     user?.email?.toLowerCase() === "rohitcool423@gmail.com" ||
@@ -208,6 +212,14 @@ export default function DashboardSidebar({
                 </div>
               </div>
               <button
+                type="button"
+                onClick={() => setEditTargetOpen(true)}
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-blue-200 bg-blue-50/80 px-3 py-2 text-xs font-bold text-blue-700 shadow-2xs transition hover:bg-blue-100 cursor-pointer"
+              >
+                <Target className="h-3.5 w-3.5" />
+                Edit Target Exams
+              </button>
+              <button
                 onClick={handleSignOut}
                 className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 shadow-2xs transition hover:border-red-200 hover:bg-red-50 hover:text-red-600"
               >
@@ -237,6 +249,13 @@ export default function DashboardSidebar({
                 {user.email?.slice(0, 2).toUpperCase() ?? "U"}
               </div>
               <button
+                onClick={() => setEditTargetOpen(true)}
+                title="Edit Target Exams"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100 transition shadow-2xs cursor-pointer"
+              >
+                <Target className="h-3.5 w-3.5" />
+              </button>
+              <button
                 onClick={handleSignOut}
                 title="Sign out"
                 className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:border-red-200 hover:bg-red-50 hover:text-red-600 transition shadow-2xs"
@@ -254,6 +273,13 @@ export default function DashboardSidebar({
             </Link>
           )}
         </div>
+      )}
+
+      {user && (
+        <EditTargetModal
+          isOpen={editTargetOpen}
+          onClose={() => setEditTargetOpen(false)}
+        />
       )}
     </aside>
   );
