@@ -166,7 +166,19 @@ export default function PracticePageClient() {
   }, []);
 
   const handleFilterChange = useCallback((filters: ActiveFilters) => {
-    setActiveFilters(filters);
+    setActiveFilters((prev) => {
+      const examsSame = prev.exams.length === filters.exams.length && prev.exams.every((e, i) => e === filters.exams[i]);
+      const yearsSame = prev.years.length === filters.years.length && prev.years.every((y, i) => y === filters.years[i]);
+      const cyclesSame = prev.cycles.length === filters.cycles.length && prev.cycles.every((c, i) => c === filters.cycles[i]);
+      const subjectsSame = prev.subjects.length === filters.subjects.length && prev.subjects.every((s, i) => s === filters.subjects[i]);
+      const topicsSame = prev.topics.length === filters.topics.length && prev.topics.every((t, i) => t === filters.topics[i]);
+      const allExamsSame = prev.allExamsSelected === filters.allExamsSelected;
+
+      if (examsSame && yearsSame && cyclesSame && subjectsSame && topicsSame && allExamsSame) {
+        return prev;
+      }
+      return filters;
+    });
     // Reset auth gate when filters change
     setShowAuthGate(false);
   }, []);

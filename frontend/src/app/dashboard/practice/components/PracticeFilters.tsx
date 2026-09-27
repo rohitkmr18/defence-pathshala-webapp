@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { getExamLabel } from "@/lib/exams";
 import type { ActiveFilters } from "./PracticePageClient";
 
@@ -191,8 +191,12 @@ export default function PracticeFilters({
   }, [onFilterChange, selectedExams, selectedYears, selectedCycles, selectedSubjects, selectedTopics, allExamsSelected]);
 
   // ── Override filter from external action (e.g. chart bar click) ───────────
+  const lastAppliedOverrideTimestamp = useRef<number>(0);
+
   useEffect(() => {
     if (!filterOverride || !filters) return;
+    if (filterOverride.timestamp <= lastAppliedOverrideTimestamp.current) return;
+    lastAppliedOverrideTimestamp.current = filterOverride.timestamp;
 
     if (filterOverride.type === "year") {
       const yearVal = Number(filterOverride.value);
@@ -207,12 +211,15 @@ export default function PracticeFilters({
       }
       setSelectedCycles([]);
     } else if (filterOverride.type === "all_years") {
-      const nextYears = Array.from(
-        new Set(
-          selectedExams.flatMap((name) => filters?.years[name] ?? [])
-        )
-      ).sort((a, b) => b - a);
-      setSelectedYears(nextYears);
+      setSelectedExams((currentExams) => {
+        const nextYears = Array.from(
+          new Set(
+            currentExams.flatMap((name) => filters?.years[name] ?? [])
+          )
+        ).sort((a, b) => b - a);
+        setSelectedYears(nextYears);
+        return currentExams;
+      });
     } else if (filterOverride.type === "cycle") {
       const cycleVal = String(filterOverride.value);
       setSelectedCycles([cycleVal]);
@@ -246,7 +253,7 @@ export default function PracticeFilters({
         setSelectedCycles([]);
       }
     }
-  }, [filterOverride, filters, selectedExams]);
+  }, [filterOverride, filters]);
 
   function toggleSelectAllExams() {
     if (allExamsSelected) {
