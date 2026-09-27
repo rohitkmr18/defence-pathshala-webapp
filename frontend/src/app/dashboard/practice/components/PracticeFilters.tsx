@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { getExamLabel } from "@/lib/exams";
 import type { ActiveFilters } from "./PracticePageClient";
 
 type PracticeFiltersResponse = {
@@ -316,7 +317,7 @@ export default function PracticeFilters({ onFilterChange }: PracticeFiltersProps
                     : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-100"
                 }`}
               >
-                {examName}
+                {getExamLabel(examName)}
               </button>
             ))}
           </div>

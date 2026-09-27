@@ -1,5 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { getExamLabel, getExamDbValue } from "@/lib/exams";
+
+export { getExamLabel, getExamDbValue };
 
 const BACKEND_URL =
   process.env.BACKEND_URL || "http://127.0.0.1:8000";
@@ -102,7 +105,7 @@ export async function getQuestionBankMeta(): Promise<QuestionBankMeta> {
       if (!examsMap[exam]) {
         examsMap[exam] = {
           value: exam,
-          label: exam.replace("-AC", " AC").replace("-", " "),
+          label: getExamLabel(exam),
           years: new Set<number>(),
           cycles: new Set<string>(),
         };

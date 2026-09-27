@@ -17,7 +17,9 @@ export default function StatementRenderer({ text }: { text: string }) {
             <span className="w-7 shrink-0 font-semibold text-slate-700">
               {item.label}
             </span>
-            <span className="min-w-0 whitespace-pre-line">{item.text}</span>
+            <div className="min-w-0">
+              <QuestionText text={item.text} />
+            </div>
           </li>
         ))}
       </ol>

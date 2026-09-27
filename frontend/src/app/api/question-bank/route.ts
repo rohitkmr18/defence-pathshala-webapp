@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { backendGET } from "@/lib/backend";
 import { createClient } from "@supabase/supabase-js";
+import { expandExamQuery } from "@/lib/exams";
 
 const supabaseUrl =
   process.env.NEXT_PUBLIC_SUPABASE_URL ||
@@ -56,16 +57,11 @@ export async function GET(request: NextRequest) {
     let query = supabase
       .from("questions")
       .select("exam,year,cycle,subject,topic,q_type,q_pattern,difficulty_category");
-
     if (examParam) {
-      const rawExams = examParam.split(",").map((s) => s.trim()).filter(Boolean);
-      const expanded: string[] = [];
-      for (const e of rawExams) {
-        expanded.push(e);
-        if (e.includes(" ")) expanded.push(e.replace(/ /g, "-"));
-        if (e.includes("-")) expanded.push(e.replace(/-/g, " "));
+      const expanded = expandExamQuery(examParam);
+      if (expanded.length > 0) {
+        query = query.in("exam", expanded);
       }
-      query = query.in("exam", Array.from(new Set(expanded)));
     }
 
     if (yearParam) {

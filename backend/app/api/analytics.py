@@ -2,15 +2,8 @@ from collections import Counter
 from typing import Optional
 
 from fastapi import APIRouter, HTTPException
+from app.core.exams import expand_exam_query, get_exam_label
 from app.core.supabase import supabase
-
-EXAM_ALIASES = {
-    "CAPF": "CAPF-AC",
-    "CAPF-AC": "CAPF-AC",
-    "CDS": "CDS",
-    "NDA": "NDA",
-    "AFCAT": "AFCAT",
-}
 
 router = APIRouter(
     prefix="/analytics",
@@ -95,11 +88,7 @@ def question_bank(
         )
 
         if exam:
-            exams = [
-                EXAM_ALIASES.get(value.strip().upper(), value.strip())
-                for value in exam.split(",")
-                if value.strip()
-            ]
+            exams = expand_exam_query(exam)
             if exams:
                 query = query.in_("exam", exams)
 
@@ -200,7 +189,7 @@ def question_bank_meta():
             if exam not in exams:
                 exams[exam] = {
                     "value": exam,
-                    "label": exam.replace("-AC", " AC"),
+                    "label": get_exam_label(exam),
                     "years": set(),
                     "cycles": set(),
                 }

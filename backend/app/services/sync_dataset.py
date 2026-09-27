@@ -154,6 +154,35 @@ def normalize_questions_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     if "question_id" in clean_df.columns:
         clean_df["question_id"] = clean_df["question_id"].astype(str).str.strip()
 
+    # Standardize exam names to canonical database values
+    if "exam" in clean_df.columns:
+        clean_df["exam"] = clean_df["exam"].astype(str).str.strip()
+        clean_df["exam"] = clean_df["exam"].replace({
+            "CAPF": "CAPF-AC",
+            "CAPF AC": "CAPF-AC",
+        })
+
+    # Normalize cycle: if CAPF-AC has empty or NaN cycle, default to 'I'
+    if "cycle" in clean_df.columns:
+        def _normalize_cycle(row: pd.Series) -> Any:
+            val = row.get("cycle")
+            if pd.isna(val) or val is None:
+                return "I" if str(row.get("exam", "")).strip() in ("CAPF-AC", "CAPF") else None
+            cleaned = str(val).strip()
+            if not cleaned or cleaned.lower() in ("nan", "none", "null"):
+                return "I" if str(row.get("exam", "")).strip() in ("CAPF-AC", "CAPF") else None
+            return cleaned
+
+    # Clean citation artifacts from explanation
+    if "explanation" in clean_df.columns:
+        clean_df["explanation"] = (
+            clean_df["explanation"]
+            .fillna("")
+            .astype(str)
+            .str.replace(r"\s*\[cite:\s*[^\]]+\]", "", regex=True)
+            .str.strip()
+        )
+
     # Boolean normalization
     if "key_discrepancy" in clean_df.columns:
         clean_df["key_discrepancy"] = (

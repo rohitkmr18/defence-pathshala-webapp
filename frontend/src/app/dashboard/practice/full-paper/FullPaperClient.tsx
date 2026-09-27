@@ -24,14 +24,14 @@ export default function FullPaperClient({
   initialYear,
   initialCycle,
 }: FullPaperClientProps) {
-  // Resolve initial paper based on query params or default to CAPF AC 2025
+  // Resolve initial paper based on query params or default to most recent exam (CDS II 2026)
   const initialPaper =
     AVAILABLE_FULL_PAPERS.find((p) => {
       const examMatches =
-        initialExam &&
-        (p.exam === initialExam ||
-          p.label.toLowerCase().includes(initialExam.toLowerCase()) ||
-          p.exam.replace(/-/g, " ").toLowerCase() === initialExam.replace(/-/g, " ").toLowerCase());
+        !initialExam ||
+        p.exam.toLowerCase() === initialExam.toLowerCase() ||
+        p.label.toLowerCase().includes(initialExam.toLowerCase()) ||
+        p.exam.replace(/-/g, " ").toLowerCase() === initialExam.replace(/-/g, " ").toLowerCase();
       const yearMatches = !initialYear || p.year === parseInt(initialYear, 10);
       const cycleMatches = !initialCycle || p.cycle === initialCycle;
       return examMatches && yearMatches && cycleMatches;

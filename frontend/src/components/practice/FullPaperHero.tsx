@@ -17,42 +17,11 @@ export interface FullPaperDefinition {
 
 export const AVAILABLE_FULL_PAPERS: FullPaperDefinition[] = [
   {
-    id: "capf-2025",
-    exam: "CAPF-AC",
-    year: 2025,
-    label: "CAPF AC 2025",
-    questions: 125,
-    duration: "2 Hours",
-    durationSeconds: 7200,
-    marks: 250,
-  },
-  {
-    id: "capf-2026",
-    exam: "CAPF-AC",
+    id: "cds-2026-2",
+    exam: "CDS",
     year: 2026,
-    label: "CAPF AC 2026",
-    questions: 125,
-    duration: "2 Hours",
-    durationSeconds: 7200,
-    marks: 250,
-  },
-  {
-    id: "cds-2025-1",
-    exam: "CDS",
-    year: 2025,
-    cycle: "I",
-    label: "CDS I 2025",
-    questions: 120,
-    duration: "2 Hours",
-    durationSeconds: 7200,
-    marks: 100,
-  },
-  {
-    id: "cds-2025-2",
-    exam: "CDS",
-    year: 2025,
     cycle: "II",
-    label: "CDS II 2025",
+    label: "CDS II 2026",
     questions: 120,
     duration: "2 Hours",
     durationSeconds: 7200,
@@ -70,15 +39,59 @@ export const AVAILABLE_FULL_PAPERS: FullPaperDefinition[] = [
     marks: 100,
   },
   {
-    id: "cds-2026-2",
-    exam: "CDS",
+    id: "capf-2026",
+    exam: "CAPF-AC",
     year: 2026,
+    cycle: "I",
+    label: "CAPF 2026",
+    questions: 125,
+    duration: "2 Hours",
+    durationSeconds: 7200,
+    marks: 250,
+  },
+  {
+    id: "cds-2025-2",
+    exam: "CDS",
+    year: 2025,
     cycle: "II",
-    label: "CDS II 2026",
+    label: "CDS II 2025",
     questions: 120,
     duration: "2 Hours",
     durationSeconds: 7200,
     marks: 100,
+  },
+  {
+    id: "cds-2025-1",
+    exam: "CDS",
+    year: 2025,
+    cycle: "I",
+    label: "CDS I 2025",
+    questions: 120,
+    duration: "2 Hours",
+    durationSeconds: 7200,
+    marks: 100,
+  },
+  {
+    id: "capf-2025",
+    exam: "CAPF-AC",
+    year: 2025,
+    cycle: "I",
+    label: "CAPF 2025",
+    questions: 125,
+    duration: "2 Hours",
+    durationSeconds: 7200,
+    marks: 250,
+  },
+  {
+    id: "capf-2024",
+    exam: "CAPF-AC",
+    year: 2024,
+    cycle: "I",
+    label: "CAPF 2024",
+    questions: 125,
+    duration: "2 Hours",
+    durationSeconds: 7200,
+    marks: 250,
   },
 ];
 
@@ -97,7 +110,9 @@ export default function FullPaperHero({
   const initialPaper =
     AVAILABLE_FULL_PAPERS.find(
       (p) =>
-        (initialExam && (p.exam === initialExam || p.label.includes(initialExam))) &&
+        (!initialExam ||
+          p.exam.toLowerCase() === initialExam.toLowerCase() ||
+          p.label.toLowerCase().includes(initialExam.toLowerCase())) &&
         (!initialYear || p.year === initialYear)
     ) || AVAILABLE_FULL_PAPERS[0]!;
 

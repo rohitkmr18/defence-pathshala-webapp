@@ -1,4 +1,5 @@
 import renderQuestionText from "./renderQuestionText";
+import MathText from "@/components/common/MathText";
 
 export interface ParsedItem {
   label: string;
@@ -65,5 +66,10 @@ export function splitLabeledItems(text: string): ParsedItem[] {
 }
 
 export function QuestionText({ text }: { text: string }) {
-  return <span className="whitespace-pre-line">{renderQuestionText(text)}</span>;
+  return (
+    <MathText
+      text={renderQuestionText(text)}
+      className="whitespace-pre-line leading-[1.65]"
+    />
+  );
 }

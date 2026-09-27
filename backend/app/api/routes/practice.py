@@ -2,6 +2,7 @@ from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
+from app.core.exams import expand_exam_query
 from app.core.supabase import supabase
 from app.schemas.practice import PracticeFiltersResponse
 
@@ -97,15 +98,9 @@ def get_practice_count(
         query = supabase.table("questions").select("id", count="exact")
 
         if exam:
-            exam_vals = [value.strip() for value in exam.split(",") if value.strip()]
-            expanded = []
-            for e in exam_vals:
-                expanded.append(e)
-                if " " in e:
-                    expanded.append(e.replace(" ", "-"))
-                if "-" in e:
-                    expanded.append(e.replace("-", " "))
-            query = query.in_("exam", list(set(expanded)))
+            expanded = expand_exam_query(exam)
+            if expanded:
+                query = query.in_("exam", expanded)
 
         if year:
             query = query.in_(
@@ -151,15 +146,9 @@ def get_practice_questions(
         query = supabase.table("questions").select("*")
 
         if exam:
-            exam_vals = [value.strip() for value in exam.split(",") if value.strip()]
-            expanded = []
-            for e in exam_vals:
-                expanded.append(e)
-                if " " in e:
-                    expanded.append(e.replace(" ", "-"))
-                if "-" in e:
-                    expanded.append(e.replace("-", " "))
-            query = query.in_("exam", list(set(expanded)))
+            expanded = expand_exam_query(exam)
+            if expanded:
+                query = query.in_("exam", expanded)
 
         if year:
             query = query.in_(

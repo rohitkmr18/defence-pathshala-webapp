@@ -2,6 +2,7 @@
 
 import type { OptionKey } from "@/lib/practice-types";
 import { renderOptionText } from "./renderers/renderQuestionText";
+import MathText from "@/components/common/MathText";
 
 interface Option {
   key: OptionKey;
@@ -94,7 +95,7 @@ export default function OptionList({
             revealed={revealed}
           />
           <span className="mt-0.5 whitespace-pre-line leading-[1.6]">
-            {renderOptionText(text, key)}
+            <MathText text={renderOptionText(text, key)} />
           </span>
         </button>
       ))}

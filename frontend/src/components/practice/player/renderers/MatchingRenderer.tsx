@@ -69,7 +69,9 @@ export default function MatchingRenderer({ text }: { text: string }) {
                 {item ? (
                   <>
                     <span className="font-semibold text-slate-700">{item.label}.</span>
-                    <span className="min-w-0 whitespace-pre-line">{item.text}</span>
+                    <div className="min-w-0">
+                      <QuestionText text={item.text} />
+                    </div>
                   </>
                 ) : null}
               </div>

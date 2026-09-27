@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { backendGET } from "@/lib/backend";
 import { createClient } from "@supabase/supabase-js";
+import { expandExamQuery } from "@/lib/exams";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://afhwegrxnvgsqbqadvwr.supabase.co";
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -41,14 +42,10 @@ export async function GET(request: NextRequest) {
     let query = supabase.from("questions").select("*");
 
     if (exam) {
-      const rawVals = exam.split(",").map((s) => s.trim()).filter(Boolean);
-      const expanded: string[] = [];
-      rawVals.forEach((e) => {
-        expanded.push(e);
-        if (e.includes(" ")) expanded.push(e.replace(/ /g, "-"));
-        if (e.includes("-")) expanded.push(e.replace(/-/g, " "));
-      });
-      query = query.in("exam", Array.from(new Set(expanded)));
+      const expanded = expandExamQuery(exam);
+      if (expanded.length > 0) {
+        query = query.in("exam", expanded);
+      }
     }
 
     if (year) {

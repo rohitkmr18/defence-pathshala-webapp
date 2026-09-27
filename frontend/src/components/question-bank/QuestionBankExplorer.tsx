@@ -18,6 +18,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import type { QuestionBankMeta } from "@/lib/question-bank";
+import { getExamDbValue } from "@/lib/exams";
 import {
   getQuestionBank,
   type QuestionBankPayload,
@@ -41,7 +42,7 @@ export default function QuestionBankExplorer({ meta }: Props) {
     searchParams.get(key)?.split(",").map((item) => item.trim()).filter(Boolean) ?? [];
 
   const [selectedExams, setSelectedExams] = useState<string[]>(() => {
-    const initial = readList("exam");
+    const initial = readList("exam").map(getExamDbValue);
     return initial.length ? initial : meta.exams[0]?.value ? [meta.exams[0].value] : [];
   });
 

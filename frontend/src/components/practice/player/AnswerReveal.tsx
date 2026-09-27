@@ -2,6 +2,7 @@
 
 import type { PracticeQuestion, OptionKey } from "@/lib/practice-types";
 import { getCorrectKey } from "@/lib/practice-types";
+import MathText from "@/components/common/MathText";
 
 interface AnswerRevealProps {
   question: PracticeQuestion;
@@ -96,9 +97,11 @@ export default function AnswerReveal({
             <p className="mb-2 text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
               Explanation
             </p>
-            <p className="text-sm leading-relaxed text-slate-700">
-              {question.explanation}
-            </p>
+            <MathText
+              text={question.explanation}
+              className="text-sm leading-relaxed text-slate-700 whitespace-pre-line"
+              as="div"
+            />
           </div>
         )}
 
