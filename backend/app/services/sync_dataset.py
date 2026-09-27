@@ -173,6 +173,8 @@ def normalize_questions_dataframe(df: pd.DataFrame) -> pd.DataFrame:
                 return "I" if str(row.get("exam", "")).strip() in ("CAPF-AC", "CAPF") else None
             return cleaned
 
+        clean_df["cycle"] = clean_df.apply(_normalize_cycle, axis=1)
+
     # Clean citation artifacts from explanation
     if "explanation" in clean_df.columns:
         clean_df["explanation"] = (

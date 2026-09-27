@@ -93,6 +93,17 @@ export const AVAILABLE_FULL_PAPERS: FullPaperDefinition[] = [
     durationSeconds: 7200,
     marks: 250,
   },
+  {
+    id: "capf-2023",
+    exam: "CAPF-AC",
+    year: 2023,
+    cycle: "I",
+    label: "CAPF 2023",
+    questions: 125,
+    duration: "2 Hours",
+    durationSeconds: 7200,
+    marks: 250,
+  },
 ];
 
 export interface FullPaperHeroProps {

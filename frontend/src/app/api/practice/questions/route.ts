@@ -61,7 +61,11 @@ export async function GET(request: NextRequest) {
     if (cycle) {
       const cycles = cycle.split(",").map((s) => s.trim()).filter(Boolean);
       if (cycles.length > 0) {
-        query = query.in("cycle", cycles);
+        if (cycles.includes("I")) {
+          query = query.or(`cycle.in.(${cycles.join(",")}),cycle.is.null`);
+        } else {
+          query = query.in("cycle", cycles);
+        }
       }
     }
 

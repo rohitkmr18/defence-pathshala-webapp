@@ -109,10 +109,13 @@ def get_practice_count(
             )
 
         if cycle:
-            query = query.in_(
-                "cycle",
-                [value.strip() for value in cycle.split(",") if value.strip()],
-            )
+            cycles = [value.strip() for value in cycle.split(",") if value.strip()]
+            if cycles:
+                if "I" in cycles:
+                    cycle_list = ",".join(cycles)
+                    query = query.or_(f"cycle.in.({cycle_list}),cycle.is.null")
+                else:
+                    query = query.in_("cycle", cycles)
 
         if subject:
             query = query.in_(
@@ -157,10 +160,13 @@ def get_practice_questions(
             )
 
         if cycle:
-            query = query.in_(
-                "cycle",
-                [value.strip() for value in cycle.split(",") if value.strip()],
-            )
+            cycles = [value.strip() for value in cycle.split(",") if value.strip()]
+            if cycles:
+                if "I" in cycles:
+                    cycle_list = ",".join(cycles)
+                    query = query.or_(f"cycle.in.({cycle_list}),cycle.is.null")
+                else:
+                    query = query.in_("cycle", cycles)
 
         if subject:
             query = query.in_(

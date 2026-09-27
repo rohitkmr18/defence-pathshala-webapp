@@ -104,7 +104,11 @@ def question_bank(
         if cycle:
             cycles = [value.strip() for value in cycle.split(",") if value.strip()]
             if cycles:
-                query = query.in_("cycle", cycles)
+                if "I" in cycles:
+                    cycle_list = ",".join(cycles)
+                    query = query.or_(f"cycle.in.({cycle_list}),cycle.is.null")
+                else:
+                    query = query.in_("cycle", cycles)
 
         response = query.execute()
         rows = response.data or []
