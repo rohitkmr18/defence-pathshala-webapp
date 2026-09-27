@@ -224,7 +224,11 @@ export default function PracticeFilters({
       const cycleVal = String(filterOverride.value);
       setSelectedCycles([cycleVal]);
     } else if (filterOverride.type === "exam") {
-      const examVal = String(filterOverride.value);
+      const rawVal = String(filterOverride.value);
+      const [examVal, cycleVal] = rawVal.includes(":")
+        ? rawVal.split(":")
+        : [rawVal, null];
+
       setSelectedExams([examVal]);
 
       const nextYears = filters.years[examVal] ?? [];
@@ -245,7 +249,9 @@ export default function PracticeFilters({
         )
       );
 
-      if (examVal === "CDS") {
+      if (cycleVal) {
+        setSelectedCycles([cycleVal]);
+      } else if (examVal === "CDS") {
         setSelectedCycles((current) =>
           current.length > 0 ? current : (filters.cycles.CDS?.slice(0, 1) ?? [])
         );

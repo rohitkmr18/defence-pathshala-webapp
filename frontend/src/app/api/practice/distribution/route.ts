@@ -171,20 +171,68 @@ export async function GET(request: NextRequest) {
         }
       }
 
-      // Sort exams consistently (CDS first, then CAPF, then others)
-      uniqueExams.sort((a, b) => a.label.localeCompare(b.label));
-
       for (const { canonical, label } of uniqueExams) {
         const expandedE = expandExamQuery(canonical);
-        const count = rows.filter((r) =>
+        const examRows = rows.filter((r) =>
           expandedE.length > 0 ? expandedE.includes(r.exam) : r.exam === canonical
-        ).length;
-        distribution.push({
-          key: canonical,
-          label,
-          count,
-        });
+        );
+
+        // Check if this exam has cycles (e.g. CDS with cycle I and II)
+        const cyclesInExam = Array.from(
+          new Set(
+            examRows
+              .map((r) => (r.cycle ? String(r.cycle).trim() : ""))
+              .filter(Boolean)
+          )
+        ).sort();
+
+        // If exam is CDS or has multiple cycles, show CDS I and CDS II separately
+        if (
+          cyclesInExam.length > 1 ||
+          (canonical.toUpperCase().includes("CDS") && (filterCycles.length === 0 || cyclesInExam.length > 0))
+        ) {
+          const targetExamCycles =
+            filterCycles.length > 0
+              ? filterCycles
+              : cyclesInExam.length > 0
+              ? cyclesInExam
+              : ["I", "II"];
+
+          for (const cycleVal of targetExamCycles) {
+            const count = examRows.filter(
+              (r) => String(r.cycle || "").trim() === cycleVal
+            ).length;
+            distribution.push({
+              key: `${canonical}:${cycleVal}`,
+              label: `${label} ${cycleVal}`,
+              count,
+            });
+          }
+        } else {
+          distribution.push({
+            key: canonical,
+            label,
+            count: examRows.length,
+          });
+        }
       }
+
+      // Desired presentation order: CDS I, CDS II, CAPF (or NDA I, NDA II, etc.)
+      const getSortRank = (itemLabel: string): number => {
+        if (itemLabel.startsWith("CDS I") && !itemLabel.startsWith("CDS II")) return 1;
+        if (itemLabel.startsWith("CDS II")) return 2;
+        if (itemLabel.startsWith("CAPF")) return 3;
+        if (itemLabel.startsWith("NDA I") && !itemLabel.startsWith("NDA II")) return 4;
+        if (itemLabel.startsWith("NDA II")) return 5;
+        if (itemLabel.startsWith("AFCAT")) return 6;
+        return 10;
+      };
+
+      distribution.sort(
+        (a, b) =>
+          getSortRank(a.label) - getSortRank(b.label) ||
+          a.label.localeCompare(b.label)
+      );
     } else {
       // "year"
       const targetYears = year
