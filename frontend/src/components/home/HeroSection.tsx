@@ -27,7 +27,7 @@ export default function HeroSection() {
 
         {/* ── Headline & Gradient Emphasis (Single H1) ─────────────────── */}
         <h1 className="mt-6 text-3xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl text-white">
-          <span className="block">Stop Solving PYQs.</span>
+          <span className="block">Stop Solving PYQs Blindly.</span>
           <span className="block mt-1 sm:mt-2">
             <motion.span
               className="inline-block"
@@ -60,7 +60,7 @@ export default function HeroSection() {
 
         {/* ── Supporting Text ──────────────────────────────────────────── */}
         <p className="mt-5 max-w-2xl mx-auto text-sm sm:text-base lg:text-lg leading-relaxed text-slate-300">
-          Practice real CDS and CAPF Previous Year Questions from GS and instantly discover recurring topics, practice smarter, and identify exactly where you&apos;re losing marks.
+          Analyse real CDS and CAPF Previous Year Questions from GS and instantly discover recurring topics, practice smarter, and identify exactly where you&apos;re losing marks.
         </p>
 
         {/* ── CTA Buttons ──────────────────────────────────────────────── */}
