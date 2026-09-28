@@ -92,6 +92,12 @@ export default function PracticePageClient() {
     let cancelled = false;
 
     async function fetchCount() {
+      if (activeFilters.exams.length === 0) {
+        setQuestionCount(null);
+        setCountLoading(false);
+        return;
+      }
+
       setCountLoading(true);
       setQuestionCount(null);
 

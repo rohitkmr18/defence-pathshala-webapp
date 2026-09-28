@@ -2,8 +2,6 @@ import Link from "next/link";
 import HeroSection from "@/components/home/HeroSection";
 import ProductShowcase from "@/components/home/ProductShowcase";
 import FounderCredibility from "@/components/home/FounderCredibility";
-import IntelligenceEngineSection from "@/components/home/IntelligenceEngineSection";
-import PostMockIntelligenceSection from "@/components/home/PostMockIntelligenceSection";
 import ObjectionAndFinalCtaSection from "@/components/home/ObjectionAndFinalCtaSection";
 
 export default function HomePage() {
@@ -38,22 +36,16 @@ export default function HomePage() {
         </div>
       </nav>
 
-      {/* ── Hero Section (Screen 1 Rebuild) ─────────────────────────────── */}
+      {/* ── Hero Section (Screen 1 - 100% Untouched) ────────────────────── */}
       <HeroSection />
 
-      {/* ── Product Showcase (Screen 2: See the Difference) ─────────────── */}
+      {/* ── Screen 2: Product Showcase (Visual Difference & Core Value) ─── */}
       <ProductShowcase />
 
-      {/* ── Credentials Banner (Built from Real Field Experience) ────────── */}
+      {/* ── Screen 3: Verified Founder Authority & Trust ────────────────── */}
       <FounderCredibility />
 
-      {/* ── Screen 4: Experience the Intelligence Engine ───────────────── */}
-      <IntelligenceEngineSection />
-
-      {/* ── Screen 5: Post-Mock Intelligence ───────────────────────────── */}
-      <PostMockIntelligenceSection />
-
-      {/* ── Screen 6: Objection Handling & Final CTA ────────────────────── */}
+      {/* ── Screen 4: FAQs & High-Converting Final CTA ──────────────────── */}
       <ObjectionAndFinalCtaSection />
 
       {/* ── Footer ───────────────────────────────────────────────────────── */}

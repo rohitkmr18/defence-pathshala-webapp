@@ -37,12 +37,29 @@ export default function PracticeFilters({
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
 
   const applyInitialSelection = (data: PracticeFiltersResponse) => {
-    const firstExam = data.exams[0] ?? "";
-    const firstYear = data.years[firstExam]?.[0] ?? null;
+    // If URL search params exist (e.g. ?exam=CDS&subject=Polity), restore them
+    if (typeof window !== "undefined") {
+      const sp = new URLSearchParams(window.location.search);
+      const urlExam = sp.get("exam")?.split(",").map((s) => s.trim()).filter(Boolean) ?? [];
+      const urlYear = sp.get("year")?.split(",").map((s) => parseInt(s.trim(), 10)).filter((n) => !isNaN(n)) ?? [];
+      const urlCycle = sp.get("cycle")?.split(",").map((s) => s.trim()).filter(Boolean) ?? [];
+      const urlSubject = sp.get("subject")?.split(",").map((s) => s.trim()).filter(Boolean) ?? [];
+      const urlTopic = sp.get("topic")?.split(",").map((s) => s.trim()).filter(Boolean) ?? [];
 
-    setSelectedExams(firstExam ? [firstExam] : []);
-    setSelectedYears(firstYear !== null ? [firstYear] : []);
-    setSelectedCycles(data.cycles[firstExam]?.slice(0, 1) ?? []);
+      if (urlExam.length > 0 || urlYear.length > 0 || urlSubject.length > 0 || urlTopic.length > 0) {
+        setSelectedExams(urlExam.filter((e) => data.exams.includes(e)));
+        setSelectedYears(urlYear);
+        setSelectedCycles(urlCycle);
+        setSelectedSubjects(urlSubject);
+        setSelectedTopics(urlTopic);
+        return;
+      }
+    }
+
+    // Nothing selected initially: give user the option to choose from the start
+    setSelectedExams([]);
+    setSelectedYears([]);
+    setSelectedCycles([]);
     setSelectedSubjects([]);
     setSelectedTopics([]);
   };
@@ -284,6 +301,16 @@ export default function PracticeFilters({
     }
   }
 
+  // ── Years Select All ──────────────────────────────────────────────────────
+  const allYearsSelected =
+    availableYears.length > 0 &&
+    selectedYears.length === availableYears.length &&
+    availableYears.every((y) => selectedYears.includes(y));
+
+  function toggleSelectAllYears() {
+    setSelectedYears(allYearsSelected ? [] : availableYears);
+  }
+
   // ── Topics Select All — pure derived state, no extra useState ─────────────
   const allTopicsSelected =
     availableTopics.length > 0 &&
@@ -316,20 +343,17 @@ export default function PracticeFilters({
       ).sort((a, b) => b - a);
 
       setSelectedYears((current) => {
-        const filtered = current.filter((year) => nextYears.includes(year));
-        return filtered.length > 0 ? filtered : (nextYears[0] !== undefined ? [nextYears[0]] : []);
+        return current.filter((year) => nextYears.includes(year));
       });
 
       setSelectedSubjects([]);
       setSelectedTopics([]);
 
-      if (next.includes("CDS")) {
-        setSelectedCycles((current) =>
-          current.length > 0 ? current : (filters?.cycles.CDS?.slice(0, 1) ?? [])
-        );
-      } else {
-        setSelectedCycles([]);
-      }
+      setSelectedCycles((current) =>
+        next.includes("CDS")
+          ? current.filter((c) => (filters?.cycles.CDS ?? []).includes(c))
+          : []
+      );
 
       return next;
     });
@@ -448,22 +472,39 @@ export default function PracticeFilters({
 
         <div>
           <label className="mb-3 block text-sm text-slate-500">Year</label>
-          <div className="flex flex-wrap gap-3">
-            {availableYears.map((yearValue) => (
+          {availableYears.length > 0 ? (
+            <div className="flex flex-wrap gap-3">
               <button
-                key={yearValue}
                 type="button"
-                onClick={() => toggleYear(yearValue)}
-                className={`rounded-full px-4 py-2 text-sm transition ${
-                  selectedYears.includes(yearValue)
-                    ? "bg-blue-600 text-white"
+                onClick={toggleSelectAllYears}
+                className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+                  allYearsSelected
+                    ? "bg-blue-600 text-white shadow-2xs"
                     : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-100"
                 }`}
               >
-                {yearValue}
+                {allYearsSelected ? "✓ All Years" : "All Years"}
               </button>
-            ))}
-          </div>
+              {availableYears.map((yearValue) => (
+                <button
+                  key={yearValue}
+                  type="button"
+                  onClick={() => toggleYear(yearValue)}
+                  className={`rounded-full px-4 py-2 text-sm transition ${
+                    selectedYears.includes(yearValue)
+                      ? "bg-blue-600 text-white"
+                      : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-100"
+                  }`}
+                >
+                  {yearValue}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <p className="text-xs text-slate-400 italic">
+              Select an exam above to view available years.
+            </p>
+          )}
         </div>
 
         {selectedExams.includes("CDS") && cycleOptions.length > 0 && (
@@ -491,22 +532,28 @@ export default function PracticeFilters({
         <div>
           <label className="mb-3 block text-sm text-slate-500">Subjects</label>
 
-          <div className="flex flex-wrap gap-3">
-            {availableSubjects.map((subject) => (
-              <button
-                key={subject}
-                type="button"
-                onClick={() => toggleSubject(subject)}
-                className={`rounded-full px-4 py-2 text-sm transition ${
-                  selectedSubjects.includes(subject)
-                    ? "bg-blue-600 text-white"
-                    : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-100"
-                }`}
-              >
-                {subject}
-              </button>
-            ))}
-          </div>
+          {availableSubjects.length > 0 ? (
+            <div className="flex flex-wrap gap-3">
+              {availableSubjects.map((subject) => (
+                <button
+                  key={subject}
+                  type="button"
+                  onClick={() => toggleSubject(subject)}
+                  className={`rounded-full px-4 py-2 text-sm transition ${
+                    selectedSubjects.includes(subject)
+                      ? "bg-blue-600 text-white"
+                      : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-100"
+                  }`}
+                >
+                  {subject}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <p className="text-xs text-slate-400 italic">
+              Select an exam above to view available subjects.
+            </p>
+          )}
         </div>
 
         {availableTopics.length > 0 && (

@@ -32,7 +32,7 @@ const baseItems = [
     icon: Database,
   },
   {
-    name: "Targeted Practice",
+    name: "Attempt PYQs",
     href: "/dashboard/practice",
     icon: Pencil,
   },

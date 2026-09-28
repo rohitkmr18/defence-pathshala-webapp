@@ -85,9 +85,26 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    const { data: rows, error } = await query;
+    // Paginate to fetch all matching rows (handling PostgREST 1000-row limit)
+    const pageSize = 1000;
+    const rows: any[] = [];
+    let start = 0;
+    while (true) {
+      const { data: pageData, error: pageErr } = await query.range(
+        start,
+        start + pageSize - 1
+      );
+      if (pageErr) {
+        console.error("Supabase question bank page query error:", pageErr);
+        break;
+      }
+      if (!pageData || pageData.length === 0) break;
+      rows.push(...pageData);
+      if (pageData.length < pageSize) break;
+      start += pageSize;
+    }
 
-    if (error || !rows) {
+    if (rows.length === 0) {
       return NextResponse.json(
         {
           summary: { questions: 0, subjects: 0, exam: examParam, year: yearParam, cycle: cycleParam },

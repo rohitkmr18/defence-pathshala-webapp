@@ -49,6 +49,11 @@ export default function QuestionDistributionChart({
   const selectedYear = activeFilters.years.length === 1 ? activeFilters.years[0] : null;
 
   const groupBy = useMemo<"cycle" | "year" | "exam" | null>(() => {
+    // If no exams selected, do not render chart
+    if (activeFilters.exams.length === 0) {
+      return null;
+    }
+
     // 1. If a single year is active:
     if (activeFilters.years.length === 1) {
       if (activeFilters.exams.length > 1) {
@@ -82,7 +87,7 @@ export default function QuestionDistributionChart({
       return "exam";
     }
 
-    if (isAllExams) {
+    if (isAllExams || activeFilters.exams.length >= 1) {
       return "year";
     }
 

@@ -39,47 +39,56 @@ export default function QuestionBankExplorer({ meta }: Props) {
   const readList = (key: string) =>
     searchParams.get(key)?.split(",").map((item) => item.trim()).filter(Boolean) ?? [];
 
+  // Initially no exam is selected unless explicitly provided via URL param (?exam=...)
   const [selectedExams, setSelectedExams] = useState<string[]>(() => {
-    const initial = readList("exam");
-    return initial.length ? initial : meta.exams[0]?.value ? [meta.exams[0].value] : [];
+    return readList("exam");
   });
+
+  const allExamValues = useMemo(() => meta.exams.map((e) => e.value), [meta.exams]);
+  const allAvailableYears = useMemo(() => {
+    return Array.from(new Set(meta.exams.flatMap((e) => e.years))).sort((a, b) => b - a);
+  }, [meta.exams]);
+  const allAvailableCycles = useMemo(() => {
+    return Array.from(new Set(meta.exams.flatMap((e) => e.cycles))).sort();
+  }, [meta.exams]);
+
+  const isAllSelected = useMemo(() => {
+    if (selectedExams.length !== allExamValues.length || allExamValues.length === 0) return false;
+    return allExamValues.every((val) => selectedExams.includes(val));
+  }, [allExamValues, selectedExams]);
 
   const availableYears = useMemo(() => {
     const years = new Set<number>();
-    for (const exam of selectedExams) {
+    const targetExams = selectedExams.length > 0 ? selectedExams : allExamValues;
+    for (const exam of targetExams) {
       for (const item of meta.exams.find((entry) => entry.value === exam)?.years ?? []) {
         years.add(item);
       }
     }
     return Array.from(years).sort((a, b) => b - a);
-  }, [meta.exams, selectedExams]);
+  }, [allExamValues, meta.exams, selectedExams]);
 
   const availableCycles = useMemo(() => {
     const cycles = new Set<string>();
-    for (const exam of selectedExams) {
+    const targetExams = selectedExams.length > 0 ? selectedExams : allExamValues;
+    for (const exam of targetExams) {
       for (const item of meta.exams.find((entry) => entry.value === exam)?.cycles ?? []) {
         cycles.add(item);
       }
     }
     return Array.from(cycles).sort();
-  }, [meta.exams, selectedExams]);
+  }, [allExamValues, meta.exams, selectedExams]);
 
   const [selectedYears, setSelectedYears] = useState<number[]>(() => {
-    const initial = readList("year").map(Number).filter(Number.isFinite);
-    if (initial.length) return initial;
-    const firstExam = meta.exams.find((entry) => entry.value === selectedExams[0]);
-    return firstExam?.years[0] ? [firstExam.years[0]] : [];
+    return readList("year").map(Number).filter(Number.isFinite);
   });
 
   const [selectedCycles, setSelectedCycles] = useState<string[]>(() => {
-    const initial = readList("cycle");
-    if (initial.length) return initial;
-    const firstExam = meta.exams.find((entry) => entry.value === selectedExams[0]);
-    return firstExam?.cycles[0] ? [firstExam.cycles[0]] : [];
+    return readList("cycle");
   });
 
   const [data, setData] = useState<QuestionBankPayload | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<TabView>("all");
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
 
@@ -128,13 +137,24 @@ export default function QuestionBankExplorer({ meta }: Props) {
     if (activeYears.length) params.set("year", activeYears.join(","));
     if (activeCycles.length) params.set("cycle", activeCycles.join(","));
 
-    router.replace(`/dashboard/question-bank?${params.toString()}`, {
-      scroll: false,
-    });
+    const query = params.toString();
+    router.replace(
+      query ? `/dashboard/question-bank?${query}` : "/dashboard/question-bank",
+      {
+        scroll: false,
+      }
+    );
   }, [activeCycles, activeYears, router, selectedExams]);
 
   useEffect(() => {
     let cancelled = false;
+
+    // If no exams selected, do not make an API request
+    if (selectedExams.length === 0) {
+      setData(null);
+      setLoading(false);
+      return;
+    }
 
     async function load() {
       setLoading(true);
@@ -173,14 +193,18 @@ export default function QuestionBankExplorer({ meta }: Props) {
       : [...values, value];
   }
 
+  function handleSelectAll() {
+    setSelectedSubject(null);
+    setSelectedExams(allExamValues);
+    setSelectedYears(allAvailableYears);
+    setSelectedCycles(allAvailableCycles);
+  }
+
   function handleResetFilters() {
     setSelectedSubject(null);
-    if (meta.exams[0]?.value) {
-      setSelectedExams([meta.exams[0].value]);
-      const firstExam = meta.exams[0];
-      setSelectedYears(firstExam.years[0] ? [firstExam.years[0]] : []);
-      setSelectedCycles(firstExam.cycles[0] ? [firstExam.cycles[0]] : []);
-    }
+    setSelectedExams([]);
+    setSelectedYears([]);
+    setSelectedCycles([]);
   }
 
   return (
@@ -204,25 +228,91 @@ export default function QuestionBankExplorer({ meta }: Props) {
             </p>
           </div>
 
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={handleSelectAll}
+              className={`inline-flex items-center gap-1.5 rounded-xl border px-3.5 py-2 text-xs font-bold transition cursor-pointer ${
+                isAllSelected
+                  ? "border-blue-600 bg-blue-600 text-white shadow-xs"
+                  : "border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100"
+              }`}
+            >
+              <CheckCircle2 className="h-3.5 w-3.5" />
+              <span>Select All Question Papers</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleResetFilters}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-50 hover:text-slate-900 cursor-pointer"
+            >
+              <RotateCcw className="h-3.5 w-3.5 text-slate-400" />
+              <span>Reset Filters</span>
+            </button>
+          </div>
+        </div>
+
+        {/* ── Quick Select Presets Tab Bar ───────────────────────────────── */}
+        <div className="flex items-center gap-2 mb-6 pb-4 border-b border-slate-100 overflow-x-auto">
+          <span className="text-xs font-bold text-slate-400 uppercase tracking-wider shrink-0">
+            Quick Select:
+          </span>
           <button
             type="button"
-            onClick={handleResetFilters}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-50 hover:text-slate-900"
+            onClick={handleSelectAll}
+            className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold transition shrink-0 cursor-pointer ${
+              isAllSelected
+                ? "bg-blue-600 text-white shadow-xs"
+                : "border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100"
+            }`}
           >
-            <RotateCcw className="h-3.5 w-3.5 text-slate-400" />
-            <span>Reset Filters</span>
+            <Layers className="h-3.5 w-3.5" />
+            <span>Select All ({allExamValues.length} Exams &bull; All Papers)</span>
           </button>
+
+          {meta.exams.map((item) => {
+            const isOnlyThis = selectedExams.length === 1 && selectedExams[0] === item.value;
+            return (
+              <button
+                key={item.value}
+                type="button"
+                onClick={() => {
+                  setSelectedSubject(null);
+                  setSelectedExams([item.value]);
+                  setSelectedYears(item.years);
+                  setSelectedCycles(item.cycles);
+                }}
+                className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold transition shrink-0 cursor-pointer ${
+                  isOnlyThis
+                    ? "bg-slate-900 text-white shadow-xs"
+                    : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                }`}
+              >
+                <span>All {item.label} Papers</span>
+              </button>
+            );
+          })}
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
           {/* Exam Filter */}
           <div>
-            <label className="mb-2 flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-700">
+            <div className="mb-2 flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-700">
               <span>Target Exam</span>
-              <span className="text-[11px] font-normal text-slate-400">
-                {selectedExams.length} selected
-              </span>
-            </label>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleSelectAll}
+                  className="text-[11px] font-bold text-blue-600 hover:underline cursor-pointer lowercase first-letter:uppercase"
+                >
+                  {isAllSelected ? "All Selected" : "Select all"}
+                </button>
+                <span className="text-[11px] font-normal text-slate-400">
+                  {selectedExams.length} selected
+                </span>
+              </div>
+            </div>
 
             <div className="max-h-48 space-y-1.5 overflow-y-auto rounded-2xl border border-slate-200 bg-slate-50/50 p-2.5">
               {meta.exams.map((item) => {
@@ -589,6 +679,43 @@ export default function QuestionBankExplorer({ meta }: Props) {
             </Link>
           </div>
         </div>
+      ) : selectedExams.length === 0 ? (
+        <section className="rounded-3xl border border-slate-200/90 bg-white p-8 sm:p-12 text-center shadow-xs">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 mb-4 border border-blue-100 shadow-2xs">
+            <BookOpen className="h-7 w-7" />
+          </div>
+          <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+            Select an Exam to Begin Exploring
+          </h3>
+          <p className="mt-2 text-xs sm:text-sm text-slate-500 max-w-lg mx-auto leading-relaxed">
+            Choose your target defence examination above, or select all question papers to analyze comprehensive syllabus trends across exams.
+          </p>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={handleSelectAll}
+              className="inline-flex items-center gap-2 rounded-2xl bg-blue-600 px-6 py-3.5 text-xs sm:text-sm font-bold text-white shadow-md shadow-blue-600/20 hover:bg-blue-500 transition active:scale-95 cursor-pointer"
+            >
+              <Layers className="h-4 w-4" />
+              <span>Select All Question Papers</span>
+            </button>
+            {meta.exams.map((exam) => (
+              <button
+                key={exam.value}
+                type="button"
+                onClick={() => {
+                  setSelectedSubject(null);
+                  setSelectedExams([exam.value]);
+                  setSelectedYears(exam.years);
+                  setSelectedCycles(exam.cycles);
+                }}
+                className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-5 py-3.5 text-xs sm:text-sm font-bold text-slate-800 hover:bg-slate-100 transition active:scale-95 cursor-pointer"
+              >
+                <span>{exam.label}</span>
+              </button>
+            ))}
+          </div>
+        </section>
       ) : (
         <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-12 text-center">
           <Database className="mx-auto h-10 w-10 text-slate-300 mb-3" />
