@@ -110,8 +110,18 @@ def question_bank(
                 else:
                     query = query.in_("cycle", cycles)
 
-        response = query.execute()
-        rows = response.data or []
+        page_size = 1000
+        rows = []
+        start = 0
+
+        while True:
+            subquery = query.range(start, start + page_size - 1)
+            response = subquery.execute()
+            page_rows = response.data or []
+            rows.extend(page_rows)
+            if len(page_rows) < page_size:
+                break
+            start += page_size
 
         total = len(rows)
 

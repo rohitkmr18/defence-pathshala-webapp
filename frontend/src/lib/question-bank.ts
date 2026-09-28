@@ -80,11 +80,29 @@ export async function getQuestionBankMeta(): Promise<QuestionBankMeta> {
     }
 
     const supabase = createSupabaseClient(supabaseUrl, key);
-    const { data: rows, error } = await supabase
+    const query = supabase
       .from("questions")
       .select("exam,year,cycle");
 
-    if (error || !rows) {
+    const pageSize = 1000;
+    const rows: any[] = [];
+    let start = 0;
+    while (true) {
+      const { data: pageData, error: pageErr } = await query.range(
+        start,
+        start + pageSize - 1
+      );
+      if (pageErr) {
+        console.error("Supabase question bank meta page query error:", pageErr);
+        break;
+      }
+      if (!pageData || pageData.length === 0) break;
+      rows.push(...pageData);
+      if (pageData.length < pageSize) break;
+      start += pageSize;
+    }
+
+    if (rows.length === 0) {
       return { exams: [] };
     }
 
