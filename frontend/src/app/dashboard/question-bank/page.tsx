@@ -3,7 +3,7 @@ import { getQuestionBankMeta } from "@/lib/question-bank";
 import QuestionBankExplorer from "@/components/question-bank/QuestionBankExplorer";
 
 export const metadata = {
-  title: "PYQ Insights – Defence Pathshala",
+  title: "Explore PYQs – Defence Pathshala",
   description:
     "Explore UPSC question patterns across exams, years, cycles, subjects, topics and difficulty using the proprietary PYQ Intelligence database.",
 };
@@ -20,7 +20,7 @@ export default async function QuestionBankPage() {
           </p>
 
           <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">
-            PYQ Insights
+            Explore PYQs
           </h1>
 
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">

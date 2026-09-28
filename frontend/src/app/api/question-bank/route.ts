@@ -108,9 +108,45 @@ export async function GET(request: NextRequest) {
     const typeCounts: Record<string, number> = {};
     const topicCounts: Record<string, number> = {};
 
+    interface SubjectAnalyticsEntry {
+      questions: number;
+      difficulty: Record<string, number>;
+      patterns: Record<string, number>;
+      types: Record<string, number>;
+      topics: Record<string, number>;
+    }
+    const subjectAnalyticsMap: Record<string, SubjectAnalyticsEntry> = {};
+
     for (const row of rows) {
       if (row.subject) {
         subjectCounts[row.subject] = (subjectCounts[row.subject] || 0) + 1;
+        if (!subjectAnalyticsMap[row.subject]) {
+          subjectAnalyticsMap[row.subject] = {
+            questions: 0,
+            difficulty: {},
+            patterns: {},
+            types: {},
+            topics: {},
+          };
+        }
+        const sEntry = subjectAnalyticsMap[row.subject];
+        sEntry.questions += 1;
+        if (row.difficulty_category) {
+          sEntry.difficulty[row.difficulty_category] =
+            (sEntry.difficulty[row.difficulty_category] || 0) + 1;
+        }
+        if (row.q_pattern) {
+          sEntry.patterns[row.q_pattern] =
+            (sEntry.patterns[row.q_pattern] || 0) + 1;
+        }
+        if (row.q_type) {
+          sEntry.types[row.q_type] =
+            (sEntry.types[row.q_type] || 0) + 1;
+        }
+        if (row.topic) {
+          sEntry.topics[row.topic] =
+            (sEntry.topics[row.topic] || 0) + 1;
+        }
       }
       if (row.difficulty_category) {
         difficultyCounts[row.difficulty_category] =
@@ -134,6 +170,31 @@ export async function GET(request: NextRequest) {
       return limit ? arr.slice(0, limit) : arr;
     };
 
+    const subjectAnalytics: Record<
+      string,
+      {
+        totalQuestions: number;
+        difficulty: { name: string; value: number }[];
+        questionPatterns: { name: string; value: number }[];
+        questionTypes: { name: string; value: number }[];
+        topics: { name: string; value: number }[];
+      }
+    > = {};
+
+    const subjectTopics: Record<string, { name: string; value: number }[]> = {};
+
+    for (const [sub, sData] of Object.entries(subjectAnalyticsMap)) {
+      const sTopics = toSortedArray(sData.topics);
+      subjectTopics[sub] = sTopics;
+      subjectAnalytics[sub] = {
+        totalQuestions: sData.questions,
+        difficulty: Object.entries(sData.difficulty).map(([name, value]) => ({ name, value })),
+        questionPatterns: toSortedArray(sData.patterns),
+        questionTypes: toSortedArray(sData.types),
+        topics: sTopics,
+      };
+    }
+
     return NextResponse.json({
       summary: {
         questions: total,
@@ -147,6 +208,8 @@ export async function GET(request: NextRequest) {
       questionPatterns: toSortedArray(patternCounts),
       questionTypes: toSortedArray(typeCounts),
       topics: toSortedArray(topicCounts, 20),
+      subjectTopics,
+      subjectAnalytics,
     });
   } catch (err: any) {
     return NextResponse.json(

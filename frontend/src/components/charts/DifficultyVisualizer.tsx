@@ -9,11 +9,13 @@ interface DifficultyVisualizerProps {
     value: number;
   }[];
   totalQuestions: number;
+  subjectContext?: string | null;
 }
 
 export default function DifficultyVisualizer({
   difficulty,
   totalQuestions,
+  subjectContext,
 }: DifficultyVisualizerProps) {
   const diffMap = useMemo(() => {
     const map: Record<string, number> = {};
@@ -39,13 +41,21 @@ export default function DifficultyVisualizer({
         <div>
           <div className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700 shadow-2xs">
             <Gauge className="h-3.5 w-3.5 text-blue-600" />
-            <span>EXAM DIFFICULTY PROFILE</span>
+            <span>
+              {subjectContext
+                ? `${subjectContext.toUpperCase()} DIFFICULTY PROFILE`
+                : "EXAM DIFFICULTY PROFILE"}
+            </span>
           </div>
           <h2 className="mt-2.5 text-xl sm:text-2xl font-black tracking-tight text-slate-900">
-            Cognitive Rigor & Difficulty Split
+            {subjectContext
+              ? `${subjectContext} — Difficulty Split`
+              : "Cognitive Rigor & Difficulty Split"}
           </h2>
           <p className="mt-1 text-xs sm:text-sm text-slate-500">
-            Categorized by UPSC historical candidate success rates and conceptual depth
+            {subjectContext
+              ? `Categorized difficulty distribution for ${subjectContext} (${totalQuestions} Questions)`
+              : "Categorized by UPSC historical candidate success rates and conceptual depth"}
           </p>
         </div>
 

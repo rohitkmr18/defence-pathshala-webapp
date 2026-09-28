@@ -46,7 +46,7 @@ export default async function DashboardPage() {
           <div className="grid gap-6 md:grid-cols-3">
             <QuickActionCard
               href="/dashboard/question-bank"
-              title="PYQ Insights"
+              title="Explore PYQs"
               description="Explore 1500+ PYQs with subject, topic and difficulty insights."
               icon={Database}
               badge="1500+ PYQs"

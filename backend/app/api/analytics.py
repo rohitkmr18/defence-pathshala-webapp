@@ -1,4 +1,4 @@
-from collections import Counter
+from collections import Counter, defaultdict
 from typing import Optional
 
 from fastapi import APIRouter, HTTPException
@@ -120,10 +120,28 @@ def question_bank(
         question_type_counter = Counter()
         question_pattern_counter = Counter()
         topic_counter = Counter()
+        subject_analytics_map = defaultdict(lambda: {
+            "questions": 0,
+            "difficulty": Counter(),
+            "patterns": Counter(),
+            "types": Counter(),
+            "topics": Counter(),
+        })
 
         for row in rows:
-            if row.get("subject"):
-                subject_counter[row["subject"]] += 1
+            sub = row.get("subject")
+            if sub:
+                subject_counter[sub] += 1
+                entry = subject_analytics_map[sub]
+                entry["questions"] += 1
+                if row.get("difficulty_category"):
+                    entry["difficulty"][row["difficulty_category"]] += 1
+                if row.get("q_pattern"):
+                    entry["patterns"][row["q_pattern"]] += 1
+                if row.get("q_type"):
+                    entry["types"][row["q_type"]] += 1
+                if row.get("topic"):
+                    entry["topics"][row["topic"]] += 1
 
             if row.get("difficulty_category"):
                 difficulty_counter[row["difficulty_category"]] += 1
@@ -136,6 +154,29 @@ def question_bank(
 
             if row.get("topic"):
                 topic_counter[row["topic"]] += 1
+
+        subject_analytics = {
+            sub: {
+                "totalQuestions": data["questions"],
+                "difficulty": [
+                    {"name": k, "value": v} for k, v in data["difficulty"].items()
+                ],
+                "questionPatterns": [
+                    {"name": k, "value": v} for k, v in data["patterns"].most_common()
+                ],
+                "questionTypes": [
+                    {"name": k, "value": v} for k, v in data["types"].most_common()
+                ],
+                "topics": [
+                    {"name": k, "value": v} for k, v in data["topics"].most_common()
+                ],
+            }
+            for sub, data in subject_analytics_map.items()
+        }
+
+        subject_topics = {
+            sub: data["topics"] for sub, data in subject_analytics.items()
+        }
 
         return {
             "summary": {
@@ -165,6 +206,8 @@ def question_bank(
                 {"name": key, "value": value}
                 for key, value in topic_counter.most_common(20)
             ],
+            "subjectTopics": subject_topics,
+            "subjectAnalytics": subject_analytics,
         }
 
     except Exception as e:

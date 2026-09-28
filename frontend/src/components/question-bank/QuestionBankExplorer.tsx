@@ -22,7 +22,6 @@ import {
   getQuestionBank,
   type QuestionBankPayload,
 } from "@/lib/question-bank-client";
-import SubjectBarChart from "@/components/charts/SubjectBarChart";
 import TopicHeatmap from "@/components/charts/TopicHeatmap";
 import DifficultyVisualizer from "@/components/charts/DifficultyVisualizer";
 import QuestionPatternMatrix from "@/components/charts/QuestionPatternMatrix";
@@ -31,7 +30,7 @@ interface Props {
   meta: QuestionBankMeta;
 }
 
-type TabView = "all" | "topics" | "subjects" | "difficulty" | "patterns";
+type TabView = "all" | "heatmaps" | "difficulty" | "patterns";
 
 export default function QuestionBankExplorer({ meta }: Props) {
   const router = useRouter();
@@ -82,9 +81,45 @@ export default function QuestionBankExplorer({ meta }: Props) {
   const [data, setData] = useState<QuestionBankPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabView>("all");
+  const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
 
   const activeYears = selectedYears.filter((item) => availableYears.includes(item));
   const activeCycles = selectedCycles.filter((item) => availableCycles.includes(item));
+
+  // Reset selectedSubject if filter changes and current selectedSubject is not in new data
+  useEffect(() => {
+    if (selectedSubject && data?.subjects) {
+      const exists = data.subjects.some((s) => s.name === selectedSubject);
+      if (!exists) {
+        setSelectedSubject(null);
+      }
+    }
+  }, [data, selectedSubject]);
+
+  const activeSubjectData = useMemo(() => {
+    if (!selectedSubject || !data?.subjectAnalytics) return null;
+    return data.subjectAnalytics[selectedSubject] ?? null;
+  }, [data?.subjectAnalytics, selectedSubject]);
+
+  const activeDifficulty = useMemo(() => {
+    if (activeSubjectData) return activeSubjectData.difficulty;
+    return data?.difficulty ?? [];
+  }, [activeSubjectData, data?.difficulty]);
+
+  const activePatterns = useMemo(() => {
+    if (activeSubjectData) return activeSubjectData.questionPatterns;
+    return data?.questionPatterns ?? [];
+  }, [activeSubjectData, data?.questionPatterns]);
+
+  const activeTypes = useMemo(() => {
+    if (activeSubjectData) return activeSubjectData.questionTypes;
+    return data?.questionTypes ?? [];
+  }, [activeSubjectData, data?.questionTypes]);
+
+  const activeTotalQuestions = useMemo(() => {
+    if (activeSubjectData) return activeSubjectData.totalQuestions;
+    return data?.summary.questions ?? 0;
+  }, [activeSubjectData, data?.summary.questions]);
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -139,6 +174,7 @@ export default function QuestionBankExplorer({ meta }: Props) {
   }
 
   function handleResetFilters() {
+    setSelectedSubject(null);
     if (meta.exams[0]?.value) {
       setSelectedExams([meta.exams[0].value]);
       const firstExam = meta.exams[0];
@@ -417,27 +453,15 @@ export default function QuestionBankExplorer({ meta }: Props) {
           </button>
           <button
             type="button"
-            onClick={() => setActiveTab("topics")}
+            onClick={() => setActiveTab("heatmaps")}
             className={`shrink-0 inline-flex items-center gap-1.5 rounded-2xl px-4 py-2.5 text-xs sm:text-sm font-bold transition-all ${
-              activeTab === "topics"
+              activeTab === "heatmaps"
                 ? "bg-blue-600 text-white shadow-sm"
                 : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
             }`}
           >
             <Flame className="h-3.5 w-3.5" />
-            <span>Topic Heatmap</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab("subjects")}
-            className={`shrink-0 inline-flex items-center gap-1.5 rounded-2xl px-4 py-2.5 text-xs sm:text-sm font-bold transition-all ${
-              activeTab === "subjects"
-                ? "bg-blue-600 text-white shadow-sm"
-                : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
-            }`}
-          >
-            <BookOpen className="h-3.5 w-3.5" />
-            <span>Subject Weightage</span>
+            <span>Syllabus Heatmaps</span>
           </button>
           <button
             type="button"
@@ -466,7 +490,7 @@ export default function QuestionBankExplorer({ meta }: Props) {
         </div>
       )}
 
-      {/* ── 4. Main Intelligence Visualizations (No Donut Charts) ───────── */}
+      {/* ── 4. Main Intelligence Visualizations ─────────────────────────── */}
       {loading && !data ? (
         <div className="space-y-6">
           <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm animate-pulse space-y-4">
@@ -480,36 +504,58 @@ export default function QuestionBankExplorer({ meta }: Props) {
         </div>
       ) : data ? (
         <div className="space-y-8">
-          {/* SECTION A: Subject Weightage Breakdown */}
-          {(activeTab === "all" || activeTab === "subjects") && (
-            <SubjectBarChart
-              data={data.subjects}
+          {/* SECTION: Subject & Topic Frequency Heatmaps (with Dynamic Topic Drill-Down) */}
+          {(activeTab === "all" || activeTab === "heatmaps") && (
+            <TopicHeatmap
+              subjects={data.subjects}
+              subjectTopics={data.subjectTopics}
+              topics={data.topics}
               totalQuestions={data.summary.questions}
+              selectedSubject={selectedSubject}
+              onSelectSubject={setSelectedSubject}
             />
           )}
 
-          {/* SECTION B: Topic Frequency Heatmap */}
-          {(activeTab === "all" || activeTab === "topics") && (
-            <TopicHeatmap
-              topics={data.topics}
-              totalQuestions={data.summary.questions}
-            />
+          {/* Contextual Notice Banner when Subject is Selected */}
+          {selectedSubject && (
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-2xl border border-blue-200 bg-blue-50/70 p-4 text-xs sm:text-sm text-blue-950 shadow-2xs">
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <span className="font-bold text-blue-700 uppercase tracking-wider text-[11px]">
+                  Subject Filter Applied:
+                </span>
+                <span className="rounded-lg bg-blue-600 px-2.5 py-0.5 text-xs font-black text-white shadow-2xs">
+                  {selectedSubject}
+                </span>
+                <span className="text-slate-600 font-medium text-xs">
+                  Showing analytics for {activeTotalQuestions} questions in {selectedSubject}. Graphs below update automatically.
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedSubject(null)}
+                className="self-start sm:self-auto inline-flex items-center gap-1 font-bold text-blue-700 hover:text-blue-900 underline text-xs transition cursor-pointer"
+              >
+                Reset to Full Paper
+              </button>
+            </div>
           )}
 
           {/* SECTION C: Difficulty Profile */}
           {(activeTab === "all" || activeTab === "difficulty") && (
             <DifficultyVisualizer
-              difficulty={data.difficulty}
-              totalQuestions={data.summary.questions}
+              difficulty={activeDifficulty}
+              totalQuestions={activeTotalQuestions}
+              subjectContext={selectedSubject}
             />
           )}
 
           {/* SECTION D: Question Pattern Matrix */}
           {(activeTab === "all" || activeTab === "patterns") && (
             <QuestionPatternMatrix
-              patterns={data.questionPatterns}
-              types={data.questionTypes}
-              totalQuestions={data.summary.questions}
+              patterns={activePatterns}
+              types={activeTypes}
+              totalQuestions={activeTotalQuestions}
+              subjectContext={selectedSubject}
             />
           )}
 
@@ -520,17 +566,25 @@ export default function QuestionBankExplorer({ meta }: Props) {
                 Ready to act on this intelligence?
               </p>
               <h3 className="mt-1 text-xl sm:text-2xl font-black tracking-tight text-white">
-                Turn these pattern insights into targeted practice
+                {selectedSubject
+                  ? `Practice real ${selectedSubject} questions now`
+                  : "Turn these pattern insights into targeted practice"}
               </h3>
               <p className="mt-1 text-xs sm:text-sm text-blue-100">
-                Practice real questions filtered specifically by the high-yield topics above.
+                {selectedSubject
+                  ? `Practice real official PYQs filtered specifically for ${selectedSubject}.`
+                  : "Practice real questions filtered specifically by the high-yield topics above."}
               </p>
             </div>
             <Link
-              href="/dashboard/practice"
+              href={
+                selectedSubject
+                  ? `/dashboard/practice?exam=${selectedExams[0] || "CDS"}&subject=${encodeURIComponent(selectedSubject)}`
+                  : "/dashboard/practice"
+              }
               className="inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl bg-white px-6 py-3.5 text-sm font-black text-blue-700 shadow-md transition hover:bg-blue-50 active:scale-95"
             >
-              <span>Start Free Practice</span>
+              <span>{selectedSubject ? `Practice ${selectedSubject}` : "Start Free Practice"}</span>
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

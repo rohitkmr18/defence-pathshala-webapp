@@ -191,18 +191,21 @@ export default function ObjectionAndFinalCtaSection() {
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 href="/dashboard/practice"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-2xl bg-blue-600 px-8 py-4 text-base font-bold text-white shadow-xl shadow-blue-500/25 transition-all duration-200 hover:bg-blue-500 hover:shadow-blue-500/40 hover:scale-105 active:scale-95 motion-reduce:transform-none"
+                className="inline-flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-blue-600 px-6 text-base font-bold text-white shadow-xl shadow-blue-500/25 transition-all duration-200 hover:bg-blue-500 hover:shadow-blue-500/40 hover:scale-105 active:scale-95 motion-reduce:transform-none sm:w-56"
               >
-                <span>Start Free Targeted Practice</span>
+                <span>Attempt PYQs</span>
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 href="/dashboard/question-bank"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-6 py-4 text-base font-semibold text-white transition hover:bg-white/10"
+                className="inline-flex h-14 w-full items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-6 text-base font-semibold text-white transition hover:bg-white/10 sm:w-56"
               >
                 <span>Explore PYQs</span>
+                <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
+
+            <p className="mt-4 text-sm font-semibold text-blue-200">A Free Initiative</p>
 
             {/* Small trust line */}
             <p className="mt-6 text-xs sm:text-sm text-slate-400 font-medium">

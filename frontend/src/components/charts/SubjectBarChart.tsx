@@ -1,15 +1,15 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import Link from "next/link";
 import {
   BarChart,
   Bar,
   XAxis,
   YAxis,
-  Tooltip,
   ResponsiveContainer,
   Cell,
+  LabelList,
 } from "recharts";
 import { BookOpen, ArrowUpRight, TrendingUp } from "lucide-react";
 
@@ -34,44 +34,12 @@ const BLUE_PALETTE = [
   "#0EA5E9", // Cyan Light
 ];
 
-interface CustomTooltipProps {
-  active?: boolean;
-  payload?: any[];
-  totalQuestions: number;
-}
-
-function CustomTooltip({ active, payload, totalQuestions }: CustomTooltipProps) {
-  if (active && payload && payload.length) {
-    const item = payload[0].payload;
-    const percent = ((item.value / (totalQuestions || 1)) * 100).toFixed(1);
-    return (
-      <div className="rounded-2xl border border-slate-200 bg-white/95 p-3.5 shadow-xl backdrop-blur-md">
-        <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
-          Subject Weightage
-        </p>
-        <p className="mt-1 text-base font-black text-slate-900">
-          {item.name}
-        </p>
-        <div className="mt-2 flex items-baseline gap-2">
-          <span className="text-2xl font-black text-blue-600">{item.value}</span>
-          <span className="text-xs font-semibold text-slate-500">
-            questions ({percent}%)
-          </span>
-        </div>
-      </div>
-    );
-  }
-  return null;
-}
-
 export default function SubjectBarChart({
   title = "Subject Weightage Breakdown",
   subtitle = "QUESTION INTELLIGENCE",
   data,
   totalQuestions,
 }: SubjectBarChartProps) {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-
   const sortedData = useMemo(() => {
     return [...data].sort((a, b) => b.value - a.value);
   }, [data]);
@@ -116,19 +84,13 @@ export default function SubjectBarChart({
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Visual Chart (7 columns on desktop) */}
+        {/* Static Infographic Chart (7 columns on desktop) - Non-interactive on touch/hover */}
         <div className="lg:col-span-7">
-          <div className="h-[320px] w-full pt-4">
+          <div className="h-[320px] w-full pt-4 pointer-events-none select-none">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={sortedData}
-                margin={{ top: 10, right: 10, left: -20, bottom: 25 }}
-                onMouseMove={(state: any) => {
-                  if (state && state.activeTooltipIndex !== undefined) {
-                    setHoveredIndex(state.activeTooltipIndex);
-                  }
-                }}
-                onMouseLeave={() => setHoveredIndex(null)}
+                margin={{ top: 20, right: 10, left: -20, bottom: 25 }}
               >
                 <XAxis
                   dataKey="name"
@@ -136,7 +98,10 @@ export default function SubjectBarChart({
                   axisLine={{ stroke: "#E2E8F0" }}
                   interval={0}
                   tick={({ x, y, payload }: any) => {
-                    const label = payload.value.length > 10 ? `${payload.value.substring(0, 9)}…` : payload.value;
+                    const label =
+                      payload.value.length > 10
+                        ? `${payload.value.substring(0, 9)}…`
+                        : payload.value;
                     return (
                       <g transform={`translate(${x},${y})`}>
                         <text
@@ -161,26 +126,23 @@ export default function SubjectBarChart({
                   tick={{ fill: "#94A3B8", fontSize: 11, fontWeight: 600 }}
                   tickFormatter={(val: number) => `${val}`}
                 />
-                <Tooltip
-                  cursor={{ fill: "rgba(37, 99, 235, 0.05)", radius: 8 }}
-                  content={<CustomTooltip totalQuestions={totalQuestions} />}
-                />
                 <Bar
                   dataKey="value"
                   radius={[8, 8, 2, 2]}
-                  animationDuration={800}
+                  isAnimationActive={false}
                 >
+                  <LabelList
+                    dataKey="value"
+                    position="top"
+                    fill="#475569"
+                    fontSize={11}
+                    fontWeight={700}
+                    formatter={(val: any) => `${val}`}
+                  />
                   {sortedData.map((_, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={
-                        hoveredIndex === null
-                          ? BLUE_PALETTE[index % BLUE_PALETTE.length]
-                          : hoveredIndex === index
-                          ? "#1D4ED8"
-                          : "#93C5FD"
-                      }
-                      className="transition-colors duration-200"
+                      fill={BLUE_PALETTE[index % BLUE_PALETTE.length]}
                     />
                   ))}
                 </Bar>
@@ -189,7 +151,7 @@ export default function SubjectBarChart({
           </div>
         </div>
 
-        {/* Breakdown List (5 columns on desktop) */}
+        {/* Detailed Breakdown List (5 columns on desktop) - Static Infographic */}
         <div className="lg:col-span-5 space-y-2.5">
           <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
             Detailed Subject Breakdown
@@ -198,22 +160,15 @@ export default function SubjectBarChart({
           <div className="space-y-2 max-h-[310px] overflow-y-auto pr-1">
             {sortedData.map((item, idx) => {
               const pct = ((item.value / (totalQuestions || 1)) * 100).toFixed(1);
-              const isHovered = hoveredIndex === idx;
 
               return (
                 <div
                   key={item.name}
-                  onMouseEnter={() => setHoveredIndex(idx)}
-                  onMouseLeave={() => setHoveredIndex(null)}
-                  className={`group flex items-center justify-between gap-3 rounded-2xl border p-3 transition-all duration-200 ${
-                    isHovered
-                      ? "border-blue-300 bg-blue-50/70 shadow-xs translate-x-1"
-                      : "border-slate-100 bg-slate-50/60 hover:bg-slate-50"
-                  }`}
+                  className="flex items-center justify-between gap-3 rounded-2xl border border-slate-100 bg-slate-50/60 p-3"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <span
-                      className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-lg text-xs font-black transition-colors ${
+                      className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-lg text-xs font-black ${
                         idx === 0
                           ? "bg-blue-600 text-white shadow-2xs"
                           : "bg-slate-200 text-slate-700"
@@ -223,13 +178,13 @@ export default function SubjectBarChart({
                     </span>
 
                     <div className="min-w-0">
-                      <p className="truncate text-xs sm:text-sm font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
+                      <p className="truncate text-xs sm:text-sm font-bold text-slate-900">
                         {item.name}
                       </p>
                       {/* Mini visual progress track */}
                       <div className="mt-1 h-1.5 w-24 sm:w-32 rounded-full bg-slate-200 overflow-hidden">
                         <div
-                          className="h-full bg-blue-600 rounded-full transition-all duration-500"
+                          className="h-full bg-blue-600 rounded-full"
                           style={{ width: `${pct}%` }}
                         />
                       </div>

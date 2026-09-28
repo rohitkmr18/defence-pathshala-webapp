@@ -20,12 +20,14 @@ interface QuestionPatternMatrixProps {
     value: number;
   }[];
   totalQuestions: number;
+  subjectContext?: string | null;
 }
 
 export default function QuestionPatternMatrix({
   patterns,
   types,
   totalQuestions,
+  subjectContext,
 }: QuestionPatternMatrixProps) {
   const sortedPatterns = useMemo(() => {
     return [...patterns].sort((a, b) => b.value - a.value);
@@ -82,18 +84,31 @@ export default function QuestionPatternMatrix({
         <div className="mb-6">
           <div className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700 shadow-2xs">
             <FileText className="h-3.5 w-3.5 text-blue-600" />
-            <span>FORMAT INTELLIGENCE</span>
+            <span>
+              {subjectContext
+                ? `${subjectContext.toUpperCase()} PATTERNS`
+                : "FORMAT INTELLIGENCE"}
+            </span>
           </div>
           <h3 className="mt-2.5 text-xl font-black tracking-tight text-slate-900">
-            Question Pattern Breakdown
+            {subjectContext
+              ? `${subjectContext} — Question Patterns`
+              : "Question Pattern Breakdown"}
           </h3>
           <p className="mt-1 text-xs sm:text-sm text-slate-500">
-            Structural types of questions tested in official papers
+            {subjectContext
+              ? `Structural formats and patterns tested in ${subjectContext} (${totalQuestions} Questions)`
+              : "Structural types of questions tested in official papers"}
           </p>
         </div>
 
         <div className="space-y-4">
-          {sortedPatterns.map((item, idx) => {
+          {sortedPatterns.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 p-6 text-center text-xs text-slate-400">
+              No specific pattern breakdown recorded for {subjectContext || "this selection"}.
+            </div>
+          ) : (
+            sortedPatterns.map((item, idx) => {
             const pct = ((item.value / (totalQuestions || 1)) * 100).toFixed(1);
             const hint = getPatternHint(item.name);
 
@@ -129,7 +144,7 @@ export default function QuestionPatternMatrix({
                 </p>
               </div>
             );
-          })}
+          }))}
         </div>
       </div>
 
@@ -138,18 +153,31 @@ export default function QuestionPatternMatrix({
         <div className="mb-6">
           <div className="inline-flex items-center gap-1.5 rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-bold text-indigo-700 shadow-2xs">
             <Brain className="h-3.5 w-3.5 text-indigo-600" />
-            <span>COGNITIVE DEPTH</span>
+            <span>
+              {subjectContext
+                ? `${subjectContext.toUpperCase()} COGNITIVE DEPTH`
+                : "COGNITIVE DEPTH"}
+            </span>
           </div>
           <h3 className="mt-2.5 text-xl font-black tracking-tight text-slate-900">
-            Cognitive Depth Distribution
+            {subjectContext
+              ? `${subjectContext} — Cognitive Depth`
+              : "Cognitive Depth Distribution"}
           </h3>
           <p className="mt-1 text-xs sm:text-sm text-slate-500">
-            Factual recall vs conceptual depth demanded by questions
+            {subjectContext
+              ? `Factual recall vs conceptual depth in ${subjectContext} (${totalQuestions} Questions)`
+              : "Factual recall vs conceptual depth demanded by questions"}
           </p>
         </div>
 
         <div className="space-y-4">
-          {sortedTypes.map((item) => {
+          {sortedTypes.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 p-6 text-center text-xs text-slate-400">
+              No specific cognitive type breakdown recorded for {subjectContext || "this selection"}.
+            </div>
+          ) : (
+            sortedTypes.map((item) => {
             const pct = ((item.value / (totalQuestions || 1)) * 100).toFixed(1);
             const style = getTypeStyle(item.name);
 
@@ -193,7 +221,7 @@ export default function QuestionPatternMatrix({
                 </div>
               </div>
             );
-          })}
+          }))}
         </div>
 
         {/* Strategic Takeaway Banner */}

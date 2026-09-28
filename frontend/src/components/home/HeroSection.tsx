@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Shield, ArrowRight } from "lucide-react";
+import { Shield, Target } from "lucide-react";
 
 export default function HeroSection() {
   return (
@@ -14,13 +14,24 @@ export default function HeroSection() {
         {/* ── Top Pill ─────────────────────────────────────────────────── */}
         <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-500/10 px-4 py-1.5 text-xs font-bold text-blue-300 backdrop-blur-md shadow-xs">
           <Shield className="h-3.5 w-3.5 text-blue-400" />
-          <span>UPSC CDS &bull; CAPF AC &bull; NDA</span>
+          <span>UPSC CDS &bull; CAPF AC &bull; AFCAT</span>
         </div>
 
         {/* ── Headline & Gradient Emphasis (Single H1) ─────────────────── */}
         <h1 className="mt-6 text-3xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl text-white">
           <span className="block">Stop Solving PYQs.</span>
-          <span className="block mt-1 sm:mt-2">Start Learning From Them.</span>
+          <span className="block mt-1 sm:mt-2">
+            <span
+              style={{
+                background: "linear-gradient(90deg, #4DA3FF 0%, #6E8CFF 45%, #A8B8FF 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              Decode
+            </span>{" "}
+            Them.
+          </span>
           <span className="mt-3.5 block text-xl sm:text-3xl lg:text-4xl font-extrabold tracking-normal bg-gradient-to-r from-blue-400 via-indigo-300 to-blue-200 bg-clip-text text-transparent sm:mt-4">
             Know exactly what UPSC repeats.
           </span>
@@ -38,14 +49,13 @@ export default function HeroSection() {
             href="/dashboard/practice"
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-8 py-4 text-base font-bold text-white shadow-lg shadow-blue-600/30 transition-all duration-200 hover:bg-blue-500 hover:shadow-blue-600/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 active:scale-[0.98]"
           >
-            <span>Start Free Targeted Practice</span>
-            <ArrowRight className="h-5 w-5" />
+            <span>Attempt PYQs</span>
           </Link>
 
           {/* Secondary CTA (Outline) */}
           <Link
             href="/dashboard/question-bank"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-7 py-4 text-base font-semibold text-slate-200 backdrop-blur-sm transition-all duration-200 hover:bg-white/10 hover:border-white/30 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-8 py-4 text-base font-bold text-white shadow-lg shadow-blue-600/30 transition-all duration-200 hover:bg-blue-500 hover:shadow-blue-600/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 active:scale-[0.98]"
           >
             <span>Explore PYQs</span>
           </Link>
