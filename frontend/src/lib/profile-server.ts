@@ -1,13 +1,9 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import type { Profile } from "@/lib/profile/types";
 
-export interface UserProfile {
-  id: string;
-  full_name: string | null;
-  target_year: number | null;
-  onboarding_completed: boolean;
-  target_exams: string[];
-}
+export type UserProfile = Profile;
+export type { Profile };
 
 export async function getServerProfile(): Promise<{
   profile: UserProfile;
