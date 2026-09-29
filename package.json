@@ -7,6 +7,6 @@
     "dev:backend": "python -m uvicorn app.main:app --reload --port 8000 --app-dir backend",
     "dev:all": "node scripts/dev-all.js",
     "build:frontend": "npm run build --prefix frontend",
-    "verify": "npm run build --prefix frontend"
+    "verify": "node scripts/verify.js"
   }
 }
