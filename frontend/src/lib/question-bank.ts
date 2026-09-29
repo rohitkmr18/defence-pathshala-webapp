@@ -10,7 +10,6 @@ const BACKEND_URL =
 const supabaseUrl =
   process.env.NEXT_PUBLIC_SUPABASE_URL ||
   "https://afhwegrxnvgsqbqadvwr.supabase.co";
-const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 export interface ExamMeta {
@@ -74,12 +73,17 @@ export async function getQuestionBankMeta(): Promise<QuestionBankMeta> {
 
   // 2. Direct Supabase query fallback (works for both guests and authenticated users)
   try {
-    const key = serviceRoleKey || anonKey;
-    if (!key) {
+    if (!anonKey) {
       return { exams: [] };
     }
 
-    const supabase = createSupabaseClient(supabaseUrl, key);
+    let supabase: any;
+    try {
+      supabase = await createClient();
+    } catch {
+      supabase = createSupabaseClient(supabaseUrl, anonKey);
+    }
+
     const query = supabase
       .from("questions")
       .select("exam,year,cycle");

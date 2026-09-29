@@ -62,53 +62,28 @@ def get_current_user(
 
 def require_admin(
     credentials: HTTPAuthorizationCredentials | None = Depends(security_optional),
-    x_admin_key: str | None = Header(None, alias="X-Admin-Key"),
 ) -> dict:
     """
     Requires the caller to be an authenticated administrator.
     Accepts:
-    1. Header `X-Admin-Key` matching ADMIN_API_KEY or SUPABASE_SERVICE_ROLE_KEY.
-    2. Bearer token matching SUPABASE_SERVICE_ROLE_KEY.
-    3. Valid Supabase JWT with role='admin' in metadata or 'admin' in profiles table.
+    1. Bearer token matching SUPABASE_SERVICE_ROLE_KEY (server-to-server).
+    2. Valid Supabase JWT with role == 'admin' in public.profiles.
     """
-    # 1. API Key authorization
-    if x_admin_key:
-        valid_keys = [k for k in [settings.admin_api_key, settings.supabase_service_role_key] if k]
-        if valid_keys and x_admin_key in valid_keys:
-            return {"sub": "admin_key", "role": "admin", "auth_method": "x_admin_key"}
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid Admin API key",
-        )
-
-    # 2. Bearer token authorization
     if not credentials:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Authentication required. Provide Bearer token or X-Admin-Key header.",
+            detail="Authentication required. Provide a Bearer token.",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
     # Decode and verify user
     user = get_current_user(credentials)
 
-    # Check for service role
-    if user.get("role") in ["service_role", "admin"]:
+    # Allow service role key
+    if user.get("role") == "service_role":
         return user
 
-    # Check app_metadata or user_metadata
-    app_meta = user.get("app_metadata", {})
-    user_meta = user.get("user_metadata", {})
-    email = user.get("email", "").lower()
-    admin_emails = {"rohitcool423@gmail.com"}
-    if (
-        app_meta.get("role") == "admin"
-        or user_meta.get("role") == "admin"
-        or email in admin_emails
-    ):
-        return user
-
-    # Check profiles table
+    # Check profiles table for application-level admin role
     user_id = user.get("sub")
     if user_id:
         try:
@@ -123,3 +98,4 @@ def require_admin(
         status_code=status.HTTP_403_FORBIDDEN,
         detail="Admin privileges required to access this resource.",
     )
+
