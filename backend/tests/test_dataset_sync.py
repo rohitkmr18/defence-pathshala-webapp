@@ -178,10 +178,10 @@ def test_sync_dataset_invalid_key() -> None:
 
 
 def test_sync_dataset_with_admin_key_dry_run() -> None:
-    admin_key = settings.supabase_service_role_key
+    service_role = settings.supabase_service_role_key
     response = client.post(
         "/admin/sync-dataset?dry_run=true",
-        headers={"X-Admin-Key": admin_key},
+        headers={"Authorization": f"Bearer {service_role}"},
     )
     assert response.status_code == 200
     data = response.json()
@@ -199,10 +199,10 @@ def test_sync_stats_unauthenticated() -> None:
 
 
 def test_sync_stats_with_admin_key() -> None:
-    admin_key = settings.supabase_service_role_key
+    service_role = settings.supabase_service_role_key
     response = client.get(
         "/admin/sync-stats",
-        headers={"X-Admin-Key": admin_key},
+        headers={"Authorization": f"Bearer {service_role}"},
     )
     assert response.status_code == 200
     data = response.json()
