@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!examCoverage || !yearCoverage) return {};
 
   const canonicalUrl = `https://www.defencepathshala.in/pyqs/${examCoverage.slug}/${yearNum}`;
-  const title = `${examCoverage.label} ${yearNum} PYQs - Question Paper & Subject Analysis | Defence Pathshala`;
+  const title = `${examCoverage.label} ${yearNum} PYQs - Question Paper & Subject Analysis`;
   const description = `Analyze and practice official UPSC ${examCoverage.label} ${yearNum} previous year questions. Contains ${yearCoverage.totalQuestions} questions across ${yearCoverage.subjects.length} subjects with instant solutions.`;
 
   return {
@@ -47,6 +47,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       url: canonicalUrl,
       siteName: "Defence Pathshala",
+      images: ["/og-image.png"],
       type: "website",
     },
   };

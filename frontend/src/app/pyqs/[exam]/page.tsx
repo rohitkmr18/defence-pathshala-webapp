@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const minYear = Math.min(...coverage.years.map((y) => y.year));
   const maxYear = Math.max(...coverage.years.map((y) => y.year));
   const canonicalUrl = `https://www.defencepathshala.in/pyqs/${coverage.slug}`;
-  const title = `${coverage.label} Previous Year Questions (${minYear}–${maxYear}) | Defence Pathshala`;
+  const title = `${coverage.label} Previous Year Questions (${minYear}–${maxYear})`;
   const description = `Exhaustive archive of UPSC ${coverage.label} previous year questions with year-by-year and subject-wise breakdown. Practice ${coverage.totalQuestions.toLocaleString()}+ real questions.`;
 
   return {
@@ -43,6 +43,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       url: canonicalUrl,
       siteName: "Defence Pathshala",
+      images: ["/og-image.png"],
       type: "website",
     },
   };

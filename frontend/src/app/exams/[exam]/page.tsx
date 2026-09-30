@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!coverage) return {};
 
   const canonicalUrl = `https://www.defencepathshala.in/exams/${coverage.slug}`;
-  const title = `${coverage.fullTitle} PYQs & Exam Analysis | Defence Pathshala`;
+  const title = `${coverage.fullTitle} PYQs & Exam Analysis`;
   const description = `${coverage.description} Access ${coverage.totalQuestions.toLocaleString()} verified previous year questions across ${coverage.years.length} exam cycles with topic-wise breakdown.`;
 
   return {
@@ -42,6 +42,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       url: canonicalUrl,
       siteName: "Defence Pathshala",
+      images: ["/og-image.png"],
       type: "website",
     },
   };
