@@ -8,6 +8,8 @@ export const metadata = {
     "Explore UPSC question patterns across exams, years, cycles, subjects, topics and difficulty using the proprietary PYQ Intelligence database.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function QuestionBankPage() {
   const meta = await getQuestionBankMeta();
 

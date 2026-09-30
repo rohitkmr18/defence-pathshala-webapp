@@ -227,15 +227,26 @@ def question_bank(
 @router.get("/question-bank/meta")
 def question_bank_meta():
     try:
-        response = (
-            supabase.table("questions")
-            .select("exam,year,cycle")
-            .execute()
-        )
+        page_size = 1000
+        rows = []
+        start = 0
+
+        while True:
+            response = (
+                supabase.table("questions")
+                .select("exam,year,cycle")
+                .range(start, start + page_size - 1)
+                .execute()
+            )
+            page_rows = response.data or []
+            rows.extend(page_rows)
+            if len(page_rows) < page_size:
+                break
+            start += page_size
 
         exams = {}
 
-        for row in response.data or []:
+        for row in rows:
             exam = row.get("exam")
             year = row.get("year")
             cycle = row.get("cycle")

@@ -1,11 +1,8 @@
-import { createClient } from "@/lib/supabase/server";
+import { backendGET } from "@/lib/backend";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { getExamLabel, getExamDbValue } from "@/lib/exams";
 
 export { getExamLabel, getExamDbValue };
-
-const BACKEND_URL =
-  process.env.BACKEND_URL || "http://127.0.0.1:8000";
 
 const supabaseUrl =
   process.env.NEXT_PUBLIC_SUPABASE_URL ||
@@ -37,53 +34,41 @@ export interface QuestionBankPayload {
 }
 
 export async function getQuestionBankMeta(): Promise<QuestionBankMeta> {
-  // 1. Try backend if available and authenticated
+  // 1. Try FastAPI backend first (handles both authenticated & guest requests)
   try {
-    const supabase = await createClient();
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-
-    if (session?.access_token) {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 1500);
-
-      const response = await fetch(
-        `${BACKEND_URL}/analytics/question-bank/meta`,
-        {
-          headers: {
-            Authorization: `Bearer ${session.access_token}`,
-          },
-          cache: "no-store",
-          signal: controller.signal,
-        }
-      );
-      clearTimeout(timeoutId);
-
-      if (response.ok) {
-        const data = (await response.json()) as QuestionBankMeta;
-        if (data?.exams && data.exams.length > 0) {
-          return data;
-        }
+    const response = await backendGET("/analytics/question-bank/meta");
+    if (response.ok) {
+      const data = (await response.json()) as QuestionBankMeta;
+      if (data?.exams && data.exams.length > 0) {
+        return data;
       }
+    } else {
+      console.warn(
+        `[QuestionBank] Backend /analytics/question-bank/meta returned HTTP ${response.status}`
+      );
     }
-  } catch {
-    // Backend offline / unauthenticated — fall through to direct Supabase query
+  } catch (backendErr: any) {
+    if (backendErr?.digest === "DYNAMIC_SERVER_USAGE") {
+      throw backendErr;
+    }
+    console.warn(
+      "[QuestionBank] Backend unreachable or failed, falling back to direct server-side Supabase query:",
+      backendErr instanceof Error ? backendErr.message : backendErr
+    );
   }
 
-  // 2. Direct Supabase query fallback (works for both guests and authenticated users)
+  // 2. Direct Supabase query fallback (server-side privileged read)
   try {
-    if (!anonKey) {
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const key = serviceRoleKey || anonKey;
+    if (!key) {
+      console.error(
+        "[QuestionBank] Neither SUPABASE_SERVICE_ROLE_KEY nor NEXT_PUBLIC_SUPABASE_ANON_KEY is configured"
+      );
       return { exams: [] };
     }
 
-    let supabase: any;
-    try {
-      supabase = await createClient();
-    } catch {
-      supabase = createSupabaseClient(supabaseUrl, anonKey);
-    }
-
+    const supabase = createSupabaseClient(supabaseUrl, key);
     const query = supabase
       .from("questions")
       .select("exam,year,cycle");
@@ -97,7 +82,7 @@ export async function getQuestionBankMeta(): Promise<QuestionBankMeta> {
         start + pageSize - 1
       );
       if (pageErr) {
-        console.error("Supabase question bank meta page query error:", pageErr);
+        console.error("[QuestionBank] Supabase question bank meta page query error:", pageErr);
         break;
       }
       if (!pageData || pageData.length === 0) break;
@@ -107,6 +92,7 @@ export async function getQuestionBankMeta(): Promise<QuestionBankMeta> {
     }
 
     if (rows.length === 0) {
+      console.warn("[QuestionBank] Supabase query returned 0 rows for question bank metadata");
       return { exams: [] };
     }
 
@@ -154,7 +140,11 @@ export async function getQuestionBankMeta(): Promise<QuestionBankMeta> {
       }));
 
     return { exams: result };
-  } catch {
+  } catch (fallbackErr) {
+    console.error(
+      "[QuestionBank] Direct Supabase fallback failed:",
+      fallbackErr instanceof Error ? fallbackErr.message : fallbackErr
+    );
     return { exams: [] };
   }
 }
