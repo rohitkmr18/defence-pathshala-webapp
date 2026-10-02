@@ -523,43 +523,70 @@ export default function PracticeFilters({
 
       {/* ── 4. SUBTOPIC SELECTOR (Dependent on Topic) ─────────────────────── */}
       {selectedTopics.length > 0 && availableSubtopics.length > 0 && (
-        <div className="rounded-2xl border border-blue-100 bg-blue-50/40 p-4 transition">
-          <div className="mb-2.5 flex items-center justify-between">
-            <div className="flex items-center gap-1.5">
-              <Compass className="h-3.5 w-3.5 text-blue-600" />
-              <label className="text-xs font-bold uppercase tracking-wider text-blue-900">
-                4. Subtopic (Optional Granular Focus)
-              </label>
+        <section
+          aria-labelledby="practice-subtopics-heading"
+          className="rounded-2xl border border-blue-100 bg-blue-50/30 p-4 sm:p-5"
+        >
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <Compass aria-hidden="true" className="h-4 w-4 shrink-0 text-blue-600" />
+                <h3 id="practice-subtopics-heading" className="text-sm font-bold text-slate-900">
+                  4. Subtopics
+                </h3>
+                <span className="rounded-full bg-white px-2 py-0.5 text-xs font-medium text-slate-500">
+                  Optional
+                </span>
+              </div>
+              <p className="mt-1.5 text-xs leading-relaxed text-slate-600">
+                Choose specific areas to practise, or leave all unselected to include every subtopic.
+              </p>
+              <p aria-live="polite" className="mt-2 text-xs font-semibold text-blue-700">
+                {selectedSubtopics.length > 0
+                  ? `${selectedSubtopics.length} of ${availableSubtopics.length} selected`
+                  : `All ${availableSubtopics.length} subtopics included`}
+              </p>
             </div>
             <button
               type="button"
               onClick={handleSelectAllSubtopics}
-              className="text-[11px] font-semibold text-blue-600 hover:text-blue-800"
+              className="min-h-11 shrink-0 self-start rounded-xl border border-blue-200 bg-white px-3 py-2 text-xs font-semibold text-blue-700 transition hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
             >
-              {selectedSubtopics.length === availableSubtopics.length ? "Deselect All" : "All Subtopics"}
+              {selectedSubtopics.length === availableSubtopics.length ? "Clear selection" : "Select all"}
             </button>
           </div>
 
-          <div className="flex flex-wrap gap-1.5 max-h-44 overflow-y-auto pr-1">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {availableSubtopics.map((subtop) => {
               const isSelected = selectedSubtopics.includes(subtop);
               return (
                 <button
                   key={subtop}
                   type="button"
+                  aria-pressed={isSelected}
                   onClick={() => handleSelectSubtopic(subtop)}
-                  className={`rounded-lg px-2.5 py-1 text-xs transition ${
+                  className={`flex min-h-12 w-full items-start gap-3 rounded-xl border px-3 py-3 text-left text-sm leading-snug transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 ${
                     isSelected
-                      ? "bg-blue-700 font-semibold text-white shadow-2xs"
-                      : "border border-blue-200/60 bg-white font-medium text-slate-700 hover:bg-blue-100/50"
+                      ? "border-blue-600 bg-blue-50 font-semibold text-blue-900"
+                      : "border-slate-200 bg-white font-medium text-slate-700 hover:border-blue-300 hover:bg-blue-50/50"
                   }`}
                 >
-                  {subtop}
+                  <span
+                    aria-hidden="true"
+                    className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border text-xs ${
+                      isSelected
+                        ? "border-blue-600 bg-blue-600 text-white"
+                        : "border-slate-300 bg-white"
+                    }`}
+                  >
+                    {isSelected ? "✓" : null}
+                  </span>
+                  <span className="min-w-0 whitespace-normal break-words">{subtop}</span>
                 </button>
               );
             })}
           </div>
-        </div>
+        </section>
       )}
 
       {/* ── 5. ADVANCED / TEMPORAL FILTERS (Year & Cycle Accordion) ───────── */}
