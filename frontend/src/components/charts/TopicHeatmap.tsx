@@ -13,6 +13,8 @@ import {
   BookOpen,
 } from "lucide-react";
 
+import { buildPracticeUrl } from "@/lib/question-filters";
+
 interface SubjectItem {
   name: string;
   value: number;
@@ -29,6 +31,10 @@ interface TopicHeatmapProps {
   topics?: TopicItem[];
   totalQuestions: number;
   selectedSubject?: string | null;
+  selectedExams?: string[];
+  selectedYears?: number[];
+  selectedCycles?: string[];
+  returnTo?: string;
   onSelectSubject?: (subject: string | null) => void;
 }
 
@@ -38,6 +44,10 @@ export default function TopicHeatmap({
   topics = [],
   totalQuestions,
   selectedSubject: propSelectedSubject,
+  selectedExams = [],
+  selectedYears = [],
+  selectedCycles = [],
+  returnTo,
   onSelectSubject,
 }: TopicHeatmapProps) {
   // Support both controlled and uncontrolled selectedSubject
@@ -526,9 +536,16 @@ export default function TopicHeatmap({
                         </span>
 
                         <Link
-                          href={`/dashboard/practice?subject=${encodeURIComponent(
-                            selectedSubject
-                          )}&topic=${encodeURIComponent(topic.name)}`}
+                          href={buildPracticeUrl(
+                            {
+                              exams: selectedExams,
+                              years: selectedYears,
+                              cycles: selectedCycles,
+                              subjects: selectedSubject ? [selectedSubject] : [],
+                              topics: [topic.name],
+                            },
+                            { returnTo }
+                          )}
                           className="inline-flex items-center gap-1 font-bold text-[11px] underline-offset-2 hover:underline group-hover:translate-x-0.5 transition-transform"
                         >
                           <span>Practice</span>

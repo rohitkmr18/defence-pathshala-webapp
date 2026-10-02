@@ -75,4 +75,3 @@ grant select on public.v_dp_question_intelligence_v1 to anon, authenticated, ser
 -- 3. Comment for documentation & schema introspection
 comment on view public.v_dp_question_intelligence_v1 is
 'Canonical production read model for Defence Pathshala PYQ Intelligence platform. Exposes normalized taxonomy, difficulty, pattern, and eligibility flags.';
-

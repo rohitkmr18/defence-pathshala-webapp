@@ -46,6 +46,8 @@ export interface PracticeQuestion {
   production_eligible?: boolean;
   intelligence_eligible?: boolean;
   human_review_required?: boolean;
+  intelligence_verified?: boolean;
+  intelligence_confidence?: "MODEL_DERIVED" | "HUMAN_VERIFIED" | string;
 }
 
 /** All possible option keys */

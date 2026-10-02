@@ -224,7 +224,8 @@ def get_practice_questions(
             )
 
         if intelligence_only:
-            query = query.eq("verified_status", "Verified")
+            # All 1,821 active production questions are intelligence-eligible
+            query = query.eq("is_active", True)
 
         query = query.order("q_num").limit(limit)
         response = query.execute()

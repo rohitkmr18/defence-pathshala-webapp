@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   LogIn,
   Target,
@@ -11,6 +11,7 @@ import {
   ChevronDown,
   ChevronUp,
   Loader2,
+  ArrowLeft,
 } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
@@ -18,6 +19,11 @@ import { createClient } from "@/lib/supabase/client";
 import FullPaperHero, { FullPaperDefinition } from "@/components/practice/FullPaperHero";
 import QuestionDistributionChart from "@/components/practice/QuestionDistributionChart";
 import PracticeFilters, { type FilterOverride } from "./PracticeFilters";
+import {
+  buildPracticeSessionUrl,
+  parseFiltersFromSearchParams,
+  serializeFiltersToSearchParams,
+} from "@/lib/question-filters";
 
 // ─── Active filter shape ───────────────────────────────────────────────────────
 
@@ -69,6 +75,8 @@ function AuthGateBanner({ nextUrl }: { nextUrl: string }) {
 
 export default function PracticePageClient() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const returnTo = searchParams.get("returnTo");
 
   // Top mode toggle: "targeted" vs "full-paper"
   const [practiceMode, setPracticeMode] = useState<"targeted" | "full-paper">("targeted");
@@ -76,14 +84,17 @@ export default function PracticePageClient() {
   // Targeted practice execution style: "instant" (learning) vs "attempt" (timed)
   const [sessionStyle, setSessionStyle] = useState<"instant" | "attempt">("instant");
 
-  const [activeFilters, setActiveFilters] = useState<ActiveFilters>({
-    exams: [],
-    years: [],
-    cycles: [],
-    subjects: [],
-    topics: [],
-    subtopics: [],
-    difficulty: "",
+  const [activeFilters, setActiveFilters] = useState<ActiveFilters>(() => {
+    const parsed = parseFiltersFromSearchParams(searchParams);
+    return {
+      exams: parsed.exams,
+      years: parsed.years,
+      cycles: parsed.cycles,
+      subjects: parsed.subjects,
+      topics: parsed.topics,
+      subtopics: parsed.subtopics,
+      difficulty: parsed.difficulties[0] || "",
+    };
   });
 
   const [questionCount, setQuestionCount] = useState<number | null>(null);
@@ -117,17 +128,18 @@ export default function PracticePageClient() {
       setCountLoading(true);
 
       try {
-        const params = new URLSearchParams();
-        if (activeFilters.exams.length)    params.set("exam", activeFilters.exams.join(","));
-        if (activeFilters.years.length)    params.set("year", activeFilters.years.join(","));
-        if (activeFilters.cycles.length)   params.set("cycle", activeFilters.cycles.join(","));
-        if (activeFilters.subjects.length) params.set("subject", activeFilters.subjects.join(","));
-        if (activeFilters.topics.length)   params.set("topic", activeFilters.topics.join(","));
-        if (activeFilters.subtopics?.length) params.set("subtopic", activeFilters.subtopics.join(","));
-        if (activeFilters.difficulty)      params.set("difficulty", activeFilters.difficulty);
+        const params = serializeFiltersToSearchParams({
+          exams: activeFilters.exams,
+          years: activeFilters.years,
+          cycles: activeFilters.cycles,
+          subjects: activeFilters.subjects,
+          topics: activeFilters.topics,
+          subtopics: activeFilters.subtopics,
+          difficulties: activeFilters.difficulty ? [activeFilters.difficulty] : [],
+        });
 
         const res = await fetch(
-          `/api/practice/count${params.toString() ? `?${params}` : ""}`,
+          `/api/practice/count?${params.toString()}`,
           { cache: "no-store" }
         );
 
@@ -198,19 +210,6 @@ export default function PracticePageClient() {
     setShowAuthGate(false);
   }, []);
 
-  // ── Session URL builder ────────────────────────────────────────────────────
-  function buildSessionParams() {
-    const params = new URLSearchParams({ mode: sessionStyle });
-    if (activeFilters.exams.length)    params.set("exam", activeFilters.exams.join(","));
-    if (activeFilters.years.length)    params.set("year", activeFilters.years.join(","));
-    if (activeFilters.cycles.length)   params.set("cycle", activeFilters.cycles.join(","));
-    if (activeFilters.subjects.length) params.set("subject", activeFilters.subjects.join(","));
-    if (activeFilters.topics.length)   params.set("topic", activeFilters.topics.join(","));
-    if (activeFilters.subtopics?.length) params.set("subtopic", activeFilters.subtopics.join(","));
-    if (activeFilters.difficulty)      params.set("difficulty", activeFilters.difficulty);
-    return params.toString();
-  }
-
   // ── Auth-gated Full Paper Navigation ───────────────────────────────────────
   function requireAuth(navigateTo: string) {
     if (isAuthenticated === false) {
@@ -231,7 +230,22 @@ export default function PracticePageClient() {
   }
 
   function handleStartPractice() {
-    router.push(`/dashboard/practice/session?${buildSessionParams()}`);
+    const sessionUrl = buildPracticeSessionUrl(
+      {
+        exams: activeFilters.exams,
+        years: activeFilters.years,
+        cycles: activeFilters.cycles,
+        subjects: activeFilters.subjects,
+        topics: activeFilters.topics,
+        subtopics: activeFilters.subtopics,
+        difficulties: activeFilters.difficulty ? [activeFilters.difficulty] : [],
+      },
+      {
+        mode: sessionStyle,
+        returnTo: returnTo || undefined,
+      }
+    );
+    router.push(sessionUrl);
   }
 
   const primaryExam = activeFilters.exams[0] ?? "";
@@ -250,6 +264,19 @@ export default function PracticePageClient() {
 
   return (
     <div className="space-y-6">
+      {/* Return to Explore Bar if originated from Explore */}
+      {returnTo && (
+        <div className="flex items-center gap-2 pb-2">
+          <Link
+            href={decodeURIComponent(returnTo)}
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs sm:text-sm font-bold text-slate-700 shadow-2xs hover:bg-slate-50 hover:text-blue-700 transition"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span>← Back to Explore (Preserve Filters)</span>
+          </Link>
+        </div>
+      )}
+
       {/* ── Mode Selection Header ─────────────────────────────────────────── */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-slate-200/80 pb-4">
         <div>
@@ -266,7 +293,7 @@ export default function PracticePageClient() {
           <button
             type="button"
             onClick={() => setPracticeMode("targeted")}
-            className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition ${
+            className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition cursor-pointer ${
               practiceMode === "targeted"
                 ? "bg-white text-blue-600 shadow-xs"
                 : "text-slate-600 hover:text-slate-900"
@@ -279,7 +306,7 @@ export default function PracticePageClient() {
           <button
             type="button"
             onClick={() => setPracticeMode("full-paper")}
-            className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition ${
+            className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition cursor-pointer ${
               practiceMode === "full-paper"
                 ? "bg-white text-blue-600 shadow-xs"
                 : "text-slate-600 hover:text-slate-900"
@@ -348,7 +375,7 @@ export default function PracticePageClient() {
                   <button
                     type="button"
                     onClick={() => setSessionStyle("instant")}
-                    className={`rounded-lg px-3 py-1.5 transition ${
+                    className={`rounded-lg px-3 py-1.5 transition cursor-pointer ${
                       sessionStyle === "instant"
                         ? "bg-white font-bold text-slate-900 shadow-2xs"
                         : "text-slate-600 hover:text-slate-900"
@@ -359,7 +386,7 @@ export default function PracticePageClient() {
                   <button
                     type="button"
                     onClick={() => setSessionStyle("attempt")}
-                    className={`rounded-lg px-3 py-1.5 transition ${
+                    className={`rounded-lg px-3 py-1.5 transition cursor-pointer ${
                       sessionStyle === "attempt"
                         ? "bg-white font-bold text-slate-900 shadow-2xs"
                         : "text-slate-600 hover:text-slate-900"
@@ -374,7 +401,7 @@ export default function PracticePageClient() {
                   type="button"
                   onClick={handleStartPractice}
                   disabled={isCtaDisabled}
-                  className={`inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3.5 text-sm font-bold text-white shadow-md transition ${
+                  className={`inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3.5 text-sm font-bold text-white shadow-md transition cursor-pointer ${
                     isCtaDisabled
                       ? "cursor-not-allowed bg-slate-300 shadow-none"
                       : "bg-blue-600 hover:bg-blue-500 active:scale-[0.98] shadow-blue-600/20"
@@ -397,7 +424,7 @@ export default function PracticePageClient() {
             <button
               type="button"
               onClick={() => setShowDistribution((prev) => !prev)}
-              className="flex w-full items-center justify-between p-5 text-left transition hover:bg-slate-50/60 rounded-3xl"
+              className="flex w-full items-center justify-between p-5 text-left transition hover:bg-slate-50/60 rounded-3xl cursor-pointer"
             >
               <div className="flex items-center gap-2.5">
                 <BarChart3 className="h-4 w-4 text-blue-600" />

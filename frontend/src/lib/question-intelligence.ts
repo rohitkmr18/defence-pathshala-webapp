@@ -39,6 +39,9 @@ export interface QuestionIntelligenceRecord {
   production_eligible: boolean;
   intelligence_eligible: boolean;
   human_review_required: boolean;
+  intelligence_verified?: boolean;
+  intelligence_confidence?: "MODEL_DERIVED" | "HUMAN_VERIFIED" | string;
+  release_version?: string | null;
   created_at?: string;
   updated_at?: string;
 }
@@ -67,7 +70,7 @@ export interface TargetedPracticeQuery {
 
 /**
  * Normalizes any database question row into a consistent, strongly-typed PracticeQuestion,
- * computing intelligence and production eligibility deterministically if not already provided.
+ * consuming the database-provided canonical intelligence contract directly without inventing heuristics.
  */
 export function normalizeQuestion(raw: Record<string, unknown>): PracticeQuestion {
   const isProductionEligible =
@@ -83,21 +86,28 @@ export function normalizeQuestion(raw: Record<string, unknown>): PracticeQuestio
             raw.final_opt
         );
 
+  // All active production corpus questions are intelligence-eligible for derived/static intelligence
   const isIntelligenceEligible =
     raw.intelligence_eligible !== undefined
       ? Boolean(raw.intelligence_eligible)
-      : Boolean(
-          raw.is_active !== false &&
-            raw.verified_status === "Verified" &&
-            raw.explanation &&
-            raw.source &&
-            (raw.key_discrepancy === false || raw.key_discrepancy === null)
-        );
+      : true;
 
   const humanReviewRequired =
     raw.human_review_required !== undefined
       ? Boolean(raw.human_review_required)
       : Boolean(raw.verified_status !== "Verified" || raw.key_discrepancy === true);
+
+  const isVerified =
+    raw.intelligence_verified !== undefined
+      ? Boolean(raw.intelligence_verified)
+      : Boolean(raw.verified_status === "Verified");
+
+  const confidence: "MODEL_DERIVED" | "HUMAN_VERIFIED" | string =
+    typeof raw.intelligence_confidence === "string" && raw.intelligence_confidence
+      ? raw.intelligence_confidence
+      : isVerified && !raw.key_discrepancy
+      ? "HUMAN_VERIFIED"
+      : "MODEL_DERIVED";
 
   return {
     id: String(raw.id),
@@ -134,5 +144,7 @@ export function normalizeQuestion(raw: Record<string, unknown>): PracticeQuestio
     production_eligible: isProductionEligible,
     intelligence_eligible: isIntelligenceEligible,
     human_review_required: humanReviewRequired,
+    intelligence_verified: isVerified,
+    intelligence_confidence: confidence,
   };
 }
