@@ -51,49 +51,40 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // 1. Fetch user attempts summary
-    const { data: attempts } = await supabase
-      .from("user_attempts")
-      .select("id, question_id, is_correct, time_taken, attempted_at")
-      .eq("user_id", userId)
-      .order("attempted_at", { ascending: false })
-      .limit(200);
+    const requestedSessionId = request.nextUrl.searchParams.get("session_id");
+    if (requestedSessionId) {
+      const { data, error } = await supabase
+        .from("practice_sessions")
+        .select("*")
+        .eq("user_id", userId)
+        .eq("id", requestedSessionId)
+        .eq("is_completed", false)
+        .maybeSingle();
+      if (error || !data) {
+        return NextResponse.json({ error: "Saved session unavailable" }, { status: 404 });
+      }
+      return NextResponse.json({ activeSession: data });
+    }
 
-    const totalAttempts = attempts?.length || 0;
-    const correctCount = attempts?.filter((a) => a.is_correct).length || 0;
-    const incorrectAttempts = attempts?.filter((a) => !a.is_correct) || [];
+    // Independent reads run together rather than adding three round-trip waits.
+    const [attemptResult, activeResult, recentResult] = await Promise.all([
+      supabase.from("user_attempts")
+        .select("id, question_id, is_correct, time_taken, attempted_at")
+        .eq("user_id", userId).order("attempted_at", { ascending: false }).limit(200),
+      supabase.from("practice_sessions").select("*")
+        .eq("user_id", userId).eq("is_completed", false)
+        .order("updated_at", { ascending: false }).limit(1),
+      supabase.from("practice_sessions").select("*")
+        .eq("user_id", userId).order("updated_at", { ascending: false }).limit(10),
+    ]);
+    const attempts = attemptResult.data || [];
+    const totalAttempts = attempts.length;
+    const correctCount = attempts.filter((a) => a.is_correct).length;
+    const incorrectAttempts = attempts.filter((a) => !a.is_correct);
     const accuracy = totalAttempts > 0 ? Math.round((correctCount / totalAttempts) * 100) : 0;
     const mistakeCount = incorrectAttempts.length;
-
-    // 2. Fetch practice sessions if table exists
-    let activeSession = null;
-    let recentSessions: any[] = [];
-    try {
-      const { data: activeData } = await supabase
-        .from("practice_sessions")
-        .select("*")
-        .eq("user_id", userId)
-        .eq("is_completed", false)
-        .order("updated_at", { ascending: false })
-        .limit(1);
-
-      if (activeData && activeData.length > 0) {
-        activeSession = activeData[0];
-      }
-
-      const { data: recentData } = await supabase
-        .from("practice_sessions")
-        .select("*")
-        .eq("user_id", userId)
-        .order("updated_at", { ascending: false })
-        .limit(10);
-
-      if (recentData) {
-        recentSessions = recentData;
-      }
-    } catch {
-      // practice_sessions table not yet queried or empty
-    }
+    const activeSession = activeResult.data?.[0] || null;
+    const recentSessions = recentResult.data || [];
 
     return NextResponse.json({
       activeSession,
@@ -103,9 +94,9 @@ export async function GET(request: NextRequest) {
       mistakeCount,
       mistakeQuestionIds: Array.from(new Set(incorrectAttempts.map((a) => a.question_id))).slice(0, 50),
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Session GET error:", err);
-    return NextResponse.json({ error: err?.message || "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ error: err instanceof Error ? err.message : "Internal Server Error" }, { status: 500 });
   }
 }
 
@@ -156,8 +147,8 @@ export async function POST(request: NextRequest) {
     } catch {
       return NextResponse.json({ success: true, fallback: true, id: `sess_${Date.now()}` });
     }
-  } catch (err: any) {
-    return NextResponse.json({ error: err?.message || "Internal Server Error" }, { status: 500 });
+  } catch (err: unknown) {
+    return NextResponse.json({ error: err instanceof Error ? err.message : "Internal Server Error" }, { status: 500 });
   }
 }
 
@@ -216,7 +207,7 @@ export async function PATCH(request: NextRequest) {
     } catch {
       return NextResponse.json({ success: true, fallback: true });
     }
-  } catch (err: any) {
-    return NextResponse.json({ error: err?.message || "Internal Server Error" }, { status: 500 });
+  } catch (err: unknown) {
+    return NextResponse.json({ error: err instanceof Error ? err.message : "Internal Server Error" }, { status: 500 });
   }
 }

@@ -15,6 +15,7 @@ interface SessionPageProps {
     returnTo?: string;
     resume?: string;
     ids?: string;
+    session_id?: string;
   }>;
 }
 
@@ -41,6 +42,7 @@ export default async function SessionPage({ searchParams }: SessionPageProps) {
           returnTo={params.returnTo}
           resume={params.resume === "true"}
           specificIds={params.ids}
+          resumeSessionId={params.session_id}
         />
       </div>
     </main>

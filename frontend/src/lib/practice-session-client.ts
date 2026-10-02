@@ -8,6 +8,7 @@ import type { QuestionSetFilters } from "./question-filters";
 
 export interface ActivePracticeSession {
   id: string;
+  server_id?: string;
   title: string;
   mode: "instant" | "attempt" | "full_paper";
   filters: Partial<QuestionSetFilters>;
@@ -25,6 +26,7 @@ export interface ActivePracticeSession {
 
 const LOCAL_ACTIVE_SESSION_KEY = "dp_active_practice_session_v1";
 export const PRACTICE_SESSION_UPDATED_EVENT = "dp_practice_session_updated";
+const progressWrites = new Map<string, Promise<void>>();
 
 /**
  * Initializes a new practice session locally and triggers backend persistence.
@@ -70,8 +72,18 @@ export async function initializeSession(params: {
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (data?.session?.id) {
-          session.id = data.session.id;
-          saveLocalSession(session);
+          const latest = getLocalSession();
+          // A late create response must not erase progress or replace a newer session.
+          if (latest?.id !== session.id) return;
+          saveLocalSession({ ...latest, server_id: data.session.id });
+          updateSessionProgress(latest.id, {
+            current_index: latest.current_index,
+            answers: latest.answers,
+            is_completed: latest.is_completed,
+            correct_count: latest.correct_count,
+            incorrect_count: latest.incorrect_count,
+            time_spent_seconds: latest.time_spent_seconds,
+          });
         }
       })
       .catch(() => {});
@@ -117,7 +129,9 @@ export async function recordQuestionAttempt(params: {
         selected_option: params.selectedOption,
         is_correct: params.isCorrect,
         time_taken: params.timeTakenSeconds || 0,
-        session_id: params.sessionId,
+        session_id: getLocalSession()?.id === params.sessionId
+          ? (getLocalSession()?.server_id || params.sessionId)
+          : params.sessionId,
         mode: params.mode || "instant",
       }),
     });
@@ -145,25 +159,61 @@ export function updateSessionProgress(
     const updated: ActivePracticeSession = {
       ...current,
       ...update,
-      answers: update.answers !== undefined ? { ...current.answers, ...update.answers } : current.answers,
+      answers: update.answers !== undefined ? { ...update.answers } : current.answers,
       updated_at: new Date().toISOString(),
     };
     saveLocalSession(updated);
 
-    // Sync to API
-    try {
-      fetch("/api/practice/session", {
+    // Wait for background creation before using a local-only ID on the server.
+    if (!current.server_id && sessionId.startsWith("sess_")) return;
+    const serverId = current.server_id || sessionId;
+    const payload = {
+      session_id: serverId,
+      current_index: updated.current_index,
+      answers: updated.answers,
+      is_completed: updated.is_completed,
+      correct_count: updated.correct_count,
+      incorrect_count: updated.incorrect_count,
+      time_spent_seconds: updated.time_spent_seconds,
+    };
+    // Serialize snapshots so an older network response cannot regress saved progress.
+    const write = (progressWrites.get(serverId) || Promise.resolve()).then(async () => {
+      await fetch("/api/practice/session", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          session_id: sessionId,
-          ...update,
-        }),
-      }).catch(() => {});
-    } catch {
-      // Ignore network errors
-    }
+        body: JSON.stringify(payload),
+      });
+    }).catch(() => {});
+    progressWrites.set(serverId, write);
+    void write.finally(() => {
+      if (progressWrites.get(serverId) === write) progressWrites.delete(serverId);
+    });
   }
+}
+
+/** Restore the requested saved session before any question query is issued. */
+export async function loadResumeSession(sessionId?: string): Promise<ActivePracticeSession> {
+  let session = getLocalSession();
+  if (!session || (sessionId && session.id !== sessionId && session.server_id !== sessionId)) {
+    const query = sessionId ? `?session_id=${encodeURIComponent(sessionId)}` : "";
+    const response = await fetch(`/api/practice/session${query}`, { cache: "no-store" });
+    if (!response.ok) throw new Error("Could not load your saved session. Please try again.");
+    session = (await response.json()).activeSession;
+  }
+  if (!session || session.is_completed || !Array.isArray(session.question_ids) || !session.question_ids.length) {
+    throw new Error("This saved session is no longer available. Return to Practice to start a new session.");
+  }
+  return session;
+}
+
+/** Database order is irrelevant: a resume must retain the original question order. */
+export function restoreQuestionOrder(ids: string[], questions: PracticeQuestion[]): PracticeQuestion[] {
+  const byId = new Map(questions.map((question) => [question.id, question]));
+  return ids.map((id) => {
+    const question = byId.get(id);
+    if (!question) throw new Error("Some saved questions are unavailable. Your saved progress has been preserved.");
+    return question;
+  });
 }
 
 export function saveLocalSession(session: ActivePracticeSession): void {
