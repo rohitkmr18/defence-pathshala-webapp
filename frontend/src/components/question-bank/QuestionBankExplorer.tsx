@@ -259,19 +259,6 @@ export default function QuestionBankExplorer({ meta }: Props) {
           <span className="text-xs font-bold text-slate-400 uppercase tracking-wider shrink-0">
             Quick Select:
           </span>
-          <button
-            type="button"
-            onClick={handleSelectAll}
-            className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold transition shrink-0 cursor-pointer ${
-              isAllSelected
-                ? "bg-blue-600 text-white shadow-xs"
-                : "border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100"
-            }`}
-          >
-            <Layers className="h-3.5 w-3.5" />
-            <span>Select All ({allExamValues.length} Exams &bull; All Papers)</span>
-          </button>
-
           {meta.exams.map((item) => {
             const isOnlyThis = selectedExams.length === 1 && selectedExams[0] === item.value;
             return (
