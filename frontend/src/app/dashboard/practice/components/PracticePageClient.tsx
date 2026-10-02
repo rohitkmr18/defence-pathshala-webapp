@@ -93,7 +93,7 @@ export default function PracticePageClient() {
       subjects: parsed.subjects,
       topics: parsed.topics,
       subtopics: parsed.subtopics,
-      difficulty: parsed.difficulties[0] || "",
+      difficulty: "",
     };
   });
 
@@ -135,7 +135,7 @@ export default function PracticePageClient() {
           subjects: activeFilters.subjects,
           topics: activeFilters.topics,
           subtopics: activeFilters.subtopics,
-          difficulties: activeFilters.difficulty ? [activeFilters.difficulty] : [],
+          difficulties: [],
         });
 
         const res = await fetch(
@@ -238,7 +238,7 @@ export default function PracticePageClient() {
         subjects: activeFilters.subjects,
         topics: activeFilters.topics,
         subtopics: activeFilters.subtopics,
-        difficulties: activeFilters.difficulty ? [activeFilters.difficulty] : [],
+        difficulties: [],
       },
       {
         mode: sessionStyle,
@@ -259,7 +259,6 @@ export default function PracticePageClient() {
     activeFilters.exams.join("/"),
     activeFilters.subjects.length > 0 ? (activeFilters.subjects.length === 1 ? activeFilters.subjects[0] : `${activeFilters.subjects.length} Subjects`) : "All Subjects",
     activeFilters.topics.length > 0 ? (activeFilters.topics.length === 1 ? activeFilters.topics[0] : `${activeFilters.topics.length} Topics`) : null,
-    activeFilters.difficulty ? activeFilters.difficulty : null,
   ].filter(Boolean).join(" › ");
 
   return (
