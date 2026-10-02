@@ -523,38 +523,38 @@ export default function PracticeFilters({
 
       {/* ── 4. SUBTOPIC SELECTOR (Dependent on Topic) ─────────────────────── */}
       {selectedTopics.length > 0 && availableSubtopics.length > 0 && (
-        <section
-          aria-labelledby="practice-subtopics-heading"
-          className="rounded-2xl border border-blue-100 bg-blue-50/30 p-4 sm:p-5"
-        >
-          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <details className="group rounded-2xl border border-blue-100 bg-blue-50/30">
+          <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-3 rounded-2xl p-4 transition hover:bg-blue-50/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 sm:p-5 [&::-webkit-details-marker]:hidden">
             <div className="min-w-0">
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <Compass aria-hidden="true" className="h-4 w-4 shrink-0 text-blue-600" />
-                <h3 id="practice-subtopics-heading" className="text-sm font-bold text-slate-900">
-                  4. Subtopics
-                </h3>
+                <h3 className="text-sm font-bold text-slate-900">4. Subtopics</h3>
                 <span className="rounded-full bg-white px-2 py-0.5 text-xs font-medium text-slate-500">
                   Optional
                 </span>
               </div>
-              <p className="mt-1.5 text-xs leading-relaxed text-slate-600">
-                Choose specific areas to practise, or leave all unselected to include every subtopic.
-              </p>
-              <p aria-live="polite" className="mt-2 text-xs font-semibold text-blue-700">
+              <p aria-live="polite" className="mt-1.5 text-xs font-semibold text-blue-700">
                 {selectedSubtopics.length > 0
                   ? `${selectedSubtopics.length} of ${availableSubtopics.length} selected`
                   : `All ${availableSubtopics.length} subtopics included`}
               </p>
             </div>
-            <button
-              type="button"
-              onClick={handleSelectAllSubtopics}
-              className="min-h-11 shrink-0 self-start rounded-xl border border-blue-200 bg-white px-3 py-2 text-xs font-semibold text-blue-700 transition hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
-            >
-              {selectedSubtopics.length === availableSubtopics.length ? "Clear selection" : "Select all"}
-            </button>
-          </div>
+            <ChevronDown aria-hidden="true" className="h-5 w-5 shrink-0 text-blue-600 transition-transform group-open:rotate-180" />
+          </summary>
+
+          <div className="border-t border-blue-100 p-4 sm:p-5">
+            <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-xs leading-relaxed text-slate-600">
+                Choose specific areas to practise, or leave all unselected to include every subtopic.
+              </p>
+              <button
+                type="button"
+                onClick={handleSelectAllSubtopics}
+                className="min-h-11 shrink-0 self-start rounded-xl border border-blue-200 bg-white px-3 py-2 text-xs font-semibold text-blue-700 transition hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
+              >
+                {selectedSubtopics.length === availableSubtopics.length ? "Clear selection" : "Select all"}
+              </button>
+            </div>
 
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {availableSubtopics.map((subtop) => {
@@ -586,7 +586,8 @@ export default function PracticeFilters({
               );
             })}
           </div>
-        </section>
+          </div>
+        </details>
       )}
 
       {/* ── 5. ADVANCED / TEMPORAL FILTERS (Year & Cycle Accordion) ───────── */}
