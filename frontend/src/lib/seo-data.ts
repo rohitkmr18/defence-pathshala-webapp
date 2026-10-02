@@ -328,6 +328,182 @@ export async function getSubjectCoverageForExam(
     .sort((a, b) => b.year - a.year);
 }
 
+// ─── Subject-Intent Archive Access ───────────────────────────────────────────
+
+export interface PublicQuestion {
+  id: string;
+  questionId: string;
+  exam: string;
+  year: number;
+  cycle: string | null;
+  paper: string | null;
+  qNum: number | null;
+  subject: string;
+  topic: string | null;
+  subtopic: string | null;
+  theme: string | null;
+  question: string;
+  optA: string | null;
+  optB: string | null;
+  optC: string | null;
+  optD: string | null;
+  finalOpt: string | null;
+  explanation: string | null;
+  source: string | null;
+  verifiedStatus: string | null;
+  difficultyScore: number | null;
+  difficultyCategory: string | null;
+}
+
+export interface TopicStat {
+  topic: string;
+  count: number;
+}
+
+export interface SubjectArchive {
+  exam: string;
+  examSlug: string;
+  subject: string;
+  subjectSlug: string;
+  totalQuestions: number;
+  years: YearStat[];
+  topics: TopicStat[];
+  questions: PublicQuestion[];
+}
+
+interface RawQuestionRow {
+  id: string;
+  question_id: string | null;
+  exam: string;
+  year: number;
+  cycle: string | null;
+  paper: string | null;
+  q_num: number | null;
+  subject: string;
+  topic: string | null;
+  subtopic: string | null;
+  theme: string | null;
+  question: string;
+  opt_a: string | null;
+  opt_b: string | null;
+  opt_c: string | null;
+  opt_d: string | null;
+  final_opt: string | null;
+  explanation: string | null;
+  source: string | null;
+  verified_status: string | null;
+  difficulty_score: number | null;
+  difficulty_category: string | null;
+}
+
+export async function getSubjectArchive(
+  examDb: string,
+  subjectName: string
+): Promise<SubjectArchive | null> {
+  const fetchArchive = unstable_cache(
+    async (exam: string, subj: string): Promise<SubjectArchive | null> => {
+      const key = serviceRoleKey || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+      if (!key) {
+        console.error("[SEO] No Supabase key available for subject archive.");
+        return null;
+      }
+
+      const client = createClient(supabaseUrl, key);
+      const pageSize = 1000;
+      let start = 0;
+      const allRows: RawQuestionRow[] = [];
+
+      while (true) {
+        const { data, error } = await client
+          .from("questions")
+          .select(
+            "id,question_id,exam,year,cycle,paper,q_num,subject,topic,subtopic,theme,question,opt_a,opt_b,opt_c,opt_d,final_opt,explanation,source,verified_status,difficulty_score,difficulty_category"
+          )
+          .eq("exam", exam)
+          .ilike("subject", subj)
+          .order("year", { ascending: false })
+          .order("q_num", { ascending: true })
+          .range(start, start + pageSize - 1);
+
+        if (error) {
+          console.error("[SEO] Error fetching subject questions:", error);
+          break;
+        }
+        if (!data || data.length === 0) break;
+        allRows.push(...data);
+        if (data.length < pageSize) break;
+        start += pageSize;
+      }
+
+      if (allRows.length === 0) return null;
+
+      const questions: PublicQuestion[] = allRows.map((r) => ({
+        id: String(r.id),
+        questionId: String(r.question_id || ""),
+        exam: String(r.exam || ""),
+        year: Number(r.year),
+        cycle: r.cycle ? String(r.cycle) : null,
+        paper: r.paper ? String(r.paper) : null,
+        qNum: r.q_num !== null && r.q_num !== undefined ? Number(r.q_num) : null,
+        subject: String(r.subject || ""),
+        topic: r.topic ? String(r.topic) : null,
+        subtopic: r.subtopic ? String(r.subtopic) : null,
+        theme: r.theme ? String(r.theme) : null,
+        question: String(r.question || ""),
+        optA: r.opt_a ? String(r.opt_a) : null,
+        optB: r.opt_b ? String(r.opt_b) : null,
+        optC: r.opt_c ? String(r.opt_c) : null,
+        optD: r.opt_d ? String(r.opt_d) : null,
+        finalOpt: r.final_opt ? String(r.final_opt) : null,
+        explanation: r.explanation ? String(r.explanation) : null,
+        source: r.source ? String(r.source) : null,
+        verifiedStatus: r.verified_status ? String(r.verified_status) : null,
+        difficultyScore:
+          r.difficulty_score !== null && r.difficulty_score !== undefined
+            ? Number(r.difficulty_score)
+            : null,
+        difficultyCategory: r.difficulty_category
+          ? String(r.difficulty_category)
+          : null,
+      }));
+
+      const yearMap = new Map<number, number>();
+      const topicMap = new Map<string, number>();
+
+      for (const q of questions) {
+        yearMap.set(q.year, (yearMap.get(q.year) || 0) + 1);
+        if (q.topic && q.topic.trim()) {
+          const t = q.topic.trim();
+          topicMap.set(t, (topicMap.get(t) || 0) + 1);
+        }
+      }
+
+      const years: YearStat[] = Array.from(yearMap.entries())
+        .map(([year, count]) => ({ year, count }))
+        .sort((a, b) => b.year - a.year);
+
+      const topics: TopicStat[] = Array.from(topicMap.entries())
+        .map(([topic, count]) => ({ topic, count }))
+        .sort((a, b) => b.count - a.count);
+
+      return {
+        exam: examDb,
+        examSlug: examToSlug(examDb),
+        subject: questions[0]?.subject || subjectName,
+        subjectSlug: subjectToSlug(subjectName),
+        totalQuestions: questions.length,
+        years,
+        topics,
+        questions,
+      };
+    },
+    [`seo-subject-archive-${examDb}-${subjectToSlug(subjectName)}`],
+    { revalidate: 3600 }
+  );
+
+  return fetchArchive(examDb, subjectName);
+}
+
 // ─── Sitemap Generator Helper ─────────────────────────────────────────────────
 
 export interface EligibleRoute {
@@ -364,6 +540,23 @@ export async function getAllEligibleSeoRoutes(): Promise<EligibleRoute[]> {
       path: `/pyqs/${examSlug}`,
       priority: 0.9,
     });
+
+    // Subject-intent routes for this exam across all years: /pyqs/{exam}/{subject} (priority 0.85)
+    const examSubjectMap = new Map<string, number>();
+    for (const r of eRows) {
+      if (r.subject) {
+        examSubjectMap.set(r.subject, (examSubjectMap.get(r.subject) || 0) + 1);
+      }
+    }
+    for (const [subj, count] of examSubjectMap.entries()) {
+      if (count > 0) {
+        const subSlug = subjectToSlug(subj);
+        routes.push({
+          path: `/pyqs/${examSlug}/${subSlug}`,
+          priority: 0.85,
+        });
+      }
+    }
 
     // Group by year
     const yearMap = new Map<number, QuestionMetaRow[]>();

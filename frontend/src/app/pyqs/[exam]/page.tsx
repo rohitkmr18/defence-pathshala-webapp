@@ -142,27 +142,39 @@ export default async function ExamPyqArchivePage({ params }: PageProps) {
           {coverage.subjects.map((sub) => (
             <div
               key={sub.slug}
-              className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+              className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:border-blue-500 hover:shadow-md transition flex flex-col justify-between"
             >
-              <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="font-bold text-slate-900 text-base">
-                    {sub.subject}
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-1">
-                    {sub.count} questions documented across all years
-                  </p>
+              <div>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <Link
+                      href={`/pyqs/${coverage.slug}/${sub.slug}`}
+                      className="group"
+                    >
+                      <h3 className="font-bold text-slate-900 text-base group-hover:text-blue-600 transition">
+                        {sub.subject}
+                      </h3>
+                    </Link>
+                    <p className="text-xs text-slate-500 mt-1">
+                      {sub.count} questions documented across all years
+                    </p>
+                  </div>
+                  <span className="rounded-md bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-700">
+                    {sub.count}
+                  </span>
                 </div>
-                <span className="rounded-md bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-700">
-                  {sub.count}
-                </span>
               </div>
 
               <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                <span className="text-slate-500">Pick a year above to view questions</span>
+                <Link
+                  href={`/pyqs/${coverage.slug}/${sub.slug}`}
+                  className="font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1"
+                >
+                  View All {sub.subject} PYQs <ChevronRight className="h-3.5 w-3.5" />
+                </Link>
                 <Link
                   href={`/dashboard/practice?exam=${encodeURIComponent(coverage.exam)}&subject=${encodeURIComponent(sub.subject)}`}
-                  className="font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-0.5"
+                  className="font-semibold text-slate-500 hover:text-blue-600 flex items-center gap-0.5"
                 >
                   Practice drill <ArrowRight className="h-3 w-3" />
                 </Link>
