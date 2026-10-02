@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
 
     if (response.ok) {
       const data = await response.json();
-      if (data?.questions && Array.isArray(data.questions) && data.questions.length > 0) {
+      if (data?.questions && Array.isArray(data.questions)) {
         const normalized = data.questions.map(normalizeQuestion);
         return NextResponse.json({ questions: normalized, total: normalized.length }, { status: 200 });
       }
@@ -26,10 +26,10 @@ export async function GET(request: NextRequest) {
     // Backend unreachable, fallback to direct Supabase query
   }
 
-  // 2. Direct Supabase query fallback (bulletproof)
+  // 2. Direct Supabase query fallback (using canonical v2 read model)
   try {
     if (!serviceRoleKey) {
-      return NextResponse.json({ questions: [], total: 0 }, { status: 200 });
+      return NextResponse.json({ error: "Service role key missing" }, { status: 500 });
     }
 
     const supabase = createClient(supabaseUrl, serviceRoleKey);
@@ -38,7 +38,6 @@ export async function GET(request: NextRequest) {
     const specificIds = parseListParam(searchParams.get("ids") || searchParams.get("id"));
     const limit = filters.limit || 150;
 
-    // Use canonical intelligence view v2
     let query = supabase
       .from("v_dp_question_intelligence_v2")
       .select("*");
@@ -90,59 +89,11 @@ export async function GET(request: NextRequest) {
 
     query = query.order("q_num", { ascending: true }).limit(limit);
 
-    let { data, error } = await query;
-
-    // Fallback to questions table if view is not accessible
-    if (error) {
-      let fallbackQuery = supabase
-        .from("questions")
-        .select("*")
-        .eq("is_active", true);
-
-      if (specificIds.length > 0) {
-        fallbackQuery = fallbackQuery.in("id", specificIds);
-      } else {
-        if (filters.exams.length > 0) {
-          const expandedExams = Array.from(
-            new Set(filters.exams.flatMap((ex) => expandExamQuery(ex)))
-          );
-          if (expandedExams.length > 0) {
-            fallbackQuery = fallbackQuery.in("exam", expandedExams);
-          }
-        }
-        if (filters.years.length > 0) {
-          fallbackQuery = fallbackQuery.in("year", filters.years);
-        }
-        if (filters.cycles.length > 0) {
-          if (filters.cycles.includes("I")) {
-            fallbackQuery = fallbackQuery.or(`cycle.in.(${filters.cycles.join(",")}),cycle.is.null`);
-          } else {
-            fallbackQuery = fallbackQuery.in("cycle", filters.cycles);
-          }
-        }
-        if (filters.subjects.length > 0) {
-          fallbackQuery = fallbackQuery.in("subject", filters.subjects);
-        }
-        if (filters.topics.length > 0) {
-          fallbackQuery = fallbackQuery.in("topic", filters.topics);
-        }
-        if (filters.subtopics.length > 0) {
-          fallbackQuery = fallbackQuery.in("subtopic", filters.subtopics);
-        }
-        if (filters.difficulties.length > 0) {
-          fallbackQuery = fallbackQuery.in("difficulty_category", filters.difficulties);
-        }
-      }
-
-      fallbackQuery = fallbackQuery.order("q_num", { ascending: true }).limit(limit);
-      const res = await fallbackQuery;
-      data = res.data;
-      error = res.error;
-    }
+    const { data, error } = await query;
 
     if (error) {
-      console.error("Supabase questions query error:", error);
-      return NextResponse.json({ questions: [], total: 0 }, { status: 200 });
+      console.error("Canonical v2 read-model query error:", error);
+      return NextResponse.json({ error: "Failed to query canonical intelligence read-model" }, { status: 500 });
     }
 
     const rawRows = data || [];
@@ -152,8 +103,8 @@ export async function GET(request: NextRequest) {
       { questions: normalizedQuestions, total: normalizedQuestions.length },
       { status: 200 }
     );
-  } catch (err) {
+  } catch (err: any) {
     console.error("Failed to fetch questions:", err);
-    return NextResponse.json({ questions: [], total: 0 }, { status: 200 });
+    return NextResponse.json({ error: err?.message || "Internal Server Error" }, { status: 500 });
   }
 }

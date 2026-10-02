@@ -21,9 +21,8 @@ def _clean_text(value: Any) -> str | None:
 def get_practice_filters() -> PracticeFiltersResponse:
     try:
         response = (
-            supabase.table("questions")
+            supabase.table("v_dp_question_intelligence_v2")
             .select("exam,year,cycle,subject,topic,subtopic")
-            .eq("is_active", True)
             .execute()
         )
 
@@ -109,75 +108,10 @@ def get_practice_count(
     topic: str | None = None,
     subtopic: str | None = None,
     difficulty: str | None = None,
+    intelligence_only: bool = False,
 ) -> dict[str, int]:
     try:
-        query = supabase.table("questions").select("id", count="exact").eq("is_active", True)
-
-        if exam:
-            expanded = expand_exam_query(exam)
-            if expanded:
-                query = query.in_("exam", expanded)
-
-        if year:
-            query = query.in_(
-                "year",
-                [int(value.strip()) for value in year.split(",") if value.strip() and value.strip().isdigit()],
-            )
-
-        if cycle:
-            cycles = [value.strip() for value in cycle.split(",") if value.strip()]
-            if cycles:
-                if "I" in cycles:
-                    cycle_list = ",".join(cycles)
-                    query = query.or_(f"cycle.in.({cycle_list}),cycle.is.null")
-                else:
-                    query = query.in_("cycle", cycles)
-
-        if subject:
-            query = query.in_(
-                "subject",
-                [value.strip() for value in subject.split(",") if value.strip()],
-            )
-
-        if topic:
-            query = query.in_(
-                "topic",
-                [value.strip() for value in topic.split(",") if value.strip()],
-            )
-
-        if subtopic:
-            query = query.in_(
-                "subtopic",
-                [value.strip() for value in subtopic.split(",") if value.strip()],
-            )
-
-        if difficulty:
-            query = query.in_(
-                "difficulty_category",
-                [value.strip() for value in difficulty.split(",") if value.strip()],
-            )
-
-        response = query.execute()
-        return {"count": response.count or 0}
-
-    except Exception as exc:  # pragma: no cover - defensive: surfaced via FastAPI
-        raise HTTPException(status_code=500, detail=str(exc)) from exc
-
-
-@router.get("/questions")
-def get_practice_questions(
-    exam: str | None = None,
-    year: str | None = None,
-    cycle: str | None = None,
-    subject: str | None = None,
-    topic: str | None = None,
-    subtopic: str | None = None,
-    difficulty: str | None = None,
-    intelligence_only: bool = False,
-    limit: int = 150,
-) -> dict[str, Any]:
-    try:
-        query = supabase.table("questions").select("*").eq("is_active", True)
+        query = supabase.table("v_dp_question_intelligence_v2").select("id", count="exact")
 
         if exam:
             expanded = expand_exam_query(exam)
@@ -224,8 +158,76 @@ def get_practice_questions(
             )
 
         if intelligence_only:
-            # All 1,821 active production questions are intelligence-eligible
-            query = query.eq("is_active", True)
+            query = query.eq("intelligence_eligible", True)
+
+        response = query.execute()
+        return {"count": response.count or 0}
+
+    except Exception as exc:  # pragma: no cover - defensive: surfaced via FastAPI
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@router.get("/questions")
+def get_practice_questions(
+    exam: str | None = None,
+    year: str | None = None,
+    cycle: str | None = None,
+    subject: str | None = None,
+    topic: str | None = None,
+    subtopic: str | None = None,
+    difficulty: str | None = None,
+    intelligence_only: bool = False,
+    limit: int = 150,
+) -> dict[str, Any]:
+    try:
+        query = supabase.table("v_dp_question_intelligence_v2").select("*")
+
+        if exam:
+            expanded = expand_exam_query(exam)
+            if expanded:
+                query = query.in_("exam", expanded)
+
+        if year:
+            query = query.in_(
+                "year",
+                [int(value.strip()) for value in year.split(",") if value.strip() and value.strip().isdigit()],
+            )
+
+        if cycle:
+            cycles = [value.strip() for value in cycle.split(",") if value.strip()]
+            if cycles:
+                if "I" in cycles:
+                    cycle_list = ",".join(cycles)
+                    query = query.or_(f"cycle.in.({cycle_list}),cycle.is.null")
+                else:
+                    query = query.in_("cycle", cycles)
+
+        if subject:
+            query = query.in_(
+                "subject",
+                [value.strip() for value in subject.split(",") if value.strip()],
+            )
+
+        if topic:
+            query = query.in_(
+                "topic",
+                [value.strip() for value in topic.split(",") if value.strip()],
+            )
+
+        if subtopic:
+            query = query.in_(
+                "subtopic",
+                [value.strip() for value in subtopic.split(",") if value.strip()],
+            )
+
+        if difficulty:
+            query = query.in_(
+                "difficulty_category",
+                [value.strip() for value in difficulty.split(",") if value.strip()],
+            )
+
+        if intelligence_only:
+            query = query.eq("intelligence_eligible", True)
 
         query = query.order("q_num").limit(limit)
         response = query.execute()
@@ -246,7 +248,7 @@ def get_practice_distribution(
     topic: str | None = None,
 ) -> dict[str, Any]:
     try:
-        query = supabase.table("questions").select("id,question_id,exam,year,cycle")
+        query = supabase.table("v_dp_question_intelligence_v2").select("id,question_id,exam,year,cycle")
 
         if exam:
             expanded = expand_exam_query(exam)
@@ -254,159 +256,46 @@ def get_practice_distribution(
                 query = query.in_("exam", expanded)
 
         if year:
-            years = [
-                int(value.strip())
-                for value in year.split(",")
-                if value.strip() and value.strip().isdigit()
-            ]
-            if years:
-                query = query.in_("year", years)
+            query = query.in_(
+                "year",
+                [int(value.strip()) for value in year.split(",") if value.strip() and value.strip().isdigit()],
+            )
+
+        if cycle:
+            cycles = [value.strip() for value in cycle.split(",") if value.strip()]
+            if cycles:
+                if "I" in cycles:
+                    cycle_list = ",".join(cycles)
+                    query = query.or_(f"cycle.in.({cycle_list}),cycle.is.null")
+                else:
+                    query = query.in_("cycle", cycles)
 
         if subject:
-            subjects = [value.strip() for value in subject.split(",") if value.strip()]
-            if subjects:
-                query = query.in_("subject", subjects)
+            query = query.in_(
+                "subject",
+                [value.strip() for value in subject.split(",") if value.strip()],
+            )
 
         if topic:
-            topics = [value.strip() for value in topic.split(",") if value.strip()]
-            if topics:
-                query = query.in_("topic", topics)
+            query = query.in_(
+                "topic",
+                [value.strip() for value in topic.split(",") if value.strip()],
+            )
 
-        # Paginate to fetch all matching rows (handling PostgREST 1000-row limit)
-        page_size = 1000
-        all_raw_rows: list[dict[str, Any]] = []
-        start = 0
-        while True:
-            page_res = query.range(start, start + page_size - 1).execute()
-            batch = page_res.data or []
-            all_raw_rows.extend(batch)
-            if len(batch) < page_size:
-                break
-            start += page_size
+        response = query.execute()
+        rows = response.data or []
 
-        # Deduplicate rows by question_id / id to prevent double counting
-        seen_question_ids: set[str] = set()
-        deduped_rows: list[dict[str, Any]] = []
-        for r in all_raw_rows:
-            qid = str(r.get("question_id") or r.get("id") or "")
-            if qid:
-                if qid in seen_question_ids:
-                    continue
-                seen_question_ids.add(qid)
-            deduped_rows.append(r)
+        counts: dict[str, int] = {}
+        for row in rows:
+            key_val = str(row.get(group_by) or "Unknown")
+            counts[key_val] = counts.get(key_val, 0) + 1
 
-        # Precise cycle attribution
-        filter_cycles = (
-            [value.strip() for value in cycle.split(",") if value.strip()]
-            if cycle
-            else []
-        )
+        return {
+            "groupBy": group_by,
+            "data": [{"label": k, "count": v} for k, v in sorted(counts.items())],
+            "total": len(rows),
+        }
 
-        def get_effective_cycle(r: dict[str, Any]) -> str:
-            raw_c = r.get("cycle")
-            if raw_c:
-                return str(raw_c).strip()
-            # If cycle is null/empty for single-cycle exam like CAPF-AC, attribute to 'I'
-            exam_name = str(r.get("exam") or "").upper()
-            if "CAPF" in exam_name:
-                return "I"
-            return "I"
-
-        if filter_cycles:
-            rows = [r for r in deduped_rows if get_effective_cycle(r) in filter_cycles]
-        else:
-            rows = deduped_rows
-
-        distribution: list[dict[str, Any]] = []
-
-        if group_by == "cycle":
-            target_cycles = filter_cycles or ["I", "II"]
-            for c in target_cycles:
-                count = sum(1 for r in deduped_rows if get_effective_cycle(r) == c)
-                distribution.append({
-                    "key": c,
-                    "label": f"Cycle {c}",
-                    "count": count,
-                })
-        elif group_by == "exam":
-            raw_exams = [e.strip() for e in (exam or "").split(",") if e.strip()]
-            if not raw_exams:
-                raw_exams = sorted({r.get("exam") for r in rows if r.get("exam")})
-
-            # Deduplicate by clean UI label
-            exam_labels_seen: set[str] = set()
-            unique_exams: list[tuple[str, str]] = []
-            for e in raw_exams:
-                label = get_exam_label(e)
-                if label not in exam_labels_seen:
-                    exam_labels_seen.add(label)
-                    unique_exams.append((e, label))
-
-            for canonical, label in unique_exams:
-                expanded_e = expand_exam_query(canonical) or [canonical]
-                exam_rows = [
-                    r for r in rows
-                    if r.get("exam") in expanded_e or r.get("exam") == canonical
-                ]
-
-                # If exam is CDS, split into CDS I and CDS II
-                if "CDS" in canonical.upper():
-                    target_cds_cycles = filter_cycles or ["I", "II"]
-                    for c in target_cds_cycles:
-                        count = sum(
-                            1 for r in exam_rows
-                            if str(r.get("cycle") or "").strip() == c
-                        )
-                        distribution.append({
-                            "key": f"{canonical}:{c}",
-                            "label": f"{label} {c}",
-                            "count": count,
-                        })
-                else:
-                    distribution.append({
-                        "key": canonical,
-                        "label": label,
-                        "count": len(exam_rows),
-                    })
-
-            # Desired presentation order: CDS I, CDS II, CAPF, etc.
-            def get_sort_rank(item_label: str) -> tuple[int, str]:
-                if item_label.startswith("CDS I") and not item_label.startswith("CDS II"):
-                    return (1, item_label)
-                if item_label.startswith("CDS II"):
-                    return (2, item_label)
-                if item_label.startswith("CAPF"):
-                    return (3, item_label)
-                if item_label.startswith("NDA I") and not item_label.startswith("NDA II"):
-                    return (4, item_label)
-                if item_label.startswith("NDA II"):
-                    return (5, item_label)
-                if item_label.startswith("AFCAT"):
-                    return (6, item_label)
-                return (10, item_label)
-
-            distribution.sort(key=lambda x: get_sort_rank(x["label"]))
-        else:  # default "year"
-            if year:
-                target_years = sorted(
-                    [int(y.strip()) for y in year.split(",") if y.strip() and y.strip().isdigit()],
-                    reverse=True,
-                )
-            else:
-                target_years = sorted(
-                    {int(r.get("year")) for r in rows if r.get("year") is not None},
-                    reverse=True,
-                )
-            for y in target_years:
-                count = sum(1 for r in rows if r.get("year") == y)
-                distribution.append({
-                    "key": str(y),
-                    "label": str(y),
-                    "count": count,
-                })
-
-        return {"distribution": distribution, "group_by": group_by}
     except Exception as exc:  # pragma: no cover - defensive: surfaced via FastAPI
         raise HTTPException(status_code=500, detail=str(exc)) from exc
-
 

@@ -154,3 +154,91 @@ test("normalizeQuestion assigns HUMAN_VERIFIED confidence when verified and no d
   assert.equal(normalized.intelligence_confidence, "HUMAN_VERIFIED");
 });
 
+// Test Suite: 7 Canonical Explore <-> Practice Filter Equivalence Combinations
+test("Filter Equivalence Combination 1: exam only", () => {
+  const exploreFilter = { exams: ["CDS"] };
+  const practiceUrl = buildPracticeUrl(exploreFilter, { returnTo: "/dashboard/question-bank?exam=CDS" });
+  const parsedParams = new URL(practiceUrl, "http://localhost").searchParams;
+  const reconstructed = parseFiltersFromSearchParams(parsedParams);
+
+  assert.deepEqual(reconstructed.exams, exploreFilter.exams);
+  assert.deepEqual(reconstructed.subjects, []);
+  assert.deepEqual(reconstructed.years, []);
+});
+
+test("Filter Equivalence Combination 2: exam + subject", () => {
+  const exploreFilter = { exams: ["CAPF-AC"], subjects: ["Indian Polity"] };
+  const practiceUrl = buildPracticeUrl(exploreFilter);
+  const parsedParams = new URL(practiceUrl, "http://localhost").searchParams;
+  const reconstructed = parseFiltersFromSearchParams(parsedParams);
+
+  assert.deepEqual(reconstructed.exams, ["CAPF-AC"]);
+  assert.deepEqual(reconstructed.subjects, ["Indian Polity"]);
+  assert.deepEqual(reconstructed.topics, []);
+});
+
+test("Filter Equivalence Combination 3: exam + subject + topic", () => {
+  const exploreFilter = { exams: ["CDS"], subjects: ["Geography"], topics: ["Physical Geography"] };
+  const practiceUrl = buildPracticeUrl(exploreFilter);
+  const parsedParams = new URL(practiceUrl, "http://localhost").searchParams;
+  const reconstructed = parseFiltersFromSearchParams(parsedParams);
+
+  assert.deepEqual(reconstructed.exams, ["CDS"]);
+  assert.deepEqual(reconstructed.subjects, ["Geography"]);
+  assert.deepEqual(reconstructed.topics, ["Physical Geography"]);
+});
+
+test("Filter Equivalence Combination 4: exam + year", () => {
+  const exploreFilter = { exams: ["CDS"], years: [2024] };
+  const practiceUrl = buildPracticeUrl(exploreFilter);
+  const parsedParams = new URL(practiceUrl, "http://localhost").searchParams;
+  const reconstructed = parseFiltersFromSearchParams(parsedParams);
+
+  assert.deepEqual(reconstructed.exams, ["CDS"]);
+  assert.deepEqual(reconstructed.years, [2024]);
+});
+
+test("Filter Equivalence Combination 5: exam + cycle", () => {
+  const exploreFilter = { exams: ["CDS"], cycles: ["I"] };
+  const practiceUrl = buildPracticeUrl(exploreFilter);
+  const parsedParams = new URL(practiceUrl, "http://localhost").searchParams;
+  const reconstructed = parseFiltersFromSearchParams(parsedParams);
+
+  assert.deepEqual(reconstructed.exams, ["CDS"]);
+  assert.deepEqual(reconstructed.cycles, ["I"]);
+});
+
+test("Filter Equivalence Combination 6: exam + subject + topic + difficulty", () => {
+  const exploreFilter = {
+    exams: ["CDS"],
+    subjects: ["Indian Polity"],
+    topics: ["Parliament"],
+    difficulties: ["Hard"],
+  };
+  const practiceUrl = buildPracticeUrl(exploreFilter);
+  const parsedParams = new URL(practiceUrl, "http://localhost").searchParams;
+  const reconstructed = parseFiltersFromSearchParams(parsedParams);
+
+  assert.deepEqual(reconstructed.exams, ["CDS"]);
+  assert.deepEqual(reconstructed.subjects, ["Indian Polity"]);
+  assert.deepEqual(reconstructed.topics, ["Parliament"]);
+  assert.deepEqual(reconstructed.difficulties, ["Hard"]);
+});
+
+test("Filter Equivalence Combination 7: multi-exam + multi-year combination", () => {
+  const exploreFilter = {
+    exams: ["CDS", "CAPF-AC", "NDA"],
+    years: [2023, 2024, 2025],
+    subjects: ["History"],
+    difficulties: ["Moderate", "Hard"],
+  };
+  const practiceUrl = buildPracticeUrl(exploreFilter);
+  const parsedParams = new URL(practiceUrl, "http://localhost").searchParams;
+  const reconstructed = parseFiltersFromSearchParams(parsedParams);
+
+  assert.deepEqual(reconstructed.exams, ["CDS", "CAPF-AC", "NDA"]);
+  assert.deepEqual(reconstructed.years, [2023, 2024, 2025]);
+  assert.deepEqual(reconstructed.subjects, ["History"]);
+  assert.deepEqual(reconstructed.difficulties, ["Moderate", "Hard"]);
+});
+
