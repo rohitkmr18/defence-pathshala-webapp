@@ -1,16 +1,19 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, BookOpen, Layers } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import type { PracticeQuestion, PlayerMode, OptionKey } from "@/lib/practice-types";
 import QuestionPlayer from "@/components/practice/player/QuestionPlayer";
 import FilteredAttemptDebrief from "@/components/practice/analysis/FilteredAttemptDebrief";
 import {
   initializeSession,
-  getLocalSession,
   updateSessionProgress,
   clearLocalSession,
+  loadResumeSession,
+  restoreQuestionOrder,
+  saveLocalSession,
+  type ActivePracticeSession,
 } from "@/lib/practice-session-client";
 import {
   parseFiltersFromSearchParams,
@@ -34,6 +37,7 @@ interface SessionPageClientProps {
   returnTo?: string;
   resume?: boolean;
   specificIds?: string;
+  resumeSessionId?: string;
 }
 
 // ─── Loading skeleton ─────────────────────────────────────────────────────────
@@ -106,6 +110,7 @@ export default function SessionPageClient({
   returnTo,
   resume,
   specificIds,
+  resumeSessionId,
 }: SessionPageClientProps) {
   const [questions, setQuestions] = useState<PracticeQuestion[] | null>(null);
   const [loading, setLoading] = useState(true);
@@ -113,33 +118,28 @@ export default function SessionPageClient({
   const [answers, setAnswers] = useState<Record<string, OptionKey>>({});
   const [sessionId, setSessionId] = useState<string | undefined>(undefined);
   const [initialIndex, setInitialIndex] = useState(0);
-  const startTimeRef = useRef<number>(Date.now());
+  const [restoredSession, setRestoredSession] = useState<ActivePracticeSession | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const sessionMode: PlayerMode = restoredSession?.mode === "attempt" ? "attempt" : restoredSession ? "instant" : mode;
+  const startTimeRef = useRef<number>(0);
   const [timeSpentSeconds, setTimeSpentSeconds] = useState<number>(0);
 
-  // Build filter object for deterministic backward navigation
-  const currentFilters = {
-    exam,
-    year,
-    cycle,
-    subject,
-    topic,
-    subtopic,
-    difficulty,
+  // Keep this stable so state restoration does not restart the loading effect.
+  const parsedFilters = useMemo(() => parseFiltersFromSearchParams({
+    exam, year, cycle, subject, topic, subtopic, difficulty,
     intelligence_only: intelligenceOnly ? "true" : undefined,
-  };
-
-  const parsedFilters = parseFiltersFromSearchParams(currentFilters as any);
+  }), [exam, year, cycle, subject, topic, subtopic, difficulty, intelligenceOnly]);
 
   // Build header label and breadcrumb
   const filterLabel =
-    [subject, topic, subtopic].filter(Boolean).join(" › ") ||
+    restoredSession?.title || [subject, topic, subtopic].filter(Boolean).join(" › ") ||
     exam ||
     "Practice Session";
 
   // Determine Back Button destination
   const backHref = returnTo
     ? decodeURIComponent(returnTo)
-    : buildPracticeUrl(parsedFilters);
+    : buildPracticeUrl(restoredSession?.filters || parsedFilters);
   const backLabel = returnTo && returnTo.includes("question-bank")
     ? "Back to Explore"
     : "Back to Practice";
@@ -148,14 +148,20 @@ export default function SessionPageClient({
     let cancelled = false;
 
     async function loadSessionAndQuestions() {
+      startTimeRef.current = Date.now();
       setLoading(true);
+      setError(null);
       try {
+        const saved = resume ? await loadResumeSession(resumeSessionId) : null;
+        if (cancelled) return;
         const params = serializeFiltersToSearchParams({
-          ...parsedFilters,
-          limit: limit || 100,
+          ...(saved?.filters || parsedFilters),
+          limit: saved ? saved.question_ids.length : limit || 100,
         });
 
-        if (specificIds) {
+        if (saved) {
+          params.set("ids", saved.question_ids.join(","));
+        } else if (specificIds) {
           params.set("ids", specificIds);
         }
 
@@ -169,32 +175,43 @@ export default function SessionPageClient({
             questions: PracticeQuestion[];
             total: number;
           };
-          const fetchedQuestions = data.questions || [];
+          const fetchedQuestions = saved
+            ? restoreQuestionOrder(saved.question_ids, data.questions || [])
+            : data.questions || [];
           setQuestions(fetchedQuestions);
 
           if (fetchedQuestions.length > 0) {
             // Check if resuming active session
-            const local = getLocalSession();
-            if (resume && local && !local.is_completed) {
-              setSessionId(local.id);
-              setAnswers(local.answers || {});
-              setInitialIndex(local.current_index || 0);
+            if (saved) {
+              saveLocalSession(saved);
+              setRestoredSession(saved);
+              setSessionId(saved.id);
+              setAnswers(saved.answers || {});
+              setInitialIndex(Math.max(0, Math.min(saved.current_index || 0, fetchedQuestions.length - 1)));
             } else {
               // Initialize a fresh session
               const newSess = await initializeSession({
-                title: filterLabel,
+                title: [subject, topic, subtopic].filter(Boolean).join(" › ") || exam || "Practice Session",
                 mode,
                 filters: parsedFilters,
                 questions: fetchedQuestions,
               });
-              setSessionId(newSess.id);
+              if (!cancelled) {
+                setRestoredSession(null);
+                setAnswers({});
+                setInitialIndex(0);
+                setSessionId(newSess.id);
+              }
             }
           }
         } else if (!cancelled) {
-          setQuestions([]);
+          throw new Error("Could not load session questions. Please try again.");
         }
-      } catch {
-        if (!cancelled) setQuestions([]);
+      } catch (err) {
+        if (!cancelled) {
+          setQuestions(null);
+          setError(err instanceof Error ? err.message : "Could not restore your session.");
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -216,8 +233,9 @@ export default function SessionPageClient({
     limit,
     resume,
     specificIds,
+    resumeSessionId,
     mode,
-    filterLabel,
+    parsedFilters,
   ]);
 
   return (
@@ -236,7 +254,7 @@ export default function SessionPageClient({
 
           <div className="text-right">
             <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
-              {mode === "instant" ? "Targeted Practice" : "Full Mock Paper"}
+              {sessionMode === "instant" ? "Targeted Practice" : "Full Mock Paper"}
             </span>
             <h1 className="text-xs sm:text-sm font-bold text-slate-900 truncate max-w-xs sm:max-w-md">
               {filterLabel}
@@ -247,11 +265,18 @@ export default function SessionPageClient({
 
       {/* Content Player */}
       {loading && <SessionSkeleton />}
+      {!loading && error && (
+        <div role="alert" className="rounded-2xl border border-amber-200 bg-amber-50 p-6 text-sm text-amber-900">
+          <p>{error}</p>
+          <Link href={backHref} className="mt-3 inline-block font-bold underline">Return to Practice</Link>
+        </div>
+      )}
       {!loading && questions?.length === 0 && <EmptyState returnUrl={backHref} />}
       {!loading && questions && questions.length > 0 && !completed && (
         <QuestionPlayer
+          key={sessionId}
           questions={questions}
-          mode={mode}
+          mode={sessionMode}
           sessionId={sessionId}
           initialIndex={initialIndex}
           initialAnswers={answers}

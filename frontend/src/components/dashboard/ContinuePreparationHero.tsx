@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -43,6 +43,7 @@ export default function ContinuePreparationHero({
   const [accuracy, setAccuracy] = useState(initialAccuracy);
   const [lastTopic, setLastTopic] = useState(initialLastTopic);
   const [totalAttempts, setTotalAttempts] = useState(0);
+  const serverAttemptsRef = useRef(0);
   const [mistakeCount, setMistakeCount] = useState(0);
   const [mistakeIds, setMistakeIds] = useState<string[]>([]);
   const [activeSession, setActiveSession] = useState<ActivePracticeSession | null>(null);
@@ -79,6 +80,7 @@ export default function ContinuePreparationHero({
         .then((data) => {
           if (data) {
             if (data.totalAttempts > 0) {
+              serverAttemptsRef.current = data.totalAttempts;
               setTotalAttempts(data.totalAttempts);
               setAccuracy(data.accuracy);
               setMistakeCount(data.mistakeCount);
@@ -96,7 +98,7 @@ export default function ContinuePreparationHero({
 
       // 3. Fallback to client mock history
       const snap = computeDashboardSnapshot();
-      if (snap.mocksCompleted > 0 && totalAttempts === 0) {
+      if (snap.mocksCompleted > 0 && serverAttemptsRef.current === 0) {
         setAccuracy(snap.averageAccuracy);
         setTotalAttempts(snap.totalQuestionsAttempted);
         if (snap.weakAreas.length > 0) {
@@ -137,7 +139,7 @@ export default function ContinuePreparationHero({
       window.removeEventListener("storage", syncStats);
       window.removeEventListener(TARGETS_UPDATED_EVENT, handleTargetsUpdated);
     };
-  }, [totalAttempts]);
+  }, []);
 
   const formattedExamLabel =
     formatExamsLabel(exams) || exam || "Choose your target exam";
@@ -209,7 +211,7 @@ export default function ContinuePreparationHero({
               </div>
 
               <Link
-                href="/dashboard/practice/session?resume=true"
+                href={`/dashboard/practice/session?resume=true&session_id=${encodeURIComponent(activeSession.id)}`}
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md shadow-blue-600/20 hover:bg-blue-500 transition active:scale-95 shrink-0"
               >
                 <span>Resume Session</span>

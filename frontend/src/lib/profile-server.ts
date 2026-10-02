@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { Profile } from "@/lib/profile/types";
@@ -5,78 +6,34 @@ import type { Profile } from "@/lib/profile/types";
 export type UserProfile = Profile;
 export type { Profile };
 
+// Request-scoped memoization only: user/profile data is never shared across users.
+const getProfileContext = cache(async () => {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  return { supabase, user };
+});
+
 export async function getServerProfile(): Promise<{
   profile: UserProfile;
   user: import("@supabase/supabase-js").User;
 }> {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { supabase, user } = await getProfileContext();
 
   if (!user) {
     redirect("/auth/login");
   }
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  if (!session) {
-    redirect("/auth/login");
-  }
-
   let profile: UserProfile | null = null;
 
-  // 1. Try FastAPI backend with a short timeout
-  try {
-    const backendUrl = process.env.BACKEND_URL ?? "http://127.0.0.1:8000";
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 2000);
-
-    const response = await fetch(`${backendUrl}/profile`, {
-      headers: {
-        Authorization: `Bearer ${session.access_token}`,
-      },
-      cache: "no-store",
-      signal: controller.signal,
-    });
-    clearTimeout(timeoutId);
-
-    if (response.status === 401) {
-      redirect("/auth/login");
-    }
-
-    if (response.ok) {
-      profile = (await response.json()) as UserProfile;
-    }
-  } catch (error: any) {
-    if (
-      error &&
-      typeof error === "object" &&
-      "digest" in error &&
-      typeof error.digest === "string" &&
-      error.digest.startsWith("NEXT_REDIRECT")
-    ) {
-      throw error;
-    }
-    // Backend offline / connection refused / timeout — fall back to Supabase directly
-  }
-
-  // 2. Direct Supabase query fallback if backend did not respond
+  // Read the canonical profile directly; avoid a backend hop and timeout on navigation.
   if (!profile) {
     try {
-      const { data: profileRow } = await supabase
-        .from("profiles")
-        .select("id, full_name, target_year, onboarding_completed")
-        .eq("id", user.id)
-        .maybeSingle();
-
-      const { data: examRows } = await supabase
-        .from("user_exam_preferences")
-        .select("exam")
-        .eq("user_id", user.id);
+      const [{ data: profileRow, error: profileError }, { data: examRows, error: examError }] = await Promise.all([
+        supabase.from("profiles").select("id, full_name, target_year, onboarding_completed")
+          .eq("id", user.id).maybeSingle(),
+        supabase.from("user_exam_preferences").select("exam").eq("user_id", user.id),
+      ]);
+      if (profileError || examError) throw new Error("Could not load profile");
 
       if (profileRow) {
         profile = {
@@ -84,7 +41,7 @@ export async function getServerProfile(): Promise<{
           full_name: profileRow.full_name,
           target_year: profileRow.target_year,
           onboarding_completed: profileRow.onboarding_completed ?? false,
-          target_exams: (examRows || []).map((item: any) => item.exam),
+          target_exams: (examRows || []).map((item) => item.exam),
         };
       } else {
         // Profile row doesn't exist yet in Supabase
@@ -123,11 +80,7 @@ export async function getSafeProfile(): Promise<{
   user: import("@supabase/supabase-js").User | null;
   isGuest: boolean;
 }> {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user } = await getProfileContext();
 
   if (!user) {
     return {
@@ -146,7 +99,7 @@ export async function getSafeProfile(): Promise<{
   try {
     const { profile } = await getServerProfile();
     return { profile, user, isGuest: false };
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (
       error &&
       typeof error === "object" &&

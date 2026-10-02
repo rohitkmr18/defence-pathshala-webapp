@@ -6,10 +6,6 @@ import {
   ChevronRight,
   CheckCircle2,
   LayoutGrid,
-  RotateCcw,
-  Check,
-  X,
-  Sparkles,
 } from "lucide-react";
 import type { PracticeQuestion, PlayerMode, OptionKey } from "@/lib/practice-types";
 import { getCorrectKey } from "@/lib/practice-types";
@@ -57,7 +53,7 @@ export default function QuestionPlayer({
   const [showNavigator, setShowNavigator] = useState(false);
 
   // Track per-question time
-  const questionStartTimeRef = useRef<number>(Date.now());
+  const questionStartTimeRef = useRef<number>(0);
 
   useEffect(() => {
     questionStartTimeRef.current = Date.now();
@@ -120,8 +116,10 @@ export default function QuestionPlayer({
   }, [question, selectedOption, sessionId, mode, currentIndex, answers]);
 
   const handlePrev = useCallback(() => {
-    setCurrentIndex((i) => Math.max(0, i - 1));
-  }, []);
+    const index = Math.max(0, currentIndex - 1);
+    setCurrentIndex(index);
+    if (sessionId) updateSessionProgress(sessionId, { current_index: index });
+  }, [currentIndex, sessionId]);
 
   const handleNext = useCallback(() => {
     if (isLast) {
@@ -141,6 +139,7 @@ export default function QuestionPlayer({
     const nextAnswers = { ...answers };
     delete nextAnswers[question.id];
     setAnswers(nextAnswers);
+    if (sessionId) updateSessionProgress(sessionId, { answers: nextAnswers });
 
     if (isLast) {
       onComplete?.(nextAnswers);
@@ -157,8 +156,9 @@ export default function QuestionPlayer({
     if (index >= 0 && index < questions.length) {
       setCurrentIndex(index);
       setShowNavigator(false);
+      if (sessionId) updateSessionProgress(sessionId, { current_index: index });
     }
-  }, [questions.length]);
+  }, [questions.length, sessionId]);
 
   // ── Mode-specific nav logic ─────────────────────────────────────────────────
   const showCheckAnswerCTA = mode === "instant" && hasAnswer && !isRevealed;

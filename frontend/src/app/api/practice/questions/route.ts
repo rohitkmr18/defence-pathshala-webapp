@@ -9,8 +9,10 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://afhwegrxnvg
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 export async function GET(request: NextRequest) {
+  const specificIds = parseListParam(request.nextUrl.searchParams.get("ids") || request.nextUrl.searchParams.get("id"));
   // 1. Try FastAPI backend first
-  try {
+  // FastAPI does not implement ID selection; never send resume/review requests there.
+  if (specificIds.length === 0) try {
     const response = await backendGET(
       `/practice/questions${request.nextUrl.search}`
     );
@@ -35,8 +37,7 @@ export async function GET(request: NextRequest) {
     const supabase = createClient(supabaseUrl, serviceRoleKey);
     const searchParams = request.nextUrl.searchParams;
     const filters = parseFiltersFromSearchParams(searchParams);
-    const specificIds = parseListParam(searchParams.get("ids") || searchParams.get("id"));
-    const limit = filters.limit || 150;
+    const limit = specificIds.length || filters.limit || 150;
 
     let query = supabase
       .from("v_dp_question_intelligence_v2")
@@ -103,8 +104,8 @@ export async function GET(request: NextRequest) {
       { questions: normalizedQuestions, total: normalizedQuestions.length },
       { status: 200 }
     );
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Failed to fetch questions:", err);
-    return NextResponse.json({ error: err?.message || "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ error: err instanceof Error ? err.message : "Internal Server Error" }, { status: 500 });
   }
 }
