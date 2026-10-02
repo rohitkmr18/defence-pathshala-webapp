@@ -32,13 +32,6 @@ interface PracticeFiltersProps {
   filterOverride?: FilterOverride | null;
 }
 
-const CANONICAL_DIFFICULTIES = [
-  { id: "", label: "All Difficulties", color: "text-slate-700 bg-white border-slate-200" },
-  { id: "Easy", label: "Easy (<25)", color: "text-emerald-700 bg-emerald-50 border-emerald-200" },
-  { id: "Moderate", label: "Moderate (25–50)", color: "text-amber-700 bg-amber-50 border-amber-200" },
-  { id: "Hard", label: "Hard (≥50)", color: "text-rose-700 bg-rose-50 border-rose-200" },
-];
-
 export default function PracticeFilters({
   onFilterChange,
   filterOverride,
@@ -52,7 +45,6 @@ export default function PracticeFilters({
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   const [selectedSubtopics, setSelectedSubtopics] = useState<string[]>([]);
-  const [selectedDifficulty, setSelectedDifficulty] = useState<string>("");
   const [selectedYears, setSelectedYears] = useState<number[]>([]);
   const [selectedCycles, setSelectedCycles] = useState<string[]>([]);
 
@@ -68,15 +60,13 @@ export default function PracticeFilters({
       const urlSubject = sp.get("subject")?.split(",").map((s) => s.trim()).filter(Boolean) ?? [];
       const urlTopic = sp.get("topic")?.split(",").map((s) => s.trim()).filter(Boolean) ?? [];
       const urlSubtopic = sp.get("subtopic")?.split(",").map((s) => s.trim()).filter(Boolean) ?? [];
-      const urlDiff = sp.get("difficulty")?.trim() ?? "";
 
       if (
         urlExam.length > 0 ||
         urlYear.length > 0 ||
         urlSubject.length > 0 ||
         urlTopic.length > 0 ||
-        urlSubtopic.length > 0 ||
-        urlDiff
+        urlSubtopic.length > 0
       ) {
         setSelectedExams(urlExam.filter((e) => data.exams.includes(e)));
         setSelectedYears(urlYear);
@@ -84,7 +74,6 @@ export default function PracticeFilters({
         setSelectedSubjects(urlSubject);
         setSelectedTopics(urlTopic);
         setSelectedSubtopics(urlSubtopic);
-        setSelectedDifficulty(urlDiff);
         if (urlYear.length > 0 || urlCycle.length > 0) {
           setShowAdvancedFilters(true);
         }
@@ -99,7 +88,6 @@ export default function PracticeFilters({
     setSelectedSubjects([]);
     setSelectedTopics([]);
     setSelectedSubtopics([]);
-    setSelectedDifficulty("");
     setSelectedYears([]);
     setSelectedCycles([]);
   };
@@ -234,7 +222,6 @@ export default function PracticeFilters({
       subjects: selectedSubjects,
       topics: selectedTopics,
       subtopics: selectedSubtopics,
-      difficulty: selectedDifficulty,
       allExamsSelected,
     });
   }, [
@@ -245,7 +232,6 @@ export default function PracticeFilters({
     selectedSubjects,
     selectedTopics,
     selectedSubtopics,
-    selectedDifficulty,
     allExamsSelected,
   ]);
 
@@ -365,7 +351,6 @@ export default function PracticeFilters({
     setSelectedSubjects([]);
     setSelectedTopics([]);
     setSelectedSubtopics([]);
-    setSelectedDifficulty("");
     setSelectedYears([]);
     setSelectedCycles([]);
   }
@@ -577,33 +562,7 @@ export default function PracticeFilters({
         </div>
       )}
 
-      {/* ── 5. DIFFICULTY SELECTOR ────────────────────────────────────────── */}
-      <div>
-        <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-600">
-          5. Difficulty Level
-        </label>
-        <div className="flex flex-wrap gap-2">
-          {CANONICAL_DIFFICULTIES.map((diff) => {
-            const isSelected = selectedDifficulty === diff.id;
-            return (
-              <button
-                key={diff.id}
-                type="button"
-                onClick={() => setSelectedDifficulty(diff.id)}
-                className={`rounded-xl border px-3.5 py-1.5 text-xs font-semibold transition ${
-                  isSelected
-                    ? "bg-slate-900 text-white border-slate-900 shadow-2xs"
-                    : `${diff.color} hover:border-slate-400`
-                }`}
-              >
-                {diff.label}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* ── 6. ADVANCED / TEMPORAL FILTERS (Year & Cycle Accordion) ───────── */}
+      {/* ── 5. ADVANCED / TEMPORAL FILTERS (Year & Cycle Accordion) ───────── */}
       <div className="rounded-2xl border border-slate-200/80 bg-white">
         <button
           type="button"
