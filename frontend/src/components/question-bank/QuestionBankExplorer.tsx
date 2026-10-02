@@ -25,6 +25,7 @@ import {
 import TopicHeatmap from "@/components/charts/TopicHeatmap";
 import DifficultyVisualizer from "@/components/charts/DifficultyVisualizer";
 import QuestionPatternMatrix from "@/components/charts/QuestionPatternMatrix";
+import { buildPracticeUrl } from "@/lib/question-filters";
 
 interface Props {
   meta: QuestionBankMeta;
@@ -602,6 +603,10 @@ export default function QuestionBankExplorer({ meta }: Props) {
               topics={data.topics}
               totalQuestions={data.summary.questions}
               selectedSubject={selectedSubject}
+              selectedExams={selectedExams}
+              selectedYears={activeYears}
+              selectedCycles={activeCycles}
+              returnTo={`/dashboard/question-bank?${searchParams.toString()}`}
               onSelectSubject={setSelectedSubject}
             />
           )}
@@ -667,14 +672,18 @@ export default function QuestionBankExplorer({ meta }: Props) {
               </p>
             </div>
             <Link
-              href={
-                selectedSubject
-                  ? `/dashboard/practice?exam=${selectedExams[0] || "CDS"}&subject=${encodeURIComponent(selectedSubject)}`
-                  : "/dashboard/practice"
-              }
+              href={buildPracticeUrl(
+                {
+                  exams: selectedExams,
+                  years: activeYears,
+                  cycles: activeCycles,
+                  subjects: selectedSubject ? [selectedSubject] : [],
+                },
+                { returnTo: `/dashboard/question-bank?${searchParams.toString()}` }
+              )}
               className="inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl bg-white px-6 py-3.5 text-sm font-black text-blue-700 shadow-md transition hover:bg-blue-50 active:scale-95"
             >
-              <span>{selectedSubject ? `Practice ${selectedSubject}` : "Start Free Practice"}</span>
+              <span>{selectedSubject ? `Practice ${selectedSubject}` : "Practice Selected PYQs"}</span>
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

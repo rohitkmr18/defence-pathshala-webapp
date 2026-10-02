@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import PracticePageClient from "./components/PracticePageClient";
 
 export const metadata = {
@@ -25,7 +26,15 @@ export default function PracticePage() {
           </p>
         </div>
 
-        <PracticePageClient />
+        <Suspense
+          fallback={
+            <div className="h-96 rounded-3xl border border-slate-200 bg-white p-8 animate-pulse flex items-center justify-center">
+              <div className="h-8 w-48 bg-slate-200 rounded-xl" />
+            </div>
+          }
+        >
+          <PracticePageClient />
+        </Suspense>
       </div>
     </main>
   );

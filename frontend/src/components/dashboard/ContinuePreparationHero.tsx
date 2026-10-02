@@ -2,8 +2,21 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Sparkles, Pencil } from "lucide-react";
+import {
+  ArrowRight,
+  Sparkles,
+  Pencil,
+  RotateCcw,
+  AlertCircle,
+  CheckCircle2,
+  Play,
+} from "lucide-react";
 import { computeDashboardSnapshot, MOCK_SAVED_EVENT } from "@/lib/mockHistory";
+import {
+  getLocalSession,
+  PRACTICE_SESSION_UPDATED_EVENT,
+  type ActivePracticeSession,
+} from "@/lib/practice-session-client";
 import EditTargetModal, {
   formatExamsLabel,
   TARGETS_UPDATED_EVENT,
@@ -29,6 +42,10 @@ export default function ContinuePreparationHero({
   const firstName = name?.trim()?.split(" ")[0] || "Aspirant";
   const [accuracy, setAccuracy] = useState(initialAccuracy);
   const [lastTopic, setLastTopic] = useState(initialLastTopic);
+  const [totalAttempts, setTotalAttempts] = useState(0);
+  const [mistakeCount, setMistakeCount] = useState(0);
+  const [mistakeIds, setMistakeIds] = useState<string[]>([]);
+  const [activeSession, setActiveSession] = useState<ActivePracticeSession | null>(null);
 
   const [exams, setExams] = useState<string[]>(() =>
     targetExams && targetExams.length > 0 ? targetExams : exam ? [exam] : []
@@ -44,12 +61,44 @@ export default function ContinuePreparationHero({
     setYear(targetYear);
   }, [targetExams, targetYear]);
 
-  // Listen to live target updates & mock history
+  // Sync live session, attempts & target updates
   useEffect(() => {
-    const syncAccuracy = () => {
+    const syncStats = () => {
+      // 1. Check local session
+      const local = getLocalSession();
+      if (local && !local.is_completed) {
+        setActiveSession(local);
+        setLastTopic(local.title || "Targeted Practice");
+      } else {
+        setActiveSession(null);
+      }
+
+      // 2. Fetch server session / attempt stats
+      fetch("/api/practice/session", { cache: "no-store" })
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data) {
+            if (data.totalAttempts > 0) {
+              setTotalAttempts(data.totalAttempts);
+              setAccuracy(data.accuracy);
+              setMistakeCount(data.mistakeCount);
+              if (Array.isArray(data.mistakeQuestionIds)) {
+                setMistakeIds(data.mistakeQuestionIds);
+              }
+            }
+            if (data.activeSession && !data.activeSession.is_completed) {
+              setActiveSession((prev) => prev || data.activeSession);
+              setLastTopic(data.activeSession.title);
+            }
+          }
+        })
+        .catch(() => {});
+
+      // 3. Fallback to client mock history
       const snap = computeDashboardSnapshot();
-      if (snap.mocksCompleted > 0) {
+      if (snap.mocksCompleted > 0 && totalAttempts === 0) {
         setAccuracy(snap.averageAccuracy);
+        setTotalAttempts(snap.totalQuestionsAttempted);
         if (snap.weakAreas.length > 0) {
           setLastTopic(`Revise ${snap.weakAreas[0].topic}`);
         } else if (snap.lastMockTitle && snap.lastMockTitle !== "None") {
@@ -73,21 +122,29 @@ export default function ContinuePreparationHero({
       }
     };
 
-    syncAccuracy();
+    syncStats();
 
-    window.addEventListener(MOCK_SAVED_EVENT, syncAccuracy);
-    window.addEventListener("storage", syncAccuracy);
+    window.addEventListener(MOCK_SAVED_EVENT, syncStats);
+    window.addEventListener(PRACTICE_SESSION_UPDATED_EVENT, syncStats);
+    window.addEventListener("dp_question_attempted", syncStats);
+    window.addEventListener("storage", syncStats);
     window.addEventListener(TARGETS_UPDATED_EVENT, handleTargetsUpdated);
 
     return () => {
-      window.removeEventListener(MOCK_SAVED_EVENT, syncAccuracy);
-      window.removeEventListener("storage", syncAccuracy);
+      window.removeEventListener(MOCK_SAVED_EVENT, syncStats);
+      window.removeEventListener(PRACTICE_SESSION_UPDATED_EVENT, syncStats);
+      window.removeEventListener("dp_question_attempted", syncStats);
+      window.removeEventListener("storage", syncStats);
       window.removeEventListener(TARGETS_UPDATED_EVENT, handleTargetsUpdated);
     };
-  }, []);
+  }, [totalAttempts]);
 
   const formattedExamLabel =
     formatExamsLabel(exams) || exam || "Choose your target exam";
+
+  const answeredInSession = activeSession
+    ? Object.keys(activeSession.answers || {}).length
+    : 0;
 
   return (
     <>
@@ -134,10 +191,48 @@ export default function ContinuePreparationHero({
           . Pick up exactly where you left off.
         </p>
 
-        <div className="mt-6 grid grid-cols-2 gap-4 sm:mt-8 sm:grid-cols-3 sm:gap-5">
+        {/* ── Unfinished Active Session Banner (Priority 1) ───────────────── */}
+        {activeSession && !activeSession.is_completed && (
+          <div className="mt-6 rounded-2xl border border-blue-200 bg-white p-4 sm:p-5 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-blue-600">
+                  <span className="h-2 w-2 rounded-full bg-blue-600 animate-ping" />
+                  Unfinished Practice Session
+                </span>
+                <h3 className="mt-0.5 text-base sm:text-lg font-black text-slate-900">
+                  {activeSession.title}
+                </h3>
+                <p className="text-xs text-slate-500 font-medium">
+                  Progress: {answeredInSession} of {activeSession.total_questions || activeSession.question_ids?.length || 0} questions completed
+                </p>
+              </div>
+
+              <Link
+                href="/dashboard/practice/session?resume=true"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md shadow-blue-600/20 hover:bg-blue-500 transition active:scale-95 shrink-0"
+              >
+                <span>Resume Session</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {/* ── Practice Summary KPI Cards ──────────────────────────────────── */}
+        <div className="mt-6 grid grid-cols-2 gap-4 sm:mt-8 sm:grid-cols-4 sm:gap-4">
           <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm">
             <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
-              Accuracy
+              Questions Done
+            </p>
+            <p className="mt-1 text-2xl font-black text-slate-900 sm:text-3xl">
+              {totalAttempts}
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm">
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              Accuracy Rate
             </p>
             <p className="mt-1 text-2xl font-black text-slate-900 sm:text-3xl">
               {accuracy}%
@@ -146,17 +241,28 @@ export default function ContinuePreparationHero({
 
           <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm">
             <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
-              Focus
+              Review Mistakes
             </p>
-            <p className="mt-1 truncate text-base font-bold text-slate-900 sm:text-lg">
-              {lastTopic}
-            </p>
+            <div className="mt-1 flex items-baseline justify-between">
+              <p className="text-2xl font-black text-slate-900 sm:text-3xl">
+                {mistakeCount}
+              </p>
+              {mistakeCount > 0 && mistakeIds.length > 0 && (
+                <Link
+                  href={`/dashboard/practice/session?ids=${mistakeIds.join(",")}`}
+                  className="text-[11px] font-bold text-rose-600 hover:underline inline-flex items-center gap-0.5"
+                >
+                  <span>Practice</span>
+                  <ArrowRight className="h-3 w-3" />
+                </Link>
+              )}
+            </div>
           </div>
 
           <button
             type="button"
             onClick={() => setIsEditModalOpen(true)}
-            className="col-span-2 sm:col-span-1 flex flex-col justify-between text-left rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm transition hover:border-blue-300 hover:bg-blue-50/40 group cursor-pointer"
+            className="flex flex-col justify-between text-left rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm transition hover:border-blue-300 hover:bg-blue-50/40 group cursor-pointer"
           >
             <div className="flex items-center justify-between w-full">
               <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
@@ -178,13 +284,26 @@ export default function ContinuePreparationHero({
           </button>
         </div>
 
-        <Link
-          href="/dashboard/practice"
-          className="mt-6 inline-flex items-center gap-2 rounded-2xl bg-blue-600 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-600/25 transition hover:bg-blue-500 hover:scale-[1.02] active:scale-[0.98] sm:mt-8"
-        >
-          <span>Continue Practice</span>
-          <ArrowRight className="h-4 w-4" />
-        </Link>
+        {/* Primary CTA */}
+        <div className="mt-6 flex flex-wrap items-center gap-3 sm:mt-8">
+          <Link
+            href="/dashboard/practice"
+            className="inline-flex items-center gap-2 rounded-2xl bg-blue-600 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-600/25 transition hover:bg-blue-500 hover:scale-[1.02] active:scale-[0.98]"
+          >
+            <span>{totalAttempts > 0 ? "Continue Practice" : "Start Your First Practice"}</span>
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+
+          {mistakeCount > 0 && mistakeIds.length > 0 && (
+            <Link
+              href={`/dashboard/practice/session?ids=${mistakeIds.join(",")}`}
+              className="inline-flex items-center gap-2 rounded-2xl border border-rose-200 bg-rose-50/80 px-5 py-3.5 text-sm font-bold text-rose-700 shadow-xs hover:bg-rose-100 transition active:scale-95"
+            >
+              <RotateCcw className="h-4 w-4 text-rose-600" />
+              <span>Review {mistakeCount} Mistakes</span>
+            </Link>
+          )}
+        </div>
       </section>
 
       {/* Target Modal */}
