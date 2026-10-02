@@ -27,7 +27,7 @@ const baseItems = [
     icon: LayoutDashboard,
   },
   {
-    name: "Explore PYQs",
+    name: "PYQs Insights",
     href: "/dashboard/question-bank",
     icon: Database,
   },

@@ -2,19 +2,22 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { LogIn } from "lucide-react";
+import {
+  LogIn,
+  Target,
+  FileText,
+  ArrowRight,
+  BarChart3,
+  ChevronDown,
+  ChevronUp,
+  Loader2,
+} from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 
 import FullPaperHero, { FullPaperDefinition } from "@/components/practice/FullPaperHero";
-import QuestionCountCard from "@/components/practice/QuestionCountCard";
 import QuestionDistributionChart from "@/components/practice/QuestionDistributionChart";
-import {
-  InstantFeedbackCard,
-  AttemptAtOnceCard,
-} from "@/components/practice/AttemptModeCard";
 import PracticeFilters, { type FilterOverride } from "./PracticeFilters";
-
 
 // ─── Active filter shape ───────────────────────────────────────────────────────
 
@@ -24,6 +27,8 @@ export interface ActiveFilters {
   cycles: string[];
   subjects: string[];
   topics: string[];
+  subtopics?: string[];
+  difficulty?: string;
   allExamsSelected?: boolean;
 }
 
@@ -42,7 +47,7 @@ function AuthGateBanner({ nextUrl }: { nextUrl: string }) {
               Sign in to attempt Full Paper mocks
             </p>
             <p className="mt-0.5 text-xs text-slate-600">
-              Full-length exam simulations require an account to save official rankings and post-mock performance analytics. Targeted filtered practice is completely free without signing in.
+              Full-length exam simulations require an account to save official rankings and post-mock performance analytics. Targeted practice is accessible without signing in.
             </p>
           </div>
         </div>
@@ -60,10 +65,16 @@ function AuthGateBanner({ nextUrl }: { nextUrl: string }) {
   );
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
+// ─── Main Client Component ───────────────────────────────────────────────────
 
 export default function PracticePageClient() {
   const router = useRouter();
+
+  // Top mode toggle: "targeted" vs "full-paper"
+  const [practiceMode, setPracticeMode] = useState<"targeted" | "full-paper">("targeted");
+
+  // Targeted practice execution style: "instant" (learning) vs "attempt" (timed)
+  const [sessionStyle, setSessionStyle] = useState<"instant" | "attempt">("instant");
 
   const [activeFilters, setActiveFilters] = useState<ActiveFilters>({
     exams: [],
@@ -71,10 +82,15 @@ export default function PracticePageClient() {
     cycles: [],
     subjects: [],
     topics: [],
+    subtopics: [],
+    difficulty: "",
   });
 
   const [questionCount, setQuestionCount] = useState<number | null>(null);
   const [countLoading, setCountLoading] = useState(false);
+
+  // Accordion for question distribution chart
+  const [showDistribution, setShowDistribution] = useState(false);
 
   // Auth state — check once on mount
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -87,7 +103,7 @@ export default function PracticePageClient() {
     });
   }, []);
 
-  // ── Fetch question count whenever filters change ───────────────────────────
+  // ── Fetch live question count whenever filters change ──────────────────────
   useEffect(() => {
     let cancelled = false;
 
@@ -99,25 +115,16 @@ export default function PracticePageClient() {
       }
 
       setCountLoading(true);
-      setQuestionCount(null);
 
       try {
         const params = new URLSearchParams();
-        if (activeFilters.exams.length) {
-          params.set("exam", activeFilters.exams.join(","));
-        }
-        if (activeFilters.years.length) {
-          params.set("year", activeFilters.years.join(","));
-        }
-        if (activeFilters.cycles.length) {
-          params.set("cycle", activeFilters.cycles.join(","));
-        }
-        if (activeFilters.subjects.length) {
-          params.set("subject", activeFilters.subjects.join(","));
-        }
-        if (activeFilters.topics.length) {
-          params.set("topic", activeFilters.topics.join(","));
-        }
+        if (activeFilters.exams.length)    params.set("exam", activeFilters.exams.join(","));
+        if (activeFilters.years.length)    params.set("year", activeFilters.years.join(","));
+        if (activeFilters.cycles.length)   params.set("cycle", activeFilters.cycles.join(","));
+        if (activeFilters.subjects.length) params.set("subject", activeFilters.subjects.join(","));
+        if (activeFilters.topics.length)   params.set("topic", activeFilters.topics.join(","));
+        if (activeFilters.subtopics?.length) params.set("subtopic", activeFilters.subtopics.join(","));
+        if (activeFilters.difficulty)      params.set("difficulty", activeFilters.difficulty);
 
         const res = await fetch(
           `/api/practice/count${params.toString() ? `?${params}` : ""}`,
@@ -150,7 +157,7 @@ export default function PracticePageClient() {
     };
   }, [activeFilters]);
 
-  // ── Callback from PracticeFilters ─────────────────────────────────────────
+  // ── External filter override (from chart bar clicks) ───────────────────────
   const [filterOverride, setFilterOverride] = useState<FilterOverride | null>(null);
 
   const handleBarClick = useCallback(
@@ -178,34 +185,33 @@ export default function PracticePageClient() {
       const cyclesSame = prev.cycles.length === filters.cycles.length && prev.cycles.every((c, i) => c === filters.cycles[i]);
       const subjectsSame = prev.subjects.length === filters.subjects.length && prev.subjects.every((s, i) => s === filters.subjects[i]);
       const topicsSame = prev.topics.length === filters.topics.length && prev.topics.every((t, i) => t === filters.topics[i]);
+      const subtopicsSame = (prev.subtopics?.length ?? 0) === (filters.subtopics?.length ?? 0) &&
+        (prev.subtopics ?? []).every((st, i) => st === (filters.subtopics ?? [])[i]);
+      const diffSame = prev.difficulty === filters.difficulty;
       const allExamsSame = prev.allExamsSelected === filters.allExamsSelected;
 
-      if (examsSame && yearsSame && cyclesSame && subjectsSame && topicsSame && allExamsSame) {
+      if (examsSame && yearsSame && cyclesSame && subjectsSame && topicsSame && subtopicsSame && diffSame && allExamsSame) {
         return prev;
       }
       return filters;
     });
-    // Reset auth gate when filters change
     setShowAuthGate(false);
   }, []);
 
-  // ── Derived hero data ──────────────────────────────────────────────────────
-  const primaryExam = activeFilters.exams[0] ?? "";
-
-
-
   // ── Session URL builder ────────────────────────────────────────────────────
-  function buildSessionParams(mode: "instant" | "attempt") {
-    const params = new URLSearchParams({ mode });
+  function buildSessionParams() {
+    const params = new URLSearchParams({ mode: sessionStyle });
     if (activeFilters.exams.length)    params.set("exam", activeFilters.exams.join(","));
     if (activeFilters.years.length)    params.set("year", activeFilters.years.join(","));
     if (activeFilters.cycles.length)   params.set("cycle", activeFilters.cycles.join(","));
     if (activeFilters.subjects.length) params.set("subject", activeFilters.subjects.join(","));
     if (activeFilters.topics.length)   params.set("topic", activeFilters.topics.join(","));
+    if (activeFilters.subtopics?.length) params.set("subtopic", activeFilters.subtopics.join(","));
+    if (activeFilters.difficulty)      params.set("difficulty", activeFilters.difficulty);
     return params.toString();
   }
 
-  // ── Auth-gated navigation ──────────────────────────────────────────────────
+  // ── Auth-gated Full Paper Navigation ───────────────────────────────────────
   function requireAuth(navigateTo: string) {
     if (isAuthenticated === false) {
       setShowAuthGate(true);
@@ -224,73 +230,212 @@ export default function PracticePageClient() {
     requireAuth(`/dashboard/practice/full-paper?${params.toString()}`);
   }
 
-  function handleStartLearning() {
-    router.push(`/dashboard/practice/session?${buildSessionParams("instant")}`);
-  }
-
   function handleStartPractice() {
-    router.push(`/dashboard/practice/session?${buildSessionParams("attempt")}`);
+    router.push(`/dashboard/practice/session?${buildSessionParams()}`);
   }
 
-  const attemptDisabled = countLoading || questionCount === 0;
+  const primaryExam = activeFilters.exams[0] ?? "";
+  const isCtaDisabled = countLoading || questionCount === 0 || questionCount === null;
 
   // Current page URL for next= redirect
   const currentUrl = typeof window !== "undefined" ? window.location.pathname + window.location.search : "/dashboard/practice";
 
+  // Filter summary breadcrumbs
+  const filterSummary = [
+    activeFilters.exams.join("/"),
+    activeFilters.subjects.length > 0 ? (activeFilters.subjects.length === 1 ? activeFilters.subjects[0] : `${activeFilters.subjects.length} Subjects`) : "All Subjects",
+    activeFilters.topics.length > 0 ? (activeFilters.topics.length === 1 ? activeFilters.topics[0] : `${activeFilters.topics.length} Topics`) : null,
+    activeFilters.difficulty ? activeFilters.difficulty : null,
+  ].filter(Boolean).join(" › ");
+
   return (
-    <div className="space-y-5 sm:space-y-6">
+    <div className="space-y-6">
+      {/* ── Mode Selection Header ─────────────────────────────────────────── */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-slate-200/80 pb-4">
+        <div>
+          <h2 className="text-xl font-black text-slate-900 tracking-tight sm:text-2xl">
+            Choose Your Practice Workflow
+          </h2>
+          <p className="text-xs text-slate-500 sm:text-sm">
+            Select between granular topic mastery and full-length official timed mocks.
+          </p>
+        </div>
+
+        {/* Clean Segmented Tab Switcher */}
+        <div className="inline-flex rounded-2xl border border-slate-200 bg-slate-100/90 p-1 shadow-2xs self-start sm:self-auto">
+          <button
+            type="button"
+            onClick={() => setPracticeMode("targeted")}
+            className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition ${
+              practiceMode === "targeted"
+                ? "bg-white text-blue-600 shadow-xs"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            <Target className="h-4 w-4" />
+            <span>Targeted Practice</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setPracticeMode("full-paper")}
+            className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition ${
+              practiceMode === "full-paper"
+                ? "bg-white text-blue-600 shadow-xs"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            <FileText className="h-4 w-4" />
+            <span>Full Paper Mock</span>
+          </button>
+        </div>
+      </div>
+
       {/* ── Auth Gate Banner ─────────────────────────────────────────────── */}
       {showAuthGate && (
         <AuthGateBanner nextUrl={currentUrl} />
       )}
 
-      {/* ── Section 1: Full Paper Hero ─────────────────────────────────── */}
-      <FullPaperHero
-        onStart={handleStartFullPaper}
-        initialExam={primaryExam}
-        initialYear={activeFilters.years[0]}
-      />
+      {/* ═══════════════════════════════════════════════════════════════════════
+          MODE 1: TARGETED PRACTICE (PRIMARY USER FLOW)
+          ═══════════════════════════════════════════════════════════════════════ */}
+      {practiceMode === "targeted" && (
+        <div className="space-y-6">
+          {/* Main Progressive Filter Card */}
+          <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+            <PracticeFilters
+              onFilterChange={handleFilterChange}
+              filterOverride={filterOverride}
+            />
+          </div>
 
-      {/* ── Section 2: Targeted Practice ────────────────────────────────── */}
-      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-        <div className="border-b border-slate-100 px-5 pt-6 pb-5 sm:px-8 sm:pt-8">
-          <h2 className="text-lg font-bold text-slate-900 sm:text-xl">
-            Targeted Practice
-          </h2>
-          <p className="mt-1 text-sm text-slate-500">
-            Choose filters, then decide how to attempt.
-          </p>
+          {/* Sticky / Prominent Action & Launch Bar */}
+          <div className="sticky bottom-4 z-20 rounded-3xl border border-slate-200/90 bg-white/95 p-4 shadow-xl backdrop-blur-md sm:p-5">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              {/* Left: Summary + Live count badge */}
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                    Ready to practice
+                  </p>
+                  <span className="text-slate-300">·</span>
+                  <span className="text-xs font-semibold text-slate-700 truncate max-w-[280px] sm:max-w-md">
+                    {filterSummary}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-1.5">
+                    {countLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+                    ) : (
+                      <span className="text-2xl font-black text-slate-900">
+                        {questionCount ?? 0}
+                      </span>
+                    )}
+                    <span className="text-xs font-semibold text-slate-500">
+                      Questions Matching Filters
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right: Practice Mode Toggle + Primary CTA */}
+              <div className="flex flex-wrap items-center gap-3">
+                {/* Session style segmented toggle */}
+                <div className="inline-flex rounded-xl border border-slate-200 bg-slate-100 p-0.5 text-xs font-semibold">
+                  <button
+                    type="button"
+                    onClick={() => setSessionStyle("instant")}
+                    className={`rounded-lg px-3 py-1.5 transition ${
+                      sessionStyle === "instant"
+                        ? "bg-white font-bold text-slate-900 shadow-2xs"
+                        : "text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    💡 Instant Learning
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSessionStyle("attempt")}
+                    className={`rounded-lg px-3 py-1.5 transition ${
+                      sessionStyle === "attempt"
+                        ? "bg-white font-bold text-slate-900 shadow-2xs"
+                        : "text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    ⏱️ Timed Exam
+                  </button>
+                </div>
+
+                {/* Single Primary CTA */}
+                <button
+                  type="button"
+                  onClick={handleStartPractice}
+                  disabled={isCtaDisabled}
+                  className={`inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3.5 text-sm font-bold text-white shadow-md transition ${
+                    isCtaDisabled
+                      ? "cursor-not-allowed bg-slate-300 shadow-none"
+                      : "bg-blue-600 hover:bg-blue-500 active:scale-[0.98] shadow-blue-600/20"
+                  }`}
+                >
+                  <span>Start Practice Session</span>
+                  {questionCount !== null && questionCount > 0 && (
+                    <span className="rounded-full bg-blue-700/60 px-2 py-0.5 text-xs">
+                      {questionCount}
+                    </span>
+                  )}
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Collapsible Question Distribution Chart */}
+          <div className="rounded-3xl border border-slate-200/90 bg-white">
+            <button
+              type="button"
+              onClick={() => setShowDistribution((prev) => !prev)}
+              className="flex w-full items-center justify-between p-5 text-left transition hover:bg-slate-50/60 rounded-3xl"
+            >
+              <div className="flex items-center gap-2.5">
+                <BarChart3 className="h-4 w-4 text-blue-600" />
+                <span className="text-sm font-bold text-slate-800">
+                  Historical PYQ Distribution & Year Breakdown
+                </span>
+                <span className="text-xs text-slate-400">
+                  (Explore year-wise recurrence trends)
+                </span>
+              </div>
+              <span className="text-slate-400">
+                {showDistribution ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+              </span>
+            </button>
+
+            {showDistribution && (
+              <div className="border-t border-slate-100 p-5 sm:p-7">
+                <QuestionDistributionChart
+                  activeFilters={activeFilters}
+                  allExamsSelected={activeFilters.allExamsSelected}
+                  onBarClick={handleBarClick}
+                  onViewAllYears={handleViewAllYears}
+                />
+              </div>
+            )}
+          </div>
         </div>
+      )}
 
-        <div className="px-5 py-5 sm:px-8 sm:py-6">
-          <PracticeFilters
-            onFilterChange={handleFilterChange}
-            filterOverride={filterOverride}
-          />
-        </div>
-      </div>
-
-      {/* ── Section 3: Live Question Count ──────────────────────────────── */}
-      <QuestionCountCard count={questionCount} loading={countLoading} />
-
-      {/* ── Section 3.5: Question Distribution Chart ────────────────────── */}
-      <QuestionDistributionChart
-        activeFilters={activeFilters}
-        allExamsSelected={activeFilters.allExamsSelected}
-        onBarClick={handleBarClick}
-        onViewAllYears={handleViewAllYears}
-      />
-
-      {/* ── Section 4: Practice Mode Cards ────────────────────────────────── */}
-      {questionCount !== null && questionCount > 0 && !countLoading && (
-        <div className="mx-auto w-full max-w-[760px] space-y-6">
-          <InstantFeedbackCard
-            onStart={handleStartLearning}
-            disabled={attemptDisabled}
-          />
-          <AttemptAtOnceCard
-            onStart={handleStartPractice}
-            disabled={attemptDisabled}
+      {/* ═══════════════════════════════════════════════════════════════════════
+          MODE 2: FULL PAPER SIMULATION (DECOUPLED FLOW)
+          ═══════════════════════════════════════════════════════════════════════ */}
+      {practiceMode === "full-paper" && (
+        <div className="space-y-6">
+          <FullPaperHero
+            onStart={handleStartFullPaper}
+            initialExam={primaryExam}
+            initialYear={activeFilters.years[0]}
           />
         </div>
       )}

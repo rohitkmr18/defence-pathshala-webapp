@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { backendGET } from "@/lib/backend";
 import { createClient } from "@supabase/supabase-js";
 import { expandExamQuery } from "@/lib/exams";
+import { normalizeQuestion } from "@/lib/question-intelligence";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://afhwegrxnvgsqbqadvwr.supabase.co";
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -15,8 +16,9 @@ export async function GET(request: NextRequest) {
 
     if (response.ok) {
       const data = await response.json();
-      if (data?.questions && data.questions.length > 0) {
-        return NextResponse.json(data, { status: 200 });
+      if (data?.questions && Array.isArray(data.questions) && data.questions.length > 0) {
+        const normalized = data.questions.map(normalizeQuestion);
+        return NextResponse.json({ questions: normalized, total: normalized.length }, { status: 200 });
       }
     }
   } catch {
@@ -37,9 +39,15 @@ export async function GET(request: NextRequest) {
     const cycle = searchParams.get("cycle");
     const subject = searchParams.get("subject");
     const topic = searchParams.get("topic");
+    const subtopic = searchParams.get("subtopic");
+    const difficulty = searchParams.get("difficulty");
+    const intelligenceOnly = searchParams.get("intelligence_only") === "true";
     const limit = parseInt(searchParams.get("limit") || "150", 10);
 
-    let query = supabase.from("questions").select("*");
+    let query = supabase
+      .from("questions")
+      .select("*")
+      .eq("is_active", true);
 
     if (exam) {
       const expanded = expandExamQuery(exam);
@@ -83,6 +91,24 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    if (subtopic) {
+      const subtopics = subtopic.split(",").map((s) => s.trim()).filter(Boolean);
+      if (subtopics.length > 0) {
+        query = query.in("subtopic", subtopics);
+      }
+    }
+
+    if (difficulty) {
+      const difficulties = difficulty.split(",").map((s) => s.trim()).filter(Boolean);
+      if (difficulties.length > 0) {
+        query = query.in("difficulty_category", difficulties);
+      }
+    }
+
+    if (intelligenceOnly) {
+      query = query.eq("verified_status", "Verified");
+    }
+
     query = query.order("q_num", { ascending: true }).limit(limit);
 
     const { data, error } = await query;
@@ -92,8 +118,11 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ questions: [], total: 0 }, { status: 200 });
     }
 
+    const rawRows = data || [];
+    const normalizedQuestions = rawRows.map(normalizeQuestion);
+
     return NextResponse.json(
-      { questions: data || [], total: (data || []).length },
+      { questions: normalizedQuestions, total: normalizedQuestions.length },
       { status: 200 }
     );
   } catch (err) {

@@ -22,7 +22,8 @@ def get_practice_filters() -> PracticeFiltersResponse:
     try:
         response = (
             supabase.table("questions")
-            .select("exam,year,cycle,subject,topic")
+            .select("exam,year,cycle,subject,topic,subtopic")
+            .eq("is_active", True)
             .execute()
         )
 
@@ -32,6 +33,7 @@ def get_practice_filters() -> PracticeFiltersResponse:
         years_by_exam: dict[str, set[int]] = {}
         cycles_by_exam: dict[str, set[str]] = {}
         subjects_by_exam: dict[str, dict[str, set[str]]] = {}
+        subtopics_by_subject: dict[str, dict[str, set[str]]] = {}
 
         for row in rows:
             exam = _clean_text(row.get("exam"))
@@ -56,11 +58,14 @@ def get_practice_filters() -> PracticeFiltersResponse:
 
             subject = _clean_text(row.get("subject"))
             topic = _clean_text(row.get("topic"))
+            subtopic = _clean_text(row.get("subtopic"))
 
             if not subject or not topic:
                 continue
 
             subjects_by_exam.setdefault(exam, {}).setdefault(subject, set()).add(topic)
+            if subtopic:
+                subtopics_by_subject.setdefault(subject, {}).setdefault(topic, set()).add(subtopic)
 
         return PracticeFiltersResponse(
             exams=sorted(exams),
@@ -80,6 +85,15 @@ def get_practice_filters() -> PracticeFiltersResponse:
                 }
                 for exam, subjects in sorted(subjects_by_exam.items())
             },
+            subtopics={
+                subject: {
+                    topic: sorted(subtopics)
+                    for topic, subtopics in sorted(topic_map.items())
+                    if subtopics
+                }
+                for subject, topic_map in sorted(subtopics_by_subject.items())
+            },
+            difficulties=["Easy", "Moderate", "Hard"],
         )
 
     except Exception as exc:  # pragma: no cover - defensive: surfaced via FastAPI
@@ -93,9 +107,11 @@ def get_practice_count(
     cycle: str | None = None,
     subject: str | None = None,
     topic: str | None = None,
+    subtopic: str | None = None,
+    difficulty: str | None = None,
 ) -> dict[str, int]:
     try:
-        query = supabase.table("questions").select("id", count="exact")
+        query = supabase.table("questions").select("id", count="exact").eq("is_active", True)
 
         if exam:
             expanded = expand_exam_query(exam)
@@ -127,6 +143,18 @@ def get_practice_count(
             query = query.in_(
                 "topic",
                 [value.strip() for value in topic.split(",") if value.strip()],
+            )
+
+        if subtopic:
+            query = query.in_(
+                "subtopic",
+                [value.strip() for value in subtopic.split(",") if value.strip()],
+            )
+
+        if difficulty:
+            query = query.in_(
+                "difficulty_category",
+                [value.strip() for value in difficulty.split(",") if value.strip()],
             )
 
         response = query.execute()
@@ -143,10 +171,13 @@ def get_practice_questions(
     cycle: str | None = None,
     subject: str | None = None,
     topic: str | None = None,
+    subtopic: str | None = None,
+    difficulty: str | None = None,
+    intelligence_only: bool = False,
     limit: int = 150,
 ) -> dict[str, Any]:
     try:
-        query = supabase.table("questions").select("*")
+        query = supabase.table("questions").select("*").eq("is_active", True)
 
         if exam:
             expanded = expand_exam_query(exam)
@@ -179,6 +210,21 @@ def get_practice_questions(
                 "topic",
                 [value.strip() for value in topic.split(",") if value.strip()],
             )
+
+        if subtopic:
+            query = query.in_(
+                "subtopic",
+                [value.strip() for value in subtopic.split(",") if value.strip()],
+            )
+
+        if difficulty:
+            query = query.in_(
+                "difficulty_category",
+                [value.strip() for value in difficulty.split(",") if value.strip()],
+            )
+
+        if intelligence_only:
+            query = query.eq("verified_status", "Verified")
 
         query = query.order("q_num").limit(limit)
         response = query.execute()
