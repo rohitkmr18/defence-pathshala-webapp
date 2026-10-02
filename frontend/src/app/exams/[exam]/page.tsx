@@ -204,22 +204,28 @@ export default async function ExamPublicPage({ params }: PageProps) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {coverage.subjects.map((sub) => (
-            <div
+            <Link
               key={sub.slug}
-              className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+              href={`/pyqs/${coverage.slug}/${sub.slug}`}
+              className="group rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-blue-500 hover:shadow-md flex flex-col justify-between"
             >
-              <div className="flex items-start justify-between">
-                <h3 className="font-bold text-slate-900 text-sm">
-                  {sub.subject}
-                </h3>
-                <span className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-700">
-                  {sub.count}
-                </span>
+              <div>
+                <div className="flex items-start justify-between">
+                  <h3 className="font-bold text-slate-900 text-sm group-hover:text-blue-600 transition">
+                    {sub.subject}
+                  </h3>
+                  <span className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-700">
+                    {sub.count}
+                  </span>
+                </div>
+                <p className="mt-2 text-xs text-slate-500">
+                  Covered across all {coverage.years.length} active test years
+                </p>
               </div>
-              <p className="mt-2 text-xs text-slate-500">
-                Covered across all {coverage.years.length} active test years
-              </p>
-            </div>
+              <div className="mt-4 flex items-center text-xs font-semibold text-blue-600 group-hover:translate-x-0.5 transition-transform">
+                Explore {sub.subject} PYQs <ChevronRight className="h-3 w-3 ml-0.5" />
+              </div>
+            </Link>
           ))}
         </div>
       </section>

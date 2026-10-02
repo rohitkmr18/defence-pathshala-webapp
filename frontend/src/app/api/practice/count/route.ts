@@ -37,8 +37,13 @@ export async function GET(request: NextRequest) {
     const cycle = searchParams.get("cycle");
     const subject = searchParams.get("subject");
     const topic = searchParams.get("topic");
+    const subtopic = searchParams.get("subtopic");
+    const difficulty = searchParams.get("difficulty");
 
-    let query = supabase.from("questions").select("id", { count: "exact", head: true });
+    let query = supabase
+      .from("questions")
+      .select("id", { count: "exact", head: true })
+      .eq("is_active", true);
 
     if (exam) {
       const expanded = expandExamQuery(exam);
@@ -79,6 +84,20 @@ export async function GET(request: NextRequest) {
       const topics = topic.split(",").map((s) => s.trim()).filter(Boolean);
       if (topics.length > 0) {
         query = query.in("topic", topics);
+      }
+    }
+
+    if (subtopic) {
+      const subtopics = subtopic.split(",").map((s) => s.trim()).filter(Boolean);
+      if (subtopics.length > 0) {
+        query = query.in("subtopic", subtopics);
+      }
+    }
+
+    if (difficulty) {
+      const difficulties = difficulty.split(",").map((s) => s.trim()).filter(Boolean);
+      if (difficulties.length > 0) {
+        query = query.in("difficulty_category", difficulties);
       }
     }
 

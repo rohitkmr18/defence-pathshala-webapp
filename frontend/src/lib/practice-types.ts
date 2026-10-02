@@ -42,6 +42,10 @@ export interface PracticeQuestion {
   static_current_link?: string | null;
   difficulty_score?: number | null;
   difficulty_category?: string | null;
+  concept?: string | null;
+  production_eligible?: boolean;
+  intelligence_eligible?: boolean;
+  human_review_required?: boolean;
 }
 
 /** All possible option keys */

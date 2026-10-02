@@ -8,6 +8,8 @@ interface SessionPageProps {
     cycle?: string;
     subject?: string;
     topic?: string;
+    subtopic?: string;
+    difficulty?: string;
   }>;
 }
 
@@ -27,6 +29,8 @@ export default async function SessionPage({ searchParams }: SessionPageProps) {
           cycle={params.cycle}
           subject={params.subject}
           topic={params.topic}
+          subtopic={params.subtopic}
+          difficulty={params.difficulty}
         />
       </div>
     </main>

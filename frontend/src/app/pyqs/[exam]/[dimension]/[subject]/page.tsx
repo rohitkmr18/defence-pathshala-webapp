@@ -9,19 +9,19 @@ import {
   getExamCoverage,
 } from "@/lib/seo-data";
 import Breadcrumbs from "@/components/public/Breadcrumbs";
-import { BookOpen, Calendar, ArrowRight, Layers, PieChart } from "lucide-react";
+import { BookOpen, Calendar, ArrowRight, Layers } from "lucide-react";
 
 interface PageProps {
   params: Promise<{
     exam: string;
-    year: string;
+    dimension: string;
     subject: string;
   }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { exam, year, subject } = await params;
-  const yearNum = parseInt(year, 10);
+  const { exam, dimension, subject } = await params;
+  const yearNum = parseInt(dimension, 10);
   if (isNaN(yearNum)) return {};
 
   const examDb = slugToExam(exam);
@@ -65,8 +65,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function ExamYearSubjectPyqPage({ params }: PageProps) {
-  const { exam, year, subject } = await params;
-  const yearNum = parseInt(year, 10);
+  const { exam, dimension, subject } = await params;
+  const yearNum = parseInt(dimension, 10);
   if (isNaN(yearNum)) {
     notFound();
   }

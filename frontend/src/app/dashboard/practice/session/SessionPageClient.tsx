@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import type { PracticeQuestion, PlayerMode, OptionKey } from "@/lib/practice-types";
@@ -16,6 +16,8 @@ interface SessionPageClientProps {
   cycle?: string;
   subject?: string;
   topic?: string;
+  subtopic?: string;
+  difficulty?: string;
 }
 
 // ─── Loading skeleton ─────────────────────────────────────────────────────────
@@ -73,30 +75,6 @@ function EmptyState() {
   );
 }
 
-// ─── Completed state ──────────────────────────────────────────────────────────
-
-function CompletedState({ total }: { total: number }) {
-  return (
-    <div className="flex flex-col items-center justify-center py-20 text-center">
-      <div className="mb-4 text-5xl">🎯</div>
-      <h2 className="text-2xl font-bold text-slate-900">Session Complete!</h2>
-      <p className="mt-2 text-slate-500">
-        You answered all {total} questions.
-      </p>
-      <p className="mt-1 text-xs text-slate-400">
-        Post-session analytics coming in the next milestone.
-      </p>
-      <Link
-        href="/dashboard/practice"
-        className="mt-6 inline-flex items-center gap-2 rounded-xl bg-black px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Back to Practice
-      </Link>
-    </div>
-  );
-}
-
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function SessionPageClient({
@@ -106,16 +84,22 @@ export default function SessionPageClient({
   cycle,
   subject,
   topic,
+  subtopic,
+  difficulty,
 }: SessionPageClientProps) {
   const [questions, setQuestions] = useState<PracticeQuestion[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [completed, setCompleted] = useState(false);
   const [answers, setAnswers] = useState<Record<string, OptionKey>>({});
-  const [startTime, setStartTime] = useState<number>(Date.now());
+  const startTimeRef = useRef<number>(0);
   const [timeSpentSeconds, setTimeSpentSeconds] = useState<number>(0);
 
+  useEffect(() => {
+    startTimeRef.current = Date.now();
+  }, []);
+
   // Build header label from filters
-  const filterLabel = [subject, topic].filter(Boolean).join(" › ") || exam || "Practice Session";
+  const filterLabel = [subject, topic, subtopic].filter(Boolean).join(" › ") || exam || "Practice Session";
 
   useEffect(() => {
     let cancelled = false;
@@ -124,11 +108,13 @@ export default function SessionPageClient({
       setLoading(true);
       try {
         const params = new URLSearchParams();
-        if (exam)    params.set("exam", exam);
-        if (year)    params.set("year", year);
-        if (cycle)   params.set("cycle", cycle);
-        if (subject) params.set("subject", subject);
-        if (topic)   params.set("topic", topic);
+        if (exam)       params.set("exam", exam);
+        if (year)       params.set("year", year);
+        if (cycle)      params.set("cycle", cycle);
+        if (subject)    params.set("subject", subject);
+        if (topic)      params.set("topic", topic);
+        if (subtopic)   params.set("subtopic", subtopic);
+        if (difficulty) params.set("difficulty", difficulty);
         // Request up to 100 questions per session
         params.set("limit", "100");
 
@@ -157,7 +143,7 @@ export default function SessionPageClient({
 
     void loadQuestions();
     return () => { cancelled = true; };
-  }, [exam, year, cycle, subject, topic]);
+  }, [exam, year, cycle, subject, topic, subtopic, difficulty]);
 
   return (
     <div>
@@ -189,7 +175,7 @@ export default function SessionPageClient({
           mode={mode}
           onComplete={(completedAnswers) => {
             setAnswers(completedAnswers);
-            setTimeSpentSeconds(Math.max(1, Math.round((Date.now() - startTime) / 1000)));
+            setTimeSpentSeconds(Math.max(1, Math.round((Date.now() - (startTimeRef.current || Date.now())) / 1000)));
             setCompleted(true);
           }}
         />
@@ -203,7 +189,7 @@ export default function SessionPageClient({
           onRetake={() => {
             setCompleted(false);
             setAnswers({});
-            setStartTime(Date.now());
+            startTimeRef.current = Date.now();
           }}
         />
       )}

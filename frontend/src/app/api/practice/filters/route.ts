@@ -32,7 +32,7 @@ export async function GET() {
     const key = serviceRoleKey || anonKey;
     if (!key) {
       return NextResponse.json(
-        { exams: [], years: {}, cycles: {}, subjects: {} },
+        { exams: [], years: {}, cycles: {}, subjects: {}, subtopics: {}, difficulties: ["Easy", "Moderate", "Hard"] },
         { status: 200 }
       );
     }
@@ -40,10 +40,11 @@ export async function GET() {
     const supabase = createClient(supabaseUrl, key);
     const query = supabase
       .from("questions")
-      .select("exam,year,cycle,subject,topic");
+      .select("exam,year,cycle,subject,topic,subtopic")
+      .eq("is_active", true);
 
     const pageSize = 1000;
-    const rows: any[] = [];
+    const rows: Record<string, unknown>[] = [];
     let start = 0;
     while (true) {
       const { data: pageData, error: pageErr } = await query.range(
@@ -62,7 +63,7 @@ export async function GET() {
 
     if (rows.length === 0) {
       return NextResponse.json(
-        { exams: [], years: {}, cycles: {}, subjects: {} },
+        { exams: [], years: {}, cycles: {}, subjects: {}, subtopics: {}, difficulties: ["Easy", "Moderate", "Hard"] },
         { status: 200 }
       );
     }
@@ -71,6 +72,7 @@ export async function GET() {
     const yearsMap: Record<string, Set<number>> = {};
     const cyclesMap: Record<string, Set<string>> = {};
     const subjectsMap: Record<string, Record<string, Set<string>>> = {};
+    const subtopicsMap: Record<string, Record<string, Set<string>>> = {};
 
     for (const row of rows) {
       const exam = row.exam ? String(row.exam).trim() : null;
@@ -96,11 +98,18 @@ export async function GET() {
 
       const subject = row.subject ? String(row.subject).trim() : null;
       const topic = row.topic ? String(row.topic).trim() : null;
+      const subtopic = row.subtopic ? String(row.subtopic).trim() : null;
 
       if (subject && topic) {
         if (!subjectsMap[exam]) subjectsMap[exam] = {};
         if (!subjectsMap[exam][subject]) subjectsMap[exam][subject] = new Set();
         subjectsMap[exam][subject].add(topic);
+
+        if (subtopic) {
+          if (!subtopicsMap[subject]) subtopicsMap[subject] = {};
+          if (!subtopicsMap[subject][topic]) subtopicsMap[subject][topic] = new Set();
+          subtopicsMap[subject][topic].add(subtopic);
+        }
       }
     }
 
@@ -124,15 +133,26 @@ export async function GET() {
       }
     }
 
+    const formattedSubtopics: Record<string, Record<string, string[]>> = {};
+    for (const [sub, topMap] of Object.entries(subtopicsMap)) {
+      formattedSubtopics[sub] = {};
+      for (const [top, subtops] of Object.entries(topMap)) {
+        formattedSubtopics[sub][top] = Array.from(subtops).sort();
+      }
+    }
+
     return NextResponse.json({
       exams: sortedExams,
       years: formattedYears,
       cycles: formattedCycles,
       subjects: formattedSubjects,
+      subtopics: formattedSubtopics,
+      difficulties: ["Easy", "Moderate", "Hard"],
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to load practice filters";
     return NextResponse.json(
-      { error: err?.message || "Failed to load practice filters" },
+      { error: message },
       { status: 500 }
     );
   }

@@ -34,6 +34,14 @@ export default function QuestionCard({
         <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-500">
           {question.topic}
         </span>
+        {question.subtopic && (
+          <>
+            <span className="text-slate-300" aria-hidden="true">›</span>
+            <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-500">
+              {question.subtopic}
+            </span>
+          </>
+        )}
         <span className="ml-auto text-xs text-slate-400">
           Q{questionNumber} · {question.exam} {question.year}
         </span>
