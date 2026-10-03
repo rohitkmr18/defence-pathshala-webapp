@@ -39,9 +39,9 @@ export async function GET() {
 
     const supabase = createClient(supabaseUrl, key);
     const query = supabase
-      .from("questions")
+      .from("v_dp_question_intelligence_v2")
       .select("exam,year,cycle,subject,topic,subtopic")
-      .eq("is_active", true);
+      ;
 
     const pageSize = 1000;
     const rows: Record<string, unknown>[] = [];
