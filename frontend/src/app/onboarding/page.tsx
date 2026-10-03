@@ -2,7 +2,6 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 
 const EXAMS = [
   { id: "CDS", label: "CDS" },
@@ -14,8 +13,6 @@ const EXAMS = [
 const YEARS = ["2026", "2027", "2028", "2029", "2030", "2031", "2032"];
 
 export default function OnboardingPage() {
-  const router = useRouter();
-
   const [step, setStep] = useState(1);
   const [fullName, setFullName] = useState("");
   const [selectedExams, setSelectedExams] = useState<string[]>([]);
@@ -23,12 +20,15 @@ export default function OnboardingPage() {
 
   const [loading, setLoading] = useState(false);
   const [completed, setCompleted] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   const progress = useMemo(() => (step / 3) * 100, [step]);
 
   async function finishSetup() {
     try {
+      if (loading) return;
       setLoading(true);
+      setSaveError(null);
 
       const response = await fetch("/api/profile", {
         method: "PATCH",
@@ -42,19 +42,21 @@ export default function OnboardingPage() {
         }),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to save profile.");
+      const result = await response.json();
+      if (!response.ok || result.onboarding_completed !== true) {
+        throw new Error(result.error || "Your setup was not saved. Please retry.");
       }
 
       setCompleted(true);
 
       setTimeout(() => {
-        router.push("/dashboard");
-        router.refresh();
+        // Start a fresh request so a previously prefetched dashboard redirect
+        // cannot send a successfully onboarded user back to step 1.
+        window.location.replace("/dashboard");
       }, 1000);
     } catch (error) {
       console.error(error);
-      alert("Failed to save your onboarding.");
+      setSaveError(error instanceof Error ? error.message : "Your setup was not saved. Please retry.");
     } finally {
       setLoading(false);
     }
@@ -63,6 +65,8 @@ export default function OnboardingPage() {
   function nextStep() {
     if (step === 1 && fullName.trim() === "") return;
     if (step === 2 && selectedExams.length === 0) return;
+
+    if (loading || (step === 3 && !targetYear)) return;
 
     if (step === 3) {
       finishSetup();
@@ -89,7 +93,7 @@ export default function OnboardingPage() {
           </div>
 
           <h1 className="mt-8 text-3xl font-bold">
-            You're all set.
+            You&apos;re all set.
           </h1>
 
           <p className="mt-4 text-gray-600 leading-7">
@@ -149,11 +153,11 @@ export default function OnboardingPage() {
               <section className="space-y-8">
                 <div>
                   <h1 className="text-4xl md:text-5xl font-bold tracking-tight leading-tight">
-                    Let's personalize your preparation.
+                    Let&apos;s personalize your preparation.
                   </h1>
 
                   <p className="mt-5 text-lg text-gray-600 leading-8">
-                    We'll build a preparation system tailored to your target
+                    We&apos;ll build a preparation system tailored to your target
                     exams, revision gaps, and PYQ performance.
                   </p>
                 </div>
@@ -257,7 +261,7 @@ export default function OnboardingPage() {
                 </h1>
 
                 <p className="mt-4 text-lg text-gray-600">
-                  We'll personalize your roadmap based on your target cycle.
+                  We&apos;ll personalize your roadmap based on your target cycle.
                 </p>
 
                 <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -294,6 +298,12 @@ export default function OnboardingPage() {
 
           </motion.div>
         </AnimatePresence>
+
+        {saveError && (
+          <p role="alert" className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+            {saveError}
+          </p>
+        )}
 
         {/* Navigation */}
         <div className="mt-14 flex items-center justify-between">
