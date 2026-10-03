@@ -16,7 +16,7 @@ def overview():
     try:
         # One fetch from Supabase
         response = (
-            supabase.table("questions")
+            supabase.table("v_dp_question_intelligence_v2")
             .select("exam,year,subject,difficulty_category", count="exact")
             .execute()
         )
@@ -50,7 +50,7 @@ def overview():
 def dashboard():
     try:
         response = (
-            supabase.table("questions")
+            supabase.table("v_dp_question_intelligence_v2")
             .select("exam,year,subject", count="exact")
             .execute()
         )
@@ -83,7 +83,7 @@ def question_bank(
     cycle: Optional[str] = None,
 ):
     try:
-        query = supabase.table("questions").select(
+        query = supabase.table("v_dp_question_intelligence_v2").select(
             "exam,year,cycle,subject,topic,q_type,q_pattern,difficulty_category"
         )
 
@@ -233,7 +233,7 @@ def question_bank_meta():
 
         while True:
             response = (
-                supabase.table("questions")
+                supabase.table("v_dp_question_intelligence_v2")
                 .select("exam,year,cycle")
                 .range(start, start + page_size - 1)
                 .execute()
@@ -288,7 +288,7 @@ def question_bank_meta():
 def subjects():
     try:
         response = (
-            supabase.table("questions")
+            supabase.table("v_dp_question_intelligence_v2")
             .select("subject")
             .execute()
         )
@@ -316,7 +316,7 @@ def subjects():
 @router.get("/debug/questions")
 def debug_questions():
     response = (
-        supabase.table("questions")
+        supabase.table("v_dp_question_intelligence_v2")
         .select("exam,year,cycle")
         .limit(20)
         .execute()
@@ -327,7 +327,7 @@ def debug_questions():
 @router.get("/debug/exams")
 def debug_exams():
     response = (
-        supabase.table("questions")
+        supabase.table("v_dp_question_intelligence_v2")
         .select("exam,year")
         .execute()
     )
