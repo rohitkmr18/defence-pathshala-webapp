@@ -24,7 +24,8 @@ function loadRoute(path, dependencies, env = {}) {
       SUPABASE_SERVICE_ROLE_KEY: "offline-test-only", ...env,
     } },
     console: { error: (...args) => errors.push(args), warn: () => {} },
-    Date, Math, Number, String, Set, URL, URLSearchParams,
+    Date, Math, Number, String, Set, URL, URLSearchParams, AbortSignal,
+    fetch: dependencies.fetch || (() => { throw new Error("Unexpected offline network call"); }),
     require: (name) => {
       if (name === "next/server") return { NextResponse: responseApi };
       if (name === "@/lib/auth-navigation") return { safeAuthNext: value => value && value.startsWith("/") && !value.startsWith("//") && !value.includes("\\") ? value : "/dashboard" };
@@ -219,4 +220,37 @@ test("canonical count failure cannot fall back to master eligibility", async () 
   const res = await route.GET(request({}, "/api/practice/count"));
   assert.equal(res.status, 503);
   assert.deepEqual(db.calls.map((c) => c.table), ["v_dp_question_intelligence_v2"]);
+});
+
+
+test('admin proxies forward the authenticated administrator bearer and never shared keys', async () => {
+  const calls = [];
+  const deps = {
+    '@/lib/admin': { checkIsAdmin: async () => ({ isAdmin: true }) },
+    '@/lib/supabase/server': { createClient: async () => ({ auth: { getSession: async () => ({ data: { session: { access_token: 'offline-admin-session' } } }) } }) },
+    '@/lib/backend-config': { requireBackendUrl: () => 'https://offline-backend.invalid' },
+    fetch: async (url, options) => { calls.push({ url, options }); return { ok: true, json: async () => ({ success: true }) }; },
+  };
+  const stats = loadRoute('../app/api/admin/sync-stats/route.ts', deps, { ADMIN_API_KEY: 'offline-legacy-key' });
+  const sync = loadRoute('../app/api/admin/sync-dataset/route.ts', deps, { ADMIN_API_KEY: 'offline-legacy-key' });
+  assert.equal((await stats.GET(new Request('https://preview.example/api/admin/sync-stats'))).status, 200);
+  assert.equal((await sync.POST(new Request('https://preview.example/api/admin/sync-dataset?dry_run=true'))).status, 200);
+  for (const call of calls) {
+    assert.equal(call.options.headers.Authorization, 'Bearer offline-admin-session');
+    assert.equal(call.options.headers['X-Admin-Key'], undefined);
+  }
+  assert.ok(calls[1].url.includes('dry_run=true'));
+});
+
+test('admin proxies deny learners and expired sessions before contacting the backend', async () => {
+  let isAdmin = false;
+  const deps = {
+    '@/lib/admin': { checkIsAdmin: async () => ({ isAdmin }) },
+    '@/lib/supabase/server': { createClient: async () => ({ auth: { getSession: async () => ({ data: { session: null } }) } }) },
+    '@/lib/backend-config': { requireBackendUrl: () => { throw new Error('Backend must not be contacted'); } },
+  };
+  const routes = [['sync-stats', 'GET'], ['sync-dataset', 'POST']].map(([name, method]) => [loadRoute('../app/api/admin/'+name+'/route.ts', deps), method]);
+  for (const [route, method] of routes) assert.equal((await route[method](new Request('https://preview.example/api/admin/test'))).status, 403);
+  isAdmin = true;
+  for (const [route, method] of routes) assert.equal((await route[method](new Request('https://preview.example/api/admin/test'))).status, 401);
 });
