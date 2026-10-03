@@ -1,8 +1,8 @@
+import { requireBackendUrl } from "@/lib/backend-config";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
-const BACKEND_URL =
-  process.env.BACKEND_URL ?? "http://127.0.0.1:8000";
+
 
 export async function GET() {
   const supabase = await createClient();
@@ -19,17 +19,15 @@ export async function GET() {
   }
 
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 2000);
+    const signal = AbortSignal.timeout(2000);
 
-    const response = await fetch(`${BACKEND_URL}/profile`, {
+    const response = await fetch(`${requireBackendUrl()}/profile`, {
       headers: {
         Authorization: `Bearer ${session.access_token}`,
       },
       cache: "no-store",
-      signal: controller.signal,
+      signal,
     });
-    clearTimeout(timeoutId);
 
     if (response.ok) {
       const data = await response.json();
@@ -58,7 +56,7 @@ export async function GET() {
     full_name: profileRow?.full_name || session.user.email?.split("@")[0] || "Aspirant",
     target_year: profileRow?.target_year || null,
     onboarding_completed: profileRow?.onboarding_completed ?? false,
-    target_exams: (examsData || []).map((item: any) => item.exam),
+    target_exams: (examsData || []).map((item) => item.exam),
   });
 }
 
@@ -79,19 +77,17 @@ export async function PATCH(request: NextRequest) {
   const body = await request.json();
 
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 2000);
+    const signal = AbortSignal.timeout(2000);
 
-    const response = await fetch(`${BACKEND_URL}/profile`, {
+    const response = await fetch(`${requireBackendUrl()}/profile`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${session.access_token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
-      signal: controller.signal,
+      signal,
     });
-    clearTimeout(timeoutId);
 
     if (response.ok) {
       const data = await response.json();
@@ -106,7 +102,7 @@ export async function PATCH(request: NextRequest) {
   // Direct Supabase fallback
   const { full_name, target_year, target_exams } = body;
 
-  const profileUpdates: Record<string, any> = {
+  const profileUpdates: Record<string, unknown> = {
     id: session.user.id,
     onboarding_completed: true,
   };

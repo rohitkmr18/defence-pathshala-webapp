@@ -64,8 +64,7 @@ export default function DashboardSidebar({
 
   const isAdmin =
     user?.email?.toLowerCase() === "rohitcool423@gmail.com" ||
-    (user?.app_metadata as any)?.role === "admin" ||
-    (user?.user_metadata as any)?.role === "admin";
+    user?.app_metadata?.role === "admin";
 
   const items = isAdmin
     ? [

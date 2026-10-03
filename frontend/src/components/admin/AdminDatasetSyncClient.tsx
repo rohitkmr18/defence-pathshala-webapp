@@ -1,5 +1,7 @@
 "use client";
 
+import { errorMessage } from "@/lib/error-message";
+
 import { useEffect, useState, useCallback } from "react";
 import {
   Database,
@@ -49,8 +51,6 @@ interface AdminDatasetSyncClientProps {
   userEmail: string;
 }
 
-const BACKEND_API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
 async function getAuthHeaders(): Promise<Record<string, string>> {
   const headers: Record<string, string> = {
@@ -67,12 +67,6 @@ async function getAuthHeaders(): Promise<Record<string, string>> {
     }
   } catch {
     // ignore
-  }
-
-  const adminKey =
-    process.env.NEXT_PUBLIC_ADMIN_KEY || "dp_admin_key_2026_super_secret";
-  if (adminKey) {
-    headers["X-Admin-Key"] = adminKey;
   }
 
   return headers;
@@ -129,80 +123,35 @@ export default function AdminDatasetSyncClient({
     return () => clearTimeout(timer);
   }, [toast]);
 
-  const loadStats = useCallback(
-    async (showLoading = true) => {
-      if (showLoading) setStatsLoading(true);
+  const fetchStats = useCallback(async (signal?: AbortSignal): Promise<SyncStats> => {
+    const qs = `worksheet_name=${encodeURIComponent(worksheetName)}`;
+    const headers = await getAuthHeaders();
+    const res = await fetch(`/api/admin/sync-stats?${qs}`, { headers, cache: "no-store", signal });
+    if (!res.ok) throw new Error(await parseBackendError(res, "Failed to fetch dataset sync statistics"));
+    return res.json();
+  }, [worksheetName]);
 
-      const qs = `worksheet_name=${encodeURIComponent(worksheetName)}`;
-      const primaryUrl = `${BACKEND_API_URL}/admin/sync-stats?${qs}`;
-      const proxyUrl = `/api/admin/sync-stats?${qs}`;
+  const showStatsError = useCallback((err: unknown) => {
+    setToast({ type: "error", title: "Failed to Fetch Sheet Preview",
+      message: errorMessage(err, "Unable to connect to Google Sheets or calculate sync diff.") });
+  }, []);
 
-      try {
-        const headers = await getAuthHeaders();
-        let res: Response | null = null;
-        let lastNetworkError: any = null;
-
-        // 1. Try FastAPI backend directly
-        try {
-          res = await fetch(primaryUrl, {
-            headers,
-            cache: "no-store",
-          });
-        } catch (networkErr: any) {
-          lastNetworkError = networkErr;
-        }
-
-        // 2. If direct call failed or returned error, try Next.js proxy fallback
-        if (!res || !res.ok) {
-          try {
-            const fallbackRes = await fetch(proxyUrl, {
-              headers,
-              cache: "no-store",
-            });
-            if (fallbackRes.ok) {
-              res = fallbackRes;
-            } else if (!res) {
-              res = fallbackRes;
-            }
-          } catch {
-            // keep previous res or error
-          }
-        }
-
-        if (!res) {
-          throw new Error(
-            `Unable to connect to backend at ${BACKEND_API_URL}. Details: ${lastNetworkError?.message || "fetch failed"}`
-          );
-        }
-
-        if (!res.ok) {
-          const errDetail = await parseBackendError(
-            res,
-            "Failed to fetch dataset sync statistics"
-          );
-          throw new Error(errDetail);
-        }
-
-        const data: SyncStats = await res.json();
-        setStats(data);
-      } catch (err: any) {
-        setToast({
-          type: "error",
-          title: "Failed to Fetch Sheet Preview",
-          message:
-            err?.message ||
-            "Unable to connect to Google Sheets or calculate sync diff.",
-        });
-      } finally {
-        if (showLoading) setStatsLoading(false);
-      }
-    },
-    [worksheetName]
-  );
+  const loadStats = useCallback(async (showLoading = true) => {
+    if (showLoading) setStatsLoading(true);
+    try { setStats(await fetchStats()); }
+    catch (err) { showStatsError(err); }
+    finally { setStatsLoading(false); }
+  }, [fetchStats, showStatsError]);
 
   useEffect(() => {
-    loadStats();
-  }, [loadStats]);
+    const controller = new AbortController();
+    fetchStats(controller.signal).then(setStats).catch((err) => {
+      if (!controller.signal.aborted) showStatsError(err);
+    }).finally(() => {
+      if (!controller.signal.aborted) setStatsLoading(false);
+    });
+    return () => controller.abort();
+  }, [fetchStats, showStatsError]);
 
   async function handleSyncDataset() {
     setSyncLoading(true);
@@ -211,44 +160,11 @@ export default function AdminDatasetSyncClient({
     const qs = `worksheet_name=${encodeURIComponent(
       worksheetName
     )}&dry_run=${dryRun ? "true" : "false"}`;
-    const primaryUrl = `${BACKEND_API_URL}/admin/sync-dataset?${qs}`;
     const proxyUrl = `/api/admin/sync-dataset?${qs}`;
 
     try {
       const headers = await getAuthHeaders();
-      let res: Response | null = null;
-      let lastNetworkError: any = null;
-
-      // 1. Try FastAPI backend directly
-      try {
-        res = await fetch(primaryUrl, {
-          method: "POST",
-          headers,
-        });
-      } catch (networkErr: any) {
-        lastNetworkError = networkErr;
-      }
-
-      // 2. If direct network error or 5xx, try Next.js proxy
-      if (!res || res.status >= 500) {
-        try {
-          const fallbackRes = await fetch(proxyUrl, {
-            method: "POST",
-            headers,
-          });
-          if (fallbackRes.ok || !res) {
-            res = fallbackRes;
-          }
-        } catch {
-          // ignore proxy failure
-        }
-      }
-
-      if (!res) {
-        throw new Error(
-          `Unable to reach backend at ${BACKEND_API_URL}/admin/sync-dataset. Details: ${lastNetworkError?.message || "fetch failed"}`
-        );
-      }
+      const res = await fetch(proxyUrl, { method: "POST", headers });
 
       if (!res.ok) {
         const errDetail = await parseBackendError(
@@ -289,13 +205,12 @@ export default function AdminDatasetSyncClient({
 
       // Refresh numbers
       await loadStats(false);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setToast({
         type: "error",
         title: "Synchronization Error",
         message:
-          err?.message ||
-          "An unexpected error occurred while syncing with Supabase.",
+          errorMessage(err, "An unexpected error occurred while syncing with Supabase."),
       });
     } finally {
       setSyncLoading(false);

@@ -78,7 +78,9 @@ export default function PaperSelector({
     return availableYears[0] ?? 2026;
   }, [initialYear, availableYears, selectedPaper.year]);
 
-  const [selectedYear, setSelectedYear] = useState<number>(initialYearValue);
+  const [requestedYear, setSelectedYear] = useState<number>(initialYearValue);
+  const selectedYear = availableYears.includes(requestedYear)
+    ? requestedYear : availableYears[0] ?? requestedYear;
 
   // ── Derive unique cycles for selected exam & year (CDS only) ──────────────
   const availableCycles = useMemo(() => {
@@ -103,13 +105,6 @@ export default function PaperSelector({
   const [selectedCycle, setSelectedCycle] = useState<string>(
     selectedPaper.cycle || "II"
   );
-
-  // ── Sync year if selected year is not available for exam ──────────────────
-  useEffect(() => {
-    if (availableYears.length > 0 && !availableYears.includes(selectedYear)) {
-      setSelectedYear(availableYears[0]);
-    }
-  }, [availableYears, selectedYear]);
 
   // ── Derive final selected paper automatically ─────────────────────────────
   const activePaper = useMemo(() => {

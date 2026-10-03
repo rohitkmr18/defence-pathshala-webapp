@@ -97,11 +97,11 @@ export default function SubjectBarChart({
                   tickLine={false}
                   axisLine={{ stroke: "#E2E8F0" }}
                   interval={0}
-                  tick={({ x, y, payload }: any) => {
+                  tick={({ x, y, payload }: { x?: string | number; y?: string | number; payload?: { value: string } }) => {
                     const label =
-                      payload.value.length > 10
-                        ? `${payload.value.substring(0, 9)}…`
-                        : payload.value;
+                      (payload?.value ?? "").length > 10
+                        ? `${(payload?.value ?? "").substring(0, 9)}…`
+                        : (payload?.value ?? "");
                     return (
                       <g transform={`translate(${x},${y})`}>
                         <text
@@ -137,7 +137,7 @@ export default function SubjectBarChart({
                     fill="#475569"
                     fontSize={11}
                     fontWeight={700}
-                    formatter={(val: any) => `${val}`}
+                    formatter={(val: unknown) => `${val}`}
                   />
                   {sortedData.map((_, index) => (
                     <Cell

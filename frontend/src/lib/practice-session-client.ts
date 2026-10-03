@@ -86,7 +86,7 @@ export async function initializeSession(params: {
           });
         }
       })
-      .catch(() => {});
+      .catch((error) => { console.warn("Session remains local; cloud persistence failed:", error); });
   } catch {
     // Keep local session
   }
@@ -121,7 +121,7 @@ export async function recordQuestionAttempt(params: {
 
   // 2. Persist to Supabase backend API
   try {
-    await fetch("/api/practice/attempt", {
+    const response = await fetch("/api/practice/attempt", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -130,11 +130,12 @@ export async function recordQuestionAttempt(params: {
         is_correct: params.isCorrect,
         time_taken: params.timeTakenSeconds || 0,
         session_id: getLocalSession()?.id === params.sessionId
-          ? (getLocalSession()?.server_id || params.sessionId)
+          ? (getLocalSession()?.server_id || (params.sessionId?.startsWith("sess_") ? undefined : params.sessionId))
           : params.sessionId,
         mode: params.mode || "instant",
       }),
     });
+    if (!response.ok) throw new Error("Attempt persistence failed");
   } catch (err) {
     console.warn("Could not persist attempt to backend immediately:", err);
   }

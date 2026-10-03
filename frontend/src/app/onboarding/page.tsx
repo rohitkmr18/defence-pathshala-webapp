@@ -89,7 +89,7 @@ export default function OnboardingPage() {
           </div>
 
           <h1 className="mt-8 text-3xl font-bold">
-            You're all set.
+            You&apos;re all set.
           </h1>
 
           <p className="mt-4 text-gray-600 leading-7">
@@ -149,11 +149,11 @@ export default function OnboardingPage() {
               <section className="space-y-8">
                 <div>
                   <h1 className="text-4xl md:text-5xl font-bold tracking-tight leading-tight">
-                    Let's personalize your preparation.
+                    Let&apos;s personalize your preparation.
                   </h1>
 
                   <p className="mt-5 text-lg text-gray-600 leading-8">
-                    We'll build a preparation system tailored to your target
+                    We&apos;ll build a preparation system tailored to your target
                     exams, revision gaps, and PYQ performance.
                   </p>
                 </div>
@@ -257,7 +257,7 @@ export default function OnboardingPage() {
                 </h1>
 
                 <p className="mt-4 text-lg text-gray-600">
-                  We'll personalize your roadmap based on your target cycle.
+                  We&apos;ll personalize your roadmap based on your target cycle.
                 </p>
 
                 <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4">

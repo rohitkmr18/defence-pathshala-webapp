@@ -93,40 +93,14 @@ export interface TargetedPracticeQuery {
  * the canonical v2 read-model directly without inventing eligibility policies.
  */
 export function normalizeQuestion(raw: Record<string, unknown>): PracticeQuestion {
-  const isProductionEligible =
-    raw.production_eligible !== undefined
-      ? Boolean(raw.production_eligible)
-      : Boolean(
-          raw.is_active !== false &&
-            raw.question &&
-            raw.opt_a &&
-            raw.opt_b &&
-            raw.opt_c &&
-            raw.opt_d &&
-            raw.final_opt
-        );
-
-  const isIntelligenceEligible =
-    raw.intelligence_eligible !== undefined
-      ? Boolean(raw.intelligence_eligible)
-      : isProductionEligible;
-
-  const humanReviewRequired =
-    raw.human_review_required !== undefined
-      ? Boolean(raw.human_review_required)
-      : Boolean(raw.verified_status !== "Verified" || raw.key_discrepancy === true);
-
-  const isVerified =
-    raw.intelligence_verified !== undefined
-      ? Boolean(raw.intelligence_verified)
-      : Boolean(raw.verified_status === "Verified");
-
-  const confidence: "MODEL_DERIVED" | "HUMAN_VERIFIED" | string =
-    typeof raw.intelligence_confidence === "string" && raw.intelligence_confidence
-      ? (raw.intelligence_confidence as "MODEL_DERIVED" | "HUMAN_VERIFIED" | string)
-      : isVerified && !raw.key_discrepancy
-      ? "HUMAN_VERIFIED"
-      : "MODEL_DERIVED";
+  // Eligibility and review provenance belong to the canonical release.
+  // Missing contract fields fail closed; question text/answer availability is not eligibility.
+  const isProductionEligible = raw.production_eligible === true;
+  const isIntelligenceEligible = raw.intelligence_eligible === true;
+  const humanReviewRequired = raw.human_review_required !== false;
+  const isVerified = raw.intelligence_verified === true;
+  const confidence = typeof raw.intelligence_confidence === "string" && raw.intelligence_confidence
+    ? raw.intelligence_confidence : "MODEL_DERIVED";
 
   return {
     id: String(raw.id),

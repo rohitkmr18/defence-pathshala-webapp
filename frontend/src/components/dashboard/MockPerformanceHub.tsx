@@ -1,5 +1,6 @@
 "use client";
 
+import { useHydrated } from "@/lib/use-hydrated";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Award, ArrowRight, Play, Sparkles } from "lucide-react";
@@ -13,7 +14,7 @@ import WeakAreasCard from "./WeakAreasCard";
 import AccuracyCard from "./AccuracyCard";
 
 export default function MockPerformanceHub() {
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const [snapshot, setSnapshot] = useState<DashboardPreparationSnapshot>({
     mocksCompleted: 0,
     totalQuestionsAttempted: 0,
@@ -31,8 +32,8 @@ export default function MockPerformanceHub() {
   };
 
   useEffect(() => {
-    setMounted(true);
-    refreshSnapshot();
+    // Read browser storage after hydration, then subscribe to external changes.
+    const frame = requestAnimationFrame(refreshSnapshot);
 
     const handleUpdate = () => {
       refreshSnapshot();
@@ -42,6 +43,7 @@ export default function MockPerformanceHub() {
     window.addEventListener("storage", handleUpdate);
 
     return () => {
+      cancelAnimationFrame(frame);
       window.removeEventListener(MOCK_SAVED_EVENT, handleUpdate);
       window.removeEventListener("storage", handleUpdate);
     };

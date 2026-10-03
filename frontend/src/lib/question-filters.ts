@@ -64,13 +64,17 @@ export function parseNumberListParam(value: string | string[] | null | undefined
 /**
  * Parses URLSearchParams or Next.js SearchParams object into canonical QuestionSetFilters.
  */
+function parseMode(value: unknown): QuestionSetFilters["mode"] {
+  return value === "instant" || value === "attempt" || value === "full_paper" ? value : undefined;
+}
+
 export function parseFiltersFromSearchParams(
   params:
     | URLSearchParams
     | { get: (k: string) => string | null }
     | Record<string, string | string[] | undefined>
 ): QuestionSetFilters {
-  if (params instanceof URLSearchParams || (typeof (params as any)?.get === "function")) {
+  if (params instanceof URLSearchParams || ("get" in params && typeof params.get === "function")) {
     const getter = params as { get: (k: string) => string | null };
     return {
       exams: parseListParam(getter.get("exam") || getter.get("exams")),
@@ -82,7 +86,7 @@ export function parseFiltersFromSearchParams(
       difficulties: parseListParam(getter.get("difficulty") || getter.get("difficulties")),
       intelligenceOnly: getter.get("intelligence_only") === "true",
       limit: getter.get("limit") ? parseInt(getter.get("limit")!, 10) : undefined,
-      mode: (getter.get("mode") as any) || undefined,
+      mode: parseMode(getter.get("mode")),
       returnTo: getter.get("returnTo") || undefined,
     };
   }
@@ -98,7 +102,7 @@ export function parseFiltersFromSearchParams(
     difficulties: parseListParam(record.difficulty || record.difficulties),
     intelligenceOnly: record.intelligence_only === "true" || record.intelligenceOnly === "true",
     limit: record.limit ? parseInt(String(record.limit), 10) : undefined,
-    mode: (record.mode as any) || undefined,
+    mode: parseMode(record.mode),
     returnTo: typeof record.returnTo === "string" ? record.returnTo : undefined,
   };
 }

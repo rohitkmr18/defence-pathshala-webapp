@@ -47,8 +47,8 @@ export async function getQuestionBankMeta(): Promise<QuestionBankMeta> {
         `[QuestionBank] Backend /analytics/question-bank/meta returned HTTP ${response.status}`
       );
     }
-  } catch (backendErr: any) {
-    if (backendErr?.digest === "DYNAMIC_SERVER_USAGE") {
+  } catch (backendErr: unknown) {
+    if (backendErr && typeof backendErr === "object" && "digest" in backendErr && backendErr.digest === "DYNAMIC_SERVER_USAGE") {
       throw backendErr;
     }
     console.warn(
@@ -70,11 +70,11 @@ export async function getQuestionBankMeta(): Promise<QuestionBankMeta> {
 
     const supabase = createSupabaseClient(supabaseUrl, key);
     const query = supabase
-      .from("questions")
+      .from("v_dp_question_intelligence_v2")
       .select("exam,year,cycle");
 
     const pageSize = 1000;
-    const rows: any[] = [];
+    const rows: { exam: string | null; year: number | null; cycle: string | null }[] = [];
     let start = 0;
     while (true) {
       const { data: pageData, error: pageErr } = await query.range(

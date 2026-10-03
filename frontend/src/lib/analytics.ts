@@ -1,6 +1,7 @@
+import { requireBackendUrl } from "@/lib/backend-config";
 import { createClient } from "@/lib/supabase/server";
 
-const BACKEND_URL = process.env.BACKEND_URL || "http://127.0.0.1:8000";
+
 
 export interface DashboardSnapshot {
   question_bank: number;
@@ -24,7 +25,7 @@ export async function getAnalytics(): Promise<DashboardSnapshot> {
     throw new Error("Unauthorized");
   }
 
-  const response = await fetch(`${BACKEND_URL}/analytics/dashboard`, {
+  const response = await fetch(`${requireBackendUrl()}/analytics/dashboard`, {
     headers: {
       Authorization: `Bearer ${session.access_token}`,
     },
@@ -55,7 +56,7 @@ export async function getSubjectAnalytics(): Promise<SubjectAnalytics[]> {
   }
 
   const response = await fetch(
-    `${BACKEND_URL}/analytics/subjects`,
+    `${requireBackendUrl()}/analytics/subjects`,
     {
       headers: {
         Authorization: `Bearer ${session.access_token}`,

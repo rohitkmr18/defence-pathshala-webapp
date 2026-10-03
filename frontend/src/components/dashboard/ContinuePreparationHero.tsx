@@ -54,13 +54,13 @@ export default function ContinuePreparationHero({
   const [year, setYear] = useState<number | null | undefined>(targetYear);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  // Sync props if parent updates
-  useEffect(() => {
-    if (targetExams && targetExams.length > 0) {
-      setExams(targetExams);
-    }
+  const targetsKey = targetExams.join(",");
+  const [previousTargets, setPreviousTargets] = useState({ key: targetsKey, year: targetYear });
+  if (previousTargets.key !== targetsKey || previousTargets.year !== targetYear) {
+    setPreviousTargets({ key: targetsKey, year: targetYear });
+    setExams(targetExams.length > 0 ? targetExams : exam ? [exam] : []);
     setYear(targetYear);
-  }, [targetExams, targetYear]);
+  }
 
   // Sync live session, attempts & target updates
   useEffect(() => {

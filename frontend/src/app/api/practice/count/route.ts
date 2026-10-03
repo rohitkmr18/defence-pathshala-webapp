@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
   // 2. Direct Supabase query fallback
   try {
     if (!serviceRoleKey) {
-      return NextResponse.json({ count: 0 }, { status: 200 });
+      return NextResponse.json({ error: "Practice data service unavailable" }, { status: 503 });
     }
 
     const supabase = createClient(supabaseUrl, serviceRoleKey);
@@ -84,62 +84,12 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    let { count, error } = await query;
-
-    if (error) {
-      let fallbackQuery = supabase
-        .from("questions")
-        .select("id", { count: "exact", head: true })
-        .eq("is_active", true);
-
-      if (specificIds.length > 0) {
-        fallbackQuery = fallbackQuery.in("id", specificIds);
-      } else {
-        if (filters.exams.length > 0) {
-          const expandedExams = Array.from(
-            new Set(filters.exams.flatMap((ex) => expandExamQuery(ex)))
-          );
-          if (expandedExams.length > 0) {
-            fallbackQuery = fallbackQuery.in("exam", expandedExams);
-          }
-        }
-        if (filters.years.length > 0) {
-          fallbackQuery = fallbackQuery.in("year", filters.years);
-        }
-        if (filters.cycles.length > 0) {
-          if (filters.cycles.includes("I")) {
-            fallbackQuery = fallbackQuery.or(`cycle.in.(${filters.cycles.join(",")}),cycle.is.null`);
-          } else {
-            fallbackQuery = fallbackQuery.in("cycle", filters.cycles);
-          }
-        }
-        if (filters.subjects.length > 0) {
-          fallbackQuery = fallbackQuery.in("subject", filters.subjects);
-        }
-        if (filters.topics.length > 0) {
-          fallbackQuery = fallbackQuery.in("topic", filters.topics);
-        }
-        if (filters.subtopics.length > 0) {
-          fallbackQuery = fallbackQuery.in("subtopic", filters.subtopics);
-        }
-        if (filters.difficulties.length > 0) {
-          fallbackQuery = fallbackQuery.in("difficulty_category", filters.difficulties);
-        }
-      }
-
-      const res = await fallbackQuery;
-      count = res.count;
-      error = res.error;
-    }
-
-    if (error) {
-      console.error("Supabase count query error:", error);
-      return NextResponse.json({ count: 0 }, { status: 200 });
-    }
+    const { count, error } = await query;
+    if (error) return NextResponse.json({ error: "Canonical practice count failed" }, { status: 503 });
 
     return NextResponse.json({ count: count || 0 }, { status: 200 });
   } catch (err) {
     console.error("Failed to fetch count:", err);
-    return NextResponse.json({ count: 0 }, { status: 200 });
+    return NextResponse.json({ error: "Practice count failed" }, { status: 503 });
   }
 }

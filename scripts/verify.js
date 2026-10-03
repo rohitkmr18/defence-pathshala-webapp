@@ -24,8 +24,8 @@ if (frontend.status !== 0) {
   process.exit(frontend.status || 1);
 }
 
-// 2. Backend import verification
-console.log("\x1b[36m%s\x1b[0m", "[verify] 2/2 Verifying backend import (app.main)...");
+// 2. Backend offline test verification
+console.log("\x1b[36m%s\x1b[0m", "[verify] 2/2 Verifying backend routes and imports offline...");
 
 const venvPythonWin = path.resolve(backendDir, ".venv", "Scripts", "python.exe");
 const venvPythonPosix = path.resolve(backendDir, ".venv", "bin", "python");
@@ -39,22 +39,19 @@ if (isWindows && fs.existsSync(venvPythonWin)) {
 
 const backend = spawnSync(
   pythonCmd,
-  ["-c", "import app.main; print('[verify] Backend app.main imported successfully.')"],
+  ["-m", "pytest", "tests", "-q"],
   {
     cwd: backendDir,
     stdio: "inherit",
     env: {
       ...process.env,
       PYTHONPATH: backendDir,
-      SUPABASE_URL: process.env.SUPABASE_URL || "https://placeholder.supabase.co",
-      SUPABASE_JWT_SECRET: process.env.SUPABASE_JWT_SECRET || "placeholder-jwt-secret-placeholder-32-chars",
-      SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY || "placeholder-service-role-key",
     },
   }
 );
 
 if (backend.status !== 0) {
-  console.error("\x1b[31m%s\x1b[0m", "[verify] Backend import verification failed!");
+  console.error("\x1b[31m%s\x1b[0m", "[verify] Backend offline test verification failed!");
   process.exit(backend.status || 1);
 }
 

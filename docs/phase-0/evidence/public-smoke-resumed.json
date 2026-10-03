@@ -1,0 +1,89 @@
+[
+  {
+    "path": "/",
+    "status": 200,
+    "seconds": 8.167,
+    "final_url": "https://www.defencepathshala.in/",
+    "canonical": "https://www.defencepathshala.in",
+    "passed": true
+  },
+  {
+    "path": "/auth/login",
+    "status": 200,
+    "seconds": 8.393,
+    "final_url": "https://www.defencepathshala.in/auth/login",
+    "passed": true
+  },
+  {
+    "path": "/pyqs/cds",
+    "status": 200,
+    "seconds": 10.479,
+    "final_url": "https://www.defencepathshala.in/pyqs/cds",
+    "canonical": "https://www.defencepathshala.in/pyqs/cds",
+    "passed": true
+  },
+  {
+    "path": "/pyqs/capf",
+    "status": 200,
+    "seconds": 9.623,
+    "final_url": "https://www.defencepathshala.in/pyqs/capf",
+    "canonical": "https://www.defencepathshala.in/pyqs/capf",
+    "passed": true
+  },
+  {
+    "path": "/dashboard/question-bank",
+    "status": 200,
+    "seconds": 12.729,
+    "final_url": "https://www.defencepathshala.in/dashboard/question-bank",
+    "passed": true
+  },
+  {
+    "path": "/dashboard/practice?exam=CDS",
+    "status": 200,
+    "seconds": 10.597,
+    "final_url": "https://www.defencepathshala.in/dashboard/practice?exam=CDS",
+    "passed": true
+  },
+  {
+    "path": "/dashboard/practice/full-paper",
+    "status": 200,
+    "seconds": 10.201,
+    "final_url": "https://www.defencepathshala.in/dashboard/practice/full-paper",
+    "passed": true
+  },
+  {
+    "path": "/api/question-bank/meta",
+    "status": 200,
+    "seconds": 12.675,
+    "final_url": "https://www.defencepathshala.in/api/question-bank/meta",
+    "passed": true
+  },
+  {
+    "path": "/api/practice/filters",
+    "status": 200,
+    "seconds": 11.659,
+    "final_url": "https://www.defencepathshala.in/api/practice/filters",
+    "passed": true
+  },
+  {
+    "path": "/api/practice/count?exam=CDS",
+    "status": 200,
+    "seconds": 10.896,
+    "final_url": "https://www.defencepathshala.in/api/practice/count?exam=CDS",
+    "passed": true
+  },
+  {
+    "path": "/api/practice/questions?exam=CDS&limit=1",
+    "status": 200,
+    "seconds": 9.381,
+    "final_url": "https://www.defencepathshala.in/api/practice/questions?exam=CDS&limit=1",
+    "passed": true
+  },
+  {
+    "path": "/auth/callback",
+    "status": 200,
+    "seconds": 17.884,
+    "final_url": "https://www.defencepathshala.in/dashboard",
+    "passed": true
+  }
+]

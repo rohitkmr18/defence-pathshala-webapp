@@ -110,6 +110,11 @@ test("normalizeQuestion does NOT use verified_status as eligibility substitute",
     opt_c: "Middle",
     opt_d: "None",
     final_opt: "A",
+    production_eligible: true,
+    intelligence_eligible: true,
+    human_review_required: true,
+    intelligence_verified: false,
+    intelligence_confidence: "MODEL_DERIVED",
     verified_status: "Draft",
     key_discrepancy: false,
     explanation: "Derived explanation",
@@ -139,6 +144,11 @@ test("normalizeQuestion assigns HUMAN_VERIFIED confidence when verified and no d
     opt_c: "C",
     opt_d: "D",
     final_opt: "B",
+    production_eligible: true,
+    intelligence_eligible: true,
+    human_review_required: false,
+    intelligence_verified: true,
+    intelligence_confidence: "HUMAN_VERIFIED",
     verified_status: "Verified",
     key_discrepancy: false,
     explanation: "Official explanation",
@@ -242,3 +252,13 @@ test("Filter Equivalence Combination 7: multi-exam + multi-year combination", ()
   assert.deepEqual(reconstructed.difficulties, ["Moderate", "Hard"]);
 });
 
+
+
+test("missing canonical contract never invents eligibility or human verification", () => {
+ const q = normalizeQuestion({ id: 'missing-contract', question: 'Text', final_opt: 'A',
+   opt_a: 'A', opt_b: 'B', opt_c: 'C', opt_d: 'D', verified_status: 'Verified' });
+ assert.equal(q.production_eligible, false);
+ assert.equal(q.intelligence_eligible, false);
+ assert.equal(q.intelligence_verified, false);
+ assert.equal(q.intelligence_confidence, 'MODEL_DERIVED');
+});

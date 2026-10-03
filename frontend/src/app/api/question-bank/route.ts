@@ -1,3 +1,5 @@
+
+import { errorMessage } from "@/lib/error-message";
 import { NextRequest, NextResponse } from "next/server";
 import { backendGET } from "@/lib/backend";
 import { createClient } from "@supabase/supabase-js";
@@ -12,13 +14,9 @@ const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 export async function GET(request: NextRequest) {
   // 1. Try FastAPI backend first
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 1500);
-
     const response = await backendGET(
       `/analytics/question-bank${request.nextUrl.search}`
     );
-    clearTimeout(timeoutId);
 
     if (response.ok) {
       const data = await response.json();
@@ -55,7 +53,7 @@ export async function GET(request: NextRequest) {
     const cycleParam = searchParams.get("cycle");
 
     let query = supabase
-      .from("questions")
+      .from("v_dp_question_intelligence_v2")
       .select("exam,year,cycle,subject,topic,q_type,q_pattern,difficulty_category");
     if (examParam) {
       const expanded = expandExamQuery(examParam);
@@ -87,7 +85,7 @@ export async function GET(request: NextRequest) {
 
     // Paginate to fetch all matching rows (handling PostgREST 1000-row limit)
     const pageSize = 1000;
-    const rows: any[] = [];
+    const rows: { subject: string | null; topic: string | null; difficulty_category: string | null; q_pattern: string | null; q_type: string | null }[] = [];
     let start = 0;
     while (true) {
       const { data: pageData, error: pageErr } = await query.range(
@@ -95,8 +93,7 @@ export async function GET(request: NextRequest) {
         start + pageSize - 1
       );
       if (pageErr) {
-        console.error("Supabase question bank page query error:", pageErr);
-        break;
+        throw new Error("Question bank query failed");
       }
       if (!pageData || pageData.length === 0) break;
       rows.push(...pageData);
@@ -228,9 +225,9 @@ export async function GET(request: NextRequest) {
       subjectTopics,
       subjectAnalytics,
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
     return NextResponse.json(
-      { error: err?.message || "Failed to load question bank data" },
+      { error: errorMessage(err, "Failed to load question bank data") },
       { status: 500 }
     );
   }

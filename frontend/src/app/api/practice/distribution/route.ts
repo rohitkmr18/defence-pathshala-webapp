@@ -3,6 +3,8 @@ import { backendGET } from "@/lib/backend";
 import { createClient } from "@supabase/supabase-js";
 import { expandExamQuery, getExamLabel } from "@/lib/exams";
 
+type DistributionRow = { id: string; question_id: string | null; exam: string; year: number | null; cycle: string | null };
+
 const supabaseUrl =
   process.env.NEXT_PUBLIC_SUPABASE_URL || "https://afhwegrxnvgsqbqadvwr.supabase.co";
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -28,8 +30,8 @@ export async function GET(request: NextRequest) {
   try {
     if (!serviceRoleKey) {
       return NextResponse.json(
-        { distribution: [], group_by: "year" },
-        { status: 200 }
+        { error: "Practice data service unavailable" },
+        { status: 503 }
       );
     }
 
@@ -46,7 +48,7 @@ export async function GET(request: NextRequest) {
     const topic = searchParams.get("topic");
 
     let query = supabase
-      .from("questions")
+      .from("v_dp_question_intelligence_v2")
       .select("id, question_id, exam, year, cycle");
 
     if (exam) {
@@ -88,7 +90,7 @@ export async function GET(request: NextRequest) {
 
     // Paginate to fetch all matching rows (handling PostgREST 1000-row limit)
     const pageSize = 1000;
-    const allRawRows: any[] = [];
+    const allRawRows: DistributionRow[] = [];
     let start = 0;
     while (true) {
       const { data: pageData, error: pageErr } = await query.range(
@@ -96,8 +98,7 @@ export async function GET(request: NextRequest) {
         start + pageSize - 1
       );
       if (pageErr) {
-        console.error("Supabase distribution page query error:", pageErr);
-        break;
+        throw new Error("Practice distribution query failed");
       }
       const batch = pageData || [];
       allRawRows.push(...batch);
@@ -109,7 +110,7 @@ export async function GET(request: NextRequest) {
 
     // Deduplicate rows by question_id / id to prevent double counting
     const seenQuestionIds = new Set<string>();
-    const dedupedRows: any[] = [];
+    const dedupedRows: DistributionRow[] = [];
     for (const r of allRawRows) {
       const qid = String(r.question_id || r.id || "");
       if (qid) {
@@ -127,7 +128,7 @@ export async function GET(request: NextRequest) {
           .filter(Boolean)
       : [];
 
-    const getEffectiveCycle = (r: any): string => {
+    const getEffectiveCycle = (r: DistributionRow): string => {
       if (r.cycle) return String(r.cycle).trim();
       const examName = String(r.exam || "").toUpperCase();
       if (examName.includes("CAPF")) return "I";
@@ -255,8 +256,8 @@ export async function GET(request: NextRequest) {
   } catch (err) {
     console.error("Failed to fetch distribution:", err);
     return NextResponse.json(
-      { distribution: [], group_by: "year" },
-      { status: 200 }
+      { error: "Practice distribution query failed" },
+      { status: 503 }
     );
   }
 }

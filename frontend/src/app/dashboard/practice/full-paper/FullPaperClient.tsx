@@ -63,58 +63,64 @@ export default function FullPaperClient({
   const [timeRemaining, setTimeRemaining] = useState(selectedPaper.durationSeconds);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Fetch questions for the selected exam paper from Supabase
-  const loadPaperQuestions = useCallback(async (paper: FullPaperDefinition) => {
-    setLoading(true);
-    setAnswers({});
-    setMarkedForReview(new Set());
-    setVisited(new Set());
-    setCurrentIndex(0);
-    setTimeRemaining(paper.durationSeconds);
-    setIsSubmitted(false);
-
-    try {
-      const params = new URLSearchParams();
-      params.set("exam", paper.exam);
-      params.set("year", paper.year.toString());
-      if (paper.cycle) {
-        params.set("cycle", paper.cycle);
-      }
-      params.set("limit", "150"); // Full paper capacity
-
-      const res = await fetch(`/api/practice/questions?${params.toString()}`, {
-        cache: "no-store",
-      });
-
-      if (res.ok) {
-        const data = (await res.json()) as { questions: PracticeQuestion[] };
-        const fetchedQuestions = data.questions || [];
-        setQuestions(fetchedQuestions);
-        if (fetchedQuestions.length > 0 && fetchedQuestions[0]) {
-          setVisited(new Set([fetchedQuestions[0].id]));
-        }
-      } else {
-        setQuestions([]);
-      }
-    } catch {
-      setQuestions([]);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  // Load questions when selected paper changes
+  // Cancel stale paper requests so a slower previous selection cannot win.
   useEffect(() => {
-    void loadPaperQuestions(selectedPaper);
-  }, [selectedPaper, loadPaperQuestions]);
+    const controller = new AbortController();
+    const signal = controller.signal;
+    const paper = selectedPaper;
+    async function loadPaperQuestions() {
+      try {
+        const params = new URLSearchParams();
+        params.set("exam", paper.exam);
+        params.set("year", paper.year.toString());
+        if (paper.cycle) {
+          params.set("cycle", paper.cycle);
+        }
+        params.set("limit", "150"); // Full paper capacity
+
+        const res = await fetch(`/api/practice/questions?${params.toString()}`, {
+          cache: "no-store",
+          signal,
+        });
+
+        if (signal.aborted) return;
+        if (res.ok) {
+          const data = (await res.json()) as { questions: PracticeQuestion[] };
+          if (signal.aborted) return;
+          const fetchedQuestions = data.questions || [];
+          setQuestions(fetchedQuestions);
+          if (fetchedQuestions.length > 0 && fetchedQuestions[0]) {
+            setVisited(new Set([fetchedQuestions[0].id]));
+          }
+        } else {
+          setQuestions([]);
+        }
+      } catch {
+        if (!signal.aborted) setQuestions([]);
+      } finally {
+        if (!signal.aborted) setLoading(false);
+      }
+    }
+    void loadPaperQuestions();
+    return () => controller.abort();
+  }, [selectedPaper]);
 
   // Paper switcher handler
   const handleSelectPaperById = useCallback((paperId: string) => {
     const nextPaper = AVAILABLE_FULL_PAPERS.find((p) => p.id === paperId);
-    if (nextPaper) {
+    if (nextPaper && nextPaper.id !== selectedPaper.id) {
+      setLoading(true);
+      setAnswers({});
+      setMarkedForReview(new Set());
+      setVisited(new Set());
+      setCurrentIndex(0);
+      setTimeRemaining(nextPaper.durationSeconds);
+      setIsSubmitted(false);
+
+      setQuestions(null);
       setSelectedPaper(nextPaper);
     }
-  }, []);
+  }, [selectedPaper.id]);
 
   // Countdown timer logic
   useEffect(() => {

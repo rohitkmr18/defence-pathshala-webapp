@@ -6,16 +6,11 @@ const supabaseUrl =
   process.env.NEXT_PUBLIC_SUPABASE_URL ||
   "https://afhwegrxnvgsqbqadvwr.supabase.co";
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 export async function GET() {
   // 1. Try FastAPI backend first
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 1500);
-
     const response = await backendGET("/practice/filters");
-    clearTimeout(timeoutId);
 
     if (response.ok) {
       const data = await response.json();
@@ -29,19 +24,13 @@ export async function GET() {
 
   // 2. Direct Supabase query fallback (bulletproof)
   try {
-    const key = serviceRoleKey || anonKey;
-    if (!key) {
-      return NextResponse.json(
-        { exams: [], years: {}, cycles: {}, subjects: {}, subtopics: {}, difficulties: ["Easy", "Moderate", "Hard"] },
-        { status: 200 }
-      );
-    }
+    const key = serviceRoleKey;
+    if (!key) return NextResponse.json({ error: "Practice data service unavailable" }, { status: 503 });
 
     const supabase = createClient(supabaseUrl, key);
     const query = supabase
-      .from("questions")
-      .select("exam,year,cycle,subject,topic,subtopic")
-      .eq("is_active", true);
+      .from("v_dp_question_intelligence_v2")
+      .select("exam,year,cycle,subject,topic,subtopic");
 
     const pageSize = 1000;
     const rows: Record<string, unknown>[] = [];
@@ -52,8 +41,7 @@ export async function GET() {
         start + pageSize - 1
       );
       if (pageErr) {
-        console.error("Supabase practice filters page query error:", pageErr);
-        break;
+        throw new Error("Practice filters query failed");
       }
       if (!pageData || pageData.length === 0) break;
       rows.push(...pageData);
