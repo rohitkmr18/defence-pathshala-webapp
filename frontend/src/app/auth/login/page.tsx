@@ -4,22 +4,27 @@ import { FormEvent, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import GoogleSignInButton from "@/components/GoogleSignInButton";
+import { safeAuthNext } from "@/lib/auth-redirect";
 import { Eye, EyeOff, Shield, ArrowRight, CheckCircle2 } from "lucide-react";
 
 // ─── Inner component that reads search params ───────────────────────────────
 
 function LoginForm() {
   const searchParams = useSearchParams();
-  const nextUrl = searchParams.get("next") ?? "/dashboard";
+  const nextUrl = safeAuthNext(searchParams.get("next"));
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(
+    searchParams.has("error") ? "Sign-in could not be completed. Please try again." : null
+  );
   const [loading, setLoading] = useState(false);
 
   async function handleLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (loading) return;
 
     setError(null);
     setLoading(true);
@@ -42,6 +47,7 @@ function LoginForm() {
 
   return (
     <form onSubmit={handleLogin} className="space-y-5" noValidate>
+      <GoogleSignInButton next={nextUrl} disabled={loading} onBusyChange={setLoading} onError={setError} />
       {/* Email */}
       <div>
         <label

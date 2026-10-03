@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import GoogleSignInButton from "@/components/GoogleSignInButton";
 import {
   Eye,
   EyeOff,
@@ -56,6 +57,7 @@ export default function SignupPage() {
 
   async function handleSignup(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (loading) return;
 
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
@@ -201,6 +203,7 @@ export default function SignupPage() {
               </div>
             ) : (
               <form onSubmit={handleSignup} className="space-y-5" noValidate>
+                <GoogleSignInButton disabled={loading} onBusyChange={setLoading} onError={setError} />
                 {/* Email */}
                 <div>
                   <label
