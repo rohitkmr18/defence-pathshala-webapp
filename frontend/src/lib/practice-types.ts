@@ -46,7 +46,7 @@ export interface PracticeQuestion {
   production_eligible?: boolean;
   intelligence_eligible?: boolean;
   human_review_required?: boolean;
-  intelligence_verified?: boolean;
+  intelligence_verified?: boolean;\n  intelligence_trust_tier?: "HUMAN_VERIFIED" | "MODEL_READY" | "REVIEW_REQUIRED" | "NOT_ELIGIBLE";\n  intelligence_verification_status?: "VERIFIED" | "REVIEW_REQUIRED" | "UNVERIFIED_READY" | "NOT_ELIGIBLE";\n  student_release_status?: "RELEASED" | "WITHHELD";
   intelligence_confidence?: "MODEL_DERIVED" | "HUMAN_VERIFIED" | string;
   pattern_id?: string | null;
   taxonomy_subject?: string | null;
