@@ -29,7 +29,7 @@ Public read-only checks passed 14/14 on production and 14/14 on the verified `28
 | P1 | Main unprotected and production deployment independent of Actions | NOT configured: owner administration is required | Main protected=false, rulesets=[], protection GET 403; deployment timing precedes main CI completion |
 | P1 | Production backend/env targets and formerly exposed credential status unknown | Code removes browser admin credentials and production localhost fallback; deployed credential/configuration review remains blocked | Source tests and preview bundle project-host audit; backend project access denied and Vercel get_project connector validation fails |
 | P1 | Applied migration history absent from Git; legacy prerequisites absent from fresh Supabase migrations | Mirror 10 historical applied SQL files; retain existing three Phase 0 files; add guarded local reconstruction script and captured prerequisites | All 13 remote versions reconcile, ignoring trailing whitespace; fresh local schema + synthetic lineage/RLS pass |
-| P1 | Real frozen-release restoration not demonstrated | BLOCKED: copying production question/intelligence payload to local storage was rejected by automatic approval review; no payload files were created | Production release/intelligence/v2 each 1,821; only synthetic two-row lineage verified locally |
+| Resolved P1 | Real frozen-release restoration was not demonstrated | Owner explicitly approved the narrowly scoped local export; import into fresh disposable PostgreSQL, excluding all learner data | All four table digests and canonical v2 digest match production; 1,821 canonical rows and nine dictionary rows |
 | P2 | Leaked-password protection disabled | Free plan does not support the feature; no paid upgrade made | Organization plan=free; current Supabase docs require Pro or above |
 
 ## C. Actual architecture and release gate
@@ -60,7 +60,9 @@ All 13 remote recorded migrations now exist under **supabase/migrations**. The t
 
 `scripts/reconstruct-phase0.py` refuses existing database names and accepts only a local Docker container/new dp_phase0_* database. It ran 19 files in a fresh PostgreSQL database: platform stubs, two base migrations, captured legacy prerequisites, 13 recorded migrations, observed grants and rolled-back synthetic checks.
 
-This proves the application schema and synthetic answer/eligibility/pattern lineage plus owner RLS and denied learner editorial writes. It does **not** prove full Supabase services, a plain supabase db reset, archive/stage restoration, original Lab freeze provenance or a real 1,821-row frozen import. The prerequisite capture is a fresh reconstruction asset, not an additional production deploy path. The default branch entry returned by Supabase is MIGRATIONS_FAILED and points at production; it was not used or reset.
+This proves the application schema and synthetic answer/eligibility/pattern lineage plus owner RLS and denied learner editorial writes. Following explicit owner approval, a second fresh reconstruction imported the production questions, frozen release contract, intelligence snapshot and dictionary. All four table digests and the canonical v2 digest match production using explicit C ordering; canonical/eligible counts are 1,821, dictionary count is nine. Source IDs, taxonomy, answers, eligibility and release lineage are retained exactly. The local database contains zero users, attempts or sessions; it has 11 public foreign keys, 53 indexes and 13 RLS tables. The payload is outside Git; committed receipts contain only digests/counts. An initial digest comparison rolled back because default database sort ordering differed; explicit C ordering resolves that difference without changing data.
+
+This does **not** prove full Supabase services, a plain supabase db reset, archive/stage restoration or original Lab freeze provenance. The prerequisite capture is a fresh reconstruction asset, not an additional production deploy path. The default branch entry returned by Supabase is MIGRATIONS_FAILED and points at production; it was not used or reset.
 
 ## E. Security state
 
@@ -81,7 +83,7 @@ Production one-hour error/fatal log query returned no rows. This limited retenti
 | Offline frontend | 48 tests: canonical reads/scoring, own/cross-user route contracts, callbacks/filter equivalence/exact resume, race/error/retry/client state, Full Paper auth/timer/submit and admin proxy | Real OAuth, real Supabase transactions or deployed authenticated UI |
 | Offline backend | 26 tests: routes, canonical analytics, mocked dataset operations, admin denial, JWT issuer | Live FastAPI environment/credential configuration |
 | Local browser | Built login page renders, Google CTA present, no blank page/Next overlay or recorded page errors | Provider exchange or learner writes |
-| Local PostgreSQL | Fresh schema, FKs/indexes/policies, synthetic frozen lineage, owner history, cross-user linkage denial, denied learner editorial writes | Full Supabase Auth/Storage, real frozen import/count equivalence |
+| Local PostgreSQL | Fresh schema, FKs/indexes/policies, owner/cross-user policy checks; approved real frozen import, all four source table digests and canonical digest/count match | Full Supabase Auth/Storage, historical archive/stage restoration, original Lab freeze provenance |
 | Public preview | 14 read-only checks on READY deployment HPGMFZr6brcaadubETMaRoK7nQaj for 28fe18f; login includes Google CTA, count=1,199 CDS, guest history empty, admin stats 403 | Signed-in learning/debrief/recommendation/Full Paper; preview uses production database |
 | Production | 14 read-only checks at unchanged c0bf584; 1,199 CDS count, empty guest history, admin denial; advisor/SQL refresh | New fixes released; authenticated post-release smoke |
 
@@ -89,18 +91,19 @@ Authenticated Google → dashboard → CDS/CAPF Explore → filters → practice
 
 ## G. Remaining P1/P2/deferred debt
 
-P1 release blockers: owner OAuth setup and secure two-identity handoff with an approved write environment; exact latest authenticated preview journey; GitHub administration/release gate; actual backend/env/active-credential review; approved frozen-release artifact and restoration; main/production/post-release evidence after a gated merge.
+P1 release blockers: owner OAuth setup and secure two-identity handoff with an approved write environment; exact latest authenticated preview journey; GitHub administration/release gate; actual backend/env/active-credential review; main/production/post-release evidence after a gated merge.
 
 P2/deferred: leaked-password feature requires paid-plan decision; 45 lint warnings; three SELECT-policy overlaps; backup/index informational findings; session summary counts still originate in client snapshots; stricter session payload/membership validation; server idempotency for ambiguous committed-write/lost-response retries; Full Paper elapsed-time restoration; Current Affairs failed publication can leave an unpublished draft. None is represented as tested end-to-end.
 
 ## H. Phase 1 readiness
 
-**NOT CLEARED.** Passing mocks, local reconstruction and public smoke do not satisfy authentication, deployed configuration, production gating or real frozen restoration. PR #9 must remain unmerged until these applicable checks pass. Rollback must preserve additive schema, existing learning history and hardened policies.
+**NOT CLEARED.** Passing mocks, local reconstruction and public smoke do not satisfy authentication, deployed configuration or production gating. The approved frozen canonical reconstruction now passes. PR #9 must remain unmerged until these applicable checks pass. Rollback must preserve additive schema, existing learning history and hardened policies.
 
 ## Evidence
 
 - [Frontend tests](evidence/frontend-tests-20261003.txt), [backend tests](evidence/backend-tests-20261003.txt), [lint](evidence/lint-20261003.txt), [build/root verification](evidence/build-verify-20261003.txt)
 - [Public checks](evidence/public-smoke-20261003.json), [preview project host audit](evidence/preview-bundle-audit-20261003.json)
 - [Database counts/views](evidence/database-20261003.json), [migration reconciliation](evidence/migration-reconciliation-20261003.json), [fresh reconstruction](evidence/local-reconstruction-20261003.json)
+- [Approved frozen import](evidence/frozen-import-20261003.json), [source digests](evidence/frozen-source-digests-20261003.json), [fresh import schema](evidence/frozen-schema-reconstruction-20261003.json)
 - [Security advisor](evidence/finalsecurity-20261003.json), [performance advisor](evidence/finalperformance-20261003.json)
 - Original refreshed checkpoint CI: [push 37096672214](https://github.com/rohitkmr18/defence-pathshala-webapp/actions/runs/37096672214), [PR 37096673460](https://github.com/rohitkmr18/defence-pathshala-webapp/actions/runs/37096673460). Current-head CI/deployment receipt is recorded on PR #9 and in the completion response.

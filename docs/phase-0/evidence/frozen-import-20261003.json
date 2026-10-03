@@ -1,0 +1,295 @@
+{
+  "timestamp": "2026-10-03T05:58:40.194685+00:00",
+  "database": "dp_phase0_frozen_approved",
+  "environment": "local PostgreSQL with platform test stubs",
+  "production_writes": false,
+  "learner_data_copied": false,
+  "tables": {
+    "questions": {
+      "expected_count": 1821,
+      "files": [
+        {
+          "file": "questions-0000.b64",
+          "sha256": "d19960e233fee2d8712cc71c13c2bdca230e7ac3534474abc02abeecc4c2685e"
+        },
+        {
+          "file": "questions-0100.b64",
+          "sha256": "529286264ba0979ac142d1e7b26892696d426d05f25dfee6b67c2764bde1a955"
+        },
+        {
+          "file": "questions-0200.b64",
+          "sha256": "abd48e31c54fe47a019602461d24d2b88d4309f89fe203eb99c4649a10319309"
+        },
+        {
+          "file": "questions-0300.b64",
+          "sha256": "1f7dce7ea204fc97f3414c55f17a51bac26fccf073fab8fa8d82dce96eef234d"
+        },
+        {
+          "file": "questions-0400.b64",
+          "sha256": "1705a4c528a6712b821e057d54800004ead88eb09995da7eaaa3c1727a1f299a"
+        },
+        {
+          "file": "questions-0500.b64",
+          "sha256": "2211dbe66705f7a9d6cd69d18bbf5b7253743aa445bbbf82085af6d93f1cd782"
+        },
+        {
+          "file": "questions-0600.b64",
+          "sha256": "6d832f8c37f0a9a2e06a3fa0606920022fb1caa707b382899b75b6be7c38ed19"
+        },
+        {
+          "file": "questions-0700.b64",
+          "sha256": "829c320bd658454a02cca181e6a784b39d170c168a46f42c4feac5ddd9638c8b"
+        },
+        {
+          "file": "questions-0800.b64",
+          "sha256": "74308e0d932234a85adfbecabb363cf6c78e7b8a2db363fb02cab113b7713c23"
+        },
+        {
+          "file": "questions-0900.b64",
+          "sha256": "9e7a45bb51795d4fb46cb77aba41ba08beb7c991bdad86de74ead86b9b4bd6d8"
+        },
+        {
+          "file": "questions-1000.b64",
+          "sha256": "edd8a9808f1035541d8dd452cf8578755804d9fcb67af6d9098a23639975515e"
+        },
+        {
+          "file": "questions-1100.b64",
+          "sha256": "29b34dabffe4dbb603c0ab61ae9b105ff079bb7911c2609362ff04a4a0c90df8"
+        },
+        {
+          "file": "questions-1200.b64",
+          "sha256": "aae36790d6f0b7b3dc601c016fd5c6b264db2193ce9ab739c0d98ca74a0e6503"
+        },
+        {
+          "file": "questions-1300.b64",
+          "sha256": "cafeabf7beae9ba7759954672ad8e91270fbbb85a67d7fdd78291be3d52fc04b"
+        },
+        {
+          "file": "questions-1400.b64",
+          "sha256": "1dcae8ecb647c626f5613fd0976f8248baae0297b93bafdfd3d8a38c2fba6c0b"
+        },
+        {
+          "file": "questions-1500.b64",
+          "sha256": "f4527b352f6970efcbb92ee8173cccc45e6693b52804ef1f41c9d9ff214cdd4f"
+        },
+        {
+          "file": "questions-1600.b64",
+          "sha256": "d113b3b636a32684fa7155213d8f20b177b75915a9e44dcc43ad4d9061b4f777"
+        },
+        {
+          "file": "questions-1700.b64",
+          "sha256": "9bd8127f9f606f9f674121881beaf65b79f7ff09def64fc07bedcc64f37632d1"
+        },
+        {
+          "file": "questions-1800.b64",
+          "sha256": "ee8b1e586e19e9b8b111ba6005f0a0047d7e53cc66aa8c734c975eb1f546b957"
+        }
+      ],
+      "count": 1821,
+      "md5": "dc7bfbf17237675ebef3fc8514410d2a"
+    },
+    "dp_pyq_v1_production_release": {
+      "expected_count": 1821,
+      "files": [
+        {
+          "file": "dp_pyq_v1_production_release-0000.b64",
+          "sha256": "0b4fb70fc11d7d837b810ca9b139c2986a9f69c3d98cb9861ffa4d4925666fbc"
+        },
+        {
+          "file": "dp_pyq_v1_production_release-0100.b64",
+          "sha256": "3b2ec4f93717ed54fc7c932551dfbba3bc424f5f9ae50535bd379e0155bd5f30"
+        },
+        {
+          "file": "dp_pyq_v1_production_release-0200.b64",
+          "sha256": "3f357ad7db23e5ed391d4ee3dc118c37aec46ecf871932b329f6eb499cbff77b"
+        },
+        {
+          "file": "dp_pyq_v1_production_release-0300.b64",
+          "sha256": "5809c8c9cf0bb4af33f0ddabae544902b44e40f06619e804f1f7abc5c71baf07"
+        },
+        {
+          "file": "dp_pyq_v1_production_release-0400.b64",
+          "sha256": "9a66b597cbed0106c35d1bce6e622e21a7fbf2f56530a121bd3846584db66dc8"
+        },
+        {
+          "file": "dp_pyq_v1_production_release-0500.b64",
+          "sha256": "58d8b179defafc678d49321b0d3f5efe2ea9b51ffd504a06dfd7f62c594589e0"
+        },
+        {
+          "file": "dp_pyq_v1_production_release-0600.b64",
+          "sha256": "3d49dec5c0b6cbfaaa1716b9be5d18b40ffc954137fb4d993d9ac44ad581b5f2"
+        },
+        {
+          "file": "dp_pyq_v1_production_release-0700.b64",
+          "sha256": "a02c82f113596815c6507b8432d3c3d1a64309bc1f2858597d3c8430f345acd0"
+        },
+        {
+          "file": "dp_pyq_v1_production_release-0800.b64",
+          "sha256": "a9aa1c6ac0e34ac217dbcd695d7694f08259bfaeb54540634cea00273f65d6f6"
+        },
+        {
+          "file": "dp_pyq_v1_production_release-0900.b64",
+          "sha256": "ce309488e42031cac123a674e2b402f7bd4936cc00897527d91c0f9596d2c7dc"
+        },
+        {
+          "file": "dp_pyq_v1_production_release-1000.b64",
+          "sha256": "fc721d92d1356dafa162e5e3c76df7197646b6bcbba2a4f7f4a6fdc3e4ff1a92"
+        },
+        {
+          "file": "dp_pyq_v1_production_release-1100.b64",
+          "sha256": "3fb68f77a7f1de827eae88e3af7f4dd197a5151549deb2c8e26067866f4e9a19"
+        },
+        {
+          "file": "dp_pyq_v1_production_release-1200.b64",
+          "sha256": "e749e813f733d4a0f8d5eb9072837a9e292d2b5d9098555899080231eb6a4981"
+        },
+        {
+          "file": "dp_pyq_v1_production_release-1300.b64",
+          "sha256": "f8b27874c44708dcdb67f06b30509c7521949a6d057d55f3d27eed459a08dcd2"
+        },
+        {
+          "file": "dp_pyq_v1_production_release-1400.b64",
+          "sha256": "fa155a41f55413a856a49d848ba5daa2f1867c89b5daccaff567890efcb2e6a3"
+        },
+        {
+          "file": "dp_pyq_v1_production_release-1500.b64",
+          "sha256": "29436fe76ebd0d8d46ff2d5a5bd676478e0b5dc3b0233ed80a0ef6743241dd8f"
+        },
+        {
+          "file": "dp_pyq_v1_production_release-1600.b64",
+          "sha256": "12e74e3c96eb98eb8b703e297d93c5aa7c7edab7e58af52f4c585f3c99c96921"
+        },
+        {
+          "file": "dp_pyq_v1_production_release-1700.b64",
+          "sha256": "7f4cf40a3508dd204dcda63685faef473fb12dcd7c16ea72d2d819e0e2164776"
+        },
+        {
+          "file": "dp_pyq_v1_production_release-1800.b64",
+          "sha256": "a2e2ed656bee796df8483cdb9b3d16756d5aec439f1066fc6f71aa2a7d5b2164"
+        }
+      ],
+      "count": 1821,
+      "md5": "26992cc28b3b19276d6be60323dd1d7c"
+    },
+    "dp_question_intelligence_v1": {
+      "expected_count": 1821,
+      "files": [
+        {
+          "file": "dp_question_intelligence_v1-0000.b64",
+          "sha256": "932af87effd1bd638c51e6a7dde033dcb6c6260978cdd48cafa0ecad72647a5a"
+        },
+        {
+          "file": "dp_question_intelligence_v1-0100.b64",
+          "sha256": "4cbec8f8aad5c9e723a7cb7d073601f59b84867af6740ce0e35defe48d8e8d99"
+        },
+        {
+          "file": "dp_question_intelligence_v1-0200.b64",
+          "sha256": "02345a02448f955202e473dbc55b3e43f556cb4fb5ee6baa7cc294fa6bc26f43"
+        },
+        {
+          "file": "dp_question_intelligence_v1-0300.b64",
+          "sha256": "4d9c4005efaab9358656deb00c97671f05dd14d8a64ac85d10a8586d0bb25f46"
+        },
+        {
+          "file": "dp_question_intelligence_v1-0400.b64",
+          "sha256": "1cd015e7a4ef43a16e97945efdc503d5fb9402d75facb06fdcee458c7e4c58fc"
+        },
+        {
+          "file": "dp_question_intelligence_v1-0500.b64",
+          "sha256": "c9379ccefffd7eb369f9e7380137de3c0e97fd8ef1fd1179cf629f3b556cf35d"
+        },
+        {
+          "file": "dp_question_intelligence_v1-0600.b64",
+          "sha256": "b16c900a38ba66cc9b4e73da8b839ca208a123ac2e3544f93ebd6468fc89ac08"
+        },
+        {
+          "file": "dp_question_intelligence_v1-0700.b64",
+          "sha256": "d56272d9cbcac7b280a2a42c380d4446f8e1b92c6d2f45fe1afda4d63a0043b6"
+        },
+        {
+          "file": "dp_question_intelligence_v1-0800.b64",
+          "sha256": "27e9c06e0412d4d39e74bb5478cc9dc182b3476e8b032ee32d9f618d58953c8d"
+        },
+        {
+          "file": "dp_question_intelligence_v1-0900.b64",
+          "sha256": "2a7da7c8d08c2301a6cae5f20853978c3cf853ab65672413787ba8121f32cfb2"
+        },
+        {
+          "file": "dp_question_intelligence_v1-1000.b64",
+          "sha256": "0ad8f31c0ff8942781aa2f74aca8e2d057de6c2af910a2367050ba480b363186"
+        },
+        {
+          "file": "dp_question_intelligence_v1-1100.b64",
+          "sha256": "8e2ece447982b306d0a435c8e38939c5ac16ed5c8b0059f72b0fc7e9d16901e1"
+        },
+        {
+          "file": "dp_question_intelligence_v1-1200.b64",
+          "sha256": "91f63700bc9c93370f2de5e9ff7e4f4fd6892f49a20560d3c0277b717d41f9ad"
+        },
+        {
+          "file": "dp_question_intelligence_v1-1300.b64",
+          "sha256": "3d70f1959e9cd8d50354b0b0ac8325a11b523e51afc20246370895235c0793e4"
+        },
+        {
+          "file": "dp_question_intelligence_v1-1400.b64",
+          "sha256": "195d14ff46018919ffa9cefe3768cbce82413f8308d909f88c32a4eefee1f2a9"
+        },
+        {
+          "file": "dp_question_intelligence_v1-1500.b64",
+          "sha256": "ffb9cd315bbf19532ebf286e4d095264ec4346cad80612667068bf49bcf42640"
+        },
+        {
+          "file": "dp_question_intelligence_v1-1600.b64",
+          "sha256": "2260481b60a1b0d42b9145684a7b7c5872f55a66a594fa56a1be75ad9891ffbc"
+        },
+        {
+          "file": "dp_question_intelligence_v1-1700.b64",
+          "sha256": "c2e60a6db06b849f671814525b756a489ceb9ce26b7cc12663821326588ff1d9"
+        },
+        {
+          "file": "dp_question_intelligence_v1-1800.b64",
+          "sha256": "bf447bb499353580a409a0c6236ec72bd0ea506dbaa97e59abc81ae31e0c5c2a"
+        }
+      ],
+      "count": 1821,
+      "md5": "9802229566f71ad6804daad7ca4cee63"
+    },
+    "dp_pattern_dictionary": {
+      "expected_count": 9,
+      "files": [
+        {
+          "file": "dp_pattern_dictionary-0000.b64",
+          "sha256": "d7a5fd093a54fcb0bc5c7c89d4e6ea8e3aa2dffd3e482c2c519e0c2edd1ab2bc"
+        }
+      ],
+      "count": 9,
+      "md5": "cbe41beb7de9112b90a8862631f2393f"
+    }
+  },
+  "canonical": {
+    "count": 1821,
+    "md5": "936561bc1893f8cd13be1f5159434bb5"
+  },
+  "passed": true,
+  "source_digest_match": true,
+  "digest_ordering": "explicit COLLATE C",
+  "local_schema": {
+    "users": 0,
+    "attempts": 0,
+    "sessions": 0,
+    "eligible": 1821,
+    "public_foreign_keys": 11,
+    "public_indexes": 53,
+    "rls_tables": 13
+  },
+  "production_after_export": {
+    "canonical": 1821,
+    "attempts": 5,
+    "sessions": 1
+  },
+  "guards_verified": [
+    "nonlocal database name rejected",
+    "initial sort-dependent digest mismatch rolled back",
+    "nonempty local question table refused"
+  ]
+}

@@ -22,7 +22,7 @@ Full Paper coverage proves no question load/session/timer before auth, answer pr
 
 ## Database and browser boundaries
 
-The guarded local reconstruction ran 19 files in a new Docker PostgreSQL database with Auth/Storage stubs, all recorded migrations, legacy prerequisites/observed grants and rolled-back synthetic fixtures. FKs/indexes/RLS, answer and eligibility/pattern lineage, owner history, cross-user linkage denial and denied learner editorial writes pass. Real frozen-release import and full Supabase services remain unproved.
+The guarded local reconstruction ran 19 files in a new Docker PostgreSQL database with Auth/Storage stubs, all recorded migrations, legacy prerequisites/observed grants and rolled-back synthetic fixtures. FKs/indexes/RLS, answer and eligibility/pattern lineage, owner history, cross-user linkage denial and denied learner editorial writes pass. Approved real frozen-release import now passes in a second fresh local schema: questions/release/intelligence=1,821 each, dictionary=9, canonical/eligible=1,821. Exact digests match all four source tables and canonical v2 using C ordering; local users/attempts/sessions=0. The transaction rolled back on the initial default-sort digest mismatch, and nonlocal database-name rejection was verified. Full Supabase services, archive/stage restoration and original Lab freeze provenance remain unproved.
 
 A local built login page was checked with agent-browser/system Chromium: Google button and expected form render; no blank page, framework overlay or recorded page errors. Direct production/preview browser navigation is blocked by workspace egress policy. No interactive Google login handoff or two-identity preview write test occurred.
 

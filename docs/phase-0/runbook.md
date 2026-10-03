@@ -52,7 +52,15 @@ python scripts/reconstruct-phase0.py --container dp-phase0-repro --database dp_p
 
 The container must be an existing suitable disposable local PostgreSQL instance. The script creates a NEW database; existing names fail, and no reset/connection URL is accepted. Bootstrap Auth/Storage stubs and captured legacy prerequisites are explicitly local reconstruction assets, not production migrations. After them, all recorded migrations run from supabase/migrations, followed by observed grants and synthetic transactional tests. This proves application DDL/RLS/lineage with fixtures, not a full Supabase reset or actual frozen-release restore.
 
-Real restoration still needs an approved frozen release artifact (question/master rows, frozen eligibility/intelligence snapshot, dictionary and provenance/checksums), including exact row-ID preservation for lineage. Do not substitute synthetic 1,821 rows or regenerate eligibility/taxonomy/answer authority. Automatic approval review rejected the attempted production payload export because its scope/destination was not explicitly approved; no payload files were created. Obtain explicit export authorization or an approved existing artifact, then demonstrate 1,821 canonical rows on a suitable disposable/staging database. Do not touch Lab or copy users/attempts/sessions.
+The owner subsequently explicitly approved copying only frozen question/release/intelligence data locally, excluding users/attempts/sessions. The approved export and real restoration passed: 1,821 canonical rows, nine dictionary rows, exact source table and canonical content digests with explicit C ordering. Payload is in `/tmp/phase0-approved-snapshot`, outside Git. Receipt: [frozen-import-20261003.json](evidence/frozen-import-20261003.json). The earlier automatic-review rejection was resolved by this explicit scope/destination approval. No Lab or learner payload was copied.
+
+To verify an approved snapshot in another fresh local reconstruction:
+
+```sh
+python scripts/import-phase0-frozen.py --container dp-phase0-repro --database dp_phase0_new_check --snapshot /tmp/phase0-approved-snapshot --expected /tmp/phase0-approved-snapshot/source-digests.json --report /tmp/dp-phase0-frozen-import.json
+```
+
+The importer refuses nonempty question/release/intelligence tables and verifies expected source counts/digests before committing its local transaction. It does not accept a remote URL or weaken policies/triggers. Preserve exact row IDs and frozen authority; do not regenerate eligibility/taxonomy/answers. Full platform Auth/Storage, archive/stage reconstruction and original Lab freeze provenance are separate unproved/deferred boundaries. Do not commit the payload or copy it elsewhere without approval.
 
 ## Rollback and post-release evidence
 

@@ -66,3 +66,10 @@ Authoritative future migration path: supabase/migrations. Legacy database/migrat
 - Thirteen applied migration files reconcile with Git; three Phase 0 migrations were not reapplied. Fresh local schema + synthetic lineage/RLS pass using explicit platform stubs; real frozen restore blocked by automatic export approval review.
 - Final production counts: questions/v2/release/intelligence=1,821 each; attempts=5; sessions=1; no null session owners/cross-owner linked attempts.
 - Remaining release blocks and exact owner actions are in report.md/runbook.md. Main remains unprotected and Vercel deploys independently of CI. Real Google/two-identity journeys, deployed config/credential review and frozen import are unproved. Free-plan leaked-password feature requires paid-plan consideration; no upgrade made. Phase 1 is not cleared.
+
+## Approved frozen reconstruction follow-up — 3 October 2026 UTC
+
+- Explicit owner approval resolved the local frozen-payload export rejection. No learner data or Lab access was included.
+- Fresh reconstruction and real import passed: all four table and canonical digests match source with C ordering; canonical/eligible=1,821 and dictionary=9. Local users/attempts/sessions=0. Production remains attempts=5, sessions=1, canonical=1,821.
+- Evidence is in frozen-import-20261003.json and frozen-source-digests-20261003.json; payload remains outside Git.
+- Phase 0 remains incomplete due to authenticated journeys, actual configuration/credential review and release-gate access. Full platform services/archive/stage/original Lab provenance were not established by this import.
