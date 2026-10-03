@@ -5,6 +5,8 @@ import Link from "next/link";
 import { ArrowLeft, Loader2, LogIn } from "lucide-react";
 import type { PracticeQuestion, OptionKey } from "@/lib/practice-types";
 import { createClient } from "@/lib/supabase/client";
+import { initializeSession, completePracticeSession, updateSessionProgress } from "@/lib/practice-session-client";
+import PracticePersistenceStatus from "@/components/practice/PracticePersistenceStatus";
 import QuestionCard from "@/components/practice/player/QuestionCard";
 import ExamHeader from "@/components/practice/full-paper/ExamHeader";
 import QuestionPalette from "@/components/practice/full-paper/QuestionPalette";
@@ -48,6 +50,9 @@ export default function FullPaperClient({
   const [visited, setVisited] = useState<Set<string>>(new Set());
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [sessionId, setSessionId] = useState<string>();
+  const [submissionError, setSubmissionError] = useState<string | null>(null);
+  const submitting = useRef(false);
 
   // Auth check
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -56,7 +61,7 @@ export default function FullPaperClient({
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => {
       setIsAuthenticated(!!data.user);
-    });
+    }).catch(() => setIsAuthenticated(false));
   }, []);
 
   // Time remaining countdown
@@ -65,6 +70,7 @@ export default function FullPaperClient({
 
   // Cancel stale paper requests so a slower previous selection cannot win.
   useEffect(() => {
+    if (isAuthenticated !== true) return;
     const controller = new AbortController();
     const signal = controller.signal;
     const paper = selectedPaper;
@@ -88,6 +94,10 @@ export default function FullPaperClient({
           const data = (await res.json()) as { questions: PracticeQuestion[] };
           if (signal.aborted) return;
           const fetchedQuestions = data.questions || [];
+          const session = await initializeSession({ title: paper.label, mode: "full_paper",
+            filters: { exams: [paper.exam], years: [paper.year], cycles: paper.cycle ? [paper.cycle] : [] }, questions: fetchedQuestions });
+          if (signal.aborted) return;
+          setSessionId(session.id);
           setQuestions(fetchedQuestions);
           if (fetchedQuestions.length > 0 && fetchedQuestions[0]) {
             setVisited(new Set([fetchedQuestions[0].id]));
@@ -103,13 +113,15 @@ export default function FullPaperClient({
     }
     void loadPaperQuestions();
     return () => controller.abort();
-  }, [selectedPaper]);
+  }, [selectedPaper, isAuthenticated]);
 
   // Paper switcher handler
   const handleSelectPaperById = useCallback((paperId: string) => {
     const nextPaper = AVAILABLE_FULL_PAPERS.find((p) => p.id === paperId);
-    if (nextPaper && nextPaper.id !== selectedPaper.id) {
+    if (!submitting.current && nextPaper && nextPaper.id !== selectedPaper.id) {
       setLoading(true);
+      setSessionId(undefined);
+      setSubmissionError(null);
       setAnswers({});
       setMarkedForReview(new Set());
       setVisited(new Set());
@@ -122,34 +134,15 @@ export default function FullPaperClient({
     }
   }, [selectedPaper.id]);
 
-  // Countdown timer logic
-  useEffect(() => {
-    if (loading || isSubmitted || !questions || questions.length === 0) return;
-
-    timerRef.current = setInterval(() => {
-      setTimeRemaining((prev) => {
-        if (prev <= 1) {
-          if (timerRef.current) clearInterval(timerRef.current);
-          setIsSubmitted(true);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [loading, isSubmitted, questions]);
-
   // Update visited state on question navigation
   const navigateToQuestion = useCallback(
     (index: number) => {
-      if (!questions || !questions[index]) return;
+      if (submitting.current || !questions || !questions[index]) return;
       setCurrentIndex(index);
+      if (sessionId) updateSessionProgress(sessionId, { current_index: index });
       setVisited((prev) => new Set(prev).add(questions[index].id));
     },
-    [questions]
+    [questions, sessionId]
   );
 
   const activeQuestion = questions?.[currentIndex];
@@ -157,20 +150,21 @@ export default function FullPaperClient({
 
   const handleSelectOption = useCallback(
     (key: OptionKey) => {
-      if (!activeQuestion || isSubmitted) return;
-      setAnswers((prev) => ({ ...prev, [activeQuestion.id]: key }));
+      if (!activeQuestion || isSubmitted || timeRemaining === 0 || submitting.current) return;
+      const next = { ...answers, [activeQuestion.id]: key };
+      setAnswers(next);
+      if (sessionId) updateSessionProgress(sessionId, { answers: next });
     },
-    [activeQuestion, isSubmitted]
+    [activeQuestion, isSubmitted, answers, sessionId, timeRemaining]
   );
 
   const handleClearResponse = useCallback(() => {
-    if (!activeQuestion || isSubmitted) return;
-    setAnswers((prev) => {
-      const next = { ...prev };
-      delete next[activeQuestion.id];
-      return next;
-    });
-  }, [activeQuestion, isSubmitted]);
+    if (!activeQuestion || isSubmitted || timeRemaining === 0 || submitting.current) return;
+    const next = { ...answers };
+    delete next[activeQuestion.id];
+    setAnswers(next);
+    if (sessionId) updateSessionProgress(sessionId, { answers: next });
+  }, [activeQuestion, isSubmitted, answers, sessionId, timeRemaining]);
 
   const handleToggleMarkForReview = useCallback(() => {
     if (!activeQuestion) return;
@@ -200,12 +194,38 @@ export default function FullPaperClient({
     }
   }, [currentIndex, questions, navigateToQuestion]);
 
-  const handleConfirmSubmit = useCallback(() => {
+  const handleConfirmSubmit = useCallback(async () => {
+    if (submitting.current || !sessionId || !questions || isAuthenticated !== true) return;
+    submitting.current = true;
     setIsSubmitModalOpen(false);
-    setIsSubmitted(true);
-  }, []);
+    setSubmissionError(null);
+    try {
+      await completePracticeSession({ sessionId, questions, answers, mode: "full_paper",
+        timeSpentSeconds: selectedPaper.durationSeconds - timeRemaining });
+      setIsSubmitted(true);
+    } catch (error) {
+      setSubmissionError(error instanceof Error ? error.message : "Submission could not be saved.");
+    } finally { submitting.current = false; }
+  }, [sessionId, questions, answers, selectedPaper.durationSeconds, timeRemaining, isAuthenticated]);
+
+  // Authentication and session creation must finish before the timer starts.
+  useEffect(() => {
+    if (loading || isSubmitted || isAuthenticated !== true || !sessionId || !questions?.length || timeRemaining === 0) return;
+    timerRef.current = setInterval(() => setTimeRemaining(prev => Math.max(0, prev - 1)), 1000);
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, [loading, isSubmitted, isAuthenticated, sessionId, questions, timeRemaining]);
+  useEffect(() => {
+    if (timeRemaining !== 0 || isSubmitted || submissionError) return;
+    const timeout = setTimeout(() => { void handleConfirmSubmit(); }, 0);
+    return () => clearTimeout(timeout);
+  }, [timeRemaining, isSubmitted, submissionError, handleConfirmSubmit]);
 
   const handleRetake = useCallback(() => {
+    if (!questions) return;
+    void initializeSession({ title: selectedPaper.label, mode: "full_paper",
+      filters: { exams: [selectedPaper.exam], years: [selectedPaper.year], cycles: selectedPaper.cycle ? [selectedPaper.cycle] : [] },
+      questions }).then(session => setSessionId(session.id));
+    setSubmissionError(null);
     setAnswers({});
     setMarkedForReview(new Set());
     setVisited(new Set(questions?.[0] ? [questions[0].id] : []));
@@ -248,7 +268,7 @@ export default function FullPaperClient({
     );
   }
 
-  if (loading) {
+  if (loading || isAuthenticated === null) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
@@ -283,6 +303,7 @@ export default function FullPaperClient({
   if (isSubmitted) {
     return (
       <div className="px-4 py-6 sm:px-6">
+        <PracticePersistenceStatus />
         <FullPaperDebrief
           questions={questions}
           answers={answers}
@@ -300,6 +321,8 @@ export default function FullPaperClient({
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
+      <PracticePersistenceStatus />
+      {submissionError && <p role="alert" className="p-4 text-sm text-amber-900">{submissionError} Retry submission after restoring your connection.</p>}
       {/* Sticky Header with Exam Switcher, Live Timer & Submit CTA */}
       <ExamHeader
         examTitle={selectedPaper.label}

@@ -27,6 +27,7 @@ function loadRoute(path, dependencies, env = {}) {
     Date, Math, Number, String, Set, URL, URLSearchParams,
     require: (name) => {
       if (name === "next/server") return { NextResponse: responseApi };
+      if (name === "@/lib/auth-navigation") return { safeAuthNext: value => value && value.startsWith("/") && !value.startsWith("//") && !value.includes("\\") ? value : "/dashboard" };
       if (name === "@/lib/error-message") return {
         errorMessage: (err, fallback) => err?.message || fallback,
       };
