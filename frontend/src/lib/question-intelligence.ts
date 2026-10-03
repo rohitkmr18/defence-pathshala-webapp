@@ -39,7 +39,10 @@ export interface QuestionIntelligenceRecord {
   production_eligible: boolean;
   intelligence_eligible: boolean;
   human_review_required: boolean;
-  intelligence_verified?: boolean;\n  intelligence_trust_tier?: "HUMAN_VERIFIED" | "MODEL_READY" | "REVIEW_REQUIRED" | "NOT_ELIGIBLE";\n  intelligence_verification_status?: "VERIFIED" | "REVIEW_REQUIRED" | "UNVERIFIED_READY" | "NOT_ELIGIBLE";\n  student_release_status?: "RELEASED" | "WITHHELD";
+  intelligence_verified?: boolean;
+  intelligence_trust_tier?: "HUMAN_VERIFIED" | "MODEL_READY" | "REVIEW_REQUIRED" | "NOT_ELIGIBLE";
+  intelligence_verification_status?: "VERIFIED" | "REVIEW_REQUIRED" | "UNVERIFIED_READY" | "NOT_ELIGIBLE";
+  student_release_status?: "RELEASED" | "WITHHELD";
   intelligence_confidence?: "MODEL_DERIVED" | "HUMAN_VERIFIED" | string;
   pattern_id?: string | null;
   taxonomy_subject?: string | null;
@@ -163,7 +166,10 @@ export function normalizeQuestion(raw: Record<string, unknown>): PracticeQuestio
     production_eligible: isProductionEligible,
     intelligence_eligible: isIntelligenceEligible,
     human_review_required: humanReviewRequired,
-    intelligence_verified: isVerified,\n    intelligence_trust_tier: raw.intelligence_trust_tier ? String(raw.intelligence_trust_tier).trim() as PracticeQuestion["intelligence_trust_tier"] : undefined,\n    intelligence_verification_status: raw.intelligence_verification_status ? String(raw.intelligence_verification_status).trim() as PracticeQuestion["intelligence_verification_status"] : undefined,\n    student_release_status: raw.student_release_status ? String(raw.student_release_status).trim() as PracticeQuestion["student_release_status"] : undefined,
+    intelligence_verified: isVerified,
+    intelligence_trust_tier: raw.intelligence_trust_tier ? String(raw.intelligence_trust_tier).trim() as PracticeQuestion["intelligence_trust_tier"] : undefined,
+    intelligence_verification_status: raw.intelligence_verification_status ? String(raw.intelligence_verification_status).trim() as PracticeQuestion["intelligence_verification_status"] : undefined,
+    student_release_status: raw.student_release_status ? String(raw.student_release_status).trim() as PracticeQuestion["student_release_status"] : undefined,
     intelligence_confidence: confidence,
     pattern_id: raw.pattern_id ? String(raw.pattern_id).trim() : null,
     taxonomy_subject: raw.taxonomy_subject ? String(raw.taxonomy_subject).trim() : null,
