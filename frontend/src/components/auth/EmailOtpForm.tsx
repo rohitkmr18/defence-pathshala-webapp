@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { ArrowRight, Loader2 } from "lucide-react";
+import GoogleSignInButton from "@/components/GoogleSignInButton";
 import { createClient } from "@/lib/supabase/client";
 import { requestEmailCode, safeAuthDestination, verifyEmailCode } from "@/lib/email-otp";
 
@@ -11,7 +12,7 @@ export default function EmailOtpForm() {
   const [email, setEmail] = useState("");
   const [sentEmail, setSentEmail] = useState<string | null>(null);
   const [code, setCode] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(searchParams.has("error") ? "Sign-in could not be completed. Please try again." : null);
   const [busy, setBusy] = useState(false);
   const [cooldown, setCooldown] = useState(0);
   const inFlight = useRef(false);
@@ -67,6 +68,8 @@ export default function EmailOtpForm() {
   const inputClass = "mt-2 block w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm text-slate-900 shadow-sm focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20";
   return (
     <form onSubmit={submit} className="space-y-5">
+      {!sentEmail && <GoogleSignInButton next={safeAuthDestination(searchParams.get("next"))}
+        disabled={busy} onBusyChange={setBusy} onError={setError} />}
       {sentEmail ? (
         <>
           <p role="status" className="text-sm text-slate-600">
