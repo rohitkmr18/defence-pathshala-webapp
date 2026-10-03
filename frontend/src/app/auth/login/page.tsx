@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import GoogleSignInButton from "@/components/GoogleSignInButton";
-import { safeAuthNext } from "@/lib/auth-redirect";
+import { authUrl, safeAuthNext } from "@/lib/auth-redirect";
 import { Eye, EyeOff, Shield, ArrowRight, CheckCircle2 } from "lucide-react";
 
 // ─── Inner component that reads search params ───────────────────────────────
@@ -42,7 +42,7 @@ function LoginForm() {
     }
 
     // Redirect to next URL or dashboard
-    window.location.href = nextUrl;
+    window.location.assign(authUrl("/auth/continue", nextUrl));
   }
 
   return (
@@ -162,7 +162,7 @@ function LoginForm() {
       <p className="text-center text-sm text-slate-500">
         New here?{" "}
         <Link
-          href="/auth/signup"
+          href={authUrl("/auth/signup", nextUrl)}
           className="font-semibold text-blue-600 hover:text-blue-500 transition"
         >
           Create a free account

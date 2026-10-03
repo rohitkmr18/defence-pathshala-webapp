@@ -1,82 +1,115 @@
-// Exercise the actual route handler with database/auth responses, without credentials.
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const fs = require('node:fs');
-const vm = require('node:vm');
-const ts = require('../frontend/node_modules/typescript');
-const source = fs.readFileSync('frontend/src/app/api/profile/route.ts', 'utf8');
-const code = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 } }).outputText;
+const createLoader = require('./test-support/load-ts.cjs');
+const valid = { full_name: ' Test Aspirant ', target_year: '', target_exams: ['CDS', 'CAPF-AC', 'CDS'] };
+const request = (body = valid) => ({ json: async () => body });
+
 function setup(options = {}) {
   const operations = [];
-  const profile = { id: 'current-user', full_name: '', target_year: null, onboarding_completed: false };
-  let exams = [];
+  let profile = options.missing ? null : { id: 'current-user', full_name: null, target_year: null, onboarding_completed: !!options.completed };
+  let exams = options.exams || [];
+  const user = { id: 'current-user', user_metadata: {} };
   const db = {
-    auth: { getUser: async () => ({ data: { user: options.guest ? null : { id: profile.id } } }) },
+    auth: { getUser: async () => ({ data: { user: options.guest ? null : user } }) },
+    async rpc(name, args) {
+      operations.push({ name, args });
+      if (options.rpcFailure) return { data: null, error: Error('transaction failed') };
+      if (!profile?.onboarding_completed || name === 'update_preparation_profile') {
+        profile = { id: user.id, full_name: args.p_full_name, target_year: args.p_target_year, onboarding_completed: true };
+        exams = args.p_target_exams;
+      }
+      const result = { ...profile, target_exams: exams };
+      if (options.unverified) result.onboarding_completed = false;
+      if (options.wrongOwner) result.id = 'other-user';
+      return { data: result, error: null };
+    },
     from(table) {
-      let action = 'select'; let payload;
       const query = {
         select() { return query; },
-        eq(column, value) { assert.equal(value, profile.id); return query; },
-        update(value) { action = 'update'; payload = value; return query; },
-        delete() { action = 'delete'; return query; },
-        insert(value) { action = 'insert'; payload = value; return query; },
+        eq(column, value) { assert.equal(value, user.id); return query; },
         maybeSingle() { return run(); },
-        single() { return run(); },
         then(resolve, reject) { return run().then(resolve, reject); },
       };
       async function run() {
-        operations.push(`${table}:${action}`);
-        if (options.fail === `${table}:${action}`) return { data: null, error: { message: 'Database rejected operation' } };
-        if (table === 'profiles') {
-          if (action === 'update') {
-            if (options.zeroRows) return { data: null, error: null };
-            Object.assign(profile, payload);
-          }
-          return { data: options.missing ? null : { ...profile }, error: null };
-        }
-        if (action === 'delete') exams = [];
-        if (action === 'insert' && !options.dropExams) exams = payload;
-        return { data: exams.map(({ exam }) => ({ exam })), error: null };
+        if (options.readFailure) return { data: null, error: Error('read failed') };
+        if (table === 'profiles') return { data: profile && { ...profile, onboarding_completed: options.zeroRows ? false : profile.onboarding_completed }, error: null };
+        return { data: (options.dropExams ? [] : exams).map(exam => ({ exam })), error: null };
       }
       return query;
     },
   };
-  const context = { exports: {}, console, setTimeout, clearTimeout,
-    require(name) {
-      if (name === 'next/server') return { NextResponse: { json: (body, init = {}) => ({ status: init.status || 200, body }) } };
-      if (name === '@/lib/supabase/server') return { createClient: async () => db };
-      throw new Error(name);
-    }, process: { env: {} },
-  };
-  vm.runInNewContext(code, context);
-  return { patch: context.exports.PATCH, profile, operations };
+  const load = createLoader({
+    'next/server': { NextResponse: { json: (body, init = {}) => ({ status: init.status || 200, body }) } },
+    '@/lib/supabase/server': { createClient: async () => db },
+  });
+  return { post: load('frontend/src/app/api/onboarding/route.ts').POST,
+    patch: load('frontend/src/app/api/profile/route.ts').PATCH,
+    get: load('frontend/src/app/api/profile/route.ts').GET, operations,
+    profile: () => profile };
 }
-const valid = { full_name: ' Test Aspirant ', target_year: '2027', target_exams: ['CDS', 'CAPF-AC', 'CDS'] };
-const request = (body = valid) => ({ json: async () => body });
-test('persists profile and unique preferences before returning completion', async () => {
-  const { patch, profile, operations } = setup(); const response = await patch(request());
-  assert.equal(response.status, 200); assert.equal(response.body.onboarding_completed, true);
-  assert.equal(profile.full_name, 'Test Aspirant'); assert.equal(profile.target_year, 2027);
+
+test('setup calls one authenticated RPC, normalizes duplicates and verifies persisted state', async () => {
+  const { post, operations } = setup({ missing: true });
+  const response = await post(request());
+  assert.equal(response.status, 200);
+  assert.equal(response.body.onboarding_completed, true);
+  assert.equal(response.body.full_name, 'Test Aspirant');
+  assert.equal(response.body.target_year, null);
   assert.equal(response.body.target_exams.length, 2);
-  assert.equal(operations.at(-1), 'profiles:update');
+  assert.equal(operations.length, 1);
+  assert.equal(operations[0].name, 'complete_onboarding');
 });
-for (const fail of ['profiles:select', 'profiles:update', 'user_exam_preferences:delete', 'user_exam_preferences:insert', 'user_exam_preferences:select']) {
-  test(`does not report success when ${fail} fails`, async () => {
-    const { patch, profile } = setup({ fail }); const response = await patch(request());
-    assert.equal(response.status, 500); assert.ok(response.body.error); assert.equal(profile.onboarding_completed, false);
-  });
-}
-for (const option of ['missing', 'zeroRows', 'dropExams']) {
-  test(`does not report success for ${option}`, async () => {
-    const { patch } = setup({ [option]: true }); assert.equal((await patch(request())).status, 500);
-  });
-}
-test('rejects expired sessions and invalid details', async () => {
-  assert.equal((await setup({ guest: true }).patch(request())).status, 401);
-  for (const body of [null, {}, { ...valid, target_exams: [] }, { ...valid, target_year: 'abc' }, { ...valid, target_exams: ['admin'] }]) {
-    assert.equal((await setup().patch(request(body))).status, 400);
+
+test('name and year are optional; required exam cannot be omitted', async () => {
+  assert.equal((await setup().post(request({ target_exams: ['CDS'] }))).status, 200);
+  for (const body of [null, {}, { ...valid, target_exams: [] }, { ...valid, target_year: 'abc' },
+    { ...valid, target_year: false }, { ...valid, target_year: [] }, { ...valid, full_name: 123 },
+    { ...valid, target_exams: ['NDA'] }, { ...valid, role: 'admin' }, { ...valid, id: 'another-user' },
+    { ...valid, onboarding_completed: true }]) {
+    const { post, operations } = setup();
+    assert.equal((await post(request(body))).status, 400);
+    assert.equal(operations.length, 0);
   }
 });
-test('repeat submission saves consistently', async () => {
-  const { patch } = setup(); assert.equal((await patch(request())).status, 200); assert.equal((await patch(request())).status, 200);
+
+for (const option of ['rpcFailure', 'readFailure', 'unverified', 'wrongOwner', 'zeroRows', 'dropExams']) {
+  test(`never reports setup success when ${option}`, async () => {
+    const { post } = setup({ [option]: true });
+    const response = await post(request());
+    assert.equal(response.status, 503);
+    assert.ok(response.body.error);
+  });
+}
+
+test('expired sessions cannot read or write a profile', async () => {
+  const { post, patch, get, operations } = setup({ guest: true });
+  assert.equal((await post(request())).status, 401);
+  assert.equal((await patch(request())).status, 401);
+  assert.equal((await get()).status, 401);
+  assert.equal(operations.length, 0);
+});
+
+test('GET distinguishes a missing row from a failed read', async () => {
+  assert.equal((await setup({ missing: true }).get()).body.onboarding_completed, false);
+  assert.equal((await setup({ readFailure: true }).get()).status, 503);
+});
+
+test('repeat setup returns saved data; existing legacy completed users are retained', async () => {
+  const { post } = setup();
+  assert.equal((await post(request())).status, 200);
+  const second = await post(request({ target_exams: ['CDS'], full_name: 'Overwrite', target_year: '2030' }));
+  assert.equal(second.body.full_name, 'Test Aspirant');
+  const existing = setup({ completed: true, exams: ['NDA'] });
+  const response = await existing.post(request());
+  assert.equal(response.status, 200);
+  assert.equal(response.body.target_exams[0], 'NDA');
+  assert.equal(response.body.full_name, null);
+});
+
+test('existing dashboard target editor keeps working without marking setup again', async () => {
+  const existing = setup({ completed: true, exams: ['NDA'] });
+  const response = await existing.patch(request({ target_exams: ['AFCAT'], target_year: 2027 }));
+  assert.equal(response.status, 200);
+  assert.equal(existing.operations[0].name, 'update_preparation_profile');
+  assert.equal(response.body.target_exams[0], 'AFCAT');
 });

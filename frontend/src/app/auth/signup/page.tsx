@@ -1,7 +1,9 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, Suspense, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { authUrl, safeAuthNext } from "@/lib/auth-redirect";
 import { createClient } from "@/lib/supabase/client";
 import GoogleSignInButton from "@/components/GoogleSignInButton";
 import {
@@ -39,7 +41,8 @@ function getPasswordStrength(password: string): {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default function SignupPage() {
+function SignupContent() {
+  const nextUrl = safeAuthNext(useSearchParams().get("next"));
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -75,17 +78,22 @@ export default function SignupPage() {
 
     const supabase = createClient();
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: `${window.location.origin}${authUrl("/auth/callback", nextUrl)}`,
       },
     });
 
     if (error) {
       setError(error.message);
       setLoading(false);
+      return;
+    }
+
+    if (data.session) {
+      window.location.assign(authUrl("/auth/continue", nextUrl));
       return;
     }
 
@@ -194,7 +202,7 @@ export default function SignupPage() {
                 </h3>
                 <p className="mt-2 text-sm text-emerald-700">{message}</p>
                 <Link
-                  href="/auth/login"
+                  href={authUrl("/auth/login", nextUrl)}
                   className="mt-5 inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-500"
                 >
                   Go to Login
@@ -203,7 +211,7 @@ export default function SignupPage() {
               </div>
             ) : (
               <form onSubmit={handleSignup} className="space-y-5" noValidate>
-                <GoogleSignInButton disabled={loading} onBusyChange={setLoading} onError={setError} />
+                <GoogleSignInButton next={nextUrl} disabled={loading} onBusyChange={setLoading} onError={setError} />
                 {/* Email */}
                 <div>
                   <label
@@ -387,7 +395,7 @@ export default function SignupPage() {
                 <p className="text-center text-sm text-slate-500">
                   Already have an account?{" "}
                   <Link
-                    href="/auth/login"
+                    href={authUrl("/auth/login", nextUrl)}
                     className="font-semibold text-blue-600 hover:text-blue-500 transition"
                   >
                     Log in
@@ -400,4 +408,8 @@ export default function SignupPage() {
       </div>
     </main>
   );
+}
+
+export default function SignupPage() {
+  return <Suspense fallback={<p>Loading…</p>}><SignupContent /></Suspense>;
 }

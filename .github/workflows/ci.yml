@@ -49,3 +49,17 @@ jobs:
 
       - name: Verify session resume regressions
         run: node --experimental-strip-types --test frontend/src/__tests__/practice_resume.test.mjs
+
+      - name: Verify auth state and atomic onboarding regressions
+        run: >-
+          node --experimental-strip-types --test --experimental-test-isolation=none
+          frontend/src/__tests__/auth_callback.test.mjs frontend/src/__tests__/auth_state.test.mjs
+          scripts/test-onboarding.cjs scripts/test-onboarding-db.cjs
+          scripts/test-auth-components.cjs scripts/test-auth-middleware.cjs
+
+      - name: Verify retired legacy profile writer
+        env:
+          SUPABASE_URL: https://placeholder.supabase.co
+          SUPABASE_SERVICE_ROLE_KEY: placeholder-service-role-key
+          SUPABASE_JWT_SECRET: placeholder-jwt-secret-placeholder-32-chars
+        run: python -m pytest -q backend/tests/test_profile_compatibility.py
