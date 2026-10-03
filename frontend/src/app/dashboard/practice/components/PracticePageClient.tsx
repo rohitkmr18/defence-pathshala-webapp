@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { fullPaperDestination } from "@/lib/full-paper-intent";
 
 import FullPaperHero, { FullPaperDefinition } from "@/components/practice/FullPaperHero";
 import QuestionDistributionChart from "@/components/practice/QuestionDistributionChart";
@@ -106,6 +107,7 @@ export default function PracticePageClient() {
   // Auth state — check once on mount
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [showAuthGate, setShowAuthGate] = useState(false);
+  const [pendingPaperUrl, setPendingPaperUrl] = useState("/dashboard/practice/full-paper");
 
   useEffect(() => {
     const supabase = createClient();
@@ -212,7 +214,8 @@ export default function PracticePageClient() {
 
   // ── Auth-gated Full Paper Navigation ───────────────────────────────────────
   function requireAuth(navigateTo: string) {
-    if (isAuthenticated === false) {
+    if (isAuthenticated !== true) {
+      setPendingPaperUrl(navigateTo);
       setShowAuthGate(true);
       return;
     }
@@ -220,13 +223,7 @@ export default function PracticePageClient() {
   }
 
   function handleStartFullPaper(paper: FullPaperDefinition) {
-    const params = new URLSearchParams();
-    params.set("exam", paper.exam);
-    params.set("year", paper.year.toString());
-    if (paper.cycle) {
-      params.set("cycle", paper.cycle);
-    }
-    requireAuth(`/dashboard/practice/full-paper?${params.toString()}`);
+    requireAuth(fullPaperDestination(paper));
   }
 
   function handleStartPractice() {
@@ -250,9 +247,6 @@ export default function PracticePageClient() {
 
   const primaryExam = activeFilters.exams[0] ?? "";
   const isCtaDisabled = countLoading || questionCount === 0 || questionCount === null;
-
-  // Current page URL for next= redirect
-  const currentUrl = typeof window !== "undefined" ? window.location.pathname + window.location.search : "/dashboard/practice";
 
   // Filter summary breadcrumbs
   const filterSummary = [
@@ -319,7 +313,7 @@ export default function PracticePageClient() {
 
       {/* ── Auth Gate Banner ─────────────────────────────────────────────── */}
       {showAuthGate && (
-        <AuthGateBanner nextUrl={currentUrl} />
+        <AuthGateBanner nextUrl={pendingPaperUrl} />
       )}
 
       {/* ═══════════════════════════════════════════════════════════════════════

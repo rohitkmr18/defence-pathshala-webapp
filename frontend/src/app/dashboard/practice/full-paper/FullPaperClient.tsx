@@ -5,6 +5,8 @@ import Link from "next/link";
 import { ArrowLeft, Loader2, LogIn } from "lucide-react";
 import type { PracticeQuestion, OptionKey } from "@/lib/practice-types";
 import { createClient } from "@/lib/supabase/client";
+import { authUrl } from "@/lib/auth-redirect";
+import { fullPaperDestination } from "@/lib/full-paper-intent";
 import QuestionCard from "@/components/practice/player/QuestionCard";
 import ExamHeader from "@/components/practice/full-paper/ExamHeader";
 import QuestionPalette from "@/components/practice/full-paper/QuestionPalette";
@@ -105,8 +107,11 @@ export default function FullPaperClient({
 
   // Load questions when selected paper changes
   useEffect(() => {
-    void loadPaperQuestions(selectedPaper);
-  }, [selectedPaper, loadPaperQuestions]);
+    if (isAuthenticated !== true) return;
+    // Defer initialization until the authenticated route is committed.
+    const start = window.setTimeout(() => { void loadPaperQuestions(selectedPaper); }, 0);
+    return () => window.clearTimeout(start);
+  }, [selectedPaper, loadPaperQuestions, isAuthenticated]);
 
   // Paper switcher handler
   const handleSelectPaperById = useCallback((paperId: string) => {
@@ -118,7 +123,7 @@ export default function FullPaperClient({
 
   // Countdown timer logic
   useEffect(() => {
-    if (loading || isSubmitted || !questions || questions.length === 0) return;
+    if (isAuthenticated !== true || loading || isSubmitted || !questions || questions.length === 0) return;
 
     timerRef.current = setInterval(() => {
       setTimeRemaining((prev) => {
@@ -134,7 +139,7 @@ export default function FullPaperClient({
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [loading, isSubmitted, questions]);
+  }, [loading, isSubmitted, questions, isAuthenticated]);
 
   // Update visited state on question navigation
   const navigateToQuestion = useCallback(
@@ -224,7 +229,7 @@ export default function FullPaperClient({
           </p>
           <div className="mt-6 space-y-3">
             <Link
-              href={`/auth/login?next=${encodeURIComponent(typeof window !== "undefined" ? window.location.pathname + window.location.search : "/dashboard/practice/full-paper")}`}
+              href={authUrl("/auth/login", fullPaperDestination(selectedPaper))}
               className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-md shadow-blue-600/20 hover:bg-blue-500 transition"
             >
               <LogIn className="h-4 w-4" />

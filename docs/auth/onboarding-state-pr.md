@@ -1,0 +1,15 @@
+# Reconcile auth/onboarding, email OTP and the production migration ledger
+
+Authenticated incomplete users enter one setup screen; completed users reach their safe intended destination; profile failures are recoverable. One canonical resolver preserves next and Explore returnTo through Google/email OTP → /auth/continue → setup/dashboard. The exact selected full paper survives authentication. OTP PR #12's shared form, resend/change-email behavior, session requirement and template are incorporated; password-first forms and duplicate sanitization are removed.
+
+PR #15's authenticated atomic setup/readback, locked idempotency, completed-user compatibility and role/ownership protection remain. PR #9 overlap is resolved selectively: restore recorded baseline/reconstruction sources and JWT issuer validation/offline fixtures; retain canonical reads, resolver, single-screen setup and retired legacy profile writer. Other Phase 0 practice/admin/UI work remains independently reviewable in PR #9.
+
+Read-only production metadata returned 14 applied versions through 20261003091625_phase2_intelligence_trust_contract. Their recorded SQL is restored under the actual versions, with a checked-in receipt/comparison test. The two unrecorded bootstrap files move outside the ledger. Onboarding 20261003093440 remains unchanged and unapplied to production. Repository source drift is reconciled on this branch; main and the hosted MIGRATIONS_FAILED history status were not altered. Automatic local migration/seed replay is disabled pending controlled schema reconstruction.
+
+Validation: 70 frontend/auth/OTP/onboarding SQL tests passed on Node 22 and 24; 2 separate ledger/reconstruction tests passed; all 25 backend offline tests passed. TypeScript, changed-file lint (24 frontend files), build/import verification and local guest OTP UI smoke passed. Full lint retains 41 existing errors/46 warnings. Network-isolated Docker PostgreSQL reconstructed 21 SQL files and passed two-connection serialization with synthetic Auth/Storage stubs.
+
+No authenticated live Supabase, OTP delivery, Google OAuth, PostgREST/RLS or live concurrency acceptance is claimed. No external staging resource, secret/auth setting, merge, production deployment, production DDL/DML, reset or repair was performed. The approved Vercel guard disables only this PR branch; keep this PR Draft.
+
+Migration and rollout: supabase/migrations/20261003093440_atomic_onboarding.sql; docs/auth/onboarding-state-rollout.md. Source receipts, overlap decisions and controlled staging preparation: docs/auth/repository-reconciliation.md. Check results/limits: docs/auth/onboarding-state-verification.md. OTP provider prerequisites: docs/auth/email-otp-rollout.md.
+
+Next action: select an existing isolated Supabase staging environment and review its baseline against the controlled reconstruction plan before applying any SQL or configuring test credentials. Stop before creating paid resources or changing external configuration; these require a separate owner-controlled step.

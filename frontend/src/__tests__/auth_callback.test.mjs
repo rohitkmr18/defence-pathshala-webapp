@@ -14,18 +14,18 @@ test('successful callback exchanges the code before returning to the requested p
   let exchanged = false;
   assert.equal(await completeAuthCallback(params, async code => {
     assert.equal(code, 'test-code'); exchanged = true; return { error: null };
-  }), '/dashboard/practice');
+  }), '/auth/continue?next=%2Fdashboard%2Fpractice');
   assert.equal(exchanged, true);
 });
 
 test('provider denial or missing code returns to login without exchanging a session', async () => {
   for (const params of [new URLSearchParams(), new URLSearchParams({ error: 'access_denied', code: 'ignored' })]) {
-    assert.equal(await completeAuthCallback(params, () => { throw new Error('Must not be called'); }), '/auth/login?error=oauth_failed');
+    assert.equal(await completeAuthCallback(params, () => { throw new Error('Must not be called'); }), '/auth/login?next=%2Fdashboard&error=oauth_failed');
   }
 });
 
 test('expired code and network failure cannot be mistaken for successful sign-in', async () => {
   const params = new URLSearchParams({ code: 'expired' });
-  assert.equal(await completeAuthCallback(params, async () => ({ error: { message: 'expired' } })), '/auth/login?error=oauth_failed');
-  assert.equal(await completeAuthCallback(params, async () => { throw new Error('network'); }), '/auth/login?error=oauth_failed');
+  assert.equal(await completeAuthCallback(params, async () => ({ error: { message: 'expired' } })), '/auth/login?next=%2Fdashboard&error=oauth_failed');
+  assert.equal(await completeAuthCallback(params, async () => { throw new Error('network'); }), '/auth/login?next=%2Fdashboard&error=oauth_failed');
 });

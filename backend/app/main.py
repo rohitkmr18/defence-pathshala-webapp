@@ -93,24 +93,10 @@ def get_profile(current_user: dict = Depends(get_current_user)):
             .execute()
         )
 
-        # Auto-create profile if missing
+        # Reads do not create profiles; the authenticated setup RPC is the sole writer.
         if not profile.data:
-            supabase.table("profiles").insert(
-                {
-                    "id": user_id,
-                    "role": "student",
-                    "full_name": None,
-                    "target_year": None,
-                    "onboarding_completed": False,
-                }
-            ).execute()
-
-            profile = (
-                supabase.table("profiles")
-                .select("id, full_name, target_year, onboarding_completed")
-                .eq("id", user_id)
-                .execute()
-            )
+            return {"id": user_id, "full_name": None, "target_year": None,
+                    "onboarding_completed": False, "target_exams": []}
 
         # Fetch exam preferences
         exams = (
@@ -138,34 +124,6 @@ def update_profile(
     payload: ProfileUpdate,
     current_user: dict = Depends(get_current_user),
 ):
-    user_id = current_user.get("sub")
-
-    try:
-        # Update profile selectively
-        update_data = {"onboarding_completed": True}
-        if payload.full_name is not None:
-            update_data["full_name"] = payload.full_name
-        if payload.target_year is not None:
-            update_data["target_year"] = payload.target_year
-
-        supabase.table("profiles").update(update_data).eq("id", user_id).execute()
-
-        # Replace exam preferences if provided
-        if payload.target_exams is not None:
-            supabase.table("user_exam_preferences").delete().eq(
-                "user_id",
-                user_id,
-            ).execute()
-
-            if payload.target_exams:
-                rows = [
-                    {"user_id": user_id, "exam": exam}
-                    for exam in payload.target_exams
-                ]
-                supabase.table("user_exam_preferences").insert(rows).execute()
-
-        return {"success": True}
-
-    except Exception as e:
-        traceback.print_exc()
-        raise HTTPException(status_code=500, detail=str(e))
+    # The previous service-role writer could report completion before exams saved.
+    # Do not retain a second writer or emulate the authenticated RPC with admin keys.
+    raise HTTPException(status_code=410, detail="Use the web app /api/onboarding or /api/profile endpoint.")
