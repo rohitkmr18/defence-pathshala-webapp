@@ -70,7 +70,7 @@ export async function getQuestionBankMeta(): Promise<QuestionBankMeta> {
 
     const supabase = createSupabaseClient(supabaseUrl, key);
     const query = supabase
-      .from("questions")
+      .from("v_dp_question_intelligence_v2")
       .select("exam,year,cycle");
 
     const pageSize = 1000;

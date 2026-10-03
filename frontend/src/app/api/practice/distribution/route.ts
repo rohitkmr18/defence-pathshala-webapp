@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
     const topic = searchParams.get("topic");
 
     let query = supabase
-      .from("questions")
+      .from("v_dp_question_intelligence_v2")
       .select("id, question_id, exam, year, cycle");
 
     if (exam) {

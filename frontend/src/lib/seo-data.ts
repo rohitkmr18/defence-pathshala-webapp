@@ -87,7 +87,7 @@ export const getCachedQuestionsMeta = unstable_cache(
 
     while (true) {
       const { data, error } = await client
-        .from("questions")
+        .from("v_dp_question_intelligence_v2")
         .select("exam,year,subject")
         .range(start, start + pageSize - 1);
 
@@ -415,7 +415,7 @@ export async function getSubjectArchive(
 
       while (true) {
         const { data, error } = await client
-          .from("questions")
+          .from("v_dp_question_intelligence_v2")
           .select(
             "id,question_id,exam,year,cycle,paper,q_num,subject,topic,subtopic,theme,question,opt_a,opt_b,opt_c,opt_d,final_opt,explanation,source,verified_status,difficulty_score,difficulty_category"
           )
