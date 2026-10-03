@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
     const cycleParam = searchParams.get("cycle");
 
     let query = supabase
-      .from("questions")
+      .from("v_dp_question_intelligence_v2")
       .select("exam,year,cycle,subject,topic,q_type,q_pattern,difficulty_category");
     if (examParam) {
       const expanded = expandExamQuery(examParam);
