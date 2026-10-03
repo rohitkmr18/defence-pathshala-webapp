@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   LogIn,
@@ -16,12 +16,15 @@ import {
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { fullPaperDestination } from "@/lib/full-paper-intent";
+import { safeLearningReturn } from "@/lib/learning-navigation";
+import { trackLearningEvent } from "@/lib/learning-events";
 
 import FullPaperHero, { FullPaperDefinition } from "@/components/practice/FullPaperHero";
 import QuestionDistributionChart from "@/components/practice/QuestionDistributionChart";
 import PracticeFilters, { type FilterOverride } from "./PracticeFilters";
 import {
   buildPracticeSessionUrl,
+  buildPracticeUrl,
   parseFiltersFromSearchParams,
   serializeFiltersToSearchParams,
 } from "@/lib/question-filters";
@@ -79,11 +82,20 @@ export default function PracticePageClient() {
   const searchParams = useSearchParams();
   const returnTo = searchParams.get("returnTo");
 
-  // Top mode toggle: "targeted" vs "full-paper"
-  const [practiceMode, setPracticeMode] = useState<"targeted" | "full-paper">("targeted");
+  const practiceMode = searchParams.get("mode") === "full_paper" ? "full-paper" : "targeted";
+  const sessionStyle = searchParams.get("mode") === "attempt" ? "attempt" : "instant";
 
-  // Targeted practice execution style: "instant" (learning) vs "attempt" (timed)
-  const [sessionStyle, setSessionStyle] = useState<"instant" | "attempt">("instant");
+  function preserveIntent(filters: ActiveFilters, style: "instant" | "attempt" = sessionStyle, workflow: "targeted" | "full-paper" = practiceMode) {
+    const parsed = parseFiltersFromSearchParams(searchParams);
+    const url = buildPracticeUrl({ ...parsed, ...filters,
+      mode: workflow === "full-paper" ? "full_paper" : style,
+      returnTo: returnTo ? safeLearningReturn(returnTo) : undefined,
+      origin: parsed.origin || (returnTo?.includes("question-bank") ? "explore" : "practice"),
+    });
+    if (url !== window.location.pathname + window.location.search) window.history.replaceState(null, "", url);
+  }
+  const preserveIntentRef = useRef(preserveIntent);
+  useEffect(() => { preserveIntentRef.current = preserveIntent; });
 
   const [activeFilters, setActiveFilters] = useState<ActiveFilters>(() => {
     const parsed = parseFiltersFromSearchParams(searchParams);
@@ -210,6 +222,7 @@ export default function PracticePageClient() {
       return filters;
     });
     setShowAuthGate(false);
+    preserveIntentRef.current(filters);
   }, []);
 
   // ── Auth-gated Full Paper Navigation ───────────────────────────────────────
@@ -223,12 +236,17 @@ export default function PracticePageClient() {
   }
 
   function handleStartFullPaper(paper: FullPaperDefinition) {
-    requireAuth(fullPaperDestination(paper));
+    const url = new URL(fullPaperDestination(paper), "https://learning.invalid");
+    if (returnTo) url.searchParams.set("returnTo", safeLearningReturn(returnTo));
+    const origin = searchParams.get("origin");
+    if (origin) url.searchParams.set("origin", origin);
+    requireAuth(`${url.pathname}${url.search}`);
   }
 
   function handleStartPractice() {
     const sessionUrl = buildPracticeSessionUrl(
       {
+        ...parseFiltersFromSearchParams(searchParams),
         exams: activeFilters.exams,
         years: activeFilters.years,
         cycles: activeFilters.cycles,
@@ -242,6 +260,7 @@ export default function PracticePageClient() {
         returnTo: returnTo || undefined,
       }
     );
+    trackLearningEvent("practice_launch", { mode: sessionStyle, origin: searchParams.get("origin") || "practice" });
     router.push(sessionUrl);
   }
 
@@ -261,7 +280,7 @@ export default function PracticePageClient() {
       {returnTo && (
         <div className="flex items-center gap-2 pb-2">
           <Link
-            href={decodeURIComponent(returnTo)}
+            href={safeLearningReturn(returnTo)}
             className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs sm:text-sm font-bold text-slate-700 shadow-2xs hover:bg-slate-50 hover:text-blue-700 transition"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -285,7 +304,7 @@ export default function PracticePageClient() {
         <div className="inline-flex rounded-2xl border border-slate-200 bg-slate-100/90 p-1 shadow-2xs self-start sm:self-auto">
           <button
             type="button"
-            onClick={() => setPracticeMode("targeted")}
+            onClick={() => { preserveIntent(activeFilters, sessionStyle, "targeted"); }}
             className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition cursor-pointer ${
               practiceMode === "targeted"
                 ? "bg-white text-blue-600 shadow-xs"
@@ -298,7 +317,7 @@ export default function PracticePageClient() {
 
           <button
             type="button"
-            onClick={() => setPracticeMode("full-paper")}
+            onClick={() => { preserveIntent(activeFilters, sessionStyle, "full-paper"); }}
             className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition cursor-pointer ${
               practiceMode === "full-paper"
                 ? "bg-white text-blue-600 shadow-xs"
@@ -330,7 +349,7 @@ export default function PracticePageClient() {
           </div>
 
           {/* Sticky / Prominent Action & Launch Bar */}
-          <div className="sticky bottom-4 z-20 rounded-3xl border border-slate-200/90 bg-white/95 p-4 shadow-xl backdrop-blur-md sm:p-5">
+          <div className="sticky bottom-[calc(5rem+env(safe-area-inset-bottom))] lg:bottom-4 z-20 rounded-3xl border border-slate-200/90 bg-white/95 p-4 shadow-xl backdrop-blur-md sm:p-5">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               {/* Left: Summary + Live count badge */}
               <div className="space-y-1">
@@ -367,7 +386,7 @@ export default function PracticePageClient() {
                 <div className="inline-flex rounded-xl border border-slate-200 bg-slate-100 p-0.5 text-xs font-semibold">
                   <button
                     type="button"
-                    onClick={() => setSessionStyle("instant")}
+                    onClick={() => { preserveIntent(activeFilters, "instant"); }}
                     className={`rounded-lg px-3 py-1.5 transition cursor-pointer ${
                       sessionStyle === "instant"
                         ? "bg-white font-bold text-slate-900 shadow-2xs"
@@ -378,7 +397,7 @@ export default function PracticePageClient() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setSessionStyle("attempt")}
+                    onClick={() => { preserveIntent(activeFilters, "attempt"); }}
                     className={`rounded-lg px-3 py-1.5 transition cursor-pointer ${
                       sessionStyle === "attempt"
                         ? "bg-white font-bold text-slate-900 shadow-2xs"

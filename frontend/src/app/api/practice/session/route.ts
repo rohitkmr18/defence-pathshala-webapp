@@ -1,3 +1,5 @@
+
+import { errorMessage } from "@/lib/error-message";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { createServerClient } from "@supabase/ssr";
@@ -28,19 +30,18 @@ async function getAuthenticatedUserId(): Promise<string | null> {
     });
     const {
       data: { user },
+      error,
     } = await supabaseUserClient.auth.getUser();
+    if (error && error.name !== "AuthSessionMissingError") throw error;
     return user?.id || null;
   } catch {
-    return null;
+    throw new Error("Could not verify your account. Sign in again to save progress.");
   }
 }
 
 export async function GET(request: NextRequest) {
   try {
     const userId = await getAuthenticatedUserId();
-    const key = serviceRoleKey || anonKey;
-    const supabase = createClient(supabaseUrl, key);
-
     if (!userId) {
       return NextResponse.json({
         activeSession: null,
@@ -51,6 +52,8 @@ export async function GET(request: NextRequest) {
       });
     }
 
+    if (!serviceRoleKey) return NextResponse.json({ error: "Session persistence unavailable" }, { status: 503 });
+    const supabase = createClient(supabaseUrl, serviceRoleKey);
     const requestedSessionId = request.nextUrl.searchParams.get("session_id");
     if (requestedSessionId) {
       const { data, error } = await supabase
@@ -60,7 +63,8 @@ export async function GET(request: NextRequest) {
         .eq("id", requestedSessionId)
         .eq("is_completed", false)
         .maybeSingle();
-      if (error || !data) {
+      if (error) return NextResponse.json({ error: "Saved session unavailable" }, { status: 503 });
+      if (!data) {
         return NextResponse.json({ error: "Saved session unavailable" }, { status: 404 });
       }
       return NextResponse.json({ activeSession: data });
@@ -77,6 +81,7 @@ export async function GET(request: NextRequest) {
       supabase.from("practice_sessions").select("*")
         .eq("user_id", userId).order("updated_at", { ascending: false }).limit(10),
     ]);
+    if (attemptResult.error || activeResult.error || recentResult.error) return NextResponse.json({ error: "Learning history unavailable" }, { status: 503 });
     const attempts = attemptResult.data || [];
     const totalAttempts = attempts.length;
     const correctCount = attempts.filter((a) => a.is_correct).length;
@@ -105,6 +110,7 @@ export async function POST(request: NextRequest) {
     const userId = await getAuthenticatedUserId();
     const body = await request.json();
     const {
+      creation_id,
       title,
       mode = "instant",
       filters = {},
@@ -112,14 +118,25 @@ export async function POST(request: NextRequest) {
       total_questions = 0,
     } = body;
 
-    const key = serviceRoleKey || anonKey;
-    const supabase = createClient(supabaseUrl, key);
+    if (!["instant", "attempt", "full_paper"].includes(mode) || !Array.isArray(question_ids) || !question_ids.length || question_ids.length > 150) {
+      return NextResponse.json({ error: "Invalid practice question set" }, { status: 400 });
+    }
 
     if (!userId) {
       return NextResponse.json({ success: true, guest: true, id: `guest_${Date.now()}` });
     }
 
+
+    const key = serviceRoleKey;
+    if (!key) return NextResponse.json({ error: "Session persistence unavailable" }, { status: 503 });
+    const supabase = createClient(supabaseUrl, key);
+
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(creation_id || "")) {
+      return NextResponse.json({ error: "Missing stable creation identity" }, { status: 400 });
+    }
+
     const sessionPayload = {
+      id: creation_id,
       user_id: userId,
       title: title || "Practice Session",
       mode: mode,
@@ -134,21 +151,22 @@ export async function POST(request: NextRequest) {
     };
 
     try {
-      const { data, error } = await supabase
+      const { error: insertError } = await supabase
         .from("practice_sessions")
-        .insert(sessionPayload)
-        .select()
-        .single();
+        .upsert(sessionPayload, { onConflict: "id", ignoreDuplicates: true });
+      if (insertError) return NextResponse.json({ error: "Session persistence failed" }, { status: 503 });
+      const { data, error } = await supabase.from("practice_sessions").select("*")
+        .eq("id", creation_id).eq("user_id", userId).single();
 
-      if (error) {
-        return NextResponse.json({ success: true, fallback: true, id: `sess_${Date.now()}` });
+      if (error || !data) {
+        return NextResponse.json({ success: false, error: "Session persistence failed" }, { status: 503 });
       }
       return NextResponse.json({ success: true, session: data });
     } catch {
-      return NextResponse.json({ success: true, fallback: true, id: `sess_${Date.now()}` });
+      return NextResponse.json({ success: false, error: "Session persistence failed" }, { status: 503 });
     }
   } catch (err: unknown) {
-    return NextResponse.json({ error: err instanceof Error ? err.message : "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ error: errorMessage(err, "Internal Server Error") }, { status: 500 });
   }
 }
 
@@ -164,6 +182,7 @@ export async function PATCH(request: NextRequest) {
       correct_count,
       incorrect_count,
       time_spent_seconds,
+      filters,
     } = body;
 
     if (!session_id) {
@@ -171,10 +190,11 @@ export async function PATCH(request: NextRequest) {
     }
 
     if (!userId) {
-      return NextResponse.json({ success: true, guest: true });
+      return NextResponse.json({ error: "Sign in again to save progress" }, { status: 401 });
     }
 
-    const key = serviceRoleKey || anonKey;
+    const key = serviceRoleKey;
+    if (!key) return NextResponse.json({ error: "Session persistence unavailable" }, { status: 503 });
     const supabase = createClient(supabaseUrl, key);
 
     const updatePayload: Record<string, unknown> = {
@@ -190,6 +210,7 @@ export async function PATCH(request: NextRequest) {
     if (correct_count !== undefined) updatePayload.correct_count = correct_count;
     if (incorrect_count !== undefined) updatePayload.incorrect_count = incorrect_count;
     if (time_spent_seconds !== undefined) updatePayload.time_spent_seconds = time_spent_seconds;
+    if (filters !== undefined) updatePayload.filters = filters;
 
     try {
       const { data, error } = await supabase
@@ -200,14 +221,14 @@ export async function PATCH(request: NextRequest) {
         .select()
         .single();
 
-      if (error) {
-        return NextResponse.json({ success: true, fallback: true });
+      if (error || !data) {
+        return NextResponse.json({ success: false, error: "Session persistence failed" }, { status: 503 });
       }
       return NextResponse.json({ success: true, session: data });
     } catch {
-      return NextResponse.json({ success: true, fallback: true });
+      return NextResponse.json({ success: false, error: "Session persistence failed" }, { status: 503 });
     }
   } catch (err: unknown) {
-    return NextResponse.json({ error: err instanceof Error ? err.message : "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ error: errorMessage(err, "Internal Server Error") }, { status: 500 });
   }
 }

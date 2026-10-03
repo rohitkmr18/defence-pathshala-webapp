@@ -12,7 +12,8 @@ import { getCorrectKey } from "@/lib/practice-types";
 import ProgressHeader from "./ProgressHeader";
 import QuestionCard from "./QuestionCard";
 import AnswerReveal from "./AnswerReveal";
-import { recordQuestionAttempt, updateSessionProgress } from "@/lib/practice-session-client";
+import { getLocalSession, recordQuestionAttempt, updateSessionProgress } from "@/lib/practice-session-client";
+import { trackLearningEvent } from "@/lib/learning-events";
 
 // ─── Props ───────────────────────────────────────────────────────────────────
 
@@ -22,7 +23,9 @@ export interface QuestionPlayerProps {
   sessionId?: string;
   initialIndex?: number;
   initialAnswers?: Record<string, OptionKey>;
-  onComplete?: (answers: Record<string, OptionKey>) => void;
+  initialCheckedIds?: string[];
+  disabled?: boolean;
+  onComplete?: (answers: Record<string, OptionKey>) => void | Promise<void>;
 }
 
 // ─── Component ───────────────────────────────────────────────────────────────
@@ -33,6 +36,8 @@ export default function QuestionPlayer({
   sessionId,
   initialIndex = 0,
   initialAnswers = {},
+  initialCheckedIds = [],
+  disabled = false,
   onComplete,
 }: QuestionPlayerProps) {
   // ── Session state ──────────────────────────────────────────────────────────
@@ -42,22 +47,31 @@ export default function QuestionPlayer({
   /** question.id → chosen option key */
   const [answers, setAnswers] = useState<Record<string, OptionKey>>(initialAnswers);
   /** Set of question IDs whose answers have been revealed */
-  const [revealed, setRevealed] = useState<Set<string>>(() => {
-    // If questions had initial answers in instant mode, treat them as revealed
-    const set = new Set<string>();
-    if (mode === "instant") {
-      Object.keys(initialAnswers).forEach((qId) => set.add(qId));
-    }
-    return set;
-  });
+  const [revealed, setRevealed] = useState<Set<string>>(() => new Set(initialCheckedIds));
+  const checkedRef = useRef(new Set(initialCheckedIds));
+  const navigationRef = useRef(false);
   const [showNavigator, setShowNavigator] = useState(false);
 
   // Track per-question time
   const questionStartTimeRef = useRef<number>(0);
+  const questionBaseTimeRef = useRef(0);
 
   useEffect(() => {
     questionStartTimeRef.current = Date.now();
-  }, [currentIndex]);
+    navigationRef.current = false;
+    const questionId = questions[currentIndex]?.id;
+    const base = getLocalSession()?.question_times?.[questionId] || 0;
+    questionBaseTimeRef.current = base;
+    const persist = () => {
+      if (!sessionId || !questionId || getLocalSession()?.id !== sessionId) return;
+      const latest = getLocalSession()!;
+      updateSessionProgress(sessionId, { question_times: { ...latest.question_times,
+        [questionId]: base + Math.round((Date.now() - questionStartTimeRef.current) / 1000) } });
+    };
+    const timer = window.setInterval(persist, 5000);
+    window.addEventListener("pagehide", persist);
+    return () => { window.clearInterval(timer); window.removeEventListener("pagehide", persist); persist(); };
+  }, [currentIndex, questions, sessionId]);
 
   // ── Derived state ───────────────────────────────────────────────────────────
   const question = questions[currentIndex];
@@ -71,7 +85,7 @@ export default function QuestionPlayer({
 
   const handleSelect = useCallback(
     (key: OptionKey) => {
-      if (!question || (mode === "instant" && isRevealed)) return;
+      if (disabled || !question || (mode === "instant" && isRevealed)) return;
       const nextAnswers = { ...answers, [question.id]: key };
       setAnswers(nextAnswers);
 
@@ -82,17 +96,19 @@ export default function QuestionPlayer({
         });
       }
     },
-    [question, mode, isRevealed, answers, sessionId, currentIndex]
+    [disabled, question, mode, isRevealed, answers, sessionId, currentIndex]
   );
 
   const handleCheckAnswer = useCallback(() => {
-    if (!question || !selectedOption) return;
+    if (disabled || !question || !selectedOption || checkedRef.current.has(question.id)) return;
+    checkedRef.current.add(question.id);
+    trackLearningEvent("practice_check", { mode, question_id: question.id }, `${sessionId}:${question.id}`);
 
     const correctKey = getCorrectKey(question);
     const isCorrect = selectedOption === correctKey;
     const timeSpent = Math.max(
       1,
-      Math.round((Date.now() - (questionStartTimeRef.current || Date.now())) / 1000)
+      questionBaseTimeRef.current + Math.round((Date.now() - (questionStartTimeRef.current || Date.now())) / 1000)
     );
 
     setRevealed((prev) => new Set(prev).add(question.id));
@@ -105,25 +121,30 @@ export default function QuestionPlayer({
       timeTakenSeconds: timeSpent,
       sessionId,
       mode,
-    });
+    }).catch(() => { /* Persistence status shows the failure; retain the answer. */ });
 
     if (sessionId) {
       updateSessionProgress(sessionId, {
         current_index: currentIndex,
         answers: { ...answers, [question.id]: selectedOption },
+        checked_ids: [...checkedRef.current],
       });
     }
-  }, [question, selectedOption, sessionId, mode, currentIndex, answers]);
+  }, [disabled, question, selectedOption, sessionId, mode, currentIndex, answers]);
 
   const handlePrev = useCallback(() => {
+    if (disabled) return;
     const index = Math.max(0, currentIndex - 1);
     setCurrentIndex(index);
     if (sessionId) updateSessionProgress(sessionId, { current_index: index });
-  }, [currentIndex, sessionId]);
+  }, [disabled, currentIndex, sessionId]);
 
   const handleNext = useCallback(() => {
+    if (disabled || navigationRef.current) return;
+    navigationRef.current = true;
+    trackLearningEvent("practice_next", { mode, position: currentIndex }, `${sessionId}:${currentIndex}:next`);
     if (isLast) {
-      onComplete?.(answers);
+      void Promise.resolve(onComplete?.(answers)).finally(() => { navigationRef.current = false; });
     } else {
       const nextIdx = currentIndex + 1;
       setCurrentIndex(nextIdx);
@@ -131,10 +152,11 @@ export default function QuestionPlayer({
         updateSessionProgress(sessionId, { current_index: nextIdx });
       }
     }
-  }, [isLast, onComplete, answers, currentIndex, sessionId]);
+  }, [disabled, mode, isLast, onComplete, answers, currentIndex, sessionId]);
 
   const handleSkip = useCallback(() => {
-    if (!question) return;
+    if (disabled || !question || navigationRef.current) return;
+    navigationRef.current = true;
 
     const nextAnswers = { ...answers };
     delete nextAnswers[question.id];
@@ -142,7 +164,7 @@ export default function QuestionPlayer({
     if (sessionId) updateSessionProgress(sessionId, { answers: nextAnswers });
 
     if (isLast) {
-      onComplete?.(nextAnswers);
+      void Promise.resolve(onComplete?.(nextAnswers)).finally(() => { navigationRef.current = false; });
     } else {
       const nextIdx = currentIndex + 1;
       setCurrentIndex(nextIdx);
@@ -150,15 +172,15 @@ export default function QuestionPlayer({
         updateSessionProgress(sessionId, { current_index: nextIdx });
       }
     }
-  }, [answers, isLast, onComplete, question, currentIndex, sessionId]);
+  }, [disabled, answers, isLast, onComplete, question, currentIndex, sessionId]);
 
   const handleJumpToQuestion = useCallback((index: number) => {
-    if (index >= 0 && index < questions.length) {
+    if (!disabled && index >= 0 && index < questions.length) {
       setCurrentIndex(index);
       setShowNavigator(false);
       if (sessionId) updateSessionProgress(sessionId, { current_index: index });
     }
-  }, [questions.length, sessionId]);
+  }, [disabled, questions.length, sessionId]);
 
   // ── Mode-specific nav logic ─────────────────────────────────────────────────
   const showCheckAnswerCTA = mode === "instant" && hasAnswer && !isRevealed;
@@ -277,6 +299,7 @@ export default function QuestionPlayer({
       {/* Answer Reveal (Instant / Learning Mode) */}
       {mode === "instant" && (
         <AnswerReveal
+          key={question.id}
           question={question}
           selectedOption={selectedOption}
           visible={isRevealed}
@@ -284,12 +307,12 @@ export default function QuestionPlayer({
       )}
 
       {/* Sticky Bottom Navigation Row */}
-      <div className="sticky bottom-4 z-10 flex items-center justify-between gap-3 rounded-2xl border border-slate-200/90 bg-white/95 p-3 sm:p-4 shadow-lg backdrop-blur-md">
+      <div className="sticky bottom-[calc(5rem+env(safe-area-inset-bottom))] lg:bottom-4 z-10 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200/90 bg-white/95 p-3 sm:p-4 shadow-lg backdrop-blur-md">
         {/* Previous Button (Always enabled for earlier questions) */}
         <button
           type="button"
           onClick={handlePrev}
-          disabled={isFirst}
+          disabled={isFirst || disabled}
           className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs sm:text-sm font-bold text-slate-700 shadow-2xs transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-30 cursor-pointer"
         >
           <ChevronLeft className="h-4 w-4" />

@@ -13,7 +13,8 @@ import {
   BookOpen,
 } from "lucide-react";
 
-import { buildPracticeUrl } from "@/lib/question-filters";
+import { buildExploreUrl, buildPracticeUrl, parseFiltersFromSearchParams } from "@/lib/question-filters";
+import { trackLearningEvent } from "@/lib/learning-events";
 
 interface SubjectItem {
   name: string;
@@ -536,15 +537,20 @@ export default function TopicHeatmap({
                         </span>
 
                         <Link
+                          onClick={() => trackLearningEvent("explore_practice", { subject: selectedSubject || undefined, topic: topic.name, origin: "explore" })}
                           href={buildPracticeUrl(
                             {
+                              ...parseFiltersFromSearchParams(new URLSearchParams(returnTo?.split("?")[1] || "")),
                               exams: selectedExams,
                               years: selectedYears,
                               cycles: selectedCycles,
                               subjects: selectedSubject ? [selectedSubject] : [],
                               topics: [topic.name],
+                              subtopics: [],
+                              origin: "explore",
                             },
-                            { returnTo }
+                            { returnTo: buildExploreUrl({ ...parseFiltersFromSearchParams(new URLSearchParams(returnTo?.split("?")[1] || "")),
+                              subjects: selectedSubject ? [selectedSubject] : [], topics: [topic.name], subtopics: [], origin: "explore" }) }
                           )}
                           className="inline-flex items-center gap-1 font-bold text-[11px] underline-offset-2 hover:underline group-hover:translate-x-0.5 transition-transform"
                         >

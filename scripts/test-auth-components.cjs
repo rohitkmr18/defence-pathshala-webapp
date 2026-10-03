@@ -67,16 +67,22 @@ test('failed save keeps all visible inputs, supports retry and prevents rapid du
   assert.deepEqual(navigations, [props.next]);
 });
 
-test('guest selecting a full paper uses the selected exam/year/cycle in login intent', () => {
+test('guest selecting a full paper uses the selected exam/year/cycle in login intent', (t) => {
   const h = hooks(); const pushed = [];
+  let search = new URLSearchParams();
+  const oldWindow = global.window;
+  global.window = { location: { pathname: '/dashboard/practice', search: '' }, history: { replaceState(_state, _title, url) {
+    search = new URL(url, 'https://local.test').searchParams;
+  } } };
+  t.after(() => { global.window = oldWindow; });
   const load = createLoader({
     react: h.react, 'next/link': 'a',
-    'next/navigation': { useRouter: () => ({ push: url => pushed.push(url) }), useSearchParams: () => new URLSearchParams() },
+    'next/navigation': { useRouter: () => ({ push: url => pushed.push(url) }), useSearchParams: () => search },
     '@/lib/supabase/client': {},
     '@/components/practice/FullPaperHero': { __esModule: true, default: 'paper-hero' },
     '@/components/practice/QuestionDistributionChart': { __esModule: true, default: 'distribution' },
     './PracticeFilters': { __esModule: true, default: 'filters' },
-  });
+  }, { window: global.window });
   const Page = load('frontend/src/app/dashboard/practice/components/PracticePageClient.tsx').default;
   function render() { h.begin(); return Page(); }
   let tree = render();
@@ -88,6 +94,6 @@ test('guest selecting a full paper uses the selected exam/year/cycle in login in
   const gate = elements(tree, n => typeof n.type === 'function' && n.props.nextUrl)[0];
   const banner = gate.type(gate.props);
   const login = elements(banner, n => n.type === 'a')[0].props.href;
-  assert.equal(new URL(login, 'https://local.test').searchParams.get('next'), '/dashboard/practice/full-paper?exam=CDS&year=2024&cycle=II');
+  assert.equal(new URL(login, 'https://local.test').searchParams.get('next'), '/dashboard/practice/full-paper?exam=CDS&year=2024&cycle=II&origin=practice');
   assert.deepEqual(pushed, []);
 });

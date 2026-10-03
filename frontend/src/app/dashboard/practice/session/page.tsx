@@ -13,6 +13,7 @@ interface SessionPageProps {
     intelligence_only?: string;
     limit?: string;
     returnTo?: string;
+    origin?: string;
     resume?: string;
     ids?: string;
     session_id?: string;
@@ -40,6 +41,7 @@ export default async function SessionPage({ searchParams }: SessionPageProps) {
           intelligenceOnly={params.intelligence_only === "true"}
           limit={params.limit ? parseInt(params.limit, 10) : undefined}
           returnTo={params.returnTo}
+          origin={params.origin}
           resume={params.resume === "true"}
           specificIds={params.ids}
           resumeSessionId={params.session_id}

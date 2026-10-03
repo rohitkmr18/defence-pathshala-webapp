@@ -17,6 +17,7 @@ module.exports = function createLoader(mocks = {}, globals = {}) {
     }).outputText;
     vm.runInNewContext(source, { exports, console, URL, URLSearchParams, fetch, ...globals,
       require(name) {
+        if (name.startsWith('node:')) return require(name);
         if (Object.hasOwn(mocks, name)) return mocks[name];
         if (name.startsWith('@/')) return load(`frontend/src/${name.slice(2)}.ts`);
         if (name.startsWith('.')) return load(path.resolve(path.dirname(absolute), `${name}.ts`));

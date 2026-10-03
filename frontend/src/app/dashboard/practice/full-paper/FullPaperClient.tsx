@@ -2,11 +2,16 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ArrowLeft, Loader2, LogIn } from "lucide-react";
 import type { PracticeQuestion, OptionKey } from "@/lib/practice-types";
 import { createClient } from "@/lib/supabase/client";
 import { authUrl } from "@/lib/auth-redirect";
 import { fullPaperDestination } from "@/lib/full-paper-intent";
+import { safeLearningReturn } from "@/lib/learning-navigation";
+import { trackLearningEvent } from "@/lib/learning-events";
+import { initializeSession, completePracticeSession, updateSessionProgress, loadResumeSession, restoreQuestionOrder, saveLocalSession, getLocalSession, PRACTICE_SESSION_UPDATED_EVENT } from "@/lib/practice-session-client";
+import PracticePersistenceStatus from "@/components/practice/PracticePersistenceStatus";
 import QuestionCard from "@/components/practice/player/QuestionCard";
 import ExamHeader from "@/components/practice/full-paper/ExamHeader";
 import QuestionPalette from "@/components/practice/full-paper/QuestionPalette";
@@ -19,13 +24,18 @@ interface FullPaperClientProps {
   initialExam?: string;
   initialYear?: string;
   initialCycle?: string;
+  returnTo?: string;
+  origin?: string;
 }
 
 export default function FullPaperClient({
   initialExam,
   initialYear,
   initialCycle,
+  returnTo,
+  origin,
 }: FullPaperClientProps) {
+  const router = useRouter();
   // Resolve initial paper based on query params or default to most recent exam (CDS II 2026)
   const initialPaper =
     AVAILABLE_FULL_PAPERS.find((p) => {
@@ -50,6 +60,26 @@ export default function FullPaperClient({
   const [visited, setVisited] = useState<Set<string>>(new Set());
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [sessionId, setSessionId] = useState<string>();
+  useEffect(() => {
+    if (!sessionId) return;
+    const url = new URL(window.location.href);
+    if (url.searchParams.get("session_id") === sessionId && url.searchParams.get("resume") === "true") return;
+    url.searchParams.set("resume", "true"); url.searchParams.set("session_id", sessionId);
+    router.replace(`${url.pathname}${url.search}`, { scroll: false });
+  }, [sessionId, router]);
+  const [submissionError, setSubmissionError] = useState<string | null>(null);
+  const submitting = useRef(false);
+  const [cloudReady, setCloudReady] = useState(false);
+  useEffect(() => {
+    const refresh = () => {
+      const local = getLocalSession();
+      setCloudReady(!!local && local.id === sessionId && !!(local.server_id || !local.id.startsWith("sess_")));
+    };
+    const start = window.setTimeout(refresh, 0);
+    window.addEventListener(PRACTICE_SESSION_UPDATED_EVENT, refresh);
+    return () => { window.clearTimeout(start); window.removeEventListener(PRACTICE_SESSION_UPDATED_EVENT, refresh); };
+  }, [sessionId]);
 
   // Auth check
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -58,97 +88,102 @@ export default function FullPaperClient({
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => {
       setIsAuthenticated(!!data.user);
-    });
+    }).catch(() => setIsAuthenticated(false));
   }, []);
 
   // Time remaining countdown
   const [timeRemaining, setTimeRemaining] = useState(selectedPaper.durationSeconds);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Fetch questions for the selected exam paper from Supabase
-  const loadPaperQuestions = useCallback(async (paper: FullPaperDefinition) => {
-    setLoading(true);
-    setAnswers({});
-    setMarkedForReview(new Set());
-    setVisited(new Set());
-    setCurrentIndex(0);
-    setTimeRemaining(paper.durationSeconds);
-    setIsSubmitted(false);
-
-    try {
-      const params = new URLSearchParams();
-      params.set("exam", paper.exam);
-      params.set("year", paper.year.toString());
-      if (paper.cycle) {
-        params.set("cycle", paper.cycle);
-      }
-      params.set("limit", "150"); // Full paper capacity
-
-      const res = await fetch(`/api/practice/questions?${params.toString()}`, {
-        cache: "no-store",
-      });
-
-      if (res.ok) {
-        const data = (await res.json()) as { questions: PracticeQuestion[] };
-        const fetchedQuestions = data.questions || [];
-        setQuestions(fetchedQuestions);
-        if (fetchedQuestions.length > 0 && fetchedQuestions[0]) {
-          setVisited(new Set([fetchedQuestions[0].id]));
-        }
-      } else {
-        setQuestions([]);
-      }
-    } catch {
-      setQuestions([]);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  // Load questions when selected paper changes
+  // Cancel stale paper requests so a slower previous selection cannot win.
   useEffect(() => {
     if (isAuthenticated !== true) return;
-    // Defer initialization until the authenticated route is committed.
-    const start = window.setTimeout(() => { void loadPaperQuestions(selectedPaper); }, 0);
-    return () => window.clearTimeout(start);
-  }, [selectedPaper, loadPaperQuestions, isAuthenticated]);
+    const controller = new AbortController();
+    const signal = controller.signal;
+    const paper = selectedPaper;
+    async function loadPaperQuestions() {
+      try {
+        const url = new URL(window.location.href);
+        const saved = url.searchParams.get("resume") === "true"
+          ? await loadResumeSession(url.searchParams.get("session_id") || undefined) : null;
+        if (signal.aborted) return;
+        if (saved && saved.mode !== "full_paper") throw new Error("This is not a full paper session.");
+        const params = new URLSearchParams();
+        params.set("exam", paper.exam);
+        params.set("year", paper.year.toString());
+        if (paper.cycle) {
+          params.set("cycle", paper.cycle);
+        }
+        params.set("limit", saved ? String(saved.question_ids.length) : "150");
+        if (saved) params.set("ids", saved.question_ids.join(","));
+
+        const res = await fetch(`/api/practice/questions?${params.toString()}`, {
+          cache: "no-store",
+          signal,
+        });
+
+        if (signal.aborted) return;
+        if (res.ok) {
+          const data = (await res.json()) as { questions: PracticeQuestion[] };
+          if (signal.aborted) return;
+          const fetchedQuestions = saved ? restoreQuestionOrder(saved.question_ids, data.questions || []) : data.questions || [];
+          const session = saved || await initializeSession({ title: paper.label, mode: "full_paper",
+            filters: { exams: [paper.exam], years: [paper.year], cycles: paper.cycle ? [paper.cycle] : [], returnTo, origin }, questions: fetchedQuestions });
+          if (saved) {
+            saveLocalSession(saved);
+            setAnswers(saved.answers);
+            setCurrentIndex(saved.current_index);
+            setTimeRemaining(Math.max(0, paper.durationSeconds - saved.time_spent_seconds));
+            trackLearningEvent("practice_resume", { mode: "full_paper", position: saved.current_index }, `${saved.id}:${saved.updated_at}`);
+          } else trackLearningEvent("practice_start", { mode: "full_paper", origin }, session.id);
+          if (signal.aborted) return;
+          setSessionId(session.id);
+          setQuestions(fetchedQuestions);
+          if (fetchedQuestions.length > 0 && fetchedQuestions[0]) {
+            setVisited(new Set([fetchedQuestions[0].id]));
+          }
+        } else {
+          setQuestions([]);
+        }
+      } catch (err) {
+        if (!signal.aborted) { setSubmissionError(err instanceof Error ? err.message : "Could not load this paper."); setQuestions([]); }
+      } finally {
+        if (!signal.aborted) setLoading(false);
+      }
+    }
+    const start = window.setTimeout(() => { void loadPaperQuestions(); }, 0);
+    return () => { window.clearTimeout(start); controller.abort(); };
+  }, [selectedPaper, isAuthenticated, returnTo, origin]);
 
   // Paper switcher handler
   const handleSelectPaperById = useCallback((paperId: string) => {
     const nextPaper = AVAILABLE_FULL_PAPERS.find((p) => p.id === paperId);
-    if (nextPaper) {
+    if (!submitting.current && nextPaper && nextPaper.id !== selectedPaper.id) {
+      setLoading(true);
+      setSessionId(undefined);
+      setSubmissionError(null);
+      setAnswers({});
+      setMarkedForReview(new Set());
+      setVisited(new Set());
+      setCurrentIndex(0);
+      setTimeRemaining(nextPaper.durationSeconds);
+      setIsSubmitted(false);
+
+      setQuestions(null);
+      window.history.replaceState(null, "", fullPaperDestination(nextPaper));
       setSelectedPaper(nextPaper);
     }
-  }, []);
-
-  // Countdown timer logic
-  useEffect(() => {
-    if (isAuthenticated !== true || loading || isSubmitted || !questions || questions.length === 0) return;
-
-    timerRef.current = setInterval(() => {
-      setTimeRemaining((prev) => {
-        if (prev <= 1) {
-          if (timerRef.current) clearInterval(timerRef.current);
-          setIsSubmitted(true);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [loading, isSubmitted, questions, isAuthenticated]);
+  }, [selectedPaper.id]);
 
   // Update visited state on question navigation
   const navigateToQuestion = useCallback(
     (index: number) => {
-      if (!questions || !questions[index]) return;
+      if (submitting.current || !questions || !questions[index]) return;
       setCurrentIndex(index);
+      if (sessionId) updateSessionProgress(sessionId, { current_index: index });
       setVisited((prev) => new Set(prev).add(questions[index].id));
     },
-    [questions]
+    [questions, sessionId]
   );
 
   const activeQuestion = questions?.[currentIndex];
@@ -156,20 +191,21 @@ export default function FullPaperClient({
 
   const handleSelectOption = useCallback(
     (key: OptionKey) => {
-      if (!activeQuestion || isSubmitted) return;
-      setAnswers((prev) => ({ ...prev, [activeQuestion.id]: key }));
+      if (!activeQuestion || isSubmitted || timeRemaining === 0 || submitting.current) return;
+      const next = { ...answers, [activeQuestion.id]: key };
+      setAnswers(next);
+      if (sessionId) updateSessionProgress(sessionId, { answers: next });
     },
-    [activeQuestion, isSubmitted]
+    [activeQuestion, isSubmitted, answers, sessionId, timeRemaining]
   );
 
   const handleClearResponse = useCallback(() => {
-    if (!activeQuestion || isSubmitted) return;
-    setAnswers((prev) => {
-      const next = { ...prev };
-      delete next[activeQuestion.id];
-      return next;
-    });
-  }, [activeQuestion, isSubmitted]);
+    if (!activeQuestion || isSubmitted || timeRemaining === 0 || submitting.current) return;
+    const next = { ...answers };
+    delete next[activeQuestion.id];
+    setAnswers(next);
+    if (sessionId) updateSessionProgress(sessionId, { answers: next });
+  }, [activeQuestion, isSubmitted, answers, sessionId, timeRemaining]);
 
   const handleToggleMarkForReview = useCallback(() => {
     if (!activeQuestion) return;
@@ -199,19 +235,53 @@ export default function FullPaperClient({
     }
   }, [currentIndex, questions, navigateToQuestion]);
 
-  const handleConfirmSubmit = useCallback(() => {
+  const handleConfirmSubmit = useCallback(async () => {
+    if (submitting.current || !sessionId || !questions || isAuthenticated !== true) return;
+    submitting.current = true;
     setIsSubmitModalOpen(false);
-    setIsSubmitted(true);
-  }, []);
+    setSubmissionError(null);
+    try {
+      await completePracticeSession({ sessionId, questions, answers, mode: "full_paper",
+        timeSpentSeconds: selectedPaper.durationSeconds - timeRemaining });
+      setIsSubmitted(true);
+      trackLearningEvent("practice_complete", { mode: "full_paper" }, sessionId);
+    } catch (error) {
+      setSubmissionError(error instanceof Error ? error.message : "Submission could not be saved.");
+    } finally { submitting.current = false; }
+  }, [sessionId, questions, answers, selectedPaper.durationSeconds, timeRemaining, isAuthenticated]);
+
+  // Authentication and session creation must finish before the timer starts.
+  useEffect(() => {
+    if (loading || isSubmitted || !cloudReady || isAuthenticated !== true || !sessionId || !questions?.length || timeRemaining === 0) return;
+    timerRef.current = setInterval(() => setTimeRemaining(prev => Math.max(0, prev - 1)), 1000);
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, [loading, isSubmitted, cloudReady, isAuthenticated, sessionId, questions, timeRemaining]);
+  useEffect(() => {
+    if (timeRemaining !== 0 || isSubmitted || submissionError) return;
+    const timeout = setTimeout(() => { void handleConfirmSubmit(); }, 0);
+    return () => clearTimeout(timeout);
+  }, [timeRemaining, isSubmitted, submissionError, handleConfirmSubmit]);
+
+  useEffect(() => {
+    if (!sessionId || isSubmitted) return;
+    updateSessionProgress(sessionId, { time_spent_seconds: selectedPaper.durationSeconds - timeRemaining });
+  }, [sessionId, timeRemaining, selectedPaper.durationSeconds, isSubmitted]);
 
   const handleRetake = useCallback(() => {
+    if (!questions) return;
+    void initializeSession({ title: selectedPaper.label, mode: "full_paper",
+      filters: { exams: [selectedPaper.exam], years: [selectedPaper.year], cycles: selectedPaper.cycle ? [selectedPaper.cycle] : [], returnTo, origin },
+      questions }).then(session => {
+        setSessionId(session.id);
+      });
+    setSubmissionError(null);
     setAnswers({});
     setMarkedForReview(new Set());
     setVisited(new Set(questions?.[0] ? [questions[0].id] : []));
     setCurrentIndex(0);
     setTimeRemaining(selectedPaper.durationSeconds);
     setIsSubmitted(false);
-  }, [questions, selectedPaper]);
+  }, [questions, selectedPaper, returnTo, origin]);
 
   // Loading view
   if (isAuthenticated === false) {
@@ -229,14 +299,14 @@ export default function FullPaperClient({
           </p>
           <div className="mt-6 space-y-3">
             <Link
-              href={authUrl("/auth/login", fullPaperDestination(selectedPaper))}
+              href={authUrl("/auth/login", typeof window !== "undefined" ? window.location.pathname + window.location.search : fullPaperDestination(selectedPaper))}
               className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-md shadow-blue-600/20 hover:bg-blue-500 transition"
             >
               <LogIn className="h-4 w-4" />
               Sign in to Attempt Full Paper
             </Link>
             <Link
-              href="/dashboard/practice"
+              href={safeLearningReturn(returnTo)}
               className="inline-flex w-full items-center justify-center rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition"
             >
               Back to Free Targeted Practice
@@ -247,7 +317,7 @@ export default function FullPaperClient({
     );
   }
 
-  if (loading) {
+  if (loading || isAuthenticated === null) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
@@ -268,7 +338,7 @@ export default function FullPaperClient({
           No questions were found for {selectedPaper.label}. Please try selecting a different exam.
         </p>
         <Link
-          href="/dashboard/practice"
+          href={safeLearningReturn(returnTo)}
           className="mt-6 inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-2.5 text-xs font-semibold text-white transition hover:bg-slate-800"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -282,6 +352,7 @@ export default function FullPaperClient({
   if (isSubmitted) {
     return (
       <div className="px-4 py-6 sm:px-6">
+        <PracticePersistenceStatus questions={questions || []} />
         <FullPaperDebrief
           questions={questions}
           answers={answers}
@@ -299,6 +370,8 @@ export default function FullPaperClient({
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
+      <PracticePersistenceStatus questions={questions || []} />
+      {submissionError && <p role="alert" className="p-4 text-sm text-amber-900">{submissionError} Retry submission after restoring your connection.</p>}
       {/* Sticky Header with Exam Switcher, Live Timer & Submit CTA */}
       <ExamHeader
         examTitle={selectedPaper.label}
