@@ -1,4 +1,3 @@
-
 create table if not exists public.dp_question_intelligence_v1 (
   question_id text primary key references public.questions(question_id) on delete cascade,
   taxonomy_subject text not null,
@@ -47,4 +46,3 @@ grant select, insert, update, delete on public.dp_question_intelligence_v1 to se
 
 comment on table public.dp_question_intelligence_v1 is
 'Production snapshot of DP_PYQ_CORPUS_v1 intelligence. Intelligence Lab is the derivation factory; this table is the production read model. Eligibility flags are imported from the frozen release and must not be recomputed independently in application code.';
-

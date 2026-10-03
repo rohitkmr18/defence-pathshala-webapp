@@ -1,4 +1,3 @@
-
 -- DP intelligence contract hardening
 -- Canonical difficulty boundary: 0-<25 Easy, 25-<50 Moderate, 50-100 Hard.
 
@@ -27,4 +26,3 @@ alter table public.questions
         end
     )
   );
-

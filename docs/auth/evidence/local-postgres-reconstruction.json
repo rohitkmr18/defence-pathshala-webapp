@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-10-03T11:54:30.257196+00:00",
-  "database": "dp_phase0_auth_reconcile_final",
+  "timestamp": "2026-10-03T11:59:22.130662+00:00",
+  "database": "dp_phase0_auth_reconcile_checked",
   "container": "dp-auth-reconcile-20261003",
   "environment": "local PostgreSQL with platform test stubs",
   "production_writes": false,
@@ -32,37 +32,37 @@
     },
     {
       "path": "supabase/migrations/20261002140511_pyq_intelligence_contract_hardening_v1.sql",
-      "sha256": "fef2c116da78a68a875346c0b48fe209b6cf674329b6f13af50b559f14cc20de",
+      "sha256": "8189e656acf66e7586822f93af5ec19c7725a8f6142fa618ffb04ac1e5bc2c5d",
       "passed": true,
       "output": "UPDATE 0\nALTER TABLE\nALTER TABLE\n"
     },
     {
       "path": "supabase/migrations/20261002162919_create_dp_pyq_v1_production_release.sql",
-      "sha256": "2998a5c6a4189be0df592b7135b74a095e2246735b791dda2cc3fa3f2e49170e",
+      "sha256": "8b31dd431d0e0953d9ce7fa1386113f0beab7731309bda724aaf54f9666a904c",
       "passed": true,
       "output": "CREATE TABLE\nCREATE INDEX\nCREATE INDEX\nALTER TABLE\nREVOKE\nCOMMENT\n"
     },
     {
       "path": "supabase/migrations/20261002163027_bind_question_intelligence_to_v1_release_contract.sql",
-      "sha256": "8ed36295b725f8a2ce91289174129985e45d8997f2a18ba82cd4577e6c752946",
+      "sha256": "70c6b8c44dffc24a5fbcb9eedf85a17d6b6659605b71982d60b5132ad65fe5cc",
       "passed": true,
       "output": "DROP VIEW\nCREATE VIEW\nALTER VIEW\nGRANT\nCOMMENT\n"
     },
     {
       "path": "supabase/migrations/20261002165607_create_dp_question_intelligence_v1_read_model.sql",
-      "sha256": "254e4be2c88b2cb2206683e6e7dcb3f4357dd90d76af572f5a21151e5fefb75b",
+      "sha256": "2aba8d2cda799b4778a1a8cf3745f077a1c3c2ac3c25d23819b5207324c9cbf3",
       "passed": true,
       "output": "CREATE TABLE\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nALTER TABLE\nREVOKE\nGRANT\nCOMMENT\n"
     },
     {
       "path": "supabase/migrations/20261002170010_create_question_intelligence_v2_read_model.sql",
-      "sha256": "1bb11941a4b1a8e61cc36bd15125a5e3dc66cea827ac4f37e5608d1bebd2ab1d",
+      "sha256": "7c28232613a70333b2aa06ffae8bdc3b72055d6d5dadec7fe0db314e06cc4b2d",
       "passed": true,
       "output": "CREATE VIEW\nGRANT\nCOMMENT\n"
     },
     {
       "path": "supabase/migrations/20261002170318_add_intelligence_review_state_to_production_read_model.sql",
-      "sha256": "b970464c8f04d6195f92a267b36f53b20f18feba02dcf5d56a3f3aab384c8023",
+      "sha256": "2c65f354b6b2c0f8ea2872798d497d8989de03ffc34f6d387a57f1a65eb845ca",
       "passed": true,
       "output": "ALTER TABLE\nCREATE INDEX\nCOMMENT\nCOMMENT\n"
     },
@@ -74,7 +74,7 @@
     },
     {
       "path": "supabase/migrations/20261002175600_canonicalize_v2_pattern_dictionary_and_read_model.sql",
-      "sha256": "a23e6c6f41dd7e3f0e486a52b6b332740613d973f2e0e8c6add4212e9890160f",
+      "sha256": "8d19d8ffe5afe3e24ac78aae19185e7dd87ef73711abbcca4a6f3b31cbde77ba",
       "passed": true,
       "output": "CREATE TABLE\nINSERT 0 9\nALTER TABLE\nGRANT\nDROP POLICY\nCREATE POLICY\nCREATE VIEW\nGRANT\nCOMMENT\nCOMMENT\n"
     },
@@ -92,19 +92,19 @@
     },
     {
       "path": "supabase/migrations/20261002205937_phase0_practice_persistence.sql",
-      "sha256": "44038ab2e5cbc5f636eb17718e4ccdd6772d44112e21eb49cd4ad47368605379",
+      "sha256": "15b253c7f9443eca4b8b427699c6b5f34affa105426f009e4aa4061f7cfd6e3d",
       "passed": true,
       "output": "CREATE TABLE\nCREATE INDEX\nCREATE INDEX\nALTER TABLE\nALTER TABLE\nCREATE INDEX\nCREATE INDEX\nALTER TABLE\nREVOKE\nGRANT\nGRANT\nCREATE POLICY\nCREATE POLICY\nCREATE POLICY\nCREATE POLICY\nREVOKE\nGRANT\nCREATE FUNCTION\nREVOKE\nCREATE TRIGGER\n"
     },
     {
       "path": "supabase/migrations/20261002210031_phase0_security_hardening.sql",
-      "sha256": "4df4d74e8085d03080bc9b89105af71d467b17758c7b90a5877d23d2ca0a1d79",
+      "sha256": "b781de2dc861fe0a679a9838cbd3c0488190a647e334a60d602021d020f684e0",
       "passed": true,
       "output": "REVOKE\nREVOKE\nALTER FUNCTION\nALTER FUNCTION\nALTER FUNCTION\nALTER POLICY\nALTER POLICY\nALTER POLICY\nALTER POLICY\nALTER POLICY\nALTER POLICY\nALTER POLICY\nALTER POLICY\nALTER POLICY\nCREATE INDEX\nCREATE INDEX\n"
     },
     {
       "path": "supabase/migrations/20261002210827_phase0_current_affairs_storage.sql",
-      "sha256": "fecc60a1518455c058120276407486ed3fc6da8ee27f3a91acf072e3aa85e13d",
+      "sha256": "cd8fde8a56b77ee23a095531dd7db7a34108386cd54fd7ee35c311fa040a7201",
       "passed": true,
       "output": "ALTER POLICY\nALTER POLICY\nALTER POLICY\n"
     },

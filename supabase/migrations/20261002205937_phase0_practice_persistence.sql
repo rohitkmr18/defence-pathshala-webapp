@@ -31,10 +31,10 @@ create index if not exists idx_practice_sessions_user_active
     on public.practice_sessions(user_id, is_completed, updated_at desc);
 
 -- 2. Extend user_attempts table with session_id and mode if not present
-alter table public.user_attempts 
+alter table public.user_attempts
     add column if not exists session_id uuid references public.practice_sessions(id) on delete set null;
 
-alter table public.user_attempts 
+alter table public.user_attempts
     add column if not exists mode text default 'instant';
 
 -- Indexes on user_attempts for session and performance tracking
@@ -79,4 +79,3 @@ $$;
 revoke execute on function public.validate_attempt_session_owner() from public, anon, authenticated;
 create trigger validate_attempt_session_owner before insert or update of session_id, user_id
 on public.user_attempts for each row execute function public.validate_attempt_session_owner();
-

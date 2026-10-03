@@ -28,4 +28,3 @@ using (exists (select 1 from public.profiles p where p.id = (select auth.uid()) 
 with check (exists (select 1 from public.profiles p where p.id = (select auth.uid()) and p.role = 'admin'));
 create index if not exists idx_ca_slides_story on public.current_affairs_slides(story_id);
 create index if not exists idx_ca_stories_post on public.current_affairs_stories(post_id);
-

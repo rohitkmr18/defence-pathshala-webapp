@@ -10,7 +10,7 @@ test('every observed applied migration has its actual version and recorded SQL; 
   const applied = history.migrations.map(row => `${row.version}_${row.name}.sql`);
   assert.deepEqual(files, [...applied, '20261003093440_atomic_onboarding.sql'].sort());
   for (const row of history.migrations) {
-    assert.equal(fs.readFileSync(`${directory}/${row.version}_${row.name}.sql`, 'utf8').trim(), row.statements.join('\n').trim());
+    assert.equal(fs.readFileSync(`${directory}/${row.version}_${row.name}.sql`, 'utf8').trim(), row.statements.join('\n').replace(/[ \t]+$/gm, '').trim());
   }
   assert.equal(history.migrations.at(-1).version, '20261003091625');
   const config = fs.readFileSync('supabase/config.toml', 'utf8');

@@ -1,4 +1,3 @@
-
 create view public.v_dp_question_intelligence_v2
 with (security_invoker=true)
 as
@@ -23,4 +22,3 @@ where q.is_active is true;
 grant select on public.v_dp_question_intelligence_v2 to service_role;
 comment on view public.v_dp_question_intelligence_v2 is
 'Production PYQ read model v2. Eligibility is sourced from the imported frozen intelligence release snapshot and is not recomputed by application code.';
-

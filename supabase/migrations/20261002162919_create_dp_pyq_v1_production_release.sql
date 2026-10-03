@@ -1,4 +1,3 @@
-
 create table if not exists public.dp_pyq_v1_production_release (
   question_id text primary key references public.questions(question_id) on delete cascade,
   release_version text not null,
@@ -21,4 +20,3 @@ revoke all on public.dp_pyq_v1_production_release from anon, authenticated;
 
 comment on table public.dp_pyq_v1_production_release is
 'Materialized production promotion contract for DP_PYQ_CORPUS_v1. Eligibility is promoted from the frozen intelligence-lab release; application code must not recompute release eligibility.';
-

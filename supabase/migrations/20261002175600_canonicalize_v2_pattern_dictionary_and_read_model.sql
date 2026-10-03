@@ -1,4 +1,3 @@
-
 create table if not exists public.dp_pattern_dictionary (
   pattern_id text primary key,
   display_label text not null unique,
@@ -112,4 +111,3 @@ comment on table public.dp_pattern_dictionary is
 
 comment on view public.v_dp_question_intelligence_v2 is
 'Canonical V2 Question Intelligence read model. Machine-readable intelligence fields come from dp_question_intelligence_v1; q_pattern is derived from dp_pattern_dictionary and pattern_id.';
-

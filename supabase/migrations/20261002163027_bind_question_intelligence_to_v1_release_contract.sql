@@ -1,4 +1,3 @@
-
 drop view if exists public.v_dp_question_intelligence_v1;
 
 create view public.v_dp_question_intelligence_v1 as
@@ -53,4 +52,3 @@ grant select on public.v_dp_question_intelligence_v1 to anon, authenticated, ser
 
 comment on view public.v_dp_question_intelligence_v1 is
 'Canonical production read model for Defence Pathshala PYQ Intelligence. Eligibility flags are materialized from the promoted frozen release contract and must not be recomputed in application code.';
-

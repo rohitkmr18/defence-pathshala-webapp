@@ -8,7 +8,7 @@ On 2026-10-03, read-only queries of production project `afhwegrxnvgsqbqadvwr` re
 
 The two `20260924` bootstrap files were absent from remote history. They are preserved under `supabase/reconstruction/bootstrap`, not presented as pending production migrations. PR #9's prerequisite snapshot, observed grants and synthetic checks support fresh reconstruction. No new production baseline entry is fabricated. `database/migrations` remains legacy reference material, not a second ledger to replay.
 
-The only unrecorded migration in the canonical directory is `20261003093440_atomic_onboarding.sql`. It is unchanged from PR #15 and **has not been applied to production**. Tests compare all 14 source files against recorded statements, allowing only surrounding whitespace differences.
+The only unrecorded migration in the canonical directory is `20261003093440_atomic_onboarding.sql`. It is unchanged from PR #15 and **has not been applied to production**. Tests compare all 14 source files against recorded statements, allowing only surrounding whitespace and trailing line whitespace differences; the raw recorded statements remain in the receipt.
 
 Repository drift is reconciled on this branch. Main and the hosted migration runner still need a separately reviewed release; the reported `MIGRATIONS_FAILED` history-drift status was not modified and is not evidence of a database outage. Never repair remote history to make it fit stale source files.
 
