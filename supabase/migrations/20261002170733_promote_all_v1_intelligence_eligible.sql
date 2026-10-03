@@ -1,0 +1,1 @@
+update public.dp_pyq_v1_production_release set intelligence_eligible=true, human_review_required=true where production_eligible=true;
