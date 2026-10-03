@@ -1,10 +1,6 @@
-export type Profile = {
-  id: string
-  full_name: string | null
-  target_year: number | null
-  onboarding_completed: boolean
-  target_exams: string[]
-}
+import type { Profile } from "@/lib/profile/types";
+
+export type { Profile };
 
 export async function getProfile(): Promise<Profile> {
   const res = await fetch("/api/profile", {

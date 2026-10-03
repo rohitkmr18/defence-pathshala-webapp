@@ -1,16 +1,9 @@
-from collections import Counter
+from collections import Counter, defaultdict
 from typing import Optional
 
 from fastapi import APIRouter, HTTPException
+from app.core.exams import expand_exam_query, get_exam_label
 from app.core.supabase import supabase
-
-EXAM_ALIASES = {
-    "CAPF": "CAPF-AC",
-    "CAPF-AC": "CAPF-AC",
-    "CDS": "CDS",
-    "NDA": "NDA",
-    "AFCAT": "AFCAT",
-}
 
 router = APIRouter(
     prefix="/analytics",
@@ -23,7 +16,7 @@ def overview():
     try:
         # One fetch from Supabase
         response = (
-            supabase.table("questions")
+            supabase.table("v_dp_question_intelligence_v2")
             .select("exam,year,subject,difficulty_category", count="exact")
             .execute()
         )
@@ -57,7 +50,7 @@ def overview():
 def dashboard():
     try:
         response = (
-            supabase.table("questions")
+            supabase.table("v_dp_question_intelligence_v2")
             .select("exam,year,subject", count="exact")
             .execute()
         )
@@ -90,16 +83,12 @@ def question_bank(
     cycle: Optional[str] = None,
 ):
     try:
-        query = supabase.table("questions").select(
+        query = supabase.table("v_dp_question_intelligence_v2").select(
             "exam,year,cycle,subject,topic,q_type,q_pattern,difficulty_category"
         )
 
         if exam:
-            exams = [
-                EXAM_ALIASES.get(value.strip().upper(), value.strip())
-                for value in exam.split(",")
-                if value.strip()
-            ]
+            exams = expand_exam_query(exam)
             if exams:
                 query = query.in_("exam", exams)
 
@@ -115,10 +104,24 @@ def question_bank(
         if cycle:
             cycles = [value.strip() for value in cycle.split(",") if value.strip()]
             if cycles:
-                query = query.in_("cycle", cycles)
+                if "I" in cycles:
+                    cycle_list = ",".join(cycles)
+                    query = query.or_(f"cycle.in.({cycle_list}),cycle.is.null")
+                else:
+                    query = query.in_("cycle", cycles)
 
-        response = query.execute()
-        rows = response.data or []
+        page_size = 1000
+        rows = []
+        start = 0
+
+        while True:
+            subquery = query.range(start, start + page_size - 1)
+            response = subquery.execute()
+            page_rows = response.data or []
+            rows.extend(page_rows)
+            if len(page_rows) < page_size:
+                break
+            start += page_size
 
         total = len(rows)
 
@@ -127,10 +130,28 @@ def question_bank(
         question_type_counter = Counter()
         question_pattern_counter = Counter()
         topic_counter = Counter()
+        subject_analytics_map = defaultdict(lambda: {
+            "questions": 0,
+            "difficulty": Counter(),
+            "patterns": Counter(),
+            "types": Counter(),
+            "topics": Counter(),
+        })
 
         for row in rows:
-            if row.get("subject"):
-                subject_counter[row["subject"]] += 1
+            sub = row.get("subject")
+            if sub:
+                subject_counter[sub] += 1
+                entry = subject_analytics_map[sub]
+                entry["questions"] += 1
+                if row.get("difficulty_category"):
+                    entry["difficulty"][row["difficulty_category"]] += 1
+                if row.get("q_pattern"):
+                    entry["patterns"][row["q_pattern"]] += 1
+                if row.get("q_type"):
+                    entry["types"][row["q_type"]] += 1
+                if row.get("topic"):
+                    entry["topics"][row["topic"]] += 1
 
             if row.get("difficulty_category"):
                 difficulty_counter[row["difficulty_category"]] += 1
@@ -143,6 +164,29 @@ def question_bank(
 
             if row.get("topic"):
                 topic_counter[row["topic"]] += 1
+
+        subject_analytics = {
+            sub: {
+                "totalQuestions": data["questions"],
+                "difficulty": [
+                    {"name": k, "value": v} for k, v in data["difficulty"].items()
+                ],
+                "questionPatterns": [
+                    {"name": k, "value": v} for k, v in data["patterns"].most_common()
+                ],
+                "questionTypes": [
+                    {"name": k, "value": v} for k, v in data["types"].most_common()
+                ],
+                "topics": [
+                    {"name": k, "value": v} for k, v in data["topics"].most_common()
+                ],
+            }
+            for sub, data in subject_analytics_map.items()
+        }
+
+        subject_topics = {
+            sub: data["topics"] for sub, data in subject_analytics.items()
+        }
 
         return {
             "summary": {
@@ -172,6 +216,8 @@ def question_bank(
                 {"name": key, "value": value}
                 for key, value in topic_counter.most_common(20)
             ],
+            "subjectTopics": subject_topics,
+            "subjectAnalytics": subject_analytics,
         }
 
     except Exception as e:
@@ -181,15 +227,26 @@ def question_bank(
 @router.get("/question-bank/meta")
 def question_bank_meta():
     try:
-        response = (
-            supabase.table("questions")
-            .select("exam,year,cycle")
-            .execute()
-        )
+        page_size = 1000
+        rows = []
+        start = 0
+
+        while True:
+            response = (
+                supabase.table("v_dp_question_intelligence_v2")
+                .select("exam,year,cycle")
+                .range(start, start + page_size - 1)
+                .execute()
+            )
+            page_rows = response.data or []
+            rows.extend(page_rows)
+            if len(page_rows) < page_size:
+                break
+            start += page_size
 
         exams = {}
 
-        for row in response.data or []:
+        for row in rows:
             exam = row.get("exam")
             year = row.get("year")
             cycle = row.get("cycle")
@@ -200,7 +257,7 @@ def question_bank_meta():
             if exam not in exams:
                 exams[exam] = {
                     "value": exam,
-                    "label": exam.replace("-AC", " AC"),
+                    "label": get_exam_label(exam),
                     "years": set(),
                     "cycles": set(),
                 }
@@ -231,7 +288,7 @@ def question_bank_meta():
 def subjects():
     try:
         response = (
-            supabase.table("questions")
+            supabase.table("v_dp_question_intelligence_v2")
             .select("subject")
             .execute()
         )
@@ -259,7 +316,7 @@ def subjects():
 @router.get("/debug/questions")
 def debug_questions():
     response = (
-        supabase.table("questions")
+        supabase.table("v_dp_question_intelligence_v2")
         .select("exam,year,cycle")
         .limit(20)
         .execute()
@@ -270,7 +327,7 @@ def debug_questions():
 @router.get("/debug/exams")
 def debug_exams():
     response = (
-        supabase.table("questions")
+        supabase.table("v_dp_question_intelligence_v2")
         .select("exam,year")
         .execute()
     )

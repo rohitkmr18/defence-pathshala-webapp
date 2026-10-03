@@ -1,0 +1,45 @@
+# Email OTP rollout
+
+The prepared frontend uses `signInWithOtp` with `shouldCreateUser: true`, then `verifyOtp` with `type: email`. Both login and signup use the same shared form. Successful verification establishes the browser session before a fresh `/auth/continue?next=...` request. PR #15's canonical resolver sends incomplete profiles to the single onboarding screen, completed profiles to their safe intended destination, and profile failures to recovery. Completing onboarding opens the intended destination or dashboard. Existing user IDs, profiles and attempts are retained.
+
+## External configuration required before rollout
+
+No mail/auth settings were changed by repository reconciliation. First verify delivery and templates on an explicitly selected isolated staging environment. Production configuration requires separate authorization. PR #12's last dashboard inspection reported custom SMTP OFF; that observation has not been reverified here.
+
+Project: `afhwegrxnvgsqbqadvwr` (defence-pathshala-pyq).
+
+1. Authentication > Emails: confirm custom SMTP is configured and can deliver to ordinary student addresses. Supabase's built-in test mail service is restricted and is unsuitable for production. Do not replace existing working SMTP settings without checking them.
+2. Authentication > Emails > Templates: paste `email-otp-template.html` into both **Magic link or OTP** and **Confirm sign up** templates. Subject: `Your Defence Pathshala verification code`. Preserve any unrelated templates. The literal `{{ .Token }}` variable is required; a confirmation URL alone does not deliver a code.
+3. Authentication > Sign In / Providers > Email: retain email verification, enable email sign-in and new-user signup, inspect the configured OTP length, and use an appropriate short expiry (10 minutes recommended). The frontend accepts 6–10 digits to support the configured length. Preserve server-side resend and verification rate limits.
+4. Do not disable email confirmation or manually mark accounts confirmed to get around failed delivery.
+5. This release exposes email OTP only on login and signup through the shared `EmailOtpForm`. The Google button is not imported or rendered there. `GoogleSignInButton` and OAuth callback handling remain in source for a future release; do not enable Google in staging or production for this rollout. Google-specific acceptance is DEFERRED, out of release scope. Re-enable the entry point only after isolated Google acceptance passes.
+
+## Verification before publishing
+
+- Request a code for the owner's existing test account, including an account that was previously unconfirmed. Check that the email contains a code, not only a link.
+- Enter the code through secure browser authentication. Confirm verification creates a signed-in session.
+- For a new/incomplete profile, complete the single setup screen. The intended destination must open automatically and remain signed in after refresh.
+- For an existing onboarded user, verification must open the dashboard directly and preserve attempts.
+- Incorrect/expired codes must show an error without navigating. Resend uses a 60-second client cooldown in addition to Supabase enforcement. Changing email clears the old code.
+- Code/session values must never be logged or committed.
+
+## Automated checks
+
+From repository root:
+
+```
+node --test --experimental-test-isolation=none scripts/test-email-otp.cjs scripts/test-otp-routing.cjs scripts/test-onboarding.cjs
+npx --prefix frontend tsc --noEmit -p frontend/tsconfig.json
+npm run build --prefix frontend
+```
+
+Run targeted ESLint inside frontend for the changed auth components and helper.
+
+## Rollback
+
+Keep the previous deployment available. If delivery or verification fails, retain/revert the current password-login production deployment; do not publish an OTP-only interface with unverified templates/SMTP. OTP verification depends on email delivery even though it removes passwords and confirmation-link friction.
+
+References:
+- https://supabase.com/docs/guides/auth/auth-email-passwordless
+- https://supabase.com/docs/guides/auth/auth-email-templates
+- https://supabase.com/docs/guides/auth/auth-smtp

@@ -1,11 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import type { PracticeQuestion, PlayerMode, OptionKey } from "@/lib/practice-types";
 import QuestionPlayer from "@/components/practice/player/QuestionPlayer";
 import FilteredAttemptDebrief from "@/components/practice/analysis/FilteredAttemptDebrief";
+import {
+  initializeSession,
+  updateSessionProgress,
+  clearLocalSession,
+  loadResumeSession,
+  restoreQuestionOrder,
+  saveLocalSession,
+  type ActivePracticeSession,
+} from "@/lib/practice-session-client";
+import {
+  parseFiltersFromSearchParams,
+  serializeFiltersToSearchParams,
+  buildPracticeUrl,
+} from "@/lib/question-filters";
 
 // ─── Props ───────────────────────────────────────────────────────────────────
 
@@ -16,6 +30,14 @@ interface SessionPageClientProps {
   cycle?: string;
   subject?: string;
   topic?: string;
+  subtopic?: string;
+  difficulty?: string;
+  intelligenceOnly?: boolean;
+  limit?: number;
+  returnTo?: string;
+  resume?: boolean;
+  specificIds?: string;
+  resumeSessionId?: string;
 }
 
 // ─── Loading skeleton ─────────────────────────────────────────────────────────
@@ -23,15 +45,13 @@ interface SessionPageClientProps {
 function SessionSkeleton() {
   return (
     <div className="mx-auto max-w-3xl space-y-5 animate-pulse">
-      {/* Progress bar skeleton */}
-      <div className="h-[72px] rounded-2xl bg-slate-200" />
-      {/* Card skeleton */}
+      <div className="h-16 rounded-2xl bg-slate-200" />
       <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
         <div className="mb-5 flex gap-2">
-          <div className="h-6 w-20 rounded-full bg-slate-200" />
-          <div className="h-6 w-32 rounded-full bg-slate-200" />
+          <div className="h-6 w-24 rounded-full bg-slate-200" />
+          <div className="h-6 w-36 rounded-full bg-slate-200" />
         </div>
-        <div className="mb-8 space-y-2">
+        <div className="mb-8 space-y-2.5">
           <div className="h-4 w-full rounded bg-slate-200" />
           <div className="h-4 w-5/6 rounded bg-slate-200" />
           <div className="h-4 w-4/6 rounded bg-slate-200" />
@@ -42,10 +62,9 @@ function SessionSkeleton() {
           ))}
         </div>
       </div>
-      {/* Nav skeleton */}
       <div className="flex justify-between">
         <div className="h-11 w-28 rounded-xl bg-slate-200" />
-        <div className="h-11 w-32 rounded-xl bg-slate-200" />
+        <div className="h-11 w-36 rounded-xl bg-slate-200" />
       </div>
     </div>
   );
@@ -53,45 +72,23 @@ function SessionSkeleton() {
 
 // ─── Empty state ──────────────────────────────────────────────────────────────
 
-function EmptyState() {
+function EmptyState({ returnUrl }: { returnUrl: string }) {
   return (
-    <div className="flex flex-col items-center justify-center py-20 text-center">
-      <div className="mb-4 text-5xl">🔍</div>
-      <h2 className="text-xl font-bold text-slate-900">No questions found</h2>
-      <p className="mt-2 max-w-sm text-sm text-slate-500">
-        The current filters returned no matching questions. Try adjusting the
-        filters or expanding the year range.
+    <div className="flex flex-col items-center justify-center py-16 text-center rounded-3xl border border-dashed border-slate-200 bg-white p-8">
+      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-500 text-2xl">
+        🔍
+      </div>
+      <h2 className="text-xl font-black text-slate-900">No questions found</h2>
+      <p className="mt-2 max-w-md text-xs sm:text-sm text-slate-500">
+        The current filters returned no matching questions. Try adjusting your
+        syllabus filters or expanding the year range.
       </p>
       <Link
-        href="/dashboard/practice"
-        className="mt-6 inline-flex items-center gap-2 rounded-xl bg-black px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+        href={returnUrl}
+        className="mt-6 inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-xs sm:text-sm font-bold text-white shadow-sm transition hover:bg-slate-800"
       >
         <ArrowLeft className="h-4 w-4" />
-        Back to Practice
-      </Link>
-    </div>
-  );
-}
-
-// ─── Completed state ──────────────────────────────────────────────────────────
-
-function CompletedState({ total }: { total: number }) {
-  return (
-    <div className="flex flex-col items-center justify-center py-20 text-center">
-      <div className="mb-4 text-5xl">🎯</div>
-      <h2 className="text-2xl font-bold text-slate-900">Session Complete!</h2>
-      <p className="mt-2 text-slate-500">
-        You answered all {total} questions.
-      </p>
-      <p className="mt-1 text-xs text-slate-400">
-        Post-session analytics coming in the next milestone.
-      </p>
-      <Link
-        href="/dashboard/practice"
-        className="mt-6 inline-flex items-center gap-2 rounded-xl bg-black px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Back to Practice
+        Return to Filters
       </Link>
     </div>
   );
@@ -106,94 +103,218 @@ export default function SessionPageClient({
   cycle,
   subject,
   topic,
+  subtopic,
+  difficulty,
+  intelligenceOnly,
+  limit,
+  returnTo,
+  resume,
+  specificIds,
+  resumeSessionId,
 }: SessionPageClientProps) {
   const [questions, setQuestions] = useState<PracticeQuestion[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [completed, setCompleted] = useState(false);
   const [answers, setAnswers] = useState<Record<string, OptionKey>>({});
-  const [startTime, setStartTime] = useState<number>(Date.now());
+  const [sessionId, setSessionId] = useState<string | undefined>(undefined);
+  const [initialIndex, setInitialIndex] = useState(0);
+  const [restoredSession, setRestoredSession] = useState<ActivePracticeSession | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const sessionMode: PlayerMode = restoredSession?.mode === "attempt" ? "attempt" : restoredSession ? "instant" : mode;
+  const startTimeRef = useRef<number>(0);
   const [timeSpentSeconds, setTimeSpentSeconds] = useState<number>(0);
 
-  // Build header label from filters
-  const filterLabel = [subject, topic].filter(Boolean).join(" › ") || exam || "Practice Session";
+  // Keep this stable so state restoration does not restart the loading effect.
+  const parsedFilters = useMemo(() => parseFiltersFromSearchParams({
+    exam, year, cycle, subject, topic, subtopic, difficulty,
+    intelligence_only: intelligenceOnly ? "true" : undefined,
+  }), [exam, year, cycle, subject, topic, subtopic, difficulty, intelligenceOnly]);
+
+  // Build header label and breadcrumb
+  const filterLabel =
+    restoredSession?.title || [subject, topic, subtopic].filter(Boolean).join(" › ") ||
+    exam ||
+    "Practice Session";
+
+  // Determine Back Button destination
+  const backHref = returnTo
+    ? decodeURIComponent(returnTo)
+    : buildPracticeUrl(restoredSession?.filters || parsedFilters);
+  const backLabel = returnTo && returnTo.includes("question-bank")
+    ? "Back to Explore"
+    : "Back to Practice";
 
   useEffect(() => {
     let cancelled = false;
 
-    async function loadQuestions() {
+    async function loadSessionAndQuestions() {
+      startTimeRef.current = Date.now();
       setLoading(true);
+      setError(null);
       try {
-        const params = new URLSearchParams();
-        if (exam)    params.set("exam", exam);
-        if (year)    params.set("year", year);
-        if (cycle)   params.set("cycle", cycle);
-        if (subject) params.set("subject", subject);
-        if (topic)   params.set("topic", topic);
-        // Request up to 100 questions per session
-        params.set("limit", "100");
+        const saved = resume ? await loadResumeSession(resumeSessionId) : null;
+        if (cancelled) return;
+        const params = serializeFiltersToSearchParams({
+          ...(saved?.filters || parsedFilters),
+          limit: saved ? saved.question_ids.length : limit || 100,
+        });
+
+        if (saved) {
+          params.set("ids", saved.question_ids.join(","));
+        } else if (specificIds) {
+          params.set("ids", specificIds);
+        }
 
         const res = await fetch(
-          `/api/practice/questions${params.toString() ? `?${params}` : ""}`,
+          `/api/practice/questions?${params.toString()}`,
           { cache: "no-store" }
         );
 
-        if (!cancelled) {
-          if (res.ok) {
-            const data = (await res.json()) as {
-              questions: PracticeQuestion[];
-              total: number;
-            };
-            setQuestions(data.questions);
-          } else {
-            setQuestions([]);
+        if (!cancelled && res.ok) {
+          const data = (await res.json()) as {
+            questions: PracticeQuestion[];
+            total: number;
+          };
+          const fetchedQuestions = saved
+            ? restoreQuestionOrder(saved.question_ids, data.questions || [])
+            : data.questions || [];
+          setQuestions(fetchedQuestions);
+
+          if (fetchedQuestions.length > 0) {
+            // Check if resuming active session
+            if (saved) {
+              saveLocalSession(saved);
+              setRestoredSession(saved);
+              setSessionId(saved.id);
+              setAnswers(saved.answers || {});
+              setInitialIndex(Math.max(0, Math.min(saved.current_index || 0, fetchedQuestions.length - 1)));
+            } else {
+              // Initialize a fresh session
+              const newSess = await initializeSession({
+                title: [subject, topic, subtopic].filter(Boolean).join(" › ") || exam || "Practice Session",
+                mode,
+                filters: parsedFilters,
+                questions: fetchedQuestions,
+              });
+              if (!cancelled) {
+                setRestoredSession(null);
+                setAnswers({});
+                setInitialIndex(0);
+                setSessionId(newSess.id);
+              }
+            }
           }
+        } else if (!cancelled) {
+          throw new Error("Could not load session questions. Please try again.");
         }
-      } catch {
-        if (!cancelled) setQuestions([]);
+      } catch (err) {
+        if (!cancelled) {
+          setQuestions(null);
+          setError(err instanceof Error ? err.message : "Could not restore your session.");
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
     }
 
-    void loadQuestions();
-    return () => { cancelled = true; };
-  }, [exam, year, cycle, subject, topic]);
+    void loadSessionAndQuestions();
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    exam,
+    year,
+    cycle,
+    subject,
+    topic,
+    subtopic,
+    difficulty,
+    intelligenceOnly,
+    limit,
+    resume,
+    specificIds,
+    resumeSessionId,
+    mode,
+    parsedFilters,
+  ]);
 
   return (
     <div>
-      {/* Back nav + session title */}
+      {/* Back Navigation Bar & Session Breadcrumb */}
       {!completed && (
-        <div className="mb-6 flex items-center gap-3">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200/80">
           <Link
-            href="/dashboard/practice"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-slate-50"
-            aria-label="Back to practice"
+            href={backHref}
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs sm:text-sm font-bold text-slate-700 shadow-2xs hover:bg-slate-50 hover:text-blue-700 transition active:scale-95"
+            aria-label={backLabel}
           >
             <ArrowLeft className="h-4 w-4" />
+            <span>{backLabel}</span>
           </Link>
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">
-              {mode === "instant" ? "Instant Feedback" : "Attempt at Once"}
-            </p>
-            <h1 className="text-lg font-bold text-slate-900">{filterLabel}</h1>
+
+          <div className="text-right">
+            <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+              {sessionMode === "instant" ? "Targeted Practice" : "Full Mock Paper"}
+            </span>
+            <h1 className="text-xs sm:text-sm font-bold text-slate-900 truncate max-w-xs sm:max-w-md">
+              {filterLabel}
+            </h1>
           </div>
         </div>
       )}
 
-      {/* Content */}
+      {/* Content Player */}
       {loading && <SessionSkeleton />}
-      {!loading && questions?.length === 0 && <EmptyState />}
+      {!loading && error && (
+        <div role="alert" className="rounded-2xl border border-amber-200 bg-amber-50 p-6 text-sm text-amber-900">
+          <p>{error}</p>
+          <Link href={backHref} className="mt-3 inline-block font-bold underline">Return to Practice</Link>
+        </div>
+      )}
+      {!loading && questions?.length === 0 && <EmptyState returnUrl={backHref} />}
       {!loading && questions && questions.length > 0 && !completed && (
         <QuestionPlayer
+          key={sessionId}
           questions={questions}
-          mode={mode}
+          mode={sessionMode}
+          sessionId={sessionId}
+          initialIndex={initialIndex}
+          initialAnswers={answers}
           onComplete={(completedAnswers) => {
             setAnswers(completedAnswers);
-            setTimeSpentSeconds(Math.max(1, Math.round((Date.now() - startTime) / 1000)));
+            const duration = Math.max(
+              1,
+              Math.round(
+                (Date.now() - (startTimeRef.current || Date.now())) / 1000
+              )
+            );
+            setTimeSpentSeconds(duration);
+
+            if (sessionId) {
+              const correctCount = questions.filter(
+                (q) => completedAnswers[q.id] === q.final_opt
+              ).length;
+              const incorrectCount = questions.filter(
+                (q) =>
+                  completedAnswers[q.id] &&
+                  completedAnswers[q.id] !== q.final_opt
+              ).length;
+
+              updateSessionProgress(sessionId, {
+                answers: completedAnswers,
+                is_completed: true,
+                correct_count: correctCount,
+                incorrect_count: incorrectCount,
+                time_spent_seconds: duration,
+              });
+            }
+
             setCompleted(true);
           }}
         />
       )}
+
+      {/* Completion Debrief */}
       {completed && questions && (
         <FilteredAttemptDebrief
           questions={questions}
@@ -201,9 +322,13 @@ export default function SessionPageClient({
           sessionTitle={filterLabel}
           totalTimeSpentSeconds={timeSpentSeconds}
           onRetake={() => {
+            if (sessionId) {
+              clearLocalSession();
+            }
             setCompleted(false);
             setAnswers({});
-            setStartTime(Date.now());
+            setInitialIndex(0);
+            startTimeRef.current = Date.now();
           }}
         />
       )}

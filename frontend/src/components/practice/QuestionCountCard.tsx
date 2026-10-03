@@ -56,6 +56,48 @@ export default function QuestionCountCard({
     );
   }
 
+  if (count === null) {
+    return (
+      <div className="rounded-3xl border border-blue-100 bg-blue-50/50 p-6 shadow-[0_10px_30px_rgba(15,23,42,0.04)]">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-2xs">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="m4.93 4.93 4.24 4.24" />
+                <path d="m14.83 9.17 4.24-4.24" />
+                <path d="m14.83 14.83 4.24 4.24" />
+                <path d="m9.17 14.83-4.24 4.24" />
+                <circle cx="12" cy="12" r="4" />
+              </svg>
+            </div>
+            <div>
+              <p className="font-bold text-slate-900">
+                Choose an exam above to configure practice
+              </p>
+              <p className="mt-0.5 text-xs text-slate-500">
+                Select your target defence examination or click &ldquo;Select All Exams&rdquo; to begin practicing questions.
+              </p>
+            </div>
+          </div>
+          <span className="self-start sm:self-auto shrink-0 rounded-full border border-blue-200 bg-white px-3 py-1 text-xs font-semibold text-blue-600 shadow-2xs">
+            Awaiting Exam Selection
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_10px_30px_rgba(15,23,42,0.06)]">
       <div className="flex items-center justify-between">

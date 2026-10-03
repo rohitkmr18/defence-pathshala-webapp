@@ -1,65 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-
-const BACKEND_URL =
-  process.env.BACKEND_URL ?? "http://127.0.0.1:8000";
+import { readProfile } from "@/lib/profile-store";
+import { savePreparation } from "@/lib/profile-save-server";
 
 export async function GET() {
-  const supabase = await createClient();
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  if (!session) {
-    return NextResponse.json(
-      { error: "Unauthorized" },
-      { status: 401 }
-    );
+  try {
+    const supabase = await createClient();
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error && error.status !== 401 && error.status !== 403 && error.name !== "AuthSessionMissingError") {
+      throw new Error("Session unavailable");
+    }
+    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json(await readProfile(supabase, user));
+  } catch {
+    return NextResponse.json({ error: "Your profile could not be loaded. Please retry." }, { status: 503 });
   }
-
-  const response = await fetch(`${BACKEND_URL}/profile`, {
-    headers: {
-      Authorization: `Bearer ${session.access_token}`,
-    },
-    cache: "no-store",
-  });
-
-  const data = await response.json();
-
-  return NextResponse.json(data, {
-    status: response.status,
-  });
 }
 
 export async function PATCH(request: NextRequest) {
-  const supabase = await createClient();
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  if (!session) {
-    return NextResponse.json(
-      { error: "Unauthorized" },
-      { status: 401 }
-    );
-  }
-
-  const body = await request.json();
-
-  const response = await fetch(`${BACKEND_URL}/profile`, {
-    method: "PATCH",
-    headers: {
-      Authorization: `Bearer ${session.access_token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  });
-
-  const data = await response.json();
-
-  return NextResponse.json(data, {
-    status: response.status,
-  });
+  return savePreparation(request, false);
 }

@@ -8,6 +8,14 @@ interface SessionPageProps {
     cycle?: string;
     subject?: string;
     topic?: string;
+    subtopic?: string;
+    difficulty?: string;
+    intelligence_only?: string;
+    limit?: string;
+    returnTo?: string;
+    resume?: string;
+    ids?: string;
+    session_id?: string;
   }>;
 }
 
@@ -27,6 +35,14 @@ export default async function SessionPage({ searchParams }: SessionPageProps) {
           cycle={params.cycle}
           subject={params.subject}
           topic={params.topic}
+          subtopic={params.subtopic}
+          difficulty={params.difficulty}
+          intelligenceOnly={params.intelligence_only === "true"}
+          limit={params.limit ? parseInt(params.limit, 10) : undefined}
+          returnTo={params.returnTo}
+          resume={params.resume === "true"}
+          specificIds={params.ids}
+          resumeSessionId={params.session_id}
         />
       </div>
     </main>

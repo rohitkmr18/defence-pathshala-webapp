@@ -1,3 +1,11 @@
+export interface SubjectAnalyticsData {
+  totalQuestions: number;
+  difficulty: { name: string; value: number }[];
+  questionPatterns: { name: string; value: number }[];
+  questionTypes: { name: string; value: number }[];
+  topics: { name: string; value: number }[];
+}
+
 export interface QuestionBankPayload {
   summary: {
     questions: number;
@@ -11,6 +19,8 @@ export interface QuestionBankPayload {
   questionPatterns: { name: string; value: number }[];
   questionTypes: { name: string; value: number }[];
   topics: { name: string; value: number }[];
+  subjectTopics?: Record<string, { name: string; value: number }[]>;
+  subjectAnalytics?: Record<string, SubjectAnalyticsData>;
 }
 
 export async function getQuestionBank(params?: {

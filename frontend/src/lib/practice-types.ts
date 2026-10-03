@@ -42,6 +42,33 @@ export interface PracticeQuestion {
   static_current_link?: string | null;
   difficulty_score?: number | null;
   difficulty_category?: string | null;
+  concept?: string | null;
+  production_eligible?: boolean;
+  intelligence_eligible?: boolean;
+  human_review_required?: boolean;
+  intelligence_verified?: boolean;
+  intelligence_confidence?: "MODEL_DERIVED" | "HUMAN_VERIFIED" | string;
+  pattern_id?: string | null;
+  taxonomy_subject?: string | null;
+  taxonomy_topic?: string | null;
+  taxonomy_subtopic?: string | null;
+  taxonomy_concept?: string | null;
+  competency_id?: string | null;
+  source_id?: string | null;
+  temporal_context_id?: string | null;
+  expected_knowledge?: string | null;
+  source_accessibility?: string | null;
+  preparation_accessibility?: string | null;
+  cognitive_complexity?: string | null;
+  esac_score?: number | null;
+  relation_degree?: number | null;
+  same_concept_degree?: number | null;
+  cross_exam_variant_degree?: number | null;
+  conceptual_variant_degree?: number | null;
+  intelligence_readiness?: string | null;
+  requires_content_review?: boolean | null;
+  release_eligible?: boolean | null;
+  release_version?: string | null;
 }
 
 /** All possible option keys */

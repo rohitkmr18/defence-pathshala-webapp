@@ -2,8 +2,11 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import Link from "next/link";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2, LogIn } from "lucide-react";
 import type { PracticeQuestion, OptionKey } from "@/lib/practice-types";
+import { createClient } from "@/lib/supabase/client";
+import { authUrl } from "@/lib/auth-redirect";
+import { fullPaperDestination } from "@/lib/full-paper-intent";
 import QuestionCard from "@/components/practice/player/QuestionCard";
 import ExamHeader from "@/components/practice/full-paper/ExamHeader";
 import QuestionPalette from "@/components/practice/full-paper/QuestionPalette";
@@ -23,14 +26,14 @@ export default function FullPaperClient({
   initialYear,
   initialCycle,
 }: FullPaperClientProps) {
-  // Resolve initial paper based on query params or default to CAPF AC 2025
+  // Resolve initial paper based on query params or default to most recent exam (CDS II 2026)
   const initialPaper =
     AVAILABLE_FULL_PAPERS.find((p) => {
       const examMatches =
-        initialExam &&
-        (p.exam === initialExam ||
-          p.label.toLowerCase().includes(initialExam.toLowerCase()) ||
-          p.exam.replace(/-/g, " ").toLowerCase() === initialExam.replace(/-/g, " ").toLowerCase());
+        !initialExam ||
+        p.exam.toLowerCase() === initialExam.toLowerCase() ||
+        p.label.toLowerCase().includes(initialExam.toLowerCase()) ||
+        p.exam.replace(/-/g, " ").toLowerCase() === initialExam.replace(/-/g, " ").toLowerCase();
       const yearMatches = !initialYear || p.year === parseInt(initialYear, 10);
       const cycleMatches = !initialCycle || p.cycle === initialCycle;
       return examMatches && yearMatches && cycleMatches;
@@ -47,6 +50,16 @@ export default function FullPaperClient({
   const [visited, setVisited] = useState<Set<string>>(new Set());
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  // Auth check
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      setIsAuthenticated(!!data.user);
+    });
+  }, []);
 
   // Time remaining countdown
   const [timeRemaining, setTimeRemaining] = useState(selectedPaper.durationSeconds);
@@ -94,8 +107,11 @@ export default function FullPaperClient({
 
   // Load questions when selected paper changes
   useEffect(() => {
-    void loadPaperQuestions(selectedPaper);
-  }, [selectedPaper, loadPaperQuestions]);
+    if (isAuthenticated !== true) return;
+    // Defer initialization until the authenticated route is committed.
+    const start = window.setTimeout(() => { void loadPaperQuestions(selectedPaper); }, 0);
+    return () => window.clearTimeout(start);
+  }, [selectedPaper, loadPaperQuestions, isAuthenticated]);
 
   // Paper switcher handler
   const handleSelectPaperById = useCallback((paperId: string) => {
@@ -107,7 +123,7 @@ export default function FullPaperClient({
 
   // Countdown timer logic
   useEffect(() => {
-    if (loading || isSubmitted || !questions || questions.length === 0) return;
+    if (isAuthenticated !== true || loading || isSubmitted || !questions || questions.length === 0) return;
 
     timerRef.current = setInterval(() => {
       setTimeRemaining((prev) => {
@@ -123,7 +139,7 @@ export default function FullPaperClient({
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [loading, isSubmitted, questions]);
+  }, [loading, isSubmitted, questions, isAuthenticated]);
 
   // Update visited state on question navigation
   const navigateToQuestion = useCallback(
@@ -198,6 +214,39 @@ export default function FullPaperClient({
   }, [questions, selectedPaper]);
 
   // Loading view
+  if (isAuthenticated === false) {
+    return (
+      <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center px-4 py-12">
+        <div className="max-w-md w-full rounded-3xl border border-slate-200 bg-white p-8 shadow-xl text-center">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 mb-5 border border-blue-100 shadow-sm">
+            <LogIn className="h-6 w-6" />
+          </div>
+          <h2 className="text-2xl font-black text-slate-900">
+            Sign In Required
+          </h2>
+          <p className="mt-2 text-sm text-slate-600 leading-relaxed">
+            Full-length paper simulation requires an account to record your answers, apply official negative marking, and generate comprehensive post-mock analytics.
+          </p>
+          <div className="mt-6 space-y-3">
+            <Link
+              href={authUrl("/auth/login", fullPaperDestination(selectedPaper))}
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-md shadow-blue-600/20 hover:bg-blue-500 transition"
+            >
+              <LogIn className="h-4 w-4" />
+              Sign in to Attempt Full Paper
+            </Link>
+            <Link
+              href="/dashboard/practice"
+              className="inline-flex w-full items-center justify-center rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition"
+            >
+              Back to Free Targeted Practice
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (loading) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3">

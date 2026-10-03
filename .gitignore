@@ -60,3 +60,4 @@ coverage/
 # Streamlit local state
 # =========================
 .streamlit/secrets.toml
+node_modules

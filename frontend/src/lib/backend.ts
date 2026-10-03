@@ -15,8 +15,19 @@ export async function backendGET(path: string) {
     headers["Authorization"] = `Bearer ${session.access_token}`;
   }
 
-  return fetch(`${BACKEND_URL}${path}`, {
-    headers,
-    cache: "no-store",
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 2000);
+
+  try {
+    const res = await fetch(`${BACKEND_URL}${path}`, {
+      headers,
+      cache: "no-store",
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+    return res;
+  } catch (err) {
+    clearTimeout(timeoutId);
+    throw err;
+  }
 }

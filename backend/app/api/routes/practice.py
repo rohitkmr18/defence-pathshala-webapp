@@ -2,6 +2,7 @@ from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
+from app.core.exams import expand_exam_query, get_exam_label
 from app.core.supabase import supabase
 from app.schemas.practice import PracticeFiltersResponse
 
@@ -20,8 +21,8 @@ def _clean_text(value: Any) -> str | None:
 def get_practice_filters() -> PracticeFiltersResponse:
     try:
         response = (
-            supabase.table("questions")
-            .select("exam,year,cycle,subject,topic")
+            supabase.table("v_dp_question_intelligence_v2")
+            .select("exam,year,cycle,subject,topic,subtopic")
             .execute()
         )
 
@@ -31,6 +32,7 @@ def get_practice_filters() -> PracticeFiltersResponse:
         years_by_exam: dict[str, set[int]] = {}
         cycles_by_exam: dict[str, set[str]] = {}
         subjects_by_exam: dict[str, dict[str, set[str]]] = {}
+        subtopics_by_subject: dict[str, dict[str, set[str]]] = {}
 
         for row in rows:
             exam = _clean_text(row.get("exam"))
@@ -55,11 +57,14 @@ def get_practice_filters() -> PracticeFiltersResponse:
 
             subject = _clean_text(row.get("subject"))
             topic = _clean_text(row.get("topic"))
+            subtopic = _clean_text(row.get("subtopic"))
 
             if not subject or not topic:
                 continue
 
             subjects_by_exam.setdefault(exam, {}).setdefault(subject, set()).add(topic)
+            if subtopic:
+                subtopics_by_subject.setdefault(subject, {}).setdefault(topic, set()).add(subtopic)
 
         return PracticeFiltersResponse(
             exams=sorted(exams),
@@ -79,6 +84,15 @@ def get_practice_filters() -> PracticeFiltersResponse:
                 }
                 for exam, subjects in sorted(subjects_by_exam.items())
             },
+            subtopics={
+                subject: {
+                    topic: sorted(subtopics)
+                    for topic, subtopics in sorted(topic_map.items())
+                    if subtopics
+                }
+                for subject, topic_map in sorted(subtopics_by_subject.items())
+            },
+            difficulties=["Easy", "Moderate", "Hard"],
         )
 
     except Exception as exc:  # pragma: no cover - defensive: surfaced via FastAPI
@@ -92,20 +106,17 @@ def get_practice_count(
     cycle: str | None = None,
     subject: str | None = None,
     topic: str | None = None,
+    subtopic: str | None = None,
+    difficulty: str | None = None,
+    intelligence_only: bool = False,
 ) -> dict[str, int]:
     try:
-        query = supabase.table("questions").select("id", count="exact")
+        query = supabase.table("v_dp_question_intelligence_v2").select("id", count="exact")
 
         if exam:
-            exam_vals = [value.strip() for value in exam.split(",") if value.strip()]
-            expanded = []
-            for e in exam_vals:
-                expanded.append(e)
-                if " " in e:
-                    expanded.append(e.replace(" ", "-"))
-                if "-" in e:
-                    expanded.append(e.replace("-", " "))
-            query = query.in_("exam", list(set(expanded)))
+            expanded = expand_exam_query(exam)
+            if expanded:
+                query = query.in_("exam", expanded)
 
         if year:
             query = query.in_(
@@ -114,10 +125,13 @@ def get_practice_count(
             )
 
         if cycle:
-            query = query.in_(
-                "cycle",
-                [value.strip() for value in cycle.split(",") if value.strip()],
-            )
+            cycles = [value.strip() for value in cycle.split(",") if value.strip()]
+            if cycles:
+                if "I" in cycles:
+                    cycle_list = ",".join(cycles)
+                    query = query.or_(f"cycle.in.({cycle_list}),cycle.is.null")
+                else:
+                    query = query.in_("cycle", cycles)
 
         if subject:
             query = query.in_(
@@ -130,6 +144,21 @@ def get_practice_count(
                 "topic",
                 [value.strip() for value in topic.split(",") if value.strip()],
             )
+
+        if subtopic:
+            query = query.in_(
+                "subtopic",
+                [value.strip() for value in subtopic.split(",") if value.strip()],
+            )
+
+        if difficulty:
+            query = query.in_(
+                "difficulty_category",
+                [value.strip() for value in difficulty.split(",") if value.strip()],
+            )
+
+        if intelligence_only:
+            query = query.eq("intelligence_eligible", True)
 
         response = query.execute()
         return {"count": response.count or 0}
@@ -145,21 +174,18 @@ def get_practice_questions(
     cycle: str | None = None,
     subject: str | None = None,
     topic: str | None = None,
+    subtopic: str | None = None,
+    difficulty: str | None = None,
+    intelligence_only: bool = False,
     limit: int = 150,
 ) -> dict[str, Any]:
     try:
-        query = supabase.table("questions").select("*")
+        query = supabase.table("v_dp_question_intelligence_v2").select("*")
 
         if exam:
-            exam_vals = [value.strip() for value in exam.split(",") if value.strip()]
-            expanded = []
-            for e in exam_vals:
-                expanded.append(e)
-                if " " in e:
-                    expanded.append(e.replace(" ", "-"))
-                if "-" in e:
-                    expanded.append(e.replace("-", " "))
-            query = query.in_("exam", list(set(expanded)))
+            expanded = expand_exam_query(exam)
+            if expanded:
+                query = query.in_("exam", expanded)
 
         if year:
             query = query.in_(
@@ -168,10 +194,13 @@ def get_practice_questions(
             )
 
         if cycle:
-            query = query.in_(
-                "cycle",
-                [value.strip() for value in cycle.split(",") if value.strip()],
-            )
+            cycles = [value.strip() for value in cycle.split(",") if value.strip()]
+            if cycles:
+                if "I" in cycles:
+                    cycle_list = ",".join(cycles)
+                    query = query.or_(f"cycle.in.({cycle_list}),cycle.is.null")
+                else:
+                    query = query.in_("cycle", cycles)
 
         if subject:
             query = query.in_(
@@ -185,10 +214,87 @@ def get_practice_questions(
                 [value.strip() for value in topic.split(",") if value.strip()],
             )
 
+        if subtopic:
+            query = query.in_(
+                "subtopic",
+                [value.strip() for value in subtopic.split(",") if value.strip()],
+            )
+
+        if difficulty:
+            query = query.in_(
+                "difficulty_category",
+                [value.strip() for value in difficulty.split(",") if value.strip()],
+            )
+
+        if intelligence_only:
+            query = query.eq("intelligence_eligible", True)
+
         query = query.order("q_num").limit(limit)
         response = query.execute()
         rows = response.data or []
         return {"questions": rows, "total": len(rows)}
+
+    except Exception as exc:  # pragma: no cover - defensive: surfaced via FastAPI
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@router.get("/distribution")
+def get_practice_distribution(
+    group_by: str = "year",
+    exam: str | None = None,
+    year: str | None = None,
+    cycle: str | None = None,
+    subject: str | None = None,
+    topic: str | None = None,
+) -> dict[str, Any]:
+    try:
+        query = supabase.table("v_dp_question_intelligence_v2").select("id,question_id,exam,year,cycle")
+
+        if exam:
+            expanded = expand_exam_query(exam)
+            if expanded:
+                query = query.in_("exam", expanded)
+
+        if year:
+            query = query.in_(
+                "year",
+                [int(value.strip()) for value in year.split(",") if value.strip() and value.strip().isdigit()],
+            )
+
+        if cycle:
+            cycles = [value.strip() for value in cycle.split(",") if value.strip()]
+            if cycles:
+                if "I" in cycles:
+                    cycle_list = ",".join(cycles)
+                    query = query.or_(f"cycle.in.({cycle_list}),cycle.is.null")
+                else:
+                    query = query.in_("cycle", cycles)
+
+        if subject:
+            query = query.in_(
+                "subject",
+                [value.strip() for value in subject.split(",") if value.strip()],
+            )
+
+        if topic:
+            query = query.in_(
+                "topic",
+                [value.strip() for value in topic.split(",") if value.strip()],
+            )
+
+        response = query.execute()
+        rows = response.data or []
+
+        counts: dict[str, int] = {}
+        for row in rows:
+            key_val = str(row.get(group_by) or "Unknown")
+            counts[key_val] = counts.get(key_val, 0) + 1
+
+        return {
+            "groupBy": group_by,
+            "data": [{"label": k, "count": v} for k, v in sorted(counts.items())],
+            "total": len(rows),
+        }
 
     except Exception as exc:  # pragma: no cover - defensive: surfaced via FastAPI
         raise HTTPException(status_code=500, detail=str(exc)) from exc
