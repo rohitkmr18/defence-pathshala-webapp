@@ -12,7 +12,7 @@ Project: `afhwegrxnvgsqbqadvwr` (defence-pathshala-pyq).
 2. Authentication > Emails > Templates: paste `email-otp-template.html` into both **Magic link or OTP** and **Confirm sign up** templates. Subject: `Your Defence Pathshala verification code`. Preserve any unrelated templates. The literal `{{ .Token }}` variable is required; a confirmation URL alone does not deliver a code.
 3. Authentication > Sign In / Providers > Email: retain email verification, enable email sign-in and new-user signup, inspect the configured OTP length, and use an appropriate short expiry (10 minutes recommended). The frontend accepts 6–10 digits to support the configured length. Preserve server-side resend and verification rate limits.
 4. Do not disable email confirmation or manually mark accounts confirmed to get around failed delivery.
-5. Google sign-in is retained alongside email OTP, including the existing callback error handling. Reconcile any further changes on main before merging.
+5. This release exposes email OTP only on login and signup through the shared `EmailOtpForm`. The Google button is not imported or rendered there. `GoogleSignInButton` and OAuth callback handling remain in source for a future release; do not enable Google in staging or production for this rollout. Google-specific acceptance is DEFERRED, out of release scope. Re-enable the entry point only after isolated Google acceptance passes.
 
 ## Verification before publishing
 

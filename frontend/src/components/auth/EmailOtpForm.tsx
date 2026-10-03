@@ -4,11 +4,10 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { ArrowRight, Loader2 } from "lucide-react";
-import GoogleSignInButton from "@/components/GoogleSignInButton";
 import { createClient } from "@/lib/supabase/client";
 import { requestEmailCode, verifyEmailCode } from "@/lib/email-otp";
 
-import { authUrl, safeAuthNext } from "@/lib/auth-redirect";
+import { authUrl } from "@/lib/auth-redirect";
 
 export default function EmailOtpForm({ mode = "login" }: { mode?: "login" | "signup" }) {
   const searchParams = useSearchParams();
@@ -70,8 +69,7 @@ export default function EmailOtpForm({ mode = "login" }: { mode?: "login" | "sig
   const inputClass = "mt-2 block w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm text-slate-900 shadow-sm focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20";
   return (
     <form onSubmit={submit} className="space-y-5">
-      {!sentEmail && <GoogleSignInButton next={safeAuthNext(searchParams.get("next"))}
-        disabled={busy} onBusyChange={setBusy} onError={setError} />}
+      {/* Email OTP only for this release; Google implementation is retained separately. */}
       {sentEmail ? (
         <>
           <p role="status" className="text-sm text-slate-600">

@@ -65,12 +65,12 @@ for (const [state, expected] of [
   });
 }
 
-test('OTP signup/login links and Google entry use canonical safe destinations', () => {
+test('email-only signup/login hides Google and uses canonical safe destinations', () => {
   for (const next of [intended, 'https://evil.test', '/onboarding?next=/auth/login', '/%61uth/login']) {
     for (const mode of ['login', 'signup']) {
       const h = harness({ next, mode });
       const safe = h.load('frontend/src/lib/auth-redirect.ts').safeAuthNext(next);
-      assert.equal(h.nodes(n => n.type === 'google-button')[0].props.next, safe);
+      assert.equal(h.nodes(n => n.type === 'google-button').length, 0);
       const link = new URL(h.nodes(n => n.type === 'a')[0].props.href, 'https://local.test');
       assert.equal(link.pathname, mode === 'login' ? '/auth/signup' : '/auth/login');
       assert.equal(link.searchParams.get('next'), safe);
