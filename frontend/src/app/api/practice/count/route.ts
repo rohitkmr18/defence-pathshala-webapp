@@ -84,57 +84,14 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    let { count, error } = await query;
+    const { count, error } = await query;
 
     if (error) {
-      let fallbackQuery = supabase
-        .from("questions")
-        .select("id", { count: "exact", head: true })
-        .eq("is_active", true);
-
-      if (specificIds.length > 0) {
-        fallbackQuery = fallbackQuery.in("id", specificIds);
-      } else {
-        if (filters.exams.length > 0) {
-          const expandedExams = Array.from(
-            new Set(filters.exams.flatMap((ex) => expandExamQuery(ex)))
-          );
-          if (expandedExams.length > 0) {
-            fallbackQuery = fallbackQuery.in("exam", expandedExams);
-          }
-        }
-        if (filters.years.length > 0) {
-          fallbackQuery = fallbackQuery.in("year", filters.years);
-        }
-        if (filters.cycles.length > 0) {
-          if (filters.cycles.includes("I")) {
-            fallbackQuery = fallbackQuery.or(`cycle.in.(${filters.cycles.join(",")}),cycle.is.null`);
-          } else {
-            fallbackQuery = fallbackQuery.in("cycle", filters.cycles);
-          }
-        }
-        if (filters.subjects.length > 0) {
-          fallbackQuery = fallbackQuery.in("subject", filters.subjects);
-        }
-        if (filters.topics.length > 0) {
-          fallbackQuery = fallbackQuery.in("topic", filters.topics);
-        }
-        if (filters.subtopics.length > 0) {
-          fallbackQuery = fallbackQuery.in("subtopic", filters.subtopics);
-        }
-        if (filters.difficulties.length > 0) {
-          fallbackQuery = fallbackQuery.in("difficulty_category", filters.difficulties);
-        }
-      }
-
-      const res = await fallbackQuery;
-      count = res.count;
-      error = res.error;
-    }
-
-    if (error) {
-      console.error("Supabase count query error:", error);
-      return NextResponse.json({ count: 0 }, { status: 200 });
+      console.error("Canonical v2 count query error:", error);
+      return NextResponse.json(
+        { error: "Canonical question intelligence read-model unavailable" },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({ count: count || 0 }, { status: 200 });
