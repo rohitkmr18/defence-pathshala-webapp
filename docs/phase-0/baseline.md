@@ -1,6 +1,6 @@
 # Phase 0 baseline — 2026-10-02 UTC
 
-Captured before source/schema changes.
+Captured before source/schema changes. Historical checkpoints below are preserved; current status is [report.md](report.md). Do not use old SHA/count/access claims as current release evidence.
 
 - Main: `6426adb116e69a29c3b1dc888de04bcda5f49593`; clean clone.
 - Production: Vercel `dpl_2UJtQqoHoRq4wop7uMjcafWptr8M`, READY, same SHA, custom domains mapped. Node 24.x.
@@ -55,3 +55,14 @@ Authoritative future migration path: supabase/migrations. Legacy database/migrat
 - Production HTTP smoke suite: 12/12 passed. Browser CDS practice shows 1199 questions; Full Paper shows Sign In Required. These are the original deployed code, not the prepared fixes.
 - Advisor refresh: security INFO no-policy6 plus WARN leaked-password1; performance INFO backup PK2 / unused-index18 plus WARN overlapping policies3. One-hour production error/fatal log query found no rows; limited evidence.
 - Remaining release blocks: actual GitHub push/PR/CI, required branch checks, preview authenticated UI and OAuth, environment/backend review, production SHA verification and fresh schema reset/import. Do not declare Phase 1 readiness.
+
+
+## Production reliability continuation — 3 October 2026 UTC
+
+- Refreshed main/production: c0bf584; PR #9 open. Changes pushed only to its phase-0 branch. No production release or data mutation.
+- Fixed client creation/answer linkage, confirmed persistence/expiry failures, Full Paper submit/timer/auth contracts, Google entry point/safe return paths, admin bearer proxy and JWT issuer verification.
+- Current local gates: 48 frontend tests, 26 backend tests, TypeScript, lint 0 errors/45 visible warnings, isolated build/root verify. Local browser login shell verified.
+- Public production and recorded 28fe18f preview GET smoke: 14/14 each; preview uses production Supabase.
+- Thirteen applied migration files reconcile with Git; three Phase 0 migrations were not reapplied. Fresh local schema + synthetic lineage/RLS pass using explicit platform stubs; real frozen restore blocked by automatic export approval review.
+- Final production counts: questions/v2/release/intelligence=1,821 each; attempts=5; sessions=1; no null session owners/cross-owner linked attempts.
+- Remaining release blocks and exact owner actions are in report.md/runbook.md. Main remains unprotected and Vercel deploys independently of CI. Real Google/two-identity journeys, deployed config/credential review and frozen import are unproved. Free-plan leaked-password feature requires paid-plan consideration; no upgrade made. Phase 1 is not cleared.

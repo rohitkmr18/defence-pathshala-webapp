@@ -1,0 +1,90 @@
+
+> defence-pathshala-webapp@0.1.0 verify
+> node scripts/verify.js
+
+[verify] 1/2 Verifying frontend production build...
+
+> frontend@0.1.0 build
+> next build
+
+▲ Next.js 16.3.6 (Turbopack)
+✓ Running next.config.ts took 41ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 1005ms
+  Running TypeScript ...
+  Finished TypeScript in 1970ms ...
+  Collecting page data using 2 workers ...
+  Generating static pages using 2 workers (0/34) ...
+  Generating static pages using 2 workers (8/34) 
+  Generating static pages using 2 workers (16/34) 
+  Generating static pages using 2 workers (25/34) 
+✓ Generating static pages using 2 workers (34/34) in 424ms
+  Finalizing page optimization ...
+
+Route (app)                             Revalidate  Expire
+┌ ○ /
+├ ○ /_not-found
+├ ○ /about
+├ ○ /admin/current-affairs
+├ ƒ /api/admin/sync-dataset
+├ ƒ /api/admin/sync-stats
+├ ƒ /api/analytics
+├ ƒ /api/current-affairs/publish
+├ ƒ /api/practice/attempt
+├ ƒ /api/practice/count
+├ ƒ /api/practice/distribution
+├ ƒ /api/practice/filters
+├ ƒ /api/practice/questions
+├ ƒ /api/practice/session
+├ ƒ /api/profile
+├ ƒ /api/question-bank
+├ ƒ /api/question-bank/meta
+├ ○ /apple-icon.png
+├ ƒ /auth/callback
+├ ○ /auth/login
+├ ○ /auth/signup
+├ ○ /current-affairs
+├ ƒ /current-affairs/[date]
+├ ƒ /dashboard
+├ ƒ /dashboard/admin
+├ ○ /dashboard/current-affairs
+├ ○ /dashboard/practice
+├ ƒ /dashboard/practice/full-paper
+├ ƒ /dashboard/practice/session
+├ ƒ /dashboard/question-bank
+├ ƒ /exams/[exam]
+├ ○ /icon.png
+├ ○ /onboarding
+├ ƒ /pyqs/[exam]
+├ ƒ /pyqs/[exam]/[dimension]
+├ ƒ /pyqs/[exam]/[dimension]/[subject]
+├ ○ /robots.txt
+└ ○ /sitemap.xml                                1h      1y
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+[verify] 2/2 Verifying backend routes and imports offline...
+..........................                                               [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:51
+  /workspace/defence-pathshala-webapp/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:51: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+26 passed, 1 warning in 0.64s
+[verify] All verifications passed successfully!
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

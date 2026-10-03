@@ -1,0 +1,85 @@
+[
+  {
+    "status": "fulfilled",
+    "value": {
+      "path": "/_next/static/immutable/chunks/0ws7t_wz4dvp7.js",
+      "status": 200,
+      "projectHosts": [],
+      "exposedAdminConfig": false
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "path": "/_next/static/immutable/chunks/3mkhgoywwoz_u.js",
+      "status": 200,
+      "projectHosts": [],
+      "exposedAdminConfig": false
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "path": "/_next/static/immutable/chunks/42yh-p7ixe8_7.js",
+      "status": 200,
+      "projectHosts": [],
+      "exposedAdminConfig": false
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "path": "/_next/static/immutable/chunks/turbopack-3xd8kk7fb4ml_.js",
+      "status": 200,
+      "projectHosts": [],
+      "exposedAdminConfig": false
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "path": "/_next/static/immutable/chunks/2hfu87lv7bf7p.js",
+      "status": 200,
+      "projectHosts": [],
+      "exposedAdminConfig": false
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "path": "/_next/static/immutable/chunks/1j-4xu-jzl_4l.js",
+      "status": 200,
+      "projectHosts": [],
+      "exposedAdminConfig": false
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "path": "/_next/static/immutable/chunks/3eyqj9d7adi84.js",
+      "status": 200,
+      "projectHosts": [
+        "afhwegrxnvgsqbqadvwr.supabase.co"
+      ],
+      "exposedAdminConfig": false
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "path": "/_next/static/immutable/chunks/0c0hxoamwjsbw.js",
+      "status": 200,
+      "projectHosts": [],
+      "exposedAdminConfig": false
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "path": "/_next/static/immutable/chunks/2belr3pe9fbiz.js",
+      "status": 200,
+      "projectHosts": [],
+      "exposedAdminConfig": false
+    }
+  }
+]

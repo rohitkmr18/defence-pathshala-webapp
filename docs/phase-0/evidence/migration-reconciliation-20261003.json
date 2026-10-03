@@ -1,0 +1,101 @@
+{
+  "production_project": "afhwegrxnvgsqbqadvwr",
+  "remote_migrations": [
+    {
+      "version": "20261002140511",
+      "name": "pyq_intelligence_contract_hardening_v1",
+      "path": "supabase/migrations/20261002140511_pyq_intelligence_contract_hardening_v1.sql",
+      "matches_remote_ignoring_trailing_whitespace": true,
+      "sha256": "8189e656acf66e7586822f93af5ec19c7725a8f6142fa618ffb04ac1e5bc2c5d"
+    },
+    {
+      "version": "20261002162919",
+      "name": "create_dp_pyq_v1_production_release",
+      "path": "supabase/migrations/20261002162919_create_dp_pyq_v1_production_release.sql",
+      "matches_remote_ignoring_trailing_whitespace": true,
+      "sha256": "8b31dd431d0e0953d9ce7fa1386113f0beab7731309bda724aaf54f9666a904c"
+    },
+    {
+      "version": "20261002163027",
+      "name": "bind_question_intelligence_to_v1_release_contract",
+      "path": "supabase/migrations/20261002163027_bind_question_intelligence_to_v1_release_contract.sql",
+      "matches_remote_ignoring_trailing_whitespace": true,
+      "sha256": "70c6b8c44dffc24a5fbcb9eedf85a17d6b6659605b71982d60b5132ad65fe5cc"
+    },
+    {
+      "version": "20261002165607",
+      "name": "create_dp_question_intelligence_v1_read_model",
+      "path": "supabase/migrations/20261002165607_create_dp_question_intelligence_v1_read_model.sql",
+      "matches_remote_ignoring_trailing_whitespace": true,
+      "sha256": "2aba8d2cda799b4778a1a8cf3745f077a1c3c2ac3c25d23819b5207324c9cbf3"
+    },
+    {
+      "version": "20261002170010",
+      "name": "create_question_intelligence_v2_read_model",
+      "path": "supabase/migrations/20261002170010_create_question_intelligence_v2_read_model.sql",
+      "matches_remote_ignoring_trailing_whitespace": true,
+      "sha256": "7c28232613a70333b2aa06ffae8bdc3b72055d6d5dadec7fe0db314e06cc4b2d"
+    },
+    {
+      "version": "20261002170318",
+      "name": "add_intelligence_review_state_to_production_read_model",
+      "path": "supabase/migrations/20261002170318_add_intelligence_review_state_to_production_read_model.sql",
+      "matches_remote_ignoring_trailing_whitespace": true,
+      "sha256": "2c65f354b6b2c0f8ea2872798d497d8989de03ffc34f6d387a57f1a65eb845ca"
+    },
+    {
+      "version": "20261002170733",
+      "name": "promote_all_v1_intelligence_eligible",
+      "path": "supabase/migrations/20261002170733_promote_all_v1_intelligence_eligible.sql",
+      "matches_remote_ignoring_trailing_whitespace": true,
+      "sha256": "d6982b350695b6d676dd959cb8b5b8a5992cc1d07769441337c4d0fceba39c3f"
+    },
+    {
+      "version": "20261002175600",
+      "name": "canonicalize_v2_pattern_dictionary_and_read_model",
+      "path": "supabase/migrations/20261002175600_canonicalize_v2_pattern_dictionary_and_read_model.sql",
+      "matches_remote_ignoring_trailing_whitespace": true,
+      "sha256": "8d19d8ffe5afe3e24ac78aae19185e7dd87ef73711abbcca4a6f3b31cbde77ba"
+    },
+    {
+      "version": "20261002175629",
+      "name": "secure_cleanup_backup_table",
+      "path": "supabase/migrations/20261002175629_secure_cleanup_backup_table.sql",
+      "matches_remote_ignoring_trailing_whitespace": true,
+      "sha256": "b3ff0de493452b67adbbc4b93651fea487af4c3fd951d7856147f0763df23d60"
+    },
+    {
+      "version": "20261002180707",
+      "name": "enforce_question_v2_taxonomy_contract",
+      "path": "supabase/migrations/20261002180707_enforce_question_v2_taxonomy_contract.sql",
+      "matches_remote_ignoring_trailing_whitespace": true,
+      "sha256": "db0e9797b1d1eca7459a348119b2fbd1b9009ad4c001985061aaffe7e9decae4"
+    },
+    {
+      "version": "20261002205937",
+      "name": "phase0_practice_persistence",
+      "path": "supabase/migrations/20261002205937_phase0_practice_persistence.sql",
+      "matches_remote_ignoring_trailing_whitespace": true,
+      "sha256": "15b253c7f9443eca4b8b427699c6b5f34affa105426f009e4aa4061f7cfd6e3d"
+    },
+    {
+      "version": "20261002210031",
+      "name": "phase0_security_hardening",
+      "path": "supabase/migrations/20261002210031_phase0_security_hardening.sql",
+      "matches_remote_ignoring_trailing_whitespace": true,
+      "sha256": "b781de2dc861fe0a679a9838cbd3c0488190a647e334a60d602021d020f684e0"
+    },
+    {
+      "version": "20261002210827",
+      "name": "phase0_current_affairs_storage",
+      "path": "supabase/migrations/20261002210827_phase0_current_affairs_storage.sql",
+      "matches_remote_ignoring_trailing_whitespace": true,
+      "sha256": "cd8fde8a56b77ee23a095531dd7db7a34108386cd54fd7ee35c311fa040a7201"
+    }
+  ],
+  "not_recorded_remote": [
+    "20260924135446",
+    "20260924135559"
+  ],
+  "production_reapplied": false
+}

@@ -1,0 +1,103 @@
+
+> frontend@0.1.0 lint
+> eslint
+
+
+/workspace/defence-pathshala-webapp/frontend/src/__tests__/question_learning_loop.test.mjs
+  12:3  warning  'buildExploreUrl' is defined but never used  @typescript-eslint/no-unused-vars
+
+/workspace/defence-pathshala-webapp/frontend/src/app/about/page.tsx
+  276:38  warning  'idx' is defined but never used  @typescript-eslint/no-unused-vars
+
+/workspace/defence-pathshala-webapp/frontend/src/app/api/practice/distribution/route.ts
+  182:15  warning  'cyclesInExam' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/workspace/defence-pathshala-webapp/frontend/src/app/exams/[exam]/page.tsx
+   7:3   warning  'examToSlug' is defined but never used    @typescript-eslint/no-unused-vars
+  10:10  warning  'BookOpen' is defined but never used      @typescript-eslint/no-unused-vars
+  10:44  warning  'CheckCircle2' is defined but never used  @typescript-eslint/no-unused-vars
+
+/workspace/defence-pathshala-webapp/frontend/src/components/CurrentAffairsUploader.tsx
+  140:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/workspace/defence-pathshala-webapp/frontend/src/components/charts/DifficultyVisualizer.tsx
+  4:31  warning  'AlertTriangle' is defined but never used  @typescript-eslint/no-unused-vars
+
+/workspace/defence-pathshala-webapp/frontend/src/components/charts/QuestionPatternMatrix.tsx
+    7:3   warning  'CheckCircle' is defined but never used  @typescript-eslint/no-unused-vars
+    8:3   warning  'HelpCircle' is defined but never used   @typescript-eslint/no-unused-vars
+    9:3   warning  'ListOrdered' is defined but never used  @typescript-eslint/no-unused-vars
+   10:3   warning  'Layers' is defined but never used       @typescript-eslint/no-unused-vars
+  111:39  warning  'idx' is defined but never used          @typescript-eslint/no-unused-vars
+
+/workspace/defence-pathshala-webapp/frontend/src/components/current-affairs/NavigationButtons.tsx
+   4:39  warning  'Calendar' is defined but never used     @typescript-eslint/no-unused-vars
+  15:3   warning  'currentDate' is defined but never used  @typescript-eslint/no-unused-vars
+
+/workspace/defence-pathshala-webapp/frontend/src/components/current-affairs/SlideViewer.tsx
+    4:37  warning  'Maximize2' is defined but never used                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+  130:11  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/workspace/defence-pathshala-webapp/frontend/src/components/dashboard/ContinuePreparationHero.tsx
+  10:3   warning  'AlertCircle' is defined but never used         @typescript-eslint/no-unused-vars
+  11:3   warning  'CheckCircle2' is defined but never used        @typescript-eslint/no-unused-vars
+  12:3   warning  'Play' is defined but never used                @typescript-eslint/no-unused-vars
+  44:10  warning  'lastTopic' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/workspace/defence-pathshala-webapp/frontend/src/components/dashboard/MockPerformanceHub.tsx
+  6:10  warning  'Award' is defined but never used  @typescript-eslint/no-unused-vars
+
+/workspace/defence-pathshala-webapp/frontend/src/components/dashboard/WeakAreasCard.tsx
+  4:30  warning  'AlertCircle' is defined but never used  @typescript-eslint/no-unused-vars
+
+/workspace/defence-pathshala-webapp/frontend/src/components/home/IntelligenceEngineSection.tsx
+  100:42  warning  'idx' is defined but never used  @typescript-eslint/no-unused-vars
+
+/workspace/defence-pathshala-webapp/frontend/src/components/home/PostMockAnalyticsShowcase.tsx
+   8:3  warning  'AlertCircle' is defined but never used  @typescript-eslint/no-unused-vars
+  11:3  warning  'Award' is defined but never used        @typescript-eslint/no-unused-vars
+  12:3  warning  'Sparkles' is defined but never used     @typescript-eslint/no-unused-vars
+
+/workspace/defence-pathshala-webapp/frontend/src/components/home/ProductShowcase.tsx
+   8:3  warning  'BarChart3' is defined but never used   @typescript-eslint/no-unused-vars
+   9:3  warning  'Search' is defined but never used      @typescript-eslint/no-unused-vars
+  10:3  warning  'Layers' is defined but never used      @typescript-eslint/no-unused-vars
+  12:3  warning  'TrendingUp' is defined but never used  @typescript-eslint/no-unused-vars
+
+/workspace/defence-pathshala-webapp/frontend/src/components/practice/analysis/DifficultyBreakdownCard.tsx
+  17:9  warning  'modStat' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  18:9  warning  'hardStat' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/workspace/defence-pathshala-webapp/frontend/src/components/practice/analysis/MockDebriefHero.tsx
+  4:32  warning  'Target' is defined but never used  @typescript-eslint/no-unused-vars
+  4:40  warning  'Award' is defined but never used   @typescript-eslint/no-unused-vars
+
+/workspace/defence-pathshala-webapp/frontend/src/components/practice/analysis/NextBestMoveCard.tsx
+  3:20  warning  'ArrowRight' is defined but never used  @typescript-eslint/no-unused-vars
+
+/workspace/defence-pathshala-webapp/frontend/src/components/practice/analysis/RecoveryPlanCard.tsx
+  3:10  warning  'CalendarCheck' is defined but never used  @typescript-eslint/no-unused-vars
+  3:25  warning  'ArrowRight' is defined but never used     @typescript-eslint/no-unused-vars
+  3:37  warning  'BookOpen' is defined but never used       @typescript-eslint/no-unused-vars
+
+/workspace/defence-pathshala-webapp/frontend/src/components/practice/analysis/TimeManagementCard.tsx
+  3:24  warning  'AlertCircle' is defined but never used  @typescript-eslint/no-unused-vars
+
+/workspace/defence-pathshala-webapp/frontend/src/components/practice/full-paper/ExamHeader.tsx
+   3:51  warning  'BookOpen' is defined but never used   @typescript-eslint/no-unused-vars
+  33:3   warning  'totalTime' is defined but never used  @typescript-eslint/no-unused-vars
+
+/workspace/defence-pathshala-webapp/frontend/src/components/practice/full-paper/ExamScorecard.tsx
+   5:10  warning  'Award' is defined but never used                  @typescript-eslint/no-unused-vars
+  23:3   warning  'totalTimeSpentSeconds' is defined but never used  @typescript-eslint/no-unused-vars
+
+/workspace/defence-pathshala-webapp/frontend/src/components/question-bank/QuestionBankExplorer.tsx
+  11:3  warning  'Sparkles' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 45 problems (0 errors, 45 warnings)
+
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

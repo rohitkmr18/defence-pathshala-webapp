@@ -1,13 +1,15 @@
-# Phase 0 continuation — 3 October 2026
+# Phase 0 continuation — 3 October 2026 UTC
 
-Current verified main: c0bf5845b43d8e2ab64934ffcf61cd4b8ae62003.
-Production: dpl_Cj3izUkgWmtDnTtywbAoZ44Lj2At, READY, same SHA.
-Main push CI run 37074700415 is green. That workflow fixes dependency order and Node 22 but does not enforce full lint/types/offline route coverage.
+**HOLD MERGE. Phase 0 incomplete; Phase 1 not cleared.** The current source of truth is [report.md](report.md), with concrete owner setup/release/rollback steps in [runbook.md](runbook.md) and environment boundaries in [testing.md](testing.md).
 
-GitHub contents writes now work. Branch phase-0/remaining-baseline-hardening was created successfully. Branch administration is still denied; no required checks exist on main. Do not represent an unprotected branch as CI-gated production.
+Main/production remain c0bf5845b43d8e2ab64934ffcf61cd4b8ae62003. PR #9 remains open on phase-0/remaining-baseline-hardening. Read current remote head/checks/deployment rather than assuming any checkpoint SHA is still latest.
 
-Prepared changes reconcile all six newer main commits: difficulty removal, collapsed/mobile subtopics, duplicate Quick Select removal, exact session identity/question-order resume and request-scoped profile reads. New resume regression tests are included in the mandatory test glob. Existing session progress snapshot serialization is retained; failed server operations now return errors instead of fake success. Guests remain local-only.
+This continuation fixed create/first-answer linkage, visible save errors and expired auth, persisted Full Paper submission and timer/auth ordering, safe Google callback return paths, admin bearer proxying and JWT issuer validation. It preserved recent difficulty removal, collapsed/mobile subtopics, Quick Select cleanup and exact session-resume/navigation behavior.
 
-Production migration history still contains the three Phase 0 migrations; do not reapply them. Corpus counts: 1,821 master and canonical rows, five attempts and one existing saved session. No records were written by this continuation. Security advisor retains six informational denied/private tables and the leaked-password warning; no new schema changes needed.
+Local authoritative installs and gates pass: 48 frontend tests, 26 backend tests, TypeScript, lint (0 errors/45 warnings), isolated production build and root verification. All 13 recorded production migrations are mirrored; three Phase 0 migrations remain already applied. Fresh local PostgreSQL application-schema/synthetic lineage/RLS checks pass with explicit platform stubs. No production or Lab data was changed. Counts remain 1,821 questions/v2/release/intelligence rows, five attempts and one owned session.
 
-Remaining exit checks: stronger remote CI and preview; signed-in Google OAuth, practice persistence/debrief/recommendations and Full Paper submission; production SHA and smoke/log checks after approved release; main required checks/production gate; Auth password configuration; deployed backend/key configuration; clean staging schema/release reconstruction. Do not merge solely because offline tests pass.
+Public production and recorded 28fe18f preview GET checks pass 14/14 each. Preview uses production Supabase. Owner says Google setup stopped at URL configuration. Authenticated OAuth/learning/debrief/recommendation/Full Paper and two-identity tests are pending, with preview browser access also blocked by workspace egress policy.
+
+Main remains unprotected, rulesets empty, administration denied 403; observed Vercel production timing precedes main CI. Backend hosting/env targets and any active formerly exposed credential remain unverified. Free-plan leaked-password protection is unsupported without a paid decision. Automatic approval review rejected copying production question/intelligence payload locally; real frozen restoration remains blocked, and no payload file was created.
+
+Next: complete the concrete owner setup in the runbook, obtain approved artifact/export scope and suitable test write environment, run real authenticated checks, establish/verify the release gate, then merge through PR and prove main/production/post-release checks. Never merge solely because CI is green.
