@@ -6,6 +6,8 @@ Setup requires CDS, CAPF AC or both, prefills optional name, offers optional yea
 
 Migration: `supabase/migrations/20261003093440_atomic_onboarding.sql`. No production migration, merge or deployment has been performed. Review migration prerequisites/history, unexposed private schema, execute grants, ownership checks and unchanged RLS/role triggers. Apply and verify in staging before a separately authorized rollout.
 
-Validation: 59 JS/SQL/component/middleware tests and 2 new backend compatibility tests passed; TypeScript, changed-file ESLint and isolated production build passed. Full repo lint still has 41 existing errors/46 warnings (main: 42/46). Broad backend tests: 16 passed, 7 existing live-data tests failed with placeholder credentials/missing Sheets configuration. Real authenticated browser, PostgREST and two-connection concurrency acceptance remain pending.
+User-approved root/frontend Vercel guards disable Git deployments only for this PR branch; no other branch is disabled.
+
+Validation: 59 JS/SQL/component/middleware tests and 2 new backend compatibility tests passed; TypeScript, changed-file ESLint and isolated production build passed. Full repo lint still has 41 existing errors/46 warnings (main: 42/46). Broad backend tests: 16 passed, 7 existing live-data tests failed with placeholder credentials/missing Sheets configuration. Local Chromium guest login/signup, onboarding redirect and exact-paper gate checks passed with placeholder credentials. Real authenticated browser, PostgREST and two-connection concurrency acceptance remain pending.
 
 Runbook and acceptance checklist: `docs/auth/onboarding-state-rollout.md`. Evidence/limits: `docs/auth/onboarding-state-verification.md`. Reconcile draft email OTP PR #12 by keeping its shared form and using `/auth/continue` after verification; mail delivery remains a separate prerequisite.

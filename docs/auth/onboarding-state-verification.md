@@ -11,6 +11,7 @@ Base: latest inspected main `8b5b7ca` (including Google auth #11, onboarding per
 - Isolated Next.js production build with placeholder Supabase credentials. SEO query failure against the placeholder was expected and did not fail the build.
 - Root `npm run verify`: isolated production build and backend import both passed.
 - `git diff --check`.
+- Local Chromium guest smoke with placeholder credentials: login/signup links retain the exact paper intent; direct guest onboarding redirects to login with the same next; the direct full-paper gate links to login with the selected CDS 2024 II paper. No browser page errors were reported on these screens. Authenticated provider/database flows were not attempted.
 
 ## Failed/environment-dependent
 
@@ -23,7 +24,7 @@ Base: latest inspected main `8b5b7ca` (including Google auth #11, onboarding per
 - PGlite exercises real transaction rollback and queued duplicate saves, but has one connection. True concurrent connection/lock acceptance remains pending on staging.
 - Supabase advisors/full service startup were not run against a non-production Supabase instance. The RPC/migration was not installed in production.
 - Supabase changelog fetch was blocked by network policy (403); the documentation MCP lookup succeeded.
-- Publishing the draft PR is blocked by automatic approval rejection of the proposed branch-only deployment guard. No branch was pushed and no deployment config was changed. Root/frontend `git.deploymentEnabled` mapping solely for this branch is the concrete proposal; its application requires explicit approval.
+- The user explicitly approved the branch-only deployment guard. Root/frontend configs disable Git deployments only for `feat/auth-onboarding-state-model`; both parsed JSON and branch scope were checked before publication. Remote CI/deployment observations are reported in the draft PR and final handoff.
 
 ## Reproduce
 

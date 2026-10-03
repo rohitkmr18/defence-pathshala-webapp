@@ -43,7 +43,7 @@ Before any separately authorized rollout:
 4. Reconcile draft PR #12 deliberately. Keep its shared EmailOtpForm and email rollout instructions; do not restore password forms when resolving conflicts. After OTP verification, navigate with `authUrl('/auth/continue', nextUrl)` so the resolver handles incomplete users even for public destinations. Retain next on links, Google entry and retries. Mail delivery prerequisites remain separate and unverified here.
 5. Ship the migration before the new frontend, and retire the legacy backend writer in the same controlled release. Neither deployment nor production migration is authorized by this task.
 
-Publishing the PR branch requires preventing automatic Vercel preview deployment. The proposed branch-only `git.deploymentEnabled` rule was rejected by automatic approval review as an unapproved deployment-setting change. It has not been applied. Do not push an unguarded branch to the connected deployment integration. Explicit approval of the branch-only guard is pending; no other branch needs its deployment behavior changed.
+The user approved a branch-only Vercel deployment guard before publication. Root and frontend `vercel.json` disable Git deployments solely for `feat/auth-onboarding-state-model`; unspecified branches retain their existing behavior. Keep this guard while the PR is draft and remove it only as part of a separately authorized rollout. No production deployment or migration is authorized by PR publication.
 
 ## Verification
 
@@ -81,4 +81,4 @@ All checks below are **pending**; no production or authenticated browser success
 
 ## Rollback
 
-If checks fail, do not publish this branch. After any separately authorized rollout, use a known UI/backend release that still uses the canonical authenticated writer; do not revive the non-atomic writer. Leave additive RPCs and saved preferences/completion in place until a reviewed rollback migration is needed. Never reset completion, delete learner data, loosen RLS or replay historical migrations to roll back.
+If staging acceptance checks fail, keep this PR draft and do not roll it out. After any separately authorized rollout, use a known UI/backend release that still uses the canonical authenticated writer; do not revive the non-atomic writer. Leave additive RPCs and saved preferences/completion in place until a reviewed rollback migration is needed. Never reset completion, delete learner data, loosen RLS or replay historical migrations to roll back.
