@@ -1,176 +1,9 @@
 "use client";
 
-import { FormEvent, useState, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
-import GoogleSignInButton from "@/components/GoogleSignInButton";
-import { authUrl, safeAuthNext } from "@/lib/auth-redirect";
-import { Eye, EyeOff, Shield, ArrowRight, CheckCircle2 } from "lucide-react";
-
-// ─── Inner component that reads search params ───────────────────────────────
-
-function LoginForm() {
-  const searchParams = useSearchParams();
-  const nextUrl = safeAuthNext(searchParams.get("next"));
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState<string | null>(
-    searchParams.has("error") ? "Sign-in could not be completed. Please try again." : null
-  );
-  const [loading, setLoading] = useState(false);
-
-  async function handleLogin(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (loading) return;
-
-    setError(null);
-    setLoading(true);
-
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-      return;
-    }
-
-    // Redirect to next URL or dashboard
-    window.location.assign(authUrl("/auth/continue", nextUrl));
-  }
-
-  return (
-    <form onSubmit={handleLogin} className="space-y-5" noValidate>
-      <GoogleSignInButton next={nextUrl} disabled={loading} onBusyChange={setLoading} onError={setError} />
-      {/* Email */}
-      <div>
-        <label
-          htmlFor="email"
-          className="block text-sm font-semibold text-slate-700"
-        >
-          Email address
-        </label>
-        <input
-          id="email"
-          type="email"
-          required
-          autoComplete="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="mt-2 block w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm text-slate-900 placeholder-slate-400 shadow-sm transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-          placeholder="you@example.com"
-        />
-      </div>
-
-      {/* Password */}
-      <div>
-        <div className="flex items-center justify-between">
-          <label
-            htmlFor="password"
-            className="block text-sm font-semibold text-slate-700"
-          >
-            Password
-          </label>
-          <button
-            type="button"
-            className="text-xs font-semibold text-blue-600 hover:text-blue-500 focus:outline-none focus-visible:underline"
-          >
-            Forgot password?
-          </button>
-        </div>
-
-        <div className="relative mt-2">
-          <input
-            id="password"
-            type={showPassword ? "text" : "password"}
-            required
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="block w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 pr-12 text-sm text-slate-900 placeholder-slate-400 shadow-sm transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-            placeholder="••••••••"
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword((v) => !v)}
-            className="absolute inset-y-0 right-0 flex items-center px-4 text-slate-400 hover:text-slate-600 focus:outline-none"
-            aria-label={showPassword ? "Hide password" : "Show password"}
-          >
-            {showPassword ? (
-              <EyeOff className="h-4 w-4" />
-            ) : (
-              <Eye className="h-4 w-4" />
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* Error */}
-      {error && (
-        <div
-          role="alert"
-          className="rounded-xl bg-red-50 border border-red-100 px-4 py-3 text-sm text-red-700"
-        >
-          {error}
-        </div>
-      )}
-
-      {/* Submit */}
-      <button
-        type="submit"
-        disabled={loading}
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-600/25 transition hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 active:scale-[0.98]"
-      >
-        {loading ? (
-          <>
-            <svg
-              className="h-4 w-4 animate-spin"
-              viewBox="0 0 24 24"
-              fill="none"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              />
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8v8H4z"
-              />
-            </svg>
-            Signing in…
-          </>
-        ) : (
-          <>
-            Log In
-            <ArrowRight className="h-4 w-4" />
-          </>
-        )}
-      </button>
-
-      {/* Sign up link */}
-      <p className="text-center text-sm text-slate-500">
-        New here?{" "}
-        <Link
-          href={authUrl("/auth/signup", nextUrl)}
-          className="font-semibold text-blue-600 hover:text-blue-500 transition"
-        >
-          Create a free account
-        </Link>
-      </p>
-    </form>
-  );
-}
+import EmailOtpForm from "@/components/auth/EmailOtpForm";
+import { Shield, CheckCircle2 } from "lucide-react";
 
 // ─── Page ──────────────────────────────────────────────────────────────────────
 
@@ -261,15 +94,15 @@ export default function LoginPage() {
           <div className="w-full max-w-md">
             <div className="mb-8">
               <h2 className="text-2xl font-black tracking-tight text-slate-900">
-                Welcome back
+                Sign in or create an account
               </h2>
               <p className="mt-1.5 text-sm text-slate-500">
-                Sign in to your PYQ Intelligence dashboard.
+                One email code. No password to remember.
               </p>
             </div>
 
             <Suspense fallback={<div className="text-sm text-slate-500">Loading…</div>}>
-              <LoginForm />
+              <EmailOtpForm />
             </Suspense>
 
             {/* Explore without login */}

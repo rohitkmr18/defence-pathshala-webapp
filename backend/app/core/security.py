@@ -50,6 +50,7 @@ def get_current_user(
                 settings.supabase_jwt_secret,
                 algorithms=["HS256"],
                 audience="authenticated",
+                issuer=ISSUER,
             )
             return payload
         except jwt.PyJWTError as exc:

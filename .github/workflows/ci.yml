@@ -56,10 +56,14 @@ jobs:
           frontend/src/__tests__/auth_callback.test.mjs frontend/src/__tests__/auth_state.test.mjs
           scripts/test-onboarding.cjs scripts/test-onboarding-db.cjs
           scripts/test-auth-components.cjs scripts/test-auth-middleware.cjs
+          scripts/test-email-otp.cjs scripts/test-otp-routing.cjs
+
+      - name: Verify recorded migration ledger and fresh reconstruction
+        run: node --test --experimental-test-isolation=none scripts/test-migration-ledger.cjs
 
       - name: Verify retired legacy profile writer
         env:
           SUPABASE_URL: https://placeholder.supabase.co
           SUPABASE_SERVICE_ROLE_KEY: placeholder-service-role-key
           SUPABASE_JWT_SECRET: placeholder-jwt-secret-placeholder-32-chars
-        run: python -m pytest -q backend/tests/test_profile_compatibility.py
+        run: python -m pytest -q backend/tests/test_profile_compatibility.py backend/tests/test_jwt_issuer.py

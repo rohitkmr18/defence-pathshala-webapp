@@ -177,7 +177,9 @@ def test_sync_dataset_invalid_key() -> None:
     assert response.status_code == 401
 
 
-def test_sync_dataset_with_admin_key_dry_run() -> None:
+def test_sync_dataset_with_admin_key_dry_run(monkeypatch) -> None:
+    monkeypatch.setattr(settings, "google_sheet_id", "offline-sheet")
+    monkeypatch.setattr("app.api.routes.admin.download_worksheet_csv", lambda **kwargs: pd.DataFrame([create_sample_row()]))
     service_role = settings.supabase_service_role_key
     response = client.post(
         "/admin/sync-dataset?dry_run=true",
@@ -187,7 +189,7 @@ def test_sync_dataset_with_admin_key_dry_run() -> None:
     data = response.json()
     assert data["success"] is True
     assert data["dry_run"] is True
-    assert data["total"] >= 730
+    assert data["total"] == 1
     assert "inserted" in data
     assert "updated" in data
     assert "duration_seconds" in data
@@ -198,7 +200,9 @@ def test_sync_stats_unauthenticated() -> None:
     assert response.status_code == 401
 
 
-def test_sync_stats_with_admin_key() -> None:
+def test_sync_stats_with_admin_key(monkeypatch) -> None:
+    monkeypatch.setattr(settings, "google_sheet_id", "offline-sheet")
+    monkeypatch.setattr("app.api.routes.admin.download_worksheet_csv", lambda **kwargs: pd.DataFrame([create_sample_row()]))
     service_role = settings.supabase_service_role_key
     response = client.get(
         "/admin/sync-stats",
@@ -210,5 +214,5 @@ def test_sync_stats_with_admin_key() -> None:
     assert "incoming_sheet_count" in data
     assert "new_questions" in data
     assert "updated_questions" in data
-    assert data["current_db_count"] >= 730
-    assert data["incoming_sheet_count"] >= 730
+    assert data["current_db_count"] == 1
+    assert data["incoming_sheet_count"] == 1

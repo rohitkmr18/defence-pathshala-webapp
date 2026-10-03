@@ -26,7 +26,7 @@ Setup requires CDS, CAPF AC or both. Name is prefilled where available and edita
 
 Prerequisites: existing `profiles` and `user_exam_preferences` tables, ownership RLS, `auth.uid()` and role-protection trigger. This migration adds schema/functions/grants only, without reconstructing historical application tables.
 
-The repository's `supabase/migrations` is not a complete mirror of historical production migrations. PR #9 contains separate baseline/migration reconciliation work. **Do not blindly run `supabase db push`, reset, or replay legacy numbered migrations against production.** Reconcile the ledger with the owner and PR #9 first.
+The PR branch now mirrors all 14 observed production migration versions and their recorded SQL, through `20261003091625_phase2_intelligence_trust_contract`. The two unrecorded bootstrap files are preserved under `supabase/reconstruction/bootstrap`, outside the applied ledger. The onboarding migration remains pending and unapplied to production. See [repository reconciliation and staging preparation](repository-reconciliation.md). **Do not run `supabase db push`, reset, repair or replay historical migrations against production.** This source reconciliation does not alter main, remote history or the reported `MIGRATIONS_FAILED` status.
 
 On an explicitly selected disposable/staging database with the prerequisite schema, apply only the reviewed migration through the normal owner-controlled workflow. A staging-only example:
 
@@ -40,7 +40,7 @@ Before any separately authorized rollout:
 1. Confirm `dp_onboarding_private` is not exposed through PostgREST. Review owners, execute grants, empty search paths, ownership checks and the unchanged RLS/role triggers. Run Supabase advisors on the selected non-production project.
 2. Apply the migration in staging. Verify schema-cache reload exposes the public RPCs to authenticated clients and rejects anonymous calls.
 3. Complete the browser acceptance checks below with staging-only test users and verify the actual persisted rows under the same user. Test two concurrent database connections; PGlite queues operations and is not a multi-connection lock stress test.
-4. Reconcile draft PR #12 deliberately. Keep its shared EmailOtpForm and email rollout instructions; do not restore password forms when resolving conflicts. After OTP verification, navigate with `authUrl('/auth/continue', nextUrl)` so the resolver handles incomplete users even for public destinations. Retain next on links, Google entry and retries. Mail delivery prerequisites remain separate and unverified here.
+4. PR #12's shared EmailOtpForm, resend/change-email behavior, OTP helper and template are incorporated. OTP verification navigates through `/auth/continue`; the canonical resolver owns all routing. Verify live staging email delivery/templates and Google configuration separately; no external auth settings were changed.
 5. Ship the migration before the new frontend, and retire the legacy backend writer in the same controlled release. Neither deployment nor production migration is authorized by this task.
 
 The user approved a branch-only Vercel deployment guard before publication. Root and frontend `vercel.json` disable Git deployments solely for `feat/auth-onboarding-state-model`; unspecified branches retain their existing behavior. Keep this guard while the PR is draft and remove it only as part of a separately authorized rollout. No production deployment or migration is authorized by PR publication.

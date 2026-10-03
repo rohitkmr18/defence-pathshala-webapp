@@ -1,0 +1,137 @@
+{
+  "timestamp": "2026-10-03T11:54:30.257196+00:00",
+  "database": "dp_phase0_auth_reconcile_final",
+  "container": "dp-auth-reconcile-20261003",
+  "environment": "local PostgreSQL with platform test stubs",
+  "production_writes": false,
+  "frozen_release_import": "not attempted; schema and synthetic fixtures only",
+  "files": [
+    {
+      "path": "supabase/reconstruction/platform-test-stubs.sql",
+      "sha256": "628fa6a18ebe525e661bdd87dd3e9c58f5e4421ed910c2dc2b8fea013013b939",
+      "passed": true,
+      "output": "DO\nDO\nDO\nCREATE SCHEMA\nCREATE TABLE\nCREATE FUNCTION\nCREATE FUNCTION\nCREATE SCHEMA\nCREATE TABLE\nALTER TABLE\nGRANT\nGRANT\n"
+    },
+    {
+      "path": "supabase/reconstruction/bootstrap/20260924135446_create_questions.sql",
+      "sha256": "e478717591cda0ed10c017eeac34cac4fc72d67846a3448605e5ed008de16408",
+      "passed": true,
+      "output": "CREATE EXTENSION\nCREATE TABLE\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nALTER TABLE\n"
+    },
+    {
+      "path": "supabase/reconstruction/bootstrap/20260924135559_create_user_attempts.sql",
+      "sha256": "5c6de127c2cfc04895ffb1503cd488dc1ce6a15e56ca56f702fa584ac172fc30",
+      "passed": true,
+      "output": "CREATE TABLE\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nALTER TABLE\n"
+    },
+    {
+      "path": "supabase/reconstruction/legacy-prerequisites.sql",
+      "sha256": "b1f4d8f9bd8c46e236501e27ff657e409c10ed8687417a9ed4b4d4e05149200e",
+      "passed": true,
+      "output": "CREATE TABLE\nALTER TABLE\nCREATE TABLE\nALTER TABLE\nCREATE TABLE\nALTER TABLE\nCREATE TABLE\nALTER TABLE\nCREATE TABLE\nALTER TABLE\nCREATE TABLE\nALTER TABLE\nCREATE FUNCTION\nCREATE FUNCTION\nCREATE FUNCTION\nCREATE TRIGGER\nCREATE TRIGGER\nCREATE TRIGGER\nCREATE POLICY\nCREATE POLICY\nCREATE POLICY\nCREATE POLICY\nCREATE POLICY\nCREATE POLICY\nCREATE POLICY\nCREATE POLICY\nCREATE POLICY\nCREATE POLICY\nCREATE POLICY\nCREATE POLICY\nALTER TABLE\nALTER TABLE\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE TABLE\nALTER TABLE\nCREATE POLICY\nCREATE POLICY\nCREATE POLICY\nCREATE POLICY\n"
+    },
+    {
+      "path": "supabase/migrations/20261002140511_pyq_intelligence_contract_hardening_v1.sql",
+      "sha256": "fef2c116da78a68a875346c0b48fe209b6cf674329b6f13af50b559f14cc20de",
+      "passed": true,
+      "output": "UPDATE 0\nALTER TABLE\nALTER TABLE\n"
+    },
+    {
+      "path": "supabase/migrations/20261002162919_create_dp_pyq_v1_production_release.sql",
+      "sha256": "2998a5c6a4189be0df592b7135b74a095e2246735b791dda2cc3fa3f2e49170e",
+      "passed": true,
+      "output": "CREATE TABLE\nCREATE INDEX\nCREATE INDEX\nALTER TABLE\nREVOKE\nCOMMENT\n"
+    },
+    {
+      "path": "supabase/migrations/20261002163027_bind_question_intelligence_to_v1_release_contract.sql",
+      "sha256": "8ed36295b725f8a2ce91289174129985e45d8997f2a18ba82cd4577e6c752946",
+      "passed": true,
+      "output": "DROP VIEW\nCREATE VIEW\nALTER VIEW\nGRANT\nCOMMENT\n"
+    },
+    {
+      "path": "supabase/migrations/20261002165607_create_dp_question_intelligence_v1_read_model.sql",
+      "sha256": "254e4be2c88b2cb2206683e6e7dcb3f4357dd90d76af572f5a21151e5fefb75b",
+      "passed": true,
+      "output": "CREATE TABLE\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nALTER TABLE\nREVOKE\nGRANT\nCOMMENT\n"
+    },
+    {
+      "path": "supabase/migrations/20261002170010_create_question_intelligence_v2_read_model.sql",
+      "sha256": "1bb11941a4b1a8e61cc36bd15125a5e3dc66cea827ac4f37e5608d1bebd2ab1d",
+      "passed": true,
+      "output": "CREATE VIEW\nGRANT\nCOMMENT\n"
+    },
+    {
+      "path": "supabase/migrations/20261002170318_add_intelligence_review_state_to_production_read_model.sql",
+      "sha256": "b970464c8f04d6195f92a267b36f53b20f18feba02dcf5d56a3f3aab384c8023",
+      "passed": true,
+      "output": "ALTER TABLE\nCREATE INDEX\nCOMMENT\nCOMMENT\n"
+    },
+    {
+      "path": "supabase/migrations/20261002170733_promote_all_v1_intelligence_eligible.sql",
+      "sha256": "d6982b350695b6d676dd959cb8b5b8a5992cc1d07769441337c4d0fceba39c3f",
+      "passed": true,
+      "output": "UPDATE 0\n"
+    },
+    {
+      "path": "supabase/migrations/20261002175600_canonicalize_v2_pattern_dictionary_and_read_model.sql",
+      "sha256": "a23e6c6f41dd7e3f0e486a52b6b332740613d973f2e0e8c6add4212e9890160f",
+      "passed": true,
+      "output": "CREATE TABLE\nINSERT 0 9\nALTER TABLE\nGRANT\nDROP POLICY\nCREATE POLICY\nCREATE VIEW\nGRANT\nCOMMENT\nCOMMENT\n"
+    },
+    {
+      "path": "supabase/migrations/20261002175629_secure_cleanup_backup_table.sql",
+      "sha256": "b3ff0de493452b67adbbc4b93651fea487af4c3fd951d7856147f0763df23d60",
+      "passed": true,
+      "output": "ALTER TABLE\n"
+    },
+    {
+      "path": "supabase/migrations/20261002180707_enforce_question_v2_taxonomy_contract.sql",
+      "sha256": "db0e9797b1d1eca7459a348119b2fbd1b9009ad4c001985061aaffe7e9decae4",
+      "passed": true,
+      "output": "CREATE FUNCTION\nDROP TRIGGER\nCREATE TRIGGER\nCREATE INDEX\n"
+    },
+    {
+      "path": "supabase/migrations/20261002205937_phase0_practice_persistence.sql",
+      "sha256": "44038ab2e5cbc5f636eb17718e4ccdd6772d44112e21eb49cd4ad47368605379",
+      "passed": true,
+      "output": "CREATE TABLE\nCREATE INDEX\nCREATE INDEX\nALTER TABLE\nALTER TABLE\nCREATE INDEX\nCREATE INDEX\nALTER TABLE\nREVOKE\nGRANT\nGRANT\nCREATE POLICY\nCREATE POLICY\nCREATE POLICY\nCREATE POLICY\nREVOKE\nGRANT\nCREATE FUNCTION\nREVOKE\nCREATE TRIGGER\n"
+    },
+    {
+      "path": "supabase/migrations/20261002210031_phase0_security_hardening.sql",
+      "sha256": "4df4d74e8085d03080bc9b89105af71d467b17758c7b90a5877d23d2ca0a1d79",
+      "passed": true,
+      "output": "REVOKE\nREVOKE\nALTER FUNCTION\nALTER FUNCTION\nALTER FUNCTION\nALTER POLICY\nALTER POLICY\nALTER POLICY\nALTER POLICY\nALTER POLICY\nALTER POLICY\nALTER POLICY\nALTER POLICY\nALTER POLICY\nCREATE INDEX\nCREATE INDEX\n"
+    },
+    {
+      "path": "supabase/migrations/20261002210827_phase0_current_affairs_storage.sql",
+      "sha256": "fecc60a1518455c058120276407486ed3fc6da8ee27f3a91acf072e3aa85e13d",
+      "passed": true,
+      "output": "ALTER POLICY\nALTER POLICY\nALTER POLICY\n"
+    },
+    {
+      "path": "supabase/migrations/20261003091625_phase2_intelligence_trust_contract.sql",
+      "sha256": "d970fb24b7cff51c3967d2f93723234fb65afa110f97736f333af05c4c806077",
+      "passed": true,
+      "output": "CREATE VIEW\nCOMMENT\n"
+    },
+    {
+      "path": "supabase/migrations/20261003093440_atomic_onboarding.sql",
+      "sha256": "4eb9317a8e81bbb439c5747cc0336672c4ee6cdf287dc12dcb94b32a54b88f50",
+      "passed": true,
+      "output": "BEGIN\nCREATE SCHEMA\nREVOKE\nGRANT\nCREATE FUNCTION\nREVOKE\nGRANT\nCREATE FUNCTION\nCREATE FUNCTION\nREVOKE\nREVOKE\nGRANT\nGRANT\nNOTIFY\nCOMMIT\n"
+    },
+    {
+      "path": "supabase/reconstruction/observed-grants.sql",
+      "sha256": "f1985a0b4f05a3e07122429b9bde749c7de638e3ce0d43a72b9f6732efab28d8",
+      "passed": true,
+      "output": "GRANT\nGRANT\nGRANT\nGRANT\nGRANT\nGRANT\nGRANT\nGRANT\nGRANT\nGRANT\nGRANT\nGRANT\nGRANT\nGRANT\nGRANT\nGRANT\nGRANT\nGRANT\nGRANT\nGRANT\nGRANT\nGRANT\nGRANT\nGRANT\nGRANT\nGRANT\nGRANT\nGRANT\nGRANT\nGRANT\n"
+    },
+    {
+      "path": "supabase/reconstruction/synthetic-lineage-check.sql",
+      "sha256": "8c8cc08a389306c987cd4e535992d80243b154c76fe4fa81adb092e9c1b72950",
+      "passed": true,
+      "output": "BEGIN\nINSERT 0 2\nINSERT 0 2\nINSERT 0 2\nINSERT 0 2\nINSERT 0 1\nINSERT 0 1\nDO\nSET\n              set_config              \n--------------------------------------\n 20000000-0000-0000-0000-000000000002\n(1 row)\n\n  set_config   \n---------------\n authenticated\n(1 row)\n\nDO\n              set_config              \n--------------------------------------\n 20000000-0000-0000-0000-000000000001\n(1 row)\n\nDO\nRESET\n                                                   result                                                    \n-------------------------------------------------------------------------------------------------------------\n PASS: synthetic lineage, canonical answer, ownership trigger, owner RLS and denied learner editorial writes\n(1 row)\n\nROLLBACK\n"
+    }
+  ],
+  "passed": true
+}

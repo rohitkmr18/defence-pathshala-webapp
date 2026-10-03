@@ -1,0 +1,38 @@
+{
+  "passed": true,
+  "connections": 2,
+  "environment": "local Docker PostgreSQL with synthetic Auth/Storage stubs; not live Supabase acceptance",
+  "production_writes": false,
+  "results": [
+    {
+      "id": "99999999-1111-4111-8111-111111111111",
+      "full_name": "First",
+      "target_year": 2028,
+      "target_exams": [
+        "CAPF-AC",
+        "CDS"
+      ],
+      "onboarding_completed": true
+    },
+    {
+      "id": "99999999-1111-4111-8111-111111111111",
+      "full_name": "First",
+      "target_year": 2028,
+      "target_exams": [
+        "CAPF-AC",
+        "CDS"
+      ],
+      "onboarding_completed": true
+    }
+  ],
+  "persisted": [
+    {
+      "profiles": 1,
+      "completed": true
+    },
+    {
+      "preferences": 2,
+      "unique_exams": 2
+    }
+  ]
+}
