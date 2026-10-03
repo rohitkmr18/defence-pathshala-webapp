@@ -1,5 +1,4 @@
 from functools import lru_cache
-from hmac import compare_digest
 
 import jwt
 from fastapi import Depends, Header, HTTPException, status
@@ -64,7 +63,6 @@ def get_current_user(
 
 def require_admin(
     credentials: HTTPAuthorizationCredentials | None = Depends(security_optional),
-    x_admin_key: str | None = Header(default=None, alias="X-Admin-Key"),
 ) -> dict:
     """
     Requires the caller to be an authenticated administrator.
@@ -72,13 +70,6 @@ def require_admin(
     1. Bearer token matching SUPABASE_SERVICE_ROLE_KEY (server-to-server).
     2. Valid Supabase JWT with role == 'admin' in public.profiles.
     """
-    # The Next.js proxy uses this server-only header, never browser credentials.
-    if x_admin_key:
-        expected = settings.admin_api_key or settings.supabase_service_role_key
-        if expected and compare_digest(x_admin_key, expected):
-            return {"sub": "admin_proxy", "role": "admin"}
-        raise HTTPException(status_code=401, detail="Invalid admin credentials")
-
     if not credentials:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

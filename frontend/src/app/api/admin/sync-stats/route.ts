@@ -21,8 +21,11 @@ export async function GET(req: Request) {
     const worksheet = searchParams.get("worksheet_name") || "questions";
     const sheetId = searchParams.get("sheet_id") || "";
 
-    const adminKey =
-      process.env.ADMIN_API_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+    // Forward the verified administrator's session. Do not activate a legacy
+    // browser-exposed shared key or send the database service key to FastAPI.
+    const supabase = await createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.access_token) return NextResponse.json({ error: "Administrator session expired" }, { status: 401 });
 
     // 1. Try FastAPI backend
     try {
@@ -34,7 +37,7 @@ export async function GET(req: Request) {
 
       const res = await fetch(targetUrl.toString(), {
         headers: {
-          "X-Admin-Key": adminKey,
+          Authorization: `Bearer ${session.access_token}`,
         },
         cache: "no-store",
         signal,

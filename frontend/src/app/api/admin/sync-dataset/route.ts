@@ -3,6 +3,7 @@ import { errorMessage } from "@/lib/error-message";
 import { requireBackendUrl } from "@/lib/backend-config";
 import { NextResponse } from "next/server";
 import { checkIsAdmin } from "@/lib/admin";
+import { createClient } from "@/lib/supabase/server";
 
 
 
@@ -21,8 +22,11 @@ export async function POST(req: Request) {
     const sheetId = searchParams.get("sheet_id") || "";
     const dryRun = searchParams.get("dry_run") === "true";
 
-    const adminKey =
-      process.env.ADMIN_API_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+    // Forward the verified administrator's session. Do not activate a legacy
+    // browser-exposed shared key or send the database service key to FastAPI.
+    const supabase = await createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.access_token) return NextResponse.json({ error: "Administrator session expired" }, { status: 401 });
 
     const targetUrl = new URL(`${requireBackendUrl()}/admin/sync-dataset`);
     targetUrl.searchParams.set("worksheet_name", worksheet);
@@ -35,7 +39,7 @@ export async function POST(req: Request) {
     const res = await fetch(targetUrl.toString(), {
       method: "POST",
       headers: {
-        "X-Admin-Key": adminKey,
+        Authorization: `Bearer ${session.access_token}`,
         "Content-Type": "application/json",
       },
       cache: "no-store",
