@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { authUrl } from "@/lib/auth-redirect";
 import {
   LayoutDashboard,
   Database,
@@ -27,18 +28,18 @@ const baseItems = [
     icon: LayoutDashboard,
   },
   {
-    name: "PYQs Insights",
+    name: "Explore PYQs",
     href: "/dashboard/question-bank",
     icon: Database,
   },
   {
-    name: "Attempt PYQs",
+    name: "Practice",
     href: "/dashboard/practice",
     icon: Pencil,
   },
   {
-    name: "About Defence Pathshala",
-    href: "/about",
+    name: "Current Affairs",
+    href: "/dashboard/current-affairs",
     icon: Shield,
   },
 ];
@@ -59,13 +60,14 @@ export default function DashboardSidebar({
   user,
 }: SidebarProps) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const loginHref = authUrl("/auth/login", `${pathname}${searchParams.size ? `?${searchParams}` : ""}`);
   const router = useRouter();
   const [editTargetOpen, setEditTargetOpen] = useState(false);
 
   const isAdmin =
     user?.email?.toLowerCase() === "rohitcool423@gmail.com" ||
-    (user?.app_metadata as any)?.role === "admin" ||
-    (user?.user_metadata as any)?.role === "admin";
+    user?.app_metadata?.role === "admin";
 
   const items = isAdmin
     ? [
@@ -194,6 +196,12 @@ export default function DashboardSidebar({
         </div>
       </nav>
 
+      <nav aria-label="Secondary navigation" className="border-t border-slate-100 p-3">
+        <Link href="/about" onClick={() => closeMobile?.()} title="About" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50">
+          <Shield className="h-5 w-5 shrink-0" />{(!collapsed || mobile) && "About"}
+        </Link>
+      </nav>
+
       {/* ── Auth CTA at bottom ───────────────────────────────────────────── */}
       {/* ── Auth CTA at bottom ───────────────────────────────────────────── */}
       {!collapsed ? (
@@ -229,7 +237,7 @@ export default function DashboardSidebar({
             </div>
           ) : (
             <Link
-              href="/auth/login"
+              href={loginHref}
               className="flex items-center justify-center gap-2 rounded-xl border border-blue-200 bg-blue-50/80 px-4 py-2.5 text-sm font-bold text-blue-700 shadow-2xs transition hover:bg-blue-100"
             >
               <LogIn className="h-4 w-4 text-blue-600" />
@@ -265,7 +273,7 @@ export default function DashboardSidebar({
             </>
           ) : (
             <Link
-              href="/auth/login"
+              href={loginHref}
               title="Log in"
               className="flex h-8 w-8 items-center justify-center rounded-lg border border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100 transition shadow-2xs"
             >

@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { authUrl } from "@/lib/auth-redirect";
+import { MOBILE_LEARNING_NAV } from "@/lib/learning-navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import DashboardSidebar from "./DashboardSidebar";
@@ -98,7 +100,7 @@ function UserMenu({ user }: { user: SupabaseUser }) {
 
 // ─── Main Shell ───────────────────────────────────────────────────────────────
 
-export default function DashboardShell({
+function DashboardShellContent({
   children,
 }: {
   children: React.ReactNode;
@@ -108,6 +110,8 @@ export default function DashboardShell({
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const loginHref = authUrl("/auth/login", `${pathname}${searchParams.size ? `?${searchParams}` : ""}`);
 
   // Fetch auth state client-side
   useEffect(() => {
@@ -131,7 +135,8 @@ export default function DashboardShell({
 
   // Close mobile menu on route change
   useEffect(() => {
-    setMobileOpen(false);
+    const close = window.setTimeout(() => setMobileOpen(false), 0);
+    return () => window.clearTimeout(close);
   }, [pathname]);
 
   return (
@@ -166,7 +171,7 @@ export default function DashboardShell({
       </div>
 
       {/* ── Main content ─────────────────────────────────────────────────── */}
-      <main className="flex-1 min-w-0 overflow-x-hidden">
+      <main className="flex-1 min-w-0 overflow-x-hidden pb-[calc(5rem+env(safe-area-inset-bottom))] lg:pb-0">
         {/* Mobile top bar */}
         <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur-nav lg:hidden">
           <div className="flex items-center justify-between px-4 py-3">
@@ -196,7 +201,7 @@ export default function DashboardShell({
               <UserMenu user={user} />
             ) : (
               <Link
-                href="/auth/login"
+                href={loginHref}
                 className="flex items-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-bold text-blue-700 shadow-2xs transition hover:bg-blue-100"
               >
                 <LogIn className="h-3.5 w-3.5 text-blue-600" />
@@ -209,6 +214,15 @@ export default function DashboardShell({
         {/* Page content */}
         <div className="w-full">{children}</div>
       </main>
+      <nav aria-label="Mobile learning navigation" className="fixed inset-x-0 bottom-0 z-30 grid h-[calc(4rem+env(safe-area-inset-bottom))] grid-cols-4 border-t border-slate-200 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden">
+        {MOBILE_LEARNING_NAV.map(item => <Link key={item.name} href={item.href}
+          aria-current={item.name !== "Progress" && (item.href === "/dashboard" ? pathname === item.href : pathname.startsWith(item.href)) ? "page" : undefined}
+          className="flex min-h-16 items-center justify-center text-xs font-bold text-slate-700 aria-[current=page]:bg-blue-50 aria-[current=page]:text-blue-700">{item.name}</Link>)}
+      </nav>
     </div>
   );
+}
+
+export default function DashboardShell({ children }: { children: React.ReactNode }) {
+  return <Suspense><DashboardShellContent>{children}</DashboardShellContent></Suspense>;
 }

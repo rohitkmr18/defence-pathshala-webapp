@@ -5,6 +5,8 @@ interface FullPaperPageProps {
     exam?: string;
     year?: string;
     cycle?: string;
+    returnTo?: string;
+    origin?: string;
   }>;
 }
 
@@ -17,6 +19,8 @@ export default async function FullPaperPage({ searchParams }: FullPaperPageProps
         initialExam={params.exam}
         initialYear={params.year}
         initialCycle={params.cycle}
+        returnTo={params.returnTo}
+        origin={params.origin}
       />
     </div>
   );

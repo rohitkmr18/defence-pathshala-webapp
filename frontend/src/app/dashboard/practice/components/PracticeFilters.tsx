@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { getExamLabel } from "@/lib/exams";
 import type { ActiveFilters } from "./PracticePageClient";
+import { useSearchParams } from "next/navigation";
 
 export type PracticeFiltersResponse = {
   exams: string[];
@@ -36,6 +37,7 @@ export default function PracticeFilters({
   onFilterChange,
   filterOverride,
 }: PracticeFiltersProps) {
+  const searchParams = useSearchParams();
   const [filters, setFilters] = useState<PracticeFiltersResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -126,6 +128,11 @@ export default function PracticeFilters({
   }, []);
 
   // Available subjects for selected exams (or all exams if none selected)
+  useEffect(() => {
+    const timer = window.setTimeout(() => { if (filters) applyInitialSelection(filters); }, 0);
+    return () => window.clearTimeout(timer);
+  }, [searchParams, filters]);
+
   const availableSubjects = useMemo(() => {
     if (!filters) return [];
     const activeExams = selectedExams.length > 0 ? selectedExams : filters.exams;
@@ -215,6 +222,7 @@ export default function PracticeFilters({
 
   // Broadcast changes up
   useEffect(() => {
+    if (loading || !filters) return;
     onFilterChange?.({
       exams: selectedExams,
       years: selectedYears,
@@ -226,6 +234,8 @@ export default function PracticeFilters({
     });
   }, [
     onFilterChange,
+    loading,
+    filters,
     selectedExams,
     selectedYears,
     selectedCycles,

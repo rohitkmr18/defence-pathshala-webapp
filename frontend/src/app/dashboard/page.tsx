@@ -69,7 +69,7 @@ export default async function DashboardPage() {
         </section>
 
         {/* Live Mock Performance & AI Insights Hub */}
-        <section className="mt-10">
+        <section id="performance-coach" className="mt-10 scroll-mt-20">
           <SectionHeader
             eyebrow="DP Performance Coach"
             title="Mock Test Analytics & Diagnostics"

@@ -1,0 +1,128 @@
+const { test } = require('node:test');
+const assert = require('node:assert/strict');
+const createLoader = require('./test-support/load-ts.cjs');
+
+test('Explore → Practice → Auth → Practice retains every selection, mode and origin', () => {
+  const load = createLoader();
+  const { buildExploreUrl, buildPracticeUrl, buildPracticeSessionUrl, parseFiltersFromSearchParams } = load('frontend/src/lib/question-filters.ts');
+  const { authUrl, resolveAuthDestination } = load('frontend/src/lib/auth-redirect.ts');
+  const context = { exams: ['CDS', 'CAPF-AC'], years: [2025, 2024], cycles: ['II'], subjects: ['Indian Polity'], topics: ['Constitution'], subtopics: ['Rights & Duties'], mode: 'attempt', origin: 'explore' };
+  const explore = buildExploreUrl(context);
+  const restored = parseFiltersFromSearchParams(new URL(explore, 'https://local.test').searchParams);
+  const practice = buildPracticeUrl({ ...restored, returnTo: explore });
+  const next = new URL(authUrl('/auth/login', practice), 'https://local.test').searchParams.get('next');
+  assert.equal(resolveAuthDestination('complete', next), practice);
+  const filters = parseFiltersFromSearchParams(new URL(next, 'https://local.test').searchParams);
+  for (const key of Object.keys(context)) assert.equal(JSON.stringify(filters[key]), JSON.stringify(context[key]));
+  assert.equal(filters.returnTo, explore);
+  const player = new URL(buildPracticeSessionUrl(filters), 'https://local.test');
+  assert.equal(player.searchParams.get('subtopic'), 'Rights & Duties');
+  assert.equal(player.searchParams.get('mode'), 'attempt');
+  assert.equal(player.searchParams.get('returnTo'), explore);
+});
+
+test('contextual return keeps nested encodings intact and rejects unsafe or unrelated destinations', () => {
+  const { safeLearningReturn, MOBILE_LEARNING_NAV } = createLoader()('frontend/src/lib/learning-navigation.ts');
+  const valid = '/dashboard/question-bank?topic=Rights%26Duties&subtopic=100%25';
+  assert.equal(safeLearningReturn(valid), valid);
+  for (const value of ['https://evil.test', '//evil.test', '/%2f%2fevil.test', '/dashboard/%5cevil', '/auth/login', '/about', '/dashboard/practice/session?resume=true']) {
+    assert.equal(safeLearningReturn(value, '/dashboard/practice?exam=CDS'), '/dashboard/practice?exam=CDS');
+  }
+  assert.equal(MOBILE_LEARNING_NAV[3].href, '/dashboard#performance-coach');
+});
+
+function hooks() {
+  const values = []; let index = 0;
+  return { begin() { index = 0; }, react: {
+    useState(initial) { const slot = index++; if (!(slot in values)) values[slot] = typeof initial === 'function' ? initial() : initial;
+      return [values[slot], next => { values[slot] = typeof next === 'function' ? next(values[slot]) : next; }]; },
+    useRef(initial) { const slot = index++; values[slot] ??= { current: initial }; return values[slot]; },
+    useEffect() {}, useCallback: value => value,
+  } };
+}
+function elements(tree, predicate) {
+  const found = [];
+  function visit(node) { if (Array.isArray(node)) return node.forEach(visit);
+    if (!node?.props) return; if (predicate(node)) found.push(node); visit(node.props.children); }
+  visit(tree); return found;
+}
+
+test('Dashboard resume restores checked separately from selected; Check and Next are single interactions', async () => {
+  const h = hooks(); const writes = []; const attempts = []; const events = [];
+  const load = createLoader({ react: h.react,
+    '@/components/practice/player/ProgressHeader': 'progress', './ProgressHeader': 'progress',
+    './QuestionCard': 'question', './AnswerReveal': 'reveal',
+    '@/lib/learning-events': { trackLearningEvent: (...args) => events.push(args) },
+    '@/lib/practice-session-client': { getLocalSession: () => ({ id: 'resume', question_times: {} }),
+      updateSessionProgress: (_id, update) => writes.push(update), recordQuestionAttempt: params => { attempts.push(params); return Promise.resolve(); } },
+  });
+  const Player = load('frontend/src/components/practice/player/QuestionPlayer.tsx').default;
+  const props = { sessionId: 'resume', mode: 'instant', questions: [{ id: 'q2', final_opt: 'B' }, { id: 'q1', final_opt: 'A' }], initialAnswers: { q2: 'B' }, initialCheckedIds: [], initialIndex: 0 };
+  function render() { h.begin(); return Player(props); }
+  let tree = render();
+  assert.equal(elements(tree, n => n.type === 'question')[0].props.revealed, false);
+  const check = elements(tree, n => n.type === 'button' && elements(n, s => s.type === 'span' && s.props.children === 'Check Answer').length)[0];
+  check.props.onClick(); check.props.onClick(); tree = render();
+  assert.equal(attempts.length, 1); assert.equal(events.filter(e => e[0] === 'practice_check').length, 1);
+  assert.deepEqual(Array.from(writes.at(-1).checked_ids), ['q2']);
+  const next = elements(tree, n => n.type === 'button' && elements(n, s => s.type === 'span' && s.props.children === 'Next Question').length)[0];
+  next.props.onClick(); next.props.onClick(); tree = render();
+  assert.equal(elements(tree, n => n.type === 'question')[0].props.question.id, 'q1');
+  assert.equal(writes.at(-1).current_index, 1);
+  assert.equal(events.filter(e => e[0] === 'practice_next').length, 1);
+});
+
+function apiFixture() {
+  const tables = { practice_sessions: new Map(), user_attempts: new Map(), v_dp_question_intelligence_v2: new Map([['q1', { id: 'q1', final_opt: 'B' }]]) };
+  const identity = { id: 'learner' };
+  const client = { from(table) {
+    const conditions = []; let payload; let writeOptions = {}; let updating = false;
+    const query = {
+      select() { return query; }, eq(key, value) { conditions.push([key, value]); return query; },
+      upsert(value, options) { payload = value; writeOptions = options; return query; },
+      update(value) { payload = value; updating = true; return query; },
+      then(resolve, reject) { return execute().then(resolve, reject); },
+      single: execute, maybeSingle: execute,
+    };
+    async function execute() {
+      const rows = tables[table];
+      if (payload && !updating && !(writeOptions.ignoreDuplicates && rows.has(payload.id))) rows.set(payload.id, { ...rows.get(payload.id), ...payload });
+      let row = [...rows.values()].find(r => conditions.every(([k, v]) => r[k] === v));
+      if (updating && row) { row = { ...row, ...payload }; rows.set(row.id, row); }
+      return { data: row || null, error: null };
+    }
+    return query;
+  } };
+  const load = createLoader({
+    'next/server': { NextResponse: { json: (body, options = {}) => ({ body, status: options.status || 200 }) } },
+    'next/headers': { cookies: async () => ({ getAll: () => [], set() {} }) },
+    '@supabase/ssr': { createServerClient: () => ({ auth: { getUser: async () => ({ data: { user: identity.id ? identity : null } }) } }) },
+    '@supabase/supabase-js': { createClient: () => client },
+  }, { process: { env: { NEXT_PUBLIC_SUPABASE_URL: 'https://offline.test', NEXT_PUBLIC_SUPABASE_ANON_KEY: 'offline', SUPABASE_SERVICE_ROLE_KEY: 'offline' } } });
+  return { tables, identity, load, request: body => ({ json: async () => body }) };
+}
+
+test('lost creation response/retry returns one cloud identity without resetting progress or crossing accounts', async () => {
+  const f = apiFixture(); const { POST, PATCH } = f.load('frontend/src/app/api/practice/session/route.ts');
+  const input = { creation_id: '11111111-1111-4111-8111-111111111111', mode: 'instant', question_ids: ['q1'], filters: { origin: 'explore' } };
+  const first = await POST(f.request(input)); assert.equal(first.status, 200);
+  await PATCH(f.request({ session_id: input.creation_id, current_index: 1, answers: { q1: 'B' }, filters: { progress: { checked_ids: ['q1'], question_times: { q1: 12 } } } }));
+  const retry = await POST(f.request(input)); assert.equal(retry.body.session.current_index, 1);
+  assert.equal(f.tables.practice_sessions.size, 1);
+  assert.equal(retry.body.session.filters.progress.question_times.q1, 12);
+  f.identity.id = 'other';
+  const denied = await POST(f.request(input)); assert.equal(denied.body.session, undefined);
+});
+
+test('attempt replay is idempotent, cloud-linked and server-scored; another account cannot attach an attempt', async () => {
+  const f = apiFixture(); const sessionId = '11111111-1111-4111-8111-111111111111';
+  f.tables.practice_sessions.set(sessionId, { id: sessionId, user_id: 'learner', question_ids: ['q1'] });
+  const { POST } = f.load('frontend/src/app/api/practice/attempt/route.ts');
+  const body = { question_id: 'q1', session_id: sessionId, selected_option: 'B', is_correct: false, time_taken: 12 };
+  assert.equal((await POST(f.request(body))).body.persisted, true);
+  assert.equal((await POST(f.request(body))).body.persisted, true);
+  assert.equal(f.tables.user_attempts.size, 1);
+  const saved = [...f.tables.user_attempts.values()][0];
+  assert.equal(saved.session_id, sessionId); assert.equal(saved.is_correct, true); assert.equal(saved.time_taken, 12);
+  f.identity.id = 'other'; assert.equal((await POST(f.request(body))).status, 404);
+});

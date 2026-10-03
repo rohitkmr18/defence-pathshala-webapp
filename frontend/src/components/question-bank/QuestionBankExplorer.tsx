@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
   Database,
@@ -25,7 +25,8 @@ import {
 import TopicHeatmap from "@/components/charts/TopicHeatmap";
 import DifficultyVisualizer from "@/components/charts/DifficultyVisualizer";
 import QuestionPatternMatrix from "@/components/charts/QuestionPatternMatrix";
-import { buildPracticeUrl } from "@/lib/question-filters";
+import { buildExploreUrl, buildPracticeUrl, parseFiltersFromSearchParams, type QuestionSetFilters } from "@/lib/question-filters";
+import { trackLearningEvent } from "@/lib/learning-events";
 
 interface Props {
   meta: QuestionBankMeta;
@@ -34,16 +35,32 @@ interface Props {
 type TabView = "all" | "heatmaps" | "difficulty" | "patterns";
 
 export default function QuestionBankExplorer({ meta }: Props) {
-  const router = useRouter();
   const searchParams = useSearchParams();
-
-  const readList = (key: string) =>
-    searchParams.get(key)?.split(",").map((item) => item.trim()).filter(Boolean) ?? [];
-
-  // Initially no exam is selected unless explicitly provided via URL param (?exam=...)
-  const [selectedExams, setSelectedExams] = useState<string[]>(() => {
-    return readList("exam");
-  });
+  const context = useMemo(() => parseFiltersFromSearchParams(searchParams), [searchParams]);
+  const selectedExams = context.exams;
+  const selectedYears = context.years;
+  const selectedCycles = context.cycles;
+  const selectedSubject = context.subjects[0] || null;
+  function changeContext(update: Partial<QuestionSetFilters>) {
+    const next = { ...context, ...update, origin: "explore" };
+    const url = buildExploreUrl(next);
+    if (url !== window.location.pathname + window.location.search) {
+      window.history.pushState(null, "", url);
+      trackLearningEvent("explore_filter", { filters: url.split("?")[1] });
+    }
+  }
+  function setSelectedExams(value: string[] | ((current: string[]) => string[])) {
+    changeContext({ exams: typeof value === "function" ? value(selectedExams) : value });
+  }
+  function setSelectedYears(value: number[] | ((current: number[]) => number[])) {
+    changeContext({ years: typeof value === "function" ? value(selectedYears) : value });
+  }
+  function setSelectedCycles(value: string[] | ((current: string[]) => string[])) {
+    changeContext({ cycles: typeof value === "function" ? value(selectedCycles) : value });
+  }
+  function setSelectedSubject(value: string | null) {
+    changeContext({ subjects: value ? [value] : [], topics: [], subtopics: [] });
+  }
 
   const allExamValues = useMemo(() => meta.exams.map((e) => e.value), [meta.exams]);
   const allAvailableYears = useMemo(() => {
@@ -80,36 +97,17 @@ export default function QuestionBankExplorer({ meta }: Props) {
     return Array.from(cycles).sort();
   }, [allExamValues, meta.exams, selectedExams]);
 
-  const [selectedYears, setSelectedYears] = useState<number[]>(() => {
-    return readList("year").map(Number).filter(Number.isFinite);
-  });
-
-  const [selectedCycles, setSelectedCycles] = useState<string[]>(() => {
-    return readList("cycle");
-  });
-
   const [data, setData] = useState<QuestionBankPayload | null>(null);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<TabView>("all");
-  const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
 
-  const activeYears = selectedYears.filter((item) => availableYears.includes(item));
-  const activeCycles = selectedCycles.filter((item) => availableCycles.includes(item));
-
-  // Reset selectedSubject if filter changes and current selectedSubject is not in new data
-  useEffect(() => {
-    if (selectedSubject && data?.subjects) {
-      const exists = data.subjects.some((s) => s.name === selectedSubject);
-      if (!exists) {
-        setSelectedSubject(null);
-      }
-    }
-  }, [data, selectedSubject]);
+  const activeYears = useMemo(() => selectedYears.filter((item) => availableYears.includes(item)), [selectedYears, availableYears]);
+  const activeCycles = useMemo(() => selectedCycles.filter((item) => availableCycles.includes(item)), [selectedCycles, availableCycles]);
 
   const activeSubjectData = useMemo(() => {
     if (!selectedSubject || !data?.subjectAnalytics) return null;
     return data.subjectAnalytics[selectedSubject] ?? null;
-  }, [data?.subjectAnalytics, selectedSubject]);
+  }, [data, selectedSubject]);
 
   const activeDifficulty = useMemo(() => {
     if (activeSubjectData) return activeSubjectData.difficulty;
@@ -132,29 +130,16 @@ export default function QuestionBankExplorer({ meta }: Props) {
   }, [activeSubjectData, data?.summary.questions]);
 
   useEffect(() => {
-    const params = new URLSearchParams();
-
-    if (selectedExams.length) params.set("exam", selectedExams.join(","));
-    if (activeYears.length) params.set("year", activeYears.join(","));
-    if (activeCycles.length) params.set("cycle", activeCycles.join(","));
-
-    const query = params.toString();
-    router.replace(
-      query ? `/dashboard/question-bank?${query}` : "/dashboard/question-bank",
-      {
-        scroll: false,
-      }
-    );
-  }, [activeCycles, activeYears, router, selectedExams]);
+    trackLearningEvent("explore_view", { origin: "explore" }, `explore:${searchParams.toString()}`);
+  }, [searchParams]);
 
   useEffect(() => {
     let cancelled = false;
 
     // If no exams selected, do not make an API request
     if (selectedExams.length === 0) {
-      setData(null);
-      setLoading(false);
-      return;
+      const timer = window.setTimeout(() => { setData(null); setLoading(false); }, 0);
+      return () => window.clearTimeout(timer);
     }
 
     async function load() {
@@ -195,17 +180,11 @@ export default function QuestionBankExplorer({ meta }: Props) {
   }
 
   function handleSelectAll() {
-    setSelectedSubject(null);
-    setSelectedExams(allExamValues);
-    setSelectedYears(allAvailableYears);
-    setSelectedCycles(allAvailableCycles);
+    changeContext({ exams: allExamValues, years: allAvailableYears, cycles: allAvailableCycles, subjects: [], topics: [], subtopics: [] });
   }
 
   function handleResetFilters() {
-    setSelectedSubject(null);
-    setSelectedExams([]);
-    setSelectedYears([]);
-    setSelectedCycles([]);
+    changeContext({ exams: [], years: [], cycles: [], subjects: [], topics: [], subtopics: [] });
   }
 
   return (
@@ -266,10 +245,7 @@ export default function QuestionBankExplorer({ meta }: Props) {
                 key={item.value}
                 type="button"
                 onClick={() => {
-                  setSelectedSubject(null);
-                  setSelectedExams([item.value]);
-                  setSelectedYears(item.years);
-                  setSelectedCycles(item.cycles);
+                  changeContext({ exams: [item.value], years: item.years, cycles: item.cycles, subjects: [], topics: [], subtopics: [] });
                 }}
                 className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold transition shrink-0 cursor-pointer ${
                   isOnlyThis
@@ -421,6 +397,15 @@ export default function QuestionBankExplorer({ meta }: Props) {
               </div>
             )}
           </div>
+        </div>
+
+        <div className="mt-5 flex flex-wrap items-center gap-2" aria-label="Selected learning context">
+          {[...context.subjects, ...context.topics, ...context.subtopics].map(value => <span key={value} className="rounded-lg bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700">{value}</span>)}
+          <label className="text-xs font-semibold">Practice mode
+            <select aria-label="Practice mode" value={context.mode || "instant"} onChange={e => changeContext({ mode: e.target.value as "instant" | "attempt" })} className="ml-2 rounded-lg border border-slate-200 p-2">
+              <option value="instant">Instant Learning</option><option value="attempt">Timed Exam</option>
+            </select>
+          </label>
         </div>
 
         {/* Live Filter Selection Badges */}
@@ -593,7 +578,7 @@ export default function QuestionBankExplorer({ meta }: Props) {
               selectedExams={selectedExams}
               selectedYears={activeYears}
               selectedCycles={activeCycles}
-              returnTo={`/dashboard/question-bank?${searchParams.toString()}`}
+              returnTo={buildExploreUrl(context)}
               onSelectSubject={setSelectedSubject}
             />
           )}
@@ -659,14 +644,16 @@ export default function QuestionBankExplorer({ meta }: Props) {
               </p>
             </div>
             <Link
+              onClick={() => trackLearningEvent("explore_practice", { origin: "explore" })}
               href={buildPracticeUrl(
                 {
+                  ...context,
                   exams: selectedExams,
                   years: activeYears,
                   cycles: activeCycles,
-                  subjects: selectedSubject ? [selectedSubject] : [],
+                  origin: "explore",
                 },
-                { returnTo: `/dashboard/question-bank?${searchParams.toString()}` }
+                { returnTo: buildExploreUrl(context) }
               )}
               className="inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl bg-white px-6 py-3.5 text-sm font-black text-blue-700 shadow-md transition hover:bg-blue-50 active:scale-95"
             >
@@ -700,10 +687,7 @@ export default function QuestionBankExplorer({ meta }: Props) {
                 key={exam.value}
                 type="button"
                 onClick={() => {
-                  setSelectedSubject(null);
-                  setSelectedExams([exam.value]);
-                  setSelectedYears(exam.years);
-                  setSelectedCycles(exam.cycles);
+                  changeContext({ exams: [exam.value], years: exam.years, cycles: exam.cycles, subjects: [], topics: [], subtopics: [] });
                 }}
                 className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-5 py-3.5 text-xs sm:text-sm font-bold text-slate-800 hover:bg-slate-100 transition active:scale-95 cursor-pointer"
               >
