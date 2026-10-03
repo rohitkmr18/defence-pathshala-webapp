@@ -79,7 +79,7 @@ export default function CurrentAffairsUploader() {
           <div className="text-5xl">📤</div>
 
           <h3 className="mt-4 text-2xl font-bold text-slate-900">
-            Upload Today's Carousel
+            Upload Today&apos;s Carousel
           </h3>
 
           <p className="mt-2 text-sm text-slate-500">
@@ -106,7 +106,7 @@ export default function CurrentAffairsUploader() {
             </h4>
 
             <p className="text-sm text-slate-500">
-              Ready to publish today's current affairs.
+              Ready to publish today&apos;s current affairs.
             </p>
           </div>
 
@@ -186,7 +186,7 @@ export default function CurrentAffairsUploader() {
               </h3>
 
               <p className="mt-1 text-sm text-green-700">
-                {uploadedSlides.length} slides are now stored in Supabase and linked to today's brief.
+                {uploadedSlides.length} slides are now stored in Supabase and linked to today&apos;s brief.
               </p>
 
             </div>

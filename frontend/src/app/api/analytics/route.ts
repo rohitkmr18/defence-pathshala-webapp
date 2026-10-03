@@ -1,7 +1,8 @@
+import { getBackendUrl } from "@/lib/backend-config";
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
-const BACKEND_URL = process.env.BACKEND_URL || "http://127.0.0.1:8000";
+
 
 export async function GET() {
   const supabase = await createClient();
@@ -14,7 +15,9 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const response = await fetch(`${BACKEND_URL}/analytics/overview`, {
+  const backendUrl = getBackendUrl();
+  if (!backendUrl) return NextResponse.json({ error: "Analytics backend unavailable" }, { status: 503 });
+  const response = await fetch(`${backendUrl}/analytics/overview`, {
     headers: {
       Authorization: `Bearer ${session.access_token}`,
     },

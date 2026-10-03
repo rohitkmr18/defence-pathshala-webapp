@@ -129,10 +129,12 @@ export default function DashboardShell({
     return () => subscription.unsubscribe();
   }, []);
 
-  // Close mobile menu on route change
-  useEffect(() => {
+  // Reset route-specific state before rendering a newly navigated page.
+  const [menuPath, setMenuPath] = useState(pathname);
+  if (menuPath !== pathname) {
+    setMenuPath(pathname);
     setMobileOpen(false);
-  }, [pathname]);
+  }
 
   return (
     <div className="flex min-h-screen max-w-full overflow-x-hidden bg-gray-50">

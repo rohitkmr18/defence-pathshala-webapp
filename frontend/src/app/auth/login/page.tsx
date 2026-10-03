@@ -3,6 +3,7 @@
 import { FormEvent, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { safeAuthNext } from "@/lib/auth-navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Eye, EyeOff, Shield, ArrowRight, CheckCircle2 } from "lucide-react";
 
@@ -10,7 +11,9 @@ import { Eye, EyeOff, Shield, ArrowRight, CheckCircle2 } from "lucide-react";
 
 function LoginForm() {
   const searchParams = useSearchParams();
-  const nextUrl = searchParams.get("next") ?? "/dashboard";
+  const nextUrl = safeAuthNext(searchParams.get("next"));
+  const callbackError = searchParams.get("error")
+    ? "Sign-in could not complete. Please try again or check the provider configuration." : null;
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -40,8 +43,27 @@ function LoginForm() {
     window.location.href = nextUrl;
   }
 
+  async function handleGoogleLogin() {
+    setError(null);
+    setLoading(true);
+    try {
+      const callback = new URL("/auth/callback", window.location.origin);
+      callback.searchParams.set("next", nextUrl);
+      const { error } = await createClient().auth.signInWithOAuth({ provider: "google",
+        options: { redirectTo: callback.toString() } });
+      if (error) throw error;
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Google sign-in could not start.");
+      setLoading(false);
+    }
+  }
+
   return (
     <form onSubmit={handleLogin} className="space-y-5" noValidate>
+      <button type="button" disabled={loading} onClick={handleGoogleLogin}
+        className="w-full rounded-xl border border-slate-200 px-4 py-3.5 text-sm font-bold text-slate-900 disabled:opacity-60">
+        Continue with Google
+      </button>
       {/* Email */}
       <div>
         <label
@@ -106,12 +128,12 @@ function LoginForm() {
       </div>
 
       {/* Error */}
-      {error && (
+      {(error || callbackError) && (
         <div
           role="alert"
           className="rounded-xl bg-red-50 border border-red-100 px-4 py-3 text-sm text-red-700"
         >
-          {error}
+          {error || callbackError}
         </div>
       )}
 

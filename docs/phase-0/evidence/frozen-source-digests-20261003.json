@@ -1,0 +1,27 @@
+[
+  {
+    "relation": "questions",
+    "count": 1821,
+    "md5": "dc7bfbf17237675ebef3fc8514410d2a"
+  },
+  {
+    "relation": "dp_pyq_v1_production_release",
+    "count": 1821,
+    "md5": "26992cc28b3b19276d6be60323dd1d7c"
+  },
+  {
+    "relation": "dp_question_intelligence_v1",
+    "count": 1821,
+    "md5": "9802229566f71ad6804daad7ca4cee63"
+  },
+  {
+    "relation": "dp_pattern_dictionary",
+    "count": 9,
+    "md5": "cbe41beb7de9112b90a8862631f2393f"
+  },
+  {
+    "relation": "v_dp_question_intelligence_v2",
+    "count": 1821,
+    "md5": "936561bc1893f8cd13be1f5159434bb5"
+  }
+]

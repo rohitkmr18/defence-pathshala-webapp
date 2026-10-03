@@ -1,7 +1,11 @@
+
+import { errorMessage } from "@/lib/error-message";
+import { requireBackendUrl } from "@/lib/backend-config";
 import { NextResponse } from "next/server";
 import { checkIsAdmin } from "@/lib/admin";
+import { createClient } from "@/lib/supabase/server";
 
-const BACKEND_URL = process.env.BACKEND_URL || "http://127.0.0.1:8000";
+
 
 export async function POST(req: Request) {
   try {
@@ -18,28 +22,29 @@ export async function POST(req: Request) {
     const sheetId = searchParams.get("sheet_id") || "";
     const dryRun = searchParams.get("dry_run") === "true";
 
-    const adminKey =
-      process.env.ADMIN_API_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+    // Forward the verified administrator's session. Do not activate a legacy
+    // browser-exposed shared key or send the database service key to FastAPI.
+    const supabase = await createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.access_token) return NextResponse.json({ error: "Administrator session expired" }, { status: 401 });
 
-    const targetUrl = new URL(`${BACKEND_URL}/admin/sync-dataset`);
+    const targetUrl = new URL(`${requireBackendUrl()}/admin/sync-dataset`);
     targetUrl.searchParams.set("worksheet_name", worksheet);
     targetUrl.searchParams.set("dry_run", dryRun ? "true" : "false");
     if (sheetId) targetUrl.searchParams.set("sheet_id", sheetId);
 
     // Timeout: 60s for full sync
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 60000);
+    const signal = AbortSignal.timeout(60000);
 
     const res = await fetch(targetUrl.toString(), {
       method: "POST",
       headers: {
-        "X-Admin-Key": adminKey,
+        Authorization: `Bearer ${session.access_token}`,
         "Content-Type": "application/json",
       },
       cache: "no-store",
-      signal: controller.signal,
+      signal,
     });
-    clearTimeout(timeoutId);
 
     const data = await res.json();
 
@@ -58,13 +63,13 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json(data);
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json(
       {
         error:
-          error?.name === "AbortError"
+          error instanceof Error && error.name === "AbortError"
             ? "Sync request timed out after 60 seconds."
-            : error?.message || "Internal server error during dataset sync.",
+            : errorMessage(error, "Internal server error during dataset sync."),
       },
       { status: 500 }
     );

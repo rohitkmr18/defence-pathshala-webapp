@@ -93,23 +93,23 @@ export default function QuestionBankExplorer({ meta }: Props) {
   const [activeTab, setActiveTab] = useState<TabView>("all");
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
 
+  if (selectedExams.length === 0 && (data !== null || loading)) {
+    setData(null);
+    setLoading(false);
+  }
+
   const activeYears = selectedYears.filter((item) => availableYears.includes(item));
   const activeCycles = selectedCycles.filter((item) => availableCycles.includes(item));
 
-  // Reset selectedSubject if filter changes and current selectedSubject is not in new data
-  useEffect(() => {
-    if (selectedSubject && data?.subjects) {
-      const exists = data.subjects.some((s) => s.name === selectedSubject);
-      if (!exists) {
-        setSelectedSubject(null);
-      }
-    }
-  }, [data, selectedSubject]);
+  // A subject absent from the current result cannot remain selected.
+  if (selectedSubject && data?.subjects && !data.subjects.some((s) => s.name === selectedSubject)) {
+    setSelectedSubject(null);
+  }
 
   const activeSubjectData = useMemo(() => {
     if (!selectedSubject || !data?.subjectAnalytics) return null;
     return data.subjectAnalytics[selectedSubject] ?? null;
-  }, [data?.subjectAnalytics, selectedSubject]);
+  }, [data, selectedSubject]);
 
   const activeDifficulty = useMemo(() => {
     if (activeSubjectData) return activeSubjectData.difficulty;
@@ -152,8 +152,6 @@ export default function QuestionBankExplorer({ meta }: Props) {
 
     // If no exams selected, do not make an API request
     if (selectedExams.length === 0) {
-      setData(null);
-      setLoading(false);
       return;
     }
 

@@ -1,3 +1,5 @@
+
+import { errorMessage } from "@/lib/error-message";
 import { NextRequest, NextResponse } from "next/server";
 import { backendGET } from "@/lib/backend";
 import { createClient } from "@supabase/supabase-js";
@@ -106,6 +108,6 @@ export async function GET(request: NextRequest) {
     );
   } catch (err: unknown) {
     console.error("Failed to fetch questions:", err);
-    return NextResponse.json({ error: err instanceof Error ? err.message : "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ error: errorMessage(err, "Internal Server Error") }, { status: 500 });
   }
 }

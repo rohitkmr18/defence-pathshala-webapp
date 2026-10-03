@@ -4,11 +4,12 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import type { PracticeQuestion, PlayerMode, OptionKey } from "@/lib/practice-types";
+import PracticePersistenceStatus from "@/components/practice/PracticePersistenceStatus";
 import QuestionPlayer from "@/components/practice/player/QuestionPlayer";
 import FilteredAttemptDebrief from "@/components/practice/analysis/FilteredAttemptDebrief";
 import {
   initializeSession,
-  updateSessionProgress,
+  completePracticeSession,
   clearLocalSession,
   loadResumeSession,
   restoreQuestionOrder,
@@ -240,6 +241,7 @@ export default function SessionPageClient({
 
   return (
     <div>
+      <PracticePersistenceStatus />
       {/* Back Navigation Bar & Session Breadcrumb */}
       {!completed && (
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200/80">
@@ -280,7 +282,7 @@ export default function SessionPageClient({
           sessionId={sessionId}
           initialIndex={initialIndex}
           initialAnswers={answers}
-          onComplete={(completedAnswers) => {
+          onComplete={async (completedAnswers) => {
             setAnswers(completedAnswers);
             const duration = Math.max(
               1,
@@ -291,22 +293,13 @@ export default function SessionPageClient({
             setTimeSpentSeconds(duration);
 
             if (sessionId) {
-              const correctCount = questions.filter(
-                (q) => completedAnswers[q.id] === q.final_opt
-              ).length;
-              const incorrectCount = questions.filter(
-                (q) =>
-                  completedAnswers[q.id] &&
-                  completedAnswers[q.id] !== q.final_opt
-              ).length;
-
-              updateSessionProgress(sessionId, {
-                answers: completedAnswers,
-                is_completed: true,
-                correct_count: correctCount,
-                incorrect_count: incorrectCount,
-                time_spent_seconds: duration,
-              });
+              try {
+                await completePracticeSession({ sessionId, questions, answers: completedAnswers,
+                  mode: sessionMode, timeSpentSeconds: duration });
+              } catch (err) {
+                setError(err instanceof Error ? err.message : "Could not save completion.");
+                return;
+              }
             }
 
             setCompleted(true);
@@ -325,6 +318,9 @@ export default function SessionPageClient({
             if (sessionId) {
               clearLocalSession();
             }
+            void initializeSession({ title: filterLabel, mode: sessionMode,
+              filters: restoredSession?.filters || parsedFilters, questions }).then(next => setSessionId(next.id));
+            setError(null);
             setCompleted(false);
             setAnswers({});
             setInitialIndex(0);

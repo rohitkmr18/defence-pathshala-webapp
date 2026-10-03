@@ -1,8 +1,11 @@
+
+import { errorMessage } from "@/lib/error-message";
+import { requireBackendUrl } from "@/lib/backend-config";
 import { NextResponse } from "next/server";
 import { checkIsAdmin } from "@/lib/admin";
 import { createClient } from "@/lib/supabase/server";
 
-const BACKEND_URL = process.env.BACKEND_URL || "http://127.0.0.1:8000";
+
 
 export async function GET(req: Request) {
   try {
@@ -18,26 +21,27 @@ export async function GET(req: Request) {
     const worksheet = searchParams.get("worksheet_name") || "questions";
     const sheetId = searchParams.get("sheet_id") || "";
 
-    const adminKey =
-      process.env.ADMIN_API_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+    // Forward the verified administrator's session. Do not activate a legacy
+    // browser-exposed shared key or send the database service key to FastAPI.
+    const supabase = await createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.access_token) return NextResponse.json({ error: "Administrator session expired" }, { status: 401 });
 
     // 1. Try FastAPI backend
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 15000);
+      const signal = AbortSignal.timeout(15000);
 
-      const targetUrl = new URL(`${BACKEND_URL}/admin/sync-stats`);
+      const targetUrl = new URL(`${requireBackendUrl()}/admin/sync-stats`);
       targetUrl.searchParams.set("worksheet_name", worksheet);
       if (sheetId) targetUrl.searchParams.set("sheet_id", sheetId);
 
       const res = await fetch(targetUrl.toString(), {
         headers: {
-          "X-Admin-Key": adminKey,
+          Authorization: `Bearer ${session.access_token}`,
         },
         cache: "no-store",
-        signal: controller.signal,
+        signal,
       });
-      clearTimeout(timeoutId);
 
       if (res.ok) {
         const data = await res.json();
@@ -53,21 +57,23 @@ export async function GET(req: Request) {
     const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
     const adminSupabase = createSupabaseClient(supabaseUrl, serviceKey);
 
-    const { count: currentDbCount } = await adminSupabase
+    const { count: currentDbCount, error: countError } = await adminSupabase
       .from("questions")
       .select("id", { count: "exact", head: true });
 
+    if (countError) throw countError;
     return NextResponse.json({
-      current_db_count: currentDbCount ?? 855,
-      incoming_sheet_count: 855,
-      new_questions: 0,
-      updated_questions: currentDbCount ?? 855,
-      sheet_id: "1bufEL9Fe-JtQLI8kSvdsI8T-4dSdiqaVBA-5pnoFuVY",
+      backend_available: false,
+      current_db_count: currentDbCount ?? 0,
+      incoming_sheet_count: null,
+      new_questions: null,
+      updated_questions: null,
+      sheet_id: sheetId || null,
       worksheet_name: worksheet,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json(
-      { error: error?.message || "Failed to load sync stats" },
+      { error: errorMessage(error, "Failed to load sync stats") },
       { status: 500 }
     );
   }

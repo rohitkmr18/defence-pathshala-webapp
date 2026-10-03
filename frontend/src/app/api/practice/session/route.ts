@@ -1,3 +1,5 @@
+
+import { errorMessage } from "@/lib/error-message";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { createServerClient } from "@supabase/ssr";
@@ -38,9 +40,6 @@ async function getAuthenticatedUserId(): Promise<string | null> {
 export async function GET(request: NextRequest) {
   try {
     const userId = await getAuthenticatedUserId();
-    const key = serviceRoleKey || anonKey;
-    const supabase = createClient(supabaseUrl, key);
-
     if (!userId) {
       return NextResponse.json({
         activeSession: null,
@@ -51,6 +50,8 @@ export async function GET(request: NextRequest) {
       });
     }
 
+    if (!serviceRoleKey) return NextResponse.json({ error: "Session persistence unavailable" }, { status: 503 });
+    const supabase = createClient(supabaseUrl, serviceRoleKey);
     const requestedSessionId = request.nextUrl.searchParams.get("session_id");
     if (requestedSessionId) {
       const { data, error } = await supabase
@@ -60,7 +61,8 @@ export async function GET(request: NextRequest) {
         .eq("id", requestedSessionId)
         .eq("is_completed", false)
         .maybeSingle();
-      if (error || !data) {
+      if (error) return NextResponse.json({ error: "Saved session unavailable" }, { status: 503 });
+      if (!data) {
         return NextResponse.json({ error: "Saved session unavailable" }, { status: 404 });
       }
       return NextResponse.json({ activeSession: data });
@@ -77,6 +79,7 @@ export async function GET(request: NextRequest) {
       supabase.from("practice_sessions").select("*")
         .eq("user_id", userId).order("updated_at", { ascending: false }).limit(10),
     ]);
+    if (attemptResult.error || activeResult.error || recentResult.error) return NextResponse.json({ error: "Learning history unavailable" }, { status: 503 });
     const attempts = attemptResult.data || [];
     const totalAttempts = attempts.length;
     const correctCount = attempts.filter((a) => a.is_correct).length;
@@ -112,12 +115,14 @@ export async function POST(request: NextRequest) {
       total_questions = 0,
     } = body;
 
-    const key = serviceRoleKey || anonKey;
-    const supabase = createClient(supabaseUrl, key);
-
     if (!userId) {
       return NextResponse.json({ success: true, guest: true, id: `guest_${Date.now()}` });
     }
+
+
+    const key = serviceRoleKey;
+    if (!key) return NextResponse.json({ error: "Session persistence unavailable" }, { status: 503 });
+    const supabase = createClient(supabaseUrl, key);
 
     const sessionPayload = {
       user_id: userId,
@@ -141,14 +146,14 @@ export async function POST(request: NextRequest) {
         .single();
 
       if (error) {
-        return NextResponse.json({ success: true, fallback: true, id: `sess_${Date.now()}` });
+        return NextResponse.json({ success: false, error: "Session persistence failed" }, { status: 503 });
       }
       return NextResponse.json({ success: true, session: data });
     } catch {
-      return NextResponse.json({ success: true, fallback: true, id: `sess_${Date.now()}` });
+      return NextResponse.json({ success: false, error: "Session persistence failed" }, { status: 503 });
     }
   } catch (err: unknown) {
-    return NextResponse.json({ error: err instanceof Error ? err.message : "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ error: errorMessage(err, "Internal Server Error") }, { status: 500 });
   }
 }
 
@@ -174,7 +179,8 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ success: true, guest: true });
     }
 
-    const key = serviceRoleKey || anonKey;
+    const key = serviceRoleKey;
+    if (!key) return NextResponse.json({ error: "Session persistence unavailable" }, { status: 503 });
     const supabase = createClient(supabaseUrl, key);
 
     const updatePayload: Record<string, unknown> = {
@@ -201,13 +207,13 @@ export async function PATCH(request: NextRequest) {
         .single();
 
       if (error) {
-        return NextResponse.json({ success: true, fallback: true });
+        return NextResponse.json({ success: false, error: "Session persistence failed" }, { status: 503 });
       }
       return NextResponse.json({ success: true, session: data });
     } catch {
-      return NextResponse.json({ success: true, fallback: true });
+      return NextResponse.json({ success: false, error: "Session persistence failed" }, { status: 503 });
     }
   } catch (err: unknown) {
-    return NextResponse.json({ error: err instanceof Error ? err.message : "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ error: errorMessage(err, "Internal Server Error") }, { status: 500 });
   }
 }

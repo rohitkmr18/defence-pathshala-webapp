@@ -15,7 +15,6 @@ export async function checkIsAdmin(): Promise<{
 
   const email = user.email?.toLowerCase();
   const appMeta = user.app_metadata || {};
-  const userMeta = user.user_metadata || {};
 
   // Check configured admin email or metadata
   const adminEmails = [
@@ -25,8 +24,7 @@ export async function checkIsAdmin(): Promise<{
 
   if (
     adminEmails.includes(email) ||
-    appMeta.role === "admin" ||
-    userMeta.role === "admin"
+    appMeta.role === "admin"
   ) {
     return { isAdmin: true, user };
   }

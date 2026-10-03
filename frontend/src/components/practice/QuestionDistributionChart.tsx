@@ -1,5 +1,6 @@
 "use client";
 
+import { useHydrated } from "@/lib/use-hydrated";
 import { useEffect, useState, useMemo } from "react";
 import {
   BarChart,
@@ -35,11 +36,7 @@ export default function QuestionDistributionChart({
 }: QuestionDistributionChartProps) {
   const [data, setData] = useState<DistributionItem[]>([]);
   const [loading, setLoading] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  const isMounted = useHydrated();
 
   // ── Dynamic Grouping Priority ─────────────────────────────────────────────
   // 1. Single Year selected -> Break down by Exam (or Cycle for single exam like CDS)
@@ -101,10 +98,7 @@ export default function QuestionDistributionChart({
 
   // ── Fetch distribution data ───────────────────────────────────────────────
   useEffect(() => {
-    if (!groupBy) {
-      setData([]);
-      return;
-    }
+    if (!groupBy) return;
 
     let isCancelled = false;
 
@@ -186,8 +180,10 @@ export default function QuestionDistributionChart({
       ? `Showing questions from selected ${activeFilters.topics.length > 0 ? "topic" : "subject"} in ${selectedYear ?? "this year"}.`
       : "Click any exam to narrow down practice.";
 
-  const handleBarClick = (entry: any) => {
-    const item = entry?.payload || entry;
+  const handleBarClick = (entry: unknown) => {
+    const candidate = entry && typeof entry === "object" && "payload" in entry ? entry.payload : entry;
+    if (!candidate || typeof candidate !== "object" || !("key" in candidate) || typeof candidate.key !== "string") return;
+    const item = { key: candidate.key };
     if (!item?.key) return;
 
     if (groupBy === "year") {

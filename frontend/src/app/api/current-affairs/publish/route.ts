@@ -1,3 +1,6 @@
+
+import { errorMessage } from "@/lib/error-message";
+import { checkIsAdmin } from "@/lib/admin";
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
@@ -10,7 +13,7 @@ export async function POST(req: Request) {
       data: { user },
     } = await supabase.auth.getUser();
 
-    if (!user || user.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+    if (!user || !(await checkIsAdmin()).isAdmin) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
@@ -21,6 +24,11 @@ export async function POST(req: Request) {
 
     const { date, title, summary, slides } = body;
 
+    if (!date || !title || !Array.isArray(slides) || slides.length === 0 ||
+        slides.some((slide: { slideNumber?: number; imageUrl?: string }) => !slide.slideNumber || !slide.imageUrl)) {
+      return NextResponse.json({ error: "Date, title and valid slides required" }, { status: 400 });
+    }
+
     // Create today's post
     const { data: post, error: postError } = await supabase
       .from("current_affairs_posts")
@@ -29,18 +37,24 @@ export async function POST(req: Request) {
         title,
         slug: date,
         summary,
-        total_stories: slides.length,
+        total_stories: 1,
         total_slides: slides.length,
-        published: true,
+        published: false,
       })
       .select()
       .single();
 
     if (postError) throw postError;
 
+    // Existing schema links slides through stories, not directly to posts.
+    const { data: story, error: storyError } = await supabase.from("current_affairs_stories")
+      .insert({ post_id: post.id, story_number: 1, headline: title, summary })
+      .select("id").single();
+    if (storyError) throw storyError;
+
     // Save slide URLs
-    const slidePayload = slides.map((slide: any) => ({
-      post_id: post.id,
+    const slidePayload = slides.map((slide: { slideNumber: number; imageUrl: string }) => ({
+      story_id: story.id,
       slide_number: slide.slideNumber,
       image_url: slide.imageUrl,
     }));
@@ -51,14 +65,18 @@ export async function POST(req: Request) {
 
     if (slideError) throw slideError;
 
+    const { error: publishError } = await supabase.from("current_affairs_posts")
+      .update({ published: true }).eq("id", post.id);
+    if (publishError) throw publishError;
+
     return NextResponse.json({
       success: true,
       postId: post.id,
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json(
-      { error: error.message },
+      { error: errorMessage(error) },
       { status: 500 }
     );
   }

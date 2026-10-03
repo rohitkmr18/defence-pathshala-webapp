@@ -1,0 +1,72 @@
+(node:7422) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///workspace/defence-pathshala-webapp/frontend/src/lib/auth-navigation.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /workspace/defence-pathshala-webapp/frontend/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ auth return paths deny external URLs, protocol relative URLs and backslashes (0.718756ms)
+(node:7429) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///workspace/defence-pathshala-webapp/frontend/src/lib/backend-config.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /workspace/defence-pathshala-webapp/frontend/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ production never silently uses localhost; optional backend is explicit (1.354136ms)
+✔ Full Paper waits for authentication; a guest never loads questions, creates a session or starts a timer (90.847341ms)
+✔ Full Paper starts a session after auth, saves answers, and waits for persistence before showing debrief (40.203169ms)
+✔ timer expiry submits through persistence and cannot show an unsaved scorecard (30.170234ms)
+✔ authenticated learning loop: create, server-score, persist, complete, read dashboard (112.223161ms)
+✔ another learner cannot link an attempt or modify a session (27.584198ms)
+✔ missing migration is an error, never retried without session lineage (9.264915ms)
+✔ guest practice creates no cloud rows (12.629848ms)
+✔ session write failure is visible instead of fabricated success (13.213039ms)
+✔ unreleased questions, invalid options and unavailable canonical answers fail closed (17.347515ms)
+✔ missing service configuration cannot claim attempt persistence (9.158194ms)
+✔ auth callback handles missing code, failed exchange and successful exchange (17.951216ms)
+✔ canonical count failure cannot fall back to master eligibility (6.740862ms)
+✔ admin proxies forward the authenticated administrator bearer and never shared keys (11.28723ms)
+✔ admin proxies deny learners and expired sessions before contacting the backend (13.546293ms)
+(node:7457) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///workspace/defence-pathshala-webapp/frontend/src/lib/practice-session-client.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /workspace/defence-pathshala-webapp/frontend/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ resume restores the exact four questions in saved order, even from unordered database results (4.35611ms)
+✔ matching local resume retains index, answers and timed mode without an API wait (1.283909ms)
+✔ server-only session is fetched by requested identity rather than using a different local session (0.852738ms)
+✔ missing/completed saved sessions and missing questions fail instead of starting random questions (1.182105ms)
+✔ late server creation preserves progress and keeps the player session identity stable (1.393936ms)
+✔ late creation does not overwrite a newer active session (0.729462ms)
+✔ skipping clears an answer and progress snapshots are written in interaction order (0.910976ms)
+✔ first answer waits for cloud creation and retains linkage after switching sessions (1.03921ms)
+✔ failed creation never sends an unlinked attempt or a local session ID (0.815251ms)
+✔ HTTP progress failures remain visible and completion cannot report saved (1.285141ms)
+✔ attempt failures propagate and a later successful snapshot cannot mask them (0.697193ms)
+✔ Full Paper completion persists owned answers before completion and retries only unsaved answers (1.869965ms)
+✔ guest creation keeps progress local without cloud PATCH writes (0.54992ms)
+✔ cloud-linked local resume verifies ownership before exposing cached progress (0.600307ms)
+✔ expired authentication cannot turn a cloud attempt or progress write into guest success (0.700518ms)
+✔ completion retries an unsaved instant answer recovered from device storage (0.93311ms)
+✔ completion waits for an in-flight first answer without duplicating the attempt (1.038298ms)
+(node:7464) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///workspace/defence-pathshala-webapp/frontend/src/lib/question-filters.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /workspace/defence-pathshala-webapp/frontend/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ parseListParam splits and trims comma-separated values and arrays (1.438563ms)
+✔ parseNumberListParam parses valid years (1.007352ms)
+✔ parseFiltersFromSearchParams parses all filter dimensions (0.383259ms)
+✔ serializeFiltersToSearchParams preserves all active dimensions (0.203969ms)
+✔ buildPracticeUrl and buildPracticeSessionUrl generate deterministic URLs (0.31073ms)
+✔ normalizeQuestion does NOT use verified_status as eligibility substitute (0.304079ms)
+✔ normalizeQuestion assigns HUMAN_VERIFIED confidence when verified and no discrepancy (0.246993ms)
+✔ Filter Equivalence Combination 1: exam only (0.454817ms)
+✔ Filter Equivalence Combination 2: exam + subject (0.237478ms)
+✔ Filter Equivalence Combination 3: exam + subject + topic (0.667248ms)
+✔ Filter Equivalence Combination 4: exam + year (0.188615ms)
+✔ Filter Equivalence Combination 5: exam + cycle (0.133342ms)
+✔ Filter Equivalence Combination 6: exam + subject + topic + difficulty (0.16547ms)
+✔ Filter Equivalence Combination 7: multi-exam + multi-year combination (0.250748ms)
+✔ missing canonical contract never invents eligibility or human verification (0.140773ms)
+ℹ tests 48
+ℹ suites 0
+ℹ pass 48
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1270.992231

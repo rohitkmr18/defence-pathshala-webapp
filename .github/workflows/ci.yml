@@ -1,51 +1,44 @@
 name: CI
-
 on:
   push:
   pull_request:
-
+permissions:
+  contents: read
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-
 jobs:
   ci:
     name: Build & Verify
     runs-on: ubuntu-latest
-
-    env:
-      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key' }}
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://placeholder.supabase.co' }}
-      SUPABASE_JWT_SECRET: ${{ secrets.SUPABASE_JWT_SECRET || 'placeholder-jwt-secret-placeholder-32-chars' }}
-      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-service-role-key' }}
-
+    timeout-minutes: 15
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 22
-          cache: "npm"
-          cache-dependency-path: "frontend/package-lock.json"
-
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
       - name: Install frontend dependencies
         run: npm ci --prefix frontend
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-          cache: "pip"
-          cache-dependency-path: "backend/requirements.txt"
-
-      - name: Install backend requirements
+      - name: Install backend dependencies
         run: python -m pip install -r backend/requirements.txt
-
-      - name: Run npm run verify
-        run: npm run verify
-
-      - name: Verify session resume regressions
-        run: node --experimental-strip-types --test frontend/src/__tests__/practice_resume.test.mjs
+      - name: Verify frontend types
+        run: npx --prefix frontend tsc --noEmit -p frontend/tsconfig.json
+      - name: Frontend unit tests
+        run: node --experimental-strip-types --test frontend/src/__tests__/*.test.mjs
+      - name: Backend offline route and unit tests
+        run: python -m pytest backend/tests -q
+      - name: Production build (isolated, no production credentials)
+        env:
+          DP_OFFLINE_BUILD: '1'
+          NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:54321
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-local-test-key
+        run: npm run build:frontend
+      - name: Frontend lint
+        run: npm run lint --prefix frontend

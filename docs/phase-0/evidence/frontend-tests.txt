@@ -1,0 +1,41 @@
+(node:13) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///workspace/scratch/2d54f5594a41/defence-pathshala-webapp/frontend/src/lib/backend-config.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /workspace/scratch/2d54f5594a41/defence-pathshala-webapp/frontend/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ production never silently uses localhost; optional backend is explicit (1.103414ms)
+✔ authenticated learning loop: create, server-score, persist, complete, read dashboard (87.60541ms)
+✔ another learner cannot link an attempt or modify a session (23.517107ms)
+✔ missing migration is an error, never retried without session lineage (8.163932ms)
+✔ guest practice creates no cloud rows (13.674553ms)
+✔ session write failure is visible instead of fabricated success (10.112711ms)
+✔ unreleased questions, invalid options and unavailable canonical answers fail closed (15.173193ms)
+✔ missing service configuration cannot claim attempt persistence (10.180894ms)
+✔ auth callback handles missing code, failed exchange and successful exchange (7.772973ms)
+✔ canonical count failure cannot fall back to master eligibility (6.144557ms)
+(node:20) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///workspace/scratch/2d54f5594a41/defence-pathshala-webapp/frontend/src/lib/question-filters.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /workspace/scratch/2d54f5594a41/defence-pathshala-webapp/frontend/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ parseListParam splits and trims comma-separated values and arrays (1.331819ms)
+✔ parseNumberListParam parses valid years (0.158368ms)
+✔ parseFiltersFromSearchParams parses all filter dimensions (0.356177ms)
+✔ serializeFiltersToSearchParams preserves all active dimensions (0.196927ms)
+✔ buildPracticeUrl and buildPracticeSessionUrl generate deterministic URLs (0.305671ms)
+✔ normalizeQuestion does NOT use verified_status as eligibility substitute (0.307463ms)
+✔ normalizeQuestion assigns HUMAN_VERIFIED confidence when verified and no discrepancy (0.913328ms)
+✔ Filter Equivalence Combination 1: exam only (0.209826ms)
+✔ Filter Equivalence Combination 2: exam + subject (0.242396ms)
+✔ Filter Equivalence Combination 3: exam + subject + topic (0.231559ms)
+✔ Filter Equivalence Combination 4: exam + year (0.166551ms)
+✔ Filter Equivalence Combination 5: exam + cycle (0.135785ms)
+✔ Filter Equivalence Combination 6: exam + subject + topic + difficulty (0.167683ms)
+✔ Filter Equivalence Combination 7: multi-exam + multi-year combination (0.385321ms)
+✔ missing canonical contract never invents eligibility or human verification (0.19266ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 449.55375

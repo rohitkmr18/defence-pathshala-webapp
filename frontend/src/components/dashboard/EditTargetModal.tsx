@@ -1,5 +1,7 @@
 "use client";
 
+import { errorMessage } from "@/lib/error-message";
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Target, X, Check, Loader2, Sparkles } from "lucide-react";
@@ -41,10 +43,17 @@ interface EditTargetModalProps {
   onSuccess?: (updated: { target_exams: string[]; target_year: number | null }) => void;
 }
 
-export default function EditTargetModal({
+export default function EditTargetModal(props: EditTargetModalProps) {
+  if (!props.isOpen) return null;
+  return <EditTargetForm key={`${props.initialExams?.join(",") ?? ""}:${props.initialYear ?? ""}`} {...props} />;
+}
+
+const EMPTY_TARGET_EXAMS: string[] = [];
+
+function EditTargetForm({
   isOpen,
   onClose,
-  initialExams = [],
+  initialExams = EMPTY_TARGET_EXAMS,
   initialYear = null,
   onSuccess,
 }: EditTargetModalProps) {
@@ -67,27 +76,19 @@ export default function EditTargetModal({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Sync props or fetch profile when opening
+  // The form remounts when opened. Fetch missing preferences asynchronously.
   useEffect(() => {
-    if (isOpen) {
-      setError(null);
-      if (initialExams.length > 0) {
-        setSelectedExams(initialExams.map(normalizeExam).filter(Boolean));
-        setSelectedYear(initialYear);
-      } else {
-        getProfile()
-          .then((profile) => {
-            if (profile?.target_exams?.length) {
-              setSelectedExams(profile.target_exams.map(normalizeExam).filter(Boolean));
-            }
-            if (profile?.target_year) {
-              setSelectedYear(profile.target_year);
-            }
-          })
-          .catch(() => {});
+    if (initialExams.length > 0) return;
+    let cancelled = false;
+    getProfile().then((profile) => {
+      if (cancelled) return;
+      if (profile?.target_exams?.length) {
+        setSelectedExams(profile.target_exams.map(normalizeExam).filter(Boolean));
       }
-    }
-  }, [isOpen, initialExams, initialYear]);
+      if (profile?.target_year) setSelectedYear(profile.target_year);
+    }).catch(() => {});
+    return () => { cancelled = true; };
+  }, [initialExams]);
 
   if (!isOpen) return null;
 
@@ -126,8 +127,8 @@ export default function EditTargetModal({
       onSuccess?.(detail);
       router.refresh();
       onClose();
-    } catch (err: any) {
-      setError(err?.message || "Failed to update target preferences.");
+    } catch (err: unknown) {
+      setError(errorMessage(err, "Failed to update target preferences."));
     } finally {
       setSaving(false);
     }

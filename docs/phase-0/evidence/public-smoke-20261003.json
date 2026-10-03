@@ -1,0 +1,188 @@
+{
+  "timestamp": "2026-10-03",
+  "transport": "Connected Vercel fetch; workspace public-host proxy denies direct browser/HTTP traffic",
+  "rows": [
+    {
+      "environment": "production",
+      "path": "/",
+      "status": 200,
+      "passed": true,
+      "canonical": "https://www.defencepathshala.in"
+    },
+    {
+      "environment": "production",
+      "path": "/dashboard/practice?exam=CDS",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "environment": "production",
+      "path": "/auth/login",
+      "status": 200,
+      "passed": true,
+      "googleEntry": false
+    },
+    {
+      "environment": "production",
+      "path": "/api/practice/session",
+      "status": 200,
+      "passed": true,
+      "guestHistoryEmpty": true
+    },
+    {
+      "environment": "production",
+      "path": "/api/admin/sync-stats",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "environment": "production",
+      "path": "/dashboard/practice/full-paper",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "environment": "production",
+      "path": "/pyqs/capf",
+      "status": 200,
+      "passed": true,
+      "canonical": "https://www.defencepathshala.in/pyqs/capf"
+    },
+    {
+      "environment": "preview_28fe18f",
+      "path": "/",
+      "status": 200,
+      "passed": true,
+      "canonical": "https://www.defencepathshala.in"
+    },
+    {
+      "environment": "production",
+      "path": "/auth/callback",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "environment": "production",
+      "path": "/pyqs/cds",
+      "status": 200,
+      "passed": true,
+      "canonical": "https://www.defencepathshala.in/pyqs/cds"
+    },
+    {
+      "environment": "production",
+      "path": "/api/practice/questions?exam=CDS&limit=1",
+      "status": 200,
+      "passed": true,
+      "questionCount": 1
+    },
+    {
+      "environment": "production",
+      "path": "/api/practice/count?exam=CDS",
+      "status": 200,
+      "passed": true,
+      "count": 1199
+    },
+    {
+      "environment": "production",
+      "path": "/api/question-bank/meta",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "environment": "production",
+      "path": "/dashboard/question-bank",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "environment": "preview_28fe18f",
+      "path": "/auth/login",
+      "status": 200,
+      "passed": true,
+      "googleEntry": false
+    },
+    {
+      "environment": "preview_28fe18f",
+      "path": "/dashboard/practice?exam=CDS",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "environment": "production",
+      "path": "/api/practice/filters",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "environment": "preview_28fe18f",
+      "path": "/auth/callback",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "environment": "preview_28fe18f",
+      "path": "/dashboard/practice/full-paper",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "environment": "preview_28fe18f",
+      "path": "/pyqs/cds",
+      "status": 200,
+      "passed": true,
+      "canonical": "https://www.defencepathshala.in/pyqs/cds"
+    },
+    {
+      "environment": "preview_28fe18f",
+      "path": "/api/practice/session",
+      "status": 200,
+      "passed": true,
+      "guestHistoryEmpty": true
+    },
+    {
+      "environment": "preview_28fe18f",
+      "path": "/dashboard/question-bank",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "environment": "preview_28fe18f",
+      "path": "/api/admin/sync-stats",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "environment": "preview_28fe18f",
+      "path": "/pyqs/capf",
+      "status": 200,
+      "passed": true,
+      "canonical": "https://www.defencepathshala.in/pyqs/capf"
+    },
+    {
+      "environment": "preview_28fe18f",
+      "path": "/api/question-bank/meta",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "environment": "preview_28fe18f",
+      "path": "/api/practice/count?exam=CDS",
+      "status": 200,
+      "passed": true,
+      "count": 1199
+    },
+    {
+      "environment": "preview_28fe18f",
+      "path": "/api/practice/questions?exam=CDS&limit=1",
+      "status": 200,
+      "passed": true,
+      "questionCount": 1
+    },
+    {
+      "environment": "preview_28fe18f",
+      "path": "/api/practice/filters",
+      "status": 200,
+      "passed": true
+    }
+  ]
+}

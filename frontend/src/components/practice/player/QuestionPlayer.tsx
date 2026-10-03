@@ -105,7 +105,7 @@ export default function QuestionPlayer({
       timeTakenSeconds: timeSpent,
       sessionId,
       mode,
-    });
+    }).catch(() => { /* Persistence status shows the failure; retain the answer. */ });
 
     if (sessionId) {
       updateSessionProgress(sessionId, {
