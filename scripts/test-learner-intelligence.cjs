@@ -154,3 +154,47 @@ test("lifetime metrics are not capped at the former 200-attempt window", () => {
   assert.equal(data.overview.correct, 125);
   assert.equal(data.overview.accuracy, 50);
 });
+
+
+test("performance coach is rebuilt from durable completed full-paper sessions", () => {
+  const corpus = [
+    q("q1", "CDS", "Polity", "Parliament", { difficulty_category: "Easy" }),
+    q("q2", "CDS", "Polity", "Parliament", { difficulty_category: "Moderate" }),
+    q("q3", "CDS", "History", "Modern India", { difficulty_category: "Hard" }),
+  ];
+  const sessions = [
+    {
+      ...baseSession,
+      id: "mock-1",
+      title: "CDS Full Paper",
+      mode: "full_paper",
+      is_completed: true,
+      total_questions: 3,
+      correct_count: 1,
+      incorrect_count: 2,
+      updated_at: "2026-10-04T10:00:00Z",
+      completed_at: "2026-10-04T10:00:00Z",
+      question_ids: ["q1", "q2", "q3"],
+    },
+  ];
+  const attempts = [
+    { ...a("a1", "q1", false, "2026-10-04T09:00:00Z"), session_id: "mock-1" },
+    { ...a("a2", "q2", true, "2026-10-04T09:01:00Z", "B"), session_id: "mock-1" },
+    { ...a("a3", "q3", false, "2026-10-04T09:02:00Z"), session_id: "mock-1" },
+  ];
+
+  const data = deriveLearnerIntelligence({
+    attempts,
+    sessions,
+    corpus,
+    targetExams: ["CDS"],
+  });
+
+  assert.equal(data.performanceCoach.mocksCompleted, 1);
+  assert.equal(data.performanceCoach.totalQuestionsAttempted, 3);
+  assert.equal(data.performanceCoach.averageAccuracy, 33);
+  assert.equal(data.performanceCoach.averageScore, 0.55);
+  assert.equal(data.performanceCoach.totalRecoverableMarks, 2.23);
+  assert.equal(data.performanceCoach.lastMockTitle, "CDS Full Paper");
+  assert.equal(data.performanceCoach.weakAreas[0].topic, "Parliament");
+});
