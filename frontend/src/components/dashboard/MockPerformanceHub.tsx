@@ -1,68 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Play, Sparkles } from "lucide-react";
 import type { DashboardPreparationSnapshot } from "@/lib/mockHistory";
-import type { LearnerIntelligence } from "@/lib/learner-intelligence";
 import PreparationSnapshotCard from "./PreparationSnapshotCard";
 import WeakAreasCard from "./WeakAreasCard";
 import AccuracyCard from "./AccuracyCard";
 
-const EMPTY_SNAPSHOT: DashboardPreparationSnapshot = {
-  mocksCompleted: 0,
-  totalQuestionsAttempted: 0,
-  averageScore: 0,
-  averageAccuracy: 0,
-  totalRecoverableMarks: 0,
-  lastMockTitle: "None",
-  weakAreas: [],
-  recentScores: [],
-  trendDirection: "flat",
-};
-
-export default function MockPerformanceHub() {
-  const [snapshot, setSnapshot] =
-    useState<DashboardPreparationSnapshot | null>(null);
-
-  useEffect(() => {
-    let active = true;
-
-    const refreshSnapshot = async () => {
-      try {
-        const response = await fetch("/api/learner-intelligence", {
-          cache: "no-store",
-        });
-        if (!response.ok) throw new Error("Performance intelligence unavailable");
-        const data = (await response.json()) as LearnerIntelligence;
-        if (active) setSnapshot(data.performanceCoach);
-      } catch {
-        if (active) setSnapshot(EMPTY_SNAPSHOT);
-      }
-    };
-
-    void refreshSnapshot();
-
-    const refresh = () => void refreshSnapshot();
-    window.addEventListener("dp_question_attempted", refresh);
-    window.addEventListener("dp_practice_session_updated", refresh);
-
-    return () => {
-      active = false;
-      window.removeEventListener("dp_question_attempted", refresh);
-      window.removeEventListener("dp_practice_session_updated", refresh);
-    };
-  }, []);
-
-  if (!snapshot) {
-    return (
-      <div className="rounded-3xl border border-slate-100 bg-slate-50/50 p-8 text-center animate-pulse">
-        <div className="h-6 w-48 bg-slate-200 rounded mx-auto mb-3" />
-        <div className="h-4 w-72 bg-slate-100 rounded mx-auto" />
-      </div>
-    );
-  }
-
+export default function MockPerformanceHub({
+  snapshot,
+}: {
+  snapshot: DashboardPreparationSnapshot;
+}) {
   if (snapshot.mocksCompleted === 0) {
     return (
       <div className="relative overflow-hidden rounded-3xl border border-dashed border-slate-300 bg-gradient-to-br from-slate-50 via-white to-blue-50/30 p-8 sm:p-10 text-center shadow-xs">
