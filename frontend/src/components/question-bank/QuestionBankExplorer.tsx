@@ -50,7 +50,9 @@ export default function QuestionBankExplorer({ meta }: Props) {
     }
   }
   function setSelectedExams(value: string[] | ((current: string[]) => string[])) {
-    changeContext({ exams: typeof value === "function" ? value(selectedExams) : value });
+    const nextExams = typeof value === "function" ? value(selectedExams) : value;
+    const keepsCds = nextExams.some((exam) => exam.toUpperCase().includes("CDS"));
+    changeContext({ exams: nextExams, ...(keepsCds ? {} : { cycles: [] }) });
   }
   function setSelectedYears(value: number[] | ((current: number[]) => number[])) {
     changeContext({ years: typeof value === "function" ? value(selectedYears) : value });
@@ -102,7 +104,11 @@ export default function QuestionBankExplorer({ meta }: Props) {
   const [activeTab, setActiveTab] = useState<TabView>("all");
 
   const activeYears = useMemo(() => selectedYears.filter((item) => availableYears.includes(item)), [selectedYears, availableYears]);
-  const activeCycles = useMemo(() => selectedCycles.filter((item) => availableCycles.includes(item)), [selectedCycles, availableCycles]);
+  const hasCdsSelected = useMemo(() => selectedExams.some((exam) => exam.toUpperCase().includes("CDS")), [selectedExams]);
+  const activeCycles = useMemo(
+    () => hasCdsSelected ? selectedCycles.filter((item) => availableCycles.includes(item)) : [],
+    [availableCycles, hasCdsSelected, selectedCycles]
+  );
 
   const activeSubjectData = useMemo(() => {
     if (!selectedSubject || !data?.subjectAnalytics) return null;
@@ -188,26 +194,22 @@ export default function QuestionBankExplorer({ meta }: Props) {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-5">
       {/* ── 1. Interactive Filter Controls Card ─────────────────────────── */}
       <section
         aria-busy={loading}
         className="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-xs"
       >
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 pb-6 border-b border-slate-100">
+        <div className="flex flex-col gap-4 border-b border-slate-100 pb-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <div className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700 shadow-2xs">
               <Filter className="h-3.5 w-3.5 text-blue-600" />
               <span>INTELLIGENCE FILTERS</span>
             </div>
-            <h2 className="mt-2.5 text-xl sm:text-2xl font-black tracking-tight text-slate-900">
+            <h2 className="mt-2.5 text-xl font-black tracking-tight text-slate-900 sm:text-2xl">
               Filter Official Papers & Patterns
             </h2>
-            <p className="mt-1 text-xs sm:text-sm text-slate-500">
-              Select multiple exams, years, and cycles to generate comprehensive pattern analysis
-            </p>
           </div>
-
           <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
@@ -221,7 +223,6 @@ export default function QuestionBankExplorer({ meta }: Props) {
               <CheckCircle2 className="h-3.5 w-3.5" />
               <span>Select All Question Papers</span>
             </button>
-
             <button
               type="button"
               onClick={handleResetFilters}
@@ -245,7 +246,7 @@ export default function QuestionBankExplorer({ meta }: Props) {
                 key={item.value}
                 type="button"
                 onClick={() => {
-                  changeContext({ exams: [item.value], years: item.years, cycles: item.cycles, subjects: [], topics: [], subtopics: [] });
+                  changeContext({ exams: [item.value], years: item.years, cycles: item.value.toUpperCase().includes("CDS") ? item.cycles : [], subjects: [], topics: [], subtopics: [] });
                 }}
                 className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold transition shrink-0 cursor-pointer ${
                   isOnlyThis
@@ -310,93 +311,81 @@ export default function QuestionBankExplorer({ meta }: Props) {
             </div>
           </div>
 
-          {/* Year Filter */}
+          {/* Year Filter — compact multi-select chips */}
           <div>
-            <label className="mb-2 flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-700">
+            <div className="mb-2 flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-700">
               <span>Exam Year</span>
               <span className="text-[11px] font-normal text-slate-400">
                 {activeYears.length} selected
               </span>
-            </label>
+            </div>
 
-            <div className="max-h-48 space-y-1.5 overflow-y-auto rounded-2xl border border-slate-200 bg-slate-50/50 p-2.5">
+            <div className="flex flex-wrap gap-2 rounded-2xl border border-slate-200 bg-slate-50/50 p-2.5">
               {availableYears.map((item) => {
                 const isChecked = activeYears.includes(item);
                 return (
                   <label
                     key={item}
-                    className={`flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-xs font-bold transition-colors ${
+                    className={`inline-flex min-h-9 cursor-pointer items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition-colors ${
                       isChecked
-                        ? "bg-blue-600 text-white shadow-xs"
-                        : "bg-white text-slate-800 hover:bg-slate-100/80 border border-slate-100"
+                        ? "border-blue-600 bg-blue-600 text-white shadow-xs"
+                        : "border-slate-200 bg-white text-slate-700 hover:bg-slate-100"
                     }`}
                   >
-                    <div className="flex items-center gap-2.5">
-                      <input
-                        type="checkbox"
-                        checked={isChecked}
-                        onChange={() =>
-                          setSelectedYears((current) =>
-                            toggleValue(current, item)
-                          )
-                        }
-                        className="sr-only"
-                      />
-                      <span>Year {item}</span>
-                    </div>
-                    {isChecked && <CheckCircle2 className="h-4 w-4 text-white" />}
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      onChange={() =>
+                        setSelectedYears((current) => toggleValue(current, item))
+                      }
+                      className="sr-only"
+                    />
+                    <span>{item}</span>
+                    {isChecked && <CheckCircle2 className="h-3.5 w-3.5" />}
                   </label>
                 );
               })}
             </div>
           </div>
 
-          {/* Cycle Filter */}
-          <div>
-            <label className="mb-2 flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-700">
-              <span>Exam Cycle / Paper</span>
-              <span className="text-[11px] font-normal text-slate-400">
-                {activeCycles.length} selected
-              </span>
-            </label>
+          {/* Cycle Filter — CDS only */}
+          {hasCdsSelected && (
+            <div>
+              <div className="mb-2 flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-700">
+                <span>Exam Cycle / Paper</span>
+                <span className="text-[11px] font-normal text-slate-400">
+                  {activeCycles.length} selected
+                </span>
+              </div>
 
-            {availableCycles.length ? (
-              <div className="max-h-48 space-y-1.5 overflow-y-auto rounded-2xl border border-slate-200 bg-slate-50/50 p-2.5">
+              <div className="flex flex-wrap gap-2 rounded-2xl border border-slate-200 bg-slate-50/50 p-2.5">
                 {availableCycles.map((item) => {
                   const isChecked = activeCycles.includes(item);
                   return (
                     <label
                       key={item}
-                      className={`flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-xs font-bold transition-colors ${
+                      className={`inline-flex min-h-9 cursor-pointer items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition-colors ${
                         isChecked
-                          ? "bg-blue-600 text-white shadow-xs"
-                          : "bg-white text-slate-800 hover:bg-slate-100/80 border border-slate-100"
+                          ? "border-blue-600 bg-blue-600 text-white shadow-xs"
+                          : "border-slate-200 bg-white text-slate-700 hover:bg-slate-100"
                       }`}
                     >
-                      <div className="flex items-center gap-2.5">
-                        <input
-                          type="checkbox"
-                          checked={isChecked}
-                          onChange={() =>
-                            setSelectedCycles((current) =>
-                              toggleValue(current, item)
-                            )
-                          }
-                          className="sr-only"
-                        />
-                        <span>Cycle {item}</span>
-                      </div>
-                      {isChecked && <CheckCircle2 className="h-4 w-4 text-white" />}
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={() =>
+                          setSelectedCycles((current) => toggleValue(current, item))
+                        }
+                        className="sr-only"
+                      />
+                      <span>Cycle {item}</span>
+                      {isChecked && <CheckCircle2 className="h-3.5 w-3.5" />}
                     </label>
                   );
                 })}
               </div>
-            ) : (
-              <div className="flex h-40 items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-4 text-center text-xs text-slate-400">
-                Single cycle exam (Not applicable)
-              </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         <div className="mt-5 flex flex-wrap items-center gap-2" aria-label="Selected learning context">
@@ -427,78 +416,55 @@ export default function QuestionBankExplorer({ meta }: Props) {
         </div>
       </section>
 
-      {/* ── 2. Top Summary KPI Cards ────────────────────────────────────── */}
+      {/* ── 2. Compact corpus summary ─────────────────────────────────────── */}
       {data && (
-        <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="rounded-3xl border border-slate-200/90 bg-white p-5 sm:p-6 shadow-xs">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                Questions
-              </span>
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                <FileText className="h-4 w-4" />
-              </div>
+        <section className="grid grid-cols-2 gap-3">
+          <div className="rounded-2xl border border-slate-200/90 bg-white px-4 py-3 shadow-xs">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Questions</p>
+            <div className="mt-1 flex items-baseline gap-2">
+              <span className="text-2xl font-black text-slate-950">{data.summary.questions}</span>
+              <span className="text-[11px] font-semibold text-slate-500">official PYQs</span>
             </div>
-            <p className="text-2xl sm:text-3xl font-black text-slate-900">
-              {data.summary.questions}
-            </p>
-            <p className="mt-1 text-[11px] font-semibold text-slate-500">
-              Official PYQs Analyzed
-            </p>
           </div>
-
-          <div className="rounded-3xl border border-slate-200/90 bg-white p-5 sm:p-6 shadow-xs">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                Subjects
-              </span>
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                <BookOpen className="h-4 w-4" />
-              </div>
+          <div className="rounded-2xl border border-slate-200/90 bg-white px-4 py-3 shadow-xs">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Subjects</p>
+            <div className="mt-1 flex items-baseline gap-2">
+              <span className="text-2xl font-black text-blue-600">{data.summary.subjects}</span>
+              <span className="text-[11px] font-semibold text-slate-500">domains</span>
             </div>
-            <p className="text-2xl sm:text-3xl font-black text-blue-600">
-              {data.summary.subjects}
-            </p>
-            <p className="mt-1 text-[11px] font-semibold text-slate-500">
-              Syllabus Domains Tested
-            </p>
-          </div>
-
-          <div className="rounded-3xl border border-slate-200/90 bg-white p-5 sm:p-6 shadow-xs">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                Exam Scope
-              </span>
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 text-slate-600">
-                <Database className="h-4 w-4" />
-              </div>
-            </div>
-            <p className="text-base sm:text-lg font-black text-slate-900 truncate">
-              {selectedExamLabels.join(", ") || "All Exams"}
-            </p>
-            <p className="mt-1 text-[11px] font-semibold text-slate-500">
-              Current Benchmark
-            </p>
-          </div>
-
-          <div className="rounded-3xl border border-slate-200/90 bg-white p-5 sm:p-6 shadow-xs">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                Timeline
-              </span>
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 text-slate-600">
-                <Calendar className="h-4 w-4" />
-              </div>
-            </div>
-            <p className="text-base sm:text-lg font-black text-slate-900 truncate">
-              {activeYears.length ? activeYears.join(", ") : "All"}
-            </p>
-            <p className="mt-1 text-[11px] font-semibold text-slate-500">
-              Cycles: {activeCycles.length ? activeCycles.join(", ") : "All"}
-            </p>
           </div>
         </section>
       )}
+
+      {/* ── 4. Main Intelligence Visualizations ─────────────────────────── */}
+      {loading && !data ? (
+        <div className="space-y-6">
+          <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm animate-pulse space-y-4">
+            <div className="h-6 w-52 bg-slate-200 rounded-lg" />
+            <div className="h-64 bg-slate-100 rounded-2xl" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-pulse">
+            <div className="h-64 bg-slate-100 rounded-3xl" />
+            <div className="h-64 bg-slate-100 rounded-3xl" />
+          </div>
+        </div>
+      ) : data ? (
+        <div className="space-y-8">
+          {/* SECTION: Subject & Topic Frequency Heatmaps (with Dynamic Topic Drill-Down) */}
+          {(activeTab === "all" || activeTab === "heatmaps") && (
+            <TopicHeatmap
+              subjects={data.subjects}
+              subjectTopics={data.subjectTopics}
+              topics={data.topics}
+              totalQuestions={data.summary.questions}
+              selectedSubject={selectedSubject}
+              selectedExams={selectedExams}
+              selectedYears={activeYears}
+              selectedCycles={activeCycles}
+              returnTo={buildExploreUrl(context)}
+              onSelectSubject={setSelectedSubject}
+            />
+          )}
 
       {/* ── 3. Quick View Switcher Tabs ─────────────────────────────────── */}
       {data && (
@@ -553,35 +519,6 @@ export default function QuestionBankExplorer({ meta }: Props) {
         </div>
       )}
 
-      {/* ── 4. Main Intelligence Visualizations ─────────────────────────── */}
-      {loading && !data ? (
-        <div className="space-y-6">
-          <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm animate-pulse space-y-4">
-            <div className="h-6 w-52 bg-slate-200 rounded-lg" />
-            <div className="h-64 bg-slate-100 rounded-2xl" />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-pulse">
-            <div className="h-64 bg-slate-100 rounded-3xl" />
-            <div className="h-64 bg-slate-100 rounded-3xl" />
-          </div>
-        </div>
-      ) : data ? (
-        <div className="space-y-8">
-          {/* SECTION: Subject & Topic Frequency Heatmaps (with Dynamic Topic Drill-Down) */}
-          {(activeTab === "all" || activeTab === "heatmaps") && (
-            <TopicHeatmap
-              subjects={data.subjects}
-              subjectTopics={data.subjectTopics}
-              topics={data.topics}
-              totalQuestions={data.summary.questions}
-              selectedSubject={selectedSubject}
-              selectedExams={selectedExams}
-              selectedYears={activeYears}
-              selectedCycles={activeCycles}
-              returnTo={buildExploreUrl(context)}
-              onSelectSubject={setSelectedSubject}
-            />
-          )}
 
           {/* Contextual Notice Banner when Subject is Selected */}
           {selectedSubject && (
@@ -687,7 +624,7 @@ export default function QuestionBankExplorer({ meta }: Props) {
                 key={exam.value}
                 type="button"
                 onClick={() => {
-                  changeContext({ exams: [exam.value], years: exam.years, cycles: exam.cycles, subjects: [], topics: [], subtopics: [] });
+                  changeContext({ exams: [exam.value], years: exam.years, cycles: exam.value.toUpperCase().includes("CDS") ? exam.cycles : [], subjects: [], topics: [], subtopics: [] });
                 }}
                 className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-5 py-3.5 text-xs sm:text-sm font-bold text-slate-800 hover:bg-slate-100 transition active:scale-95 cursor-pointer"
               >

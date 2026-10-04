@@ -369,6 +369,7 @@ export default function SessionPageClient({
           answers={answers}
           sessionTitle={filterLabel}
           totalTimeSpentSeconds={timeSpentSeconds}
+          questionTimes={getLocalSession()?.question_times || {}}
           onRetake={() => {
             if (sessionId) {
               clearLocalSession();

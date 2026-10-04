@@ -20,6 +20,7 @@ interface FilteredAttemptDebriefProps {
   answers: Record<string, OptionKey>;
   sessionTitle: string;
   totalTimeSpentSeconds: number;
+  questionTimes?: Record<string, number>;
   onRetake?: () => void;
 }
 
@@ -28,6 +29,7 @@ export default function FilteredAttemptDebrief({
   answers,
   sessionTitle,
   totalTimeSpentSeconds,
+  questionTimes = {},
   onRetake,
 }: FilteredAttemptDebriefProps) {
   const examName = questions[0]?.exam || sessionTitle;
@@ -178,6 +180,7 @@ export default function FilteredAttemptDebrief({
                       question={q}
                       selectedOption={selected}
                       visible={true}
+                      timeSpentSeconds={questionTimes[q.id] ?? null}
                     />
                   </div>
                 );

@@ -48,6 +48,9 @@ export interface PracticeQuestion {
   human_review_required?: boolean;
   intelligence_verified?: boolean;
   intelligence_confidence?: "MODEL_DERIVED" | "HUMAN_VERIFIED" | string;
+  intelligence_trust_tier?: "HUMAN_VERIFIED" | "REVIEW_REQUIRED" | "MODEL_READY" | "NOT_ELIGIBLE" | string | null;
+  intelligence_verification_status?: "VERIFIED" | "REVIEW_REQUIRED" | "UNVERIFIED_READY" | "NOT_ELIGIBLE" | string | null;
+  student_release_status?: "RELEASED" | "WITHHELD" | string | null;
   pattern_id?: string | null;
   taxonomy_subject?: string | null;
   taxonomy_topic?: string | null;
@@ -56,10 +59,10 @@ export interface PracticeQuestion {
   competency_id?: string | null;
   source_id?: string | null;
   temporal_context_id?: string | null;
-  expected_knowledge?: string | null;
-  source_accessibility?: string | null;
-  preparation_accessibility?: string | null;
-  cognitive_complexity?: string | null;
+  expected_knowledge?: number | null;
+  source_accessibility?: number | null;
+  preparation_accessibility?: number | null;
+  cognitive_complexity?: number | null;
   esac_score?: number | null;
   relation_degree?: number | null;
   same_concept_degree?: number | null;

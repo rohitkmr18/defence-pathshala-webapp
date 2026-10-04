@@ -41,6 +41,9 @@ export interface QuestionIntelligenceRecord {
   human_review_required: boolean;
   intelligence_verified?: boolean;
   intelligence_confidence?: "MODEL_DERIVED" | "HUMAN_VERIFIED" | string;
+  intelligence_trust_tier?: "HUMAN_VERIFIED" | "REVIEW_REQUIRED" | "MODEL_READY" | "NOT_ELIGIBLE" | string;
+  intelligence_verification_status?: "VERIFIED" | "REVIEW_REQUIRED" | "UNVERIFIED_READY" | "NOT_ELIGIBLE" | string;
+  student_release_status?: "RELEASED" | "WITHHELD" | string;
   pattern_id?: string | null;
   taxonomy_subject?: string | null;
   taxonomy_topic?: string | null;
@@ -49,10 +52,10 @@ export interface QuestionIntelligenceRecord {
   competency_id?: string | null;
   source_id?: string | null;
   temporal_context_id?: string | null;
-  expected_knowledge?: string | null;
-  source_accessibility?: string | null;
-  preparation_accessibility?: string | null;
-  cognitive_complexity?: string | null;
+  expected_knowledge?: number | null;
+  source_accessibility?: number | null;
+  preparation_accessibility?: number | null;
+  cognitive_complexity?: number | null;
   esac_score?: number | null;
   relation_degree?: number | null;
   same_concept_degree?: number | null;
@@ -165,6 +168,9 @@ export function normalizeQuestion(raw: Record<string, unknown>): PracticeQuestio
     human_review_required: humanReviewRequired,
     intelligence_verified: isVerified,
     intelligence_confidence: confidence,
+    intelligence_trust_tier: raw.intelligence_trust_tier ? String(raw.intelligence_trust_tier).trim() : null,
+    intelligence_verification_status: raw.intelligence_verification_status ? String(raw.intelligence_verification_status).trim() : null,
+    student_release_status: raw.student_release_status ? String(raw.student_release_status).trim() : null,
     pattern_id: raw.pattern_id ? String(raw.pattern_id).trim() : null,
     taxonomy_subject: raw.taxonomy_subject ? String(raw.taxonomy_subject).trim() : null,
     taxonomy_topic: raw.taxonomy_topic ? String(raw.taxonomy_topic).trim() : null,
@@ -173,10 +179,10 @@ export function normalizeQuestion(raw: Record<string, unknown>): PracticeQuestio
     competency_id: raw.competency_id ? String(raw.competency_id).trim() : null,
     source_id: raw.source_id ? String(raw.source_id).trim() : null,
     temporal_context_id: raw.temporal_context_id ? String(raw.temporal_context_id).trim() : null,
-    expected_knowledge: raw.expected_knowledge ? String(raw.expected_knowledge).trim() : null,
-    source_accessibility: raw.source_accessibility ? String(raw.source_accessibility).trim() : null,
-    preparation_accessibility: raw.preparation_accessibility ? String(raw.preparation_accessibility).trim() : null,
-    cognitive_complexity: raw.cognitive_complexity ? String(raw.cognitive_complexity).trim() : null,
+    expected_knowledge: raw.expected_knowledge != null ? Number(raw.expected_knowledge) : null,
+    source_accessibility: raw.source_accessibility != null ? Number(raw.source_accessibility) : null,
+    preparation_accessibility: raw.preparation_accessibility != null ? Number(raw.preparation_accessibility) : null,
+    cognitive_complexity: raw.cognitive_complexity != null ? Number(raw.cognitive_complexity) : null,
     esac_score: raw.esac_score != null ? Number(raw.esac_score) : null,
     relation_degree: raw.relation_degree != null ? Number(raw.relation_degree) : null,
     same_concept_degree: raw.same_concept_degree != null ? Number(raw.same_concept_degree) : null,

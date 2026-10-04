@@ -111,8 +111,8 @@ function elements(tree, predicate) {
 
 function feedbackPlayer(initial = {}) {
   const h = hooks();
-  const Reveal = createLoader({ react: { useState: initial => [initial, () => {}] },
-    '@/components/common/MathText': 'math-text' })('frontend/src/components/practice/player/AnswerReveal.tsx').default;
+  const Reveal = createLoader({ react: { useState: initial => [initial, () => {}] }, 'next/link': 'a',
+    '@/components/common/MathText': 'math-text', '@/lib/learning-events': { trackLearningEvent() {} } })('frontend/src/components/practice/player/AnswerReveal.tsx').default;
   const load = createLoader({ react: h.react, './ProgressHeader': 'progress', './QuestionCard': 'question', './AnswerReveal': Reveal,
     '@/lib/learning-events': { trackLearningEvent() {} },
     '@/lib/practice-session-client': { getLocalSession: () => ({ id: 'resume', question_times: {} }),
@@ -120,8 +120,8 @@ function feedbackPlayer(initial = {}) {
   });
   const Player = load('frontend/src/components/practice/player/QuestionPlayer.tsx').default;
   const props = { sessionId: 'resume', mode: 'instant', questions: [
-    { id: 'q2', final_opt: 'B', explanation: 'Explanation for q2' },
-    { id: 'q1', final_opt: 'A', explanation: 'Explanation for q1' },
+    { id: 'q2', final_opt: 'B', explanation: 'Explanation for q2', intelligence_eligible: true, student_release_status: 'RELEASED', intelligence_confidence: 'MODEL_DERIVED', topic: 'Topic 2', subject: 'Subject' },
+    { id: 'q1', final_opt: 'A', explanation: 'Explanation for q1', intelligence_eligible: true, student_release_status: 'RELEASED', intelligence_confidence: 'MODEL_DERIVED', topic: 'Topic 1', subject: 'Subject' },
   ], ...initial };
   return {
     render() { h.begin(); return Player(props); },
@@ -140,13 +140,78 @@ test('feedback is absent for fresh/selected unchecked questions, appears on Chec
   check.props.onClick(); tree = player.render();
   const feedback = player.feedback(tree);
   assert.ok(feedback);
-  assert.match(JSON.stringify(feedback), /Correct Answer!|Your Answer/);
+  assert.match(JSON.stringify(feedback), /Correct|Your answer/);
   assert.match(JSON.stringify(feedback), /Explanation for q2/);
-  assert.match(JSON.stringify(feedback), /Expand Intelligence/);
+  assert.match(JSON.stringify(feedback), /PYQ Intelligence/);
+  assert.doesNotMatch(JSON.stringify(feedback), /What to do next|Practice 5 from this topic|Explore this topic/);
   const next = elements(tree, n => n.type === 'button' && elements(n, s => s.type === 'span' && s.props.children === 'Next Question').length)[0];
   next.props.onClick(); tree = player.render();
   assert.equal(elements(tree, n => n.type === 'question')[0].props.question.id, 'q1');
   assert.equal(player.feedback(tree), null);
+});
+
+test('withheld intelligence never exposes Exam Edge, PYQ Intelligence or concept metadata', () => {
+  const Reveal = createLoader({ react: { useState: initial => [initial, () => {}] }, 'next/link': 'a',
+    '@/components/common/MathText': 'math-text', '@/lib/learning-events': { trackLearningEvent() {} } })('frontend/src/components/practice/player/AnswerReveal.tsx').default;
+  const tree = Reveal({
+    visible: true,
+    selectedOption: 'A',
+    timeSpentSeconds: 30,
+    question: {
+      id: 'withheld', final_opt: 'A', explanation: 'Safe explanation',
+      exam: 'CDS', year: 2025, subject: 'Polity', topic: 'Parliament',
+      concept: 'Money Bill', q_pattern: 'Single MCQ',
+      intelligence_eligible: false, student_release_status: 'WITHHELD',
+      intelligence_trust_tier: 'NOT_ELIGIBLE',
+    },
+  });
+  const rendered = JSON.stringify(tree);
+  assert.match(rendered, /Safe explanation/);
+  assert.match(rendered, /Attempt Intelligence/);
+  assert.doesNotMatch(rendered, /Exam Edge/);
+  assert.doesNotMatch(rendered, /PYQ Intelligence/);
+  assert.doesNotMatch(rendered, /Money Bill/);
+});
+
+test('model-derived eligible intelligence shows Exam Edge without exposing provenance wording', () => {
+  const Reveal = createLoader({ react: { useState: initial => [initial, () => {}] }, 'next/link': 'a',
+    '@/components/common/MathText': 'math-text', '@/lib/learning-events': { trackLearningEvent() {} } })('frontend/src/components/practice/player/AnswerReveal.tsx').default;
+  const tree = Reveal({
+    visible: true,
+    selectedOption: 'A',
+    question: {
+      id: 'model-edge', final_opt: 'A', explanation: 'Explanation',
+      exam: 'CDS', year: 2025, subject: 'Polity', topic: 'Parliament',
+      q_pattern: 'Statement based',
+      intelligence_eligible: true, student_release_status: 'WITHHELD',
+      intelligence_trust_tier: 'MODEL_READY', intelligence_confidence: 'MODEL_DERIVED',
+    },
+  });
+  const examEdgeNode = elements(tree, n => typeof n.type === 'function' && n.props?.question?.id === 'model-edge')[0];
+  assert.ok(examEdgeNode, 'model-ready eligible intelligence should mount Exam Edge');
+  const rendered = JSON.stringify(examEdgeNode.type(examEdgeNode.props));
+  assert.match(rendered, /Exam Edge/);
+  assert.doesNotMatch(rendered, /Model derived|Model ready|Verified|Under review/);
+  assert.doesNotMatch(JSON.stringify(tree), /PYQ Intelligence/);
+});
+
+test('Check Answer keeps provenance metadata internal and never renders provenance labels', () => {
+  const Reveal = createLoader({ react: { useState: initial => [initial, () => {}] }, 'next/link': 'a',
+    '@/components/common/MathText': 'math-text', '@/lib/learning-events': { trackLearningEvent() {} } })('frontend/src/components/practice/player/AnswerReveal.tsx').default;
+  for (const trust of ['HUMAN_VERIFIED', 'MODEL_READY', 'REVIEW_REQUIRED']) {
+    const tree = Reveal({
+      visible: true,
+      selectedOption: 'A',
+      question: {
+        id: 'provenance', final_opt: 'A', explanation: 'Explanation',
+        exam: 'CDS', year: 2025, subject: 'Polity', topic: 'Parliament',
+        intelligence_eligible: true, student_release_status: 'RELEASED',
+        intelligence_trust_tier: trust,
+      },
+    });
+    const rendered = JSON.stringify(tree);
+    assert.doesNotMatch(rendered, /Human verified|Verified|Model derived|Model ready|Under review/);
+  }
 });
 
 test('resume mounts feedback only for the current checked question ID, independently of selected answers', () => {

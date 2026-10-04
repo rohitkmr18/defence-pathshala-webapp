@@ -51,6 +51,9 @@ export default function QuestionPlayer({
   const checkedRef = useRef(new Set(initialCheckedIds));
   const navigationRef = useRef(false);
   const [showNavigator, setShowNavigator] = useState(false);
+  const [checkedTimes, setCheckedTimes] = useState<Record<string, number>>(
+    () => getLocalSession()?.question_times || {}
+  );
 
   // Track per-question time
   const questionStartTimeRef = useRef<number>(0);
@@ -111,6 +114,7 @@ export default function QuestionPlayer({
       questionBaseTimeRef.current + Math.round((Date.now() - (questionStartTimeRef.current || Date.now())) / 1000)
     );
 
+    setCheckedTimes((prev) => ({ ...prev, [question.id]: timeSpent }));
     setRevealed((prev) => new Set(prev).add(question.id));
 
     // Record question-level attempt immediately into user_attempts
@@ -303,6 +307,7 @@ export default function QuestionPlayer({
           question={question}
           selectedOption={selectedOption}
           visible={isRevealed}
+          timeSpentSeconds={checkedTimes[question.id] ?? getLocalSession()?.question_times?.[question.id] ?? null}
         />
       )}
 
