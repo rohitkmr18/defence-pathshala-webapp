@@ -66,14 +66,21 @@ export function capturePostHog(
     return;
   }
 
-  const distinctId =
-    typeof properties.user_id === "string" && properties.user_id
-      ? properties.user_id
-      : typeof properties.anonymous_id === "string"
-        ? properties.anonymous_id
-        : undefined;
+  const identified =
+    typeof properties.user_id === "string" && Boolean(properties.user_id);
+  const distinctId = identified
+    ? String(properties.user_id)
+    : typeof properties.anonymous_id === "string"
+      ? properties.anonymous_id
+      : undefined;
 
-  captureViaApi(name, distinctId, properties);
+  captureViaApi(
+    name,
+    distinctId,
+    identified
+      ? properties
+      : { ...properties, $process_person_profile: false }
+  );
 }
 
 export function identifyPostHog(
