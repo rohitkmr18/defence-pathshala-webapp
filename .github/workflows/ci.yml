@@ -51,7 +51,7 @@ jobs:
         run: >-
           node --experimental-strip-types --test
           frontend/src/__tests__/practice_resume.test.mjs frontend/src/__tests__/question_learning_loop.test.mjs
-          scripts/test-learning-continuity.cjs scripts/test-learner-intelligence.cjs scripts/test-dashboard-mode.cjs
+          scripts/test-learning-continuity.cjs scripts/test-learner-intelligence.cjs scripts/test-dashboard-mode.cjs scripts/test-analytics-contract.cjs
 
       - name: Verify auth state and atomic onboarding regressions
         run: >-
