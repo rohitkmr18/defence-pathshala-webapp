@@ -18,6 +18,7 @@ import {
   loadResumeSession,
   restoreQuestionOrder,
   saveLocalSession,
+  latestSessionSnapshot,
   PRACTICE_SESSION_UPDATED_EVENT,
   type ActivePracticeSession,
 } from "@/lib/practice-session-client";
@@ -177,7 +178,7 @@ export default function SessionPageClient({
   // Determine Back Button destination
   const backHref = safeLearningReturn(returnTo || restoredSession?.filters.returnTo,
     buildPracticeUrl(restoredSession?.filters || parsedFilters));
-  const backLabel = backHref === "/dashboard" ? "Back to Dashboard" : backHref.includes("question-bank")
+  const backLabel = backHref === "/dashboard/mistakes" ? "Back to Mistakes" : backHref === "/dashboard" ? "Back to Dashboard" : backHref.includes("question-bank")
     ? "Back to Explore"
     : "Back to Practice";
 
@@ -200,7 +201,7 @@ export default function SessionPageClient({
             localCandidate.server_id === requestedSessionId)
             ? localCandidate
             : null;
-        const saved = claimCompletedLocal || (resume || url.searchParams.get("resume") === "true"
+        let saved = claimCompletedLocal || (resume || url.searchParams.get("resume") === "true"
           ? await loadResumeSession(requestedSessionId) : null);
         if (cancelled) return;
         if (saved?.mode === "full_paper") {
@@ -234,6 +235,7 @@ export default function SessionPageClient({
           const fetchedQuestions = saved
             ? restoreQuestionOrder(saved.question_ids, data.questions || [])
             : data.questions || [];
+          if (saved) saved = latestSessionSnapshot(saved);
           setQuestions(fetchedQuestions);
 
           if (fetchedQuestions.length > 0) {

@@ -378,6 +378,15 @@ async function persistCompletion(params: {
 }
 
 /** Restore the requested saved session before any question query is issued. */
+export function latestSessionSnapshot(snapshot: ActivePracticeSession): ActivePracticeSession {
+  const latest = getLocalSession();
+  // A restore can wait for ownership and question reads while creation/progress
+  // completes. Never replace that newer device snapshot with the earlier read.
+  return latest?.id === snapshot.id &&
+    (latest.revision || 0) >= (snapshot.revision || 0) &&
+    latest.updated_at >= snapshot.updated_at ? latest : snapshot;
+}
+
 export async function loadResumeSession(sessionId?: string): Promise<ActivePracticeSession> {
   let session = getLocalSession();
   if (sessionId && session?.id !== sessionId && session?.server_id !== sessionId) {
@@ -400,6 +409,7 @@ export async function loadResumeSession(sessionId?: string): Promise<ActivePract
   if (!session || session.is_completed || !Array.isArray(session.question_ids) || !session.question_ids.length) {
     throw new Error("This saved session is no longer available. Return to Practice to start a new session.");
   }
+  session = latestSessionSnapshot(session);
   return { ...session,
     checked_ids: session.checked_ids ?? session.filters?.progress?.checked_ids ?? [],
     question_times: session.question_times ?? session.filters?.progress?.question_times ?? {},

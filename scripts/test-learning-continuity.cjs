@@ -25,6 +25,7 @@ test('contextual return keeps nested encodings intact and rejects unsafe or unre
   const { safeLearningReturn, MOBILE_LEARNING_NAV } = createLoader()('frontend/src/lib/learning-navigation.ts');
   const valid = '/dashboard/question-bank?topic=Rights%26Duties&subtopic=100%25';
   assert.equal(safeLearningReturn(valid), valid);
+  assert.equal(safeLearningReturn('/dashboard/mistakes'), '/dashboard/mistakes');
   for (const value of ['https://evil.test', '//evil.test', '/%2f%2fevil.test', '/dashboard/%5cevil', '/auth/login', '/about', '/dashboard/practice/session?resume=true']) {
     assert.equal(safeLearningReturn(value, '/dashboard/practice?exam=CDS'), '/dashboard/practice?exam=CDS');
   }

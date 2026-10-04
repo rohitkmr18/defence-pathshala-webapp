@@ -284,7 +284,7 @@ export default function PracticePageClient() {
             className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs sm:text-sm font-bold text-slate-700 shadow-2xs hover:bg-slate-50 hover:text-blue-700 transition"
           >
             <ArrowLeft className="h-4 w-4" />
-            <span>← Back to Explore (Preserve Filters)</span>
+            <span>{safeLearningReturn(returnTo) === "/dashboard/mistakes" ? "Back to Mistakes" : safeLearningReturn(returnTo) === "/dashboard" ? "Back to Dashboard" : "← Back to Explore (Preserve Filters)"}</span>
           </Link>
         </div>
       )}

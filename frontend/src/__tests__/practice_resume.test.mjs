@@ -1,7 +1,7 @@
 import test, { beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  loadResumeSession, restoreQuestionOrder, initializeSession,
+  loadResumeSession, latestSessionSnapshot, restoreQuestionOrder, initializeSession,
   updateSessionProgress, getLocalSession, saveLocalSession, recordQuestionAttempt, completePracticeSession, retryPracticePersistence,
 } from '../lib/practice-session-client.ts';
 
@@ -17,6 +17,15 @@ const session = (overrides = {}) => ({
   started_at: new Date().toISOString(), updated_at: new Date().toISOString(), ...overrides,
 });
 const tick = () => new Promise(resolve => setImmediate(resolve));
+
+test('delayed restore retains cloud identity and newer progress after question loading', () => {
+  const stale = session({ id: 'delayed-restore', revision: 1 });
+  const latest = { ...stale, server_id: 'cloud-identity', revision: 2,
+    current_index: 3, answers: { q4: 'A', q1: 'B', q3: 'C' }, cloud_status: 'saved' };
+  saveLocalSession(latest);
+  assert.deepEqual(latestSessionSnapshot(stale), latest);
+  assert.equal(latestSessionSnapshot(session({ id: 'another-session' })).id, 'another-session');
+});
 
 beforeEach(() => {
   const storage = new Map();
