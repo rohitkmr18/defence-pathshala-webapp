@@ -28,7 +28,7 @@ import {
   buildPracticeUrl,
 } from "@/lib/question-filters";
 import { safeLearningReturn } from "@/lib/learning-navigation";
-import { trackLearningEvent } from "@/lib/learning-events";
+import { trackProductEvent } from "@/lib/analytics/track";
 
 // ─── Props ───────────────────────────────────────────────────────────────────
 
@@ -266,7 +266,7 @@ export default function SessionPageClient({
                   router.replace(`${cleanUrl.pathname}${cleanUrl.search}`, { scroll: false });
                 }
               } else {
-                trackLearningEvent("practice_resume", { mode: saved.mode, position: saved.current_index, origin }, `${saved.id}:${saved.updated_at}`);
+                trackProductEvent("practice_resumed", { mode: saved.mode, position: saved.current_index, source_surface: origin }, `${saved.id}:${saved.updated_at}`);
               }
             } else {
               // Initialize a fresh session
@@ -281,7 +281,7 @@ export default function SessionPageClient({
                 setAnswers({});
                 setInitialIndex(0);
                 setSessionId(newSess.id);
-                trackLearningEvent("practice_start", { mode, origin }, newSess.id);
+                trackProductEvent("practice_started", { mode, source_surface: origin, practice_session_id: newSess.id }, newSess.id);
               }
             }
           }
@@ -408,7 +408,7 @@ export default function SessionPageClient({
 
             setCompleted(true);
             window.scrollTo({ top: 0, left: 0 });
-            trackLearningEvent("practice_complete", { mode: sessionMode, duration }, sessionId);
+            trackProductEvent("practice_completed", { mode: sessionMode, duration, practice_session_id: sessionId }, sessionId);
             completionRef.current = false;
             setSavingCompletion(false);
           }}
