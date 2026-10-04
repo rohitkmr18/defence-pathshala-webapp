@@ -1,4 +1,5 @@
 import { buildPracticeUrl } from "./question-filters";
+import { getScoringRules } from "./examScoring";
 
 export type LearnerState = "new" | "early" | "established";
 export type NextBestMoveType =
@@ -47,6 +48,7 @@ export interface LearnerQuestionMeta {
   taxonomy_concept?: string | null;
   subject?: string | null;
   topic?: string | null;
+  difficulty_category?: string | null;
   production_eligible?: boolean | null;
   intelligence_eligible?: boolean | null;
   student_release_status?: string | null;
@@ -103,6 +105,17 @@ export interface LearnerIntelligence {
     practiceHref: string | null;
   };
   needsAttention: AttentionArea[];
+  performanceCoach: {
+    mocksCompleted: number;
+    totalQuestionsAttempted: number;
+    averageScore: number;
+    averageAccuracy: number;
+    totalRecoverableMarks: number;
+    lastMockTitle: string;
+    weakAreas: Array<{ topic: string; count: number }>;
+    recentScores: number[];
+    trendDirection: "up" | "down" | "flat";
+  };
   recentActivity: Array<{
     id: string;
     title: string;
@@ -272,6 +285,105 @@ export function deriveLearnerIntelligence(input: {
     .sort((a, b) => b.score - a.score || b.attempts - a.attempts)
     .slice(0, 3);
 
+  const attemptsBySession = new Map<string, LearnerAttempt[]>();
+  for (const attempt of attempts) {
+    if (!attempt.session_id) continue;
+    const rows = attemptsBySession.get(attempt.session_id) || [];
+    rows.push(attempt);
+    attemptsBySession.set(attempt.session_id, rows);
+  }
+
+  const fullPaperSessions = [...sessions]
+    .filter((session) => session.is_completed && session.mode === "full_paper")
+    .sort((a, b) => String(b.updated_at).localeCompare(String(a.updated_at)));
+
+  const fullPaperMetrics = fullPaperSessions.map((session) => {
+    const sessionAttempts = attemptsBySession.get(session.id) || [];
+    const firstQuestionId =
+      sessionAttempts[0]?.question_id || session.question_ids?.[0] || "";
+    const exam =
+      metaById.get(firstQuestionId)?.exam || targetExams[0] || "CAPF-AC";
+    const rules = getScoringRules(exam);
+    const sessionCorrect = sessionAttempts.filter((attempt) => attempt.is_correct).length;
+    const sessionIncorrect = sessionAttempts.length - sessionCorrect;
+    const easyModerateMisses = sessionAttempts.filter((attempt) => {
+      if (attempt.is_correct) return false;
+      const raw = metaById.get(attempt.question_id)?.difficulty_category?.trim() || "Moderate";
+      const normalized = raw.toLowerCase() === "medium" ? "Moderate" : raw;
+      return normalized === "Easy" || normalized === "Moderate";
+    }).length;
+
+    return {
+      title: session.title,
+      accuracy: pct(sessionCorrect, sessionAttempts.length),
+      netScore: Math.max(
+        0,
+        Math.round(
+          (sessionCorrect * rules.correctMarks -
+            sessionIncorrect * rules.penaltyMarks) *
+            100
+        ) / 100
+      ),
+      attempted: sessionAttempts.length,
+      recoverableMarks:
+        Math.round(easyModerateMisses * rules.recoverableSwingPerQuestion * 100) /
+        100,
+    };
+  });
+
+  const mockWeakTopics = new Map<string, number>();
+  for (const session of fullPaperSessions) {
+    for (const attempt of attemptsBySession.get(session.id) || []) {
+      if (attempt.is_correct) continue;
+      const meta = metaById.get(attempt.question_id);
+      if (!meta) continue;
+      const topic = topicOf(meta);
+      mockWeakTopics.set(topic, (mockWeakTopics.get(topic) || 0) + 1);
+    }
+  }
+
+  const recentScores = fullPaperMetrics
+    .slice(0, 7)
+    .reverse()
+    .map((metric) => metric.netScore);
+  let trendDirection: "up" | "down" | "flat" = "flat";
+  if (recentScores.length >= 2) {
+    const latestScore = recentScores[recentScores.length - 1];
+    const previousScore = recentScores[recentScores.length - 2];
+    if (latestScore > previousScore + 1) trendDirection = "up";
+    else if (latestScore < previousScore - 1) trendDirection = "down";
+  }
+
+  const performanceCoach = {
+    mocksCompleted: fullPaperMetrics.length,
+    totalQuestionsAttempted: fullPaperMetrics.reduce(
+      (sum, metric) => sum + metric.attempted,
+      0
+    ),
+    averageScore: fullPaperMetrics.length
+      ? Math.round(
+          (fullPaperMetrics.reduce((sum, metric) => sum + metric.netScore, 0) /
+            fullPaperMetrics.length) *
+            10
+        ) / 10
+      : 0,
+    averageAccuracy: fullPaperMetrics.length
+      ? Math.round(
+          (fullPaperMetrics.reduce((sum, metric) => sum + metric.accuracy, 0) /
+            fullPaperMetrics.length) *
+            10
+        ) / 10
+      : 0,
+    totalRecoverableMarks: fullPaperMetrics[0]?.recoverableMarks || 0,
+    lastMockTitle: fullPaperMetrics[0]?.title || "None",
+    weakAreas: [...mockWeakTopics.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([topic, count]) => ({ topic, count })),
+    recentScores,
+    trendDirection,
+  };
+
   const recentActivity = [...sessions]
     .sort((a, b) => String(b.updated_at).localeCompare(String(a.updated_at)))
     .slice(0, 5)
@@ -343,6 +455,7 @@ export function deriveLearnerIntelligence(input: {
       practiceHref: mistakePracticeHref,
     },
     needsAttention,
+    performanceCoach,
     recentActivity,
     nextBestMove,
   };
