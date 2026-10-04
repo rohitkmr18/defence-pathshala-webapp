@@ -27,8 +27,9 @@ export default function PracticePersistenceStatus({ questions = [] }: { question
         <span>
           Practicing as a guest.{" "}
           <Link href={loginHref} className="font-bold text-blue-700 underline underline-offset-2">
-            Log in to save this session and personalise your dashboard.
-          </Link>
+            Log in
+          </Link>{" "}
+          to save this session and personalise your dashboard.
         </span>
       )
       : status === "saved" ? "Progress saved to your account and dashboard."
