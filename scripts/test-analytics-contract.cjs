@@ -29,6 +29,11 @@ test("P0 learner-intelligence surfaces emit canonical events", () => {
   const practice = read("frontend/src/app/dashboard/practice/session/SessionPageClient.tsx");
   const mistakes = read("frontend/src/app/dashboard/mistakes/page.tsx");
   const mistakeDetail = read("frontend/src/app/dashboard/mistakes/[questionId]/page.tsx");
+  const explorer = read("frontend/src/components/question-bank/QuestionBankExplorer.tsx");
+  const heatmap = read("frontend/src/components/charts/TopicHeatmap.tsx");
+  const player = read("frontend/src/components/practice/player/QuestionPlayer.tsx");
+  const otp = read("frontend/src/components/auth/EmailOtpForm.tsx");
+  const identity = read("frontend/src/components/analytics/AnalyticsIdentity.tsx");
 
   for (const event of [
     "dashboard_viewed",
@@ -46,4 +51,16 @@ test("P0 learner-intelligence surfaces emit canonical events", () => {
 
   assert.match(mistakeDetail, /mistake_question_opened/);
   assert.match(mistakeDetail, /related_practice_started/);
+
+  for (const event of ["explore_viewed", "exam_selected", "subject_selected"])
+    assert.match(explorer, new RegExp(event));
+  for (const event of ["topic_selected", "practice_cta_clicked"])
+    assert.match(heatmap, new RegExp(event));
+  for (const event of ["question_answered", "answer_checked", "next_question_clicked", "question_skipped"])
+    assert.match(player, new RegExp(event));
+  for (const event of ["auth_started", "otp_requested", "otp_verified"])
+    assert.match(otp, new RegExp(event));
+
+  assert.match(identity, /identifyAnalyticsUser/);
+  assert.match(identity, /resetAnalyticsUser/);
 });
