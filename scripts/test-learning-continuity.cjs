@@ -187,10 +187,12 @@ test('model-derived eligible intelligence shows Exam Edge without exposing prove
       intelligence_trust_tier: 'MODEL_READY', intelligence_confidence: 'MODEL_DERIVED',
     },
   });
-  const rendered = JSON.stringify(tree);
+  const examEdgeNode = elements(tree, n => typeof n.type === 'function' && n.props?.question?.id === 'model-edge')[0];
+  assert.ok(examEdgeNode, 'model-ready eligible intelligence should mount Exam Edge');
+  const rendered = JSON.stringify(examEdgeNode.type(examEdgeNode.props));
   assert.match(rendered, /Exam Edge/);
   assert.doesNotMatch(rendered, /Model derived|Model ready|Verified|Under review/);
-  assert.doesNotMatch(rendered, /PYQ Intelligence/);
+  assert.doesNotMatch(JSON.stringify(tree), /PYQ Intelligence/);
 });
 
 test('Check Answer keeps provenance metadata internal and never renders provenance labels', () => {
