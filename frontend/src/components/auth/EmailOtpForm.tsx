@@ -70,6 +70,11 @@ export default function EmailOtpForm({ mode = "login" }: { mode?: "login" | "sig
         source_surface: mode === "signup" ? "signup" : "login",
         auth_method: "email_otp",
       });
+      try {
+        sessionStorage.setItem("dp_auth_return_pending", mode);
+      } catch {
+        // Auth still succeeds if storage is unavailable.
+      }
       // Authentication establishes the session; the canonical resolver owns routing.
       window.location.replace(authUrl("/auth/continue", searchParams.get("next")));
     } catch (failure) {
