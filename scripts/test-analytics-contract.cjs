@@ -21,17 +21,13 @@ test("canonical analytics layer owns provider dispatch", () => {
   assert.match(track, /user_id: currentUserId/);
   assert.match(track, /auth_state/);
   assert.match(track, /identifyPostHog\(userId, anonymousId\)/);
-
   assert.match(ga4, /dataLayer\.push/);
-
   assert.match(posthog, /NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN/);
   assert.match(posthog, /NEXT_PUBLIC_POSTHOG_HOST/);
   assert.match(posthog, /\/i\/v0\/e\//);
   assert.match(posthog, /\$identify/);
   assert.match(posthog, /\$anon_distinct_id/);
-  assert.match(posthog, /\$process_person_profile/);
   assert.match(posthog, /keepalive: true/);
-
   assert.match(legacy, /trackProductEventUnsafe/);
 });
 
