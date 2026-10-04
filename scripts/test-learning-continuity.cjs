@@ -149,7 +149,7 @@ test('feedback is absent for fresh/selected unchecked questions, appears on Chec
   assert.equal(player.feedback(tree), null);
 });
 
-test('withheld intelligence never exposes Exam Edge, PYQ Intelligence, model-ready labels or concept metadata', () => {
+test('withheld intelligence never exposes Exam Edge, PYQ Intelligence or concept metadata', () => {
   const Reveal = createLoader({ react: { useState: initial => [initial, () => {}] }, 'next/link': 'a',
     '@/components/common/MathText': 'math-text', '@/lib/learning-events': { trackLearningEvent() {} } })('frontend/src/components/practice/player/AnswerReveal.tsx').default;
   const tree = Reveal({
@@ -170,7 +170,25 @@ test('withheld intelligence never exposes Exam Edge, PYQ Intelligence, model-rea
   assert.doesNotMatch(rendered, /Exam Edge/);
   assert.doesNotMatch(rendered, /PYQ Intelligence/);
   assert.doesNotMatch(rendered, /Money Bill/);
-  assert.doesNotMatch(rendered, /Model derived/);
+});
+
+test('Check Answer keeps provenance metadata internal and never renders provenance labels', () => {
+  const Reveal = createLoader({ react: { useState: initial => [initial, () => {}] }, 'next/link': 'a',
+    '@/components/common/MathText': 'math-text', '@/lib/learning-events': { trackLearningEvent() {} } })('frontend/src/components/practice/player/AnswerReveal.tsx').default;
+  for (const trust of ['HUMAN_VERIFIED', 'MODEL_READY', 'REVIEW_REQUIRED']) {
+    const tree = Reveal({
+      visible: true,
+      selectedOption: 'A',
+      question: {
+        id: 'provenance', final_opt: 'A', explanation: 'Explanation',
+        exam: 'CDS', year: 2025, subject: 'Polity', topic: 'Parliament',
+        intelligence_eligible: true, student_release_status: 'RELEASED',
+        intelligence_trust_tier: trust,
+      },
+    });
+    const rendered = JSON.stringify(tree);
+    assert.doesNotMatch(rendered, /Human verified|Verified|Model derived|Model ready|Under review/);
+  }
 });
 
 test('resume mounts feedback only for the current checked question ID, independently of selected answers', () => {

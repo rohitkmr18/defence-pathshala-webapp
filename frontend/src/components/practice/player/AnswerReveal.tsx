@@ -13,7 +13,6 @@ import {
   Compass,
   Gauge,
   ShieldCheck,
-  Sparkles,
   Target,
   XCircle,
 } from "lucide-react";
@@ -50,45 +49,6 @@ function DifficultyPill({ category }: { category?: string | null }) {
       {category}
     </span>
   );
-}
-
-function ProvenanceBadge({ question }: { question: PracticeQuestion }) {
-  const tier =
-    question.intelligence_trust_tier ||
-    (question.intelligence_verified || question.verified_status === "Verified"
-      ? "HUMAN_VERIFIED"
-      : question.intelligence_confidence === "MODEL_DERIVED"
-      ? "MODEL_READY"
-      : null);
-
-  if (tier === "HUMAN_VERIFIED") {
-    return (
-      <span className="inline-flex items-center gap-1 rounded-md border border-blue-200 bg-blue-50 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-blue-700">
-        <ShieldCheck className="h-3 w-3" />
-        Verified
-      </span>
-    );
-  }
-
-  if (tier === "REVIEW_REQUIRED") {
-    return (
-      <span className="inline-flex items-center gap-1 rounded-md border border-amber-200 bg-amber-50 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-amber-700">
-        <ShieldCheck className="h-3 w-3" />
-        Under review
-      </span>
-    );
-  }
-
-  if (tier === "MODEL_READY") {
-    return (
-      <span className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-slate-100 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-600">
-        <Sparkles className="h-3 w-3" />
-        Model derived
-      </span>
-    );
-  }
-
-  return null;
 }
 
 function ExamEdge({ question }: { question: PracticeQuestion }) {
@@ -190,7 +150,6 @@ export default function AnswerReveal({
                   <p className="text-base font-black tracking-tight">
                     {isCorrect ? "Correct" : "Incorrect"}
                   </p>
-                  <ProvenanceBadge question={question} />
                 </div>
                 <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-medium sm:text-sm">
                   <span>
@@ -223,7 +182,6 @@ export default function AnswerReveal({
                   Why this answer is correct
                 </h3>
               </div>
-              <ProvenanceBadge question={question} />
             </div>
             <MathText
               text={question.explanation}
