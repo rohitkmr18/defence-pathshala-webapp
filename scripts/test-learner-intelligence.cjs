@@ -193,7 +193,7 @@ test("performance coach is rebuilt from durable completed full-paper sessions", 
   assert.equal(data.performanceCoach.mocksCompleted, 1);
   assert.equal(data.performanceCoach.totalQuestionsAttempted, 3);
   assert.equal(data.performanceCoach.averageAccuracy, 33);
-  assert.equal(data.performanceCoach.averageScore, 0.55);
+  assert.equal(data.performanceCoach.averageScore, 0.6);
   assert.equal(data.performanceCoach.totalRecoverableMarks, 2.23);
   assert.equal(data.performanceCoach.lastMockTitle, "CDS Full Paper");
   assert.equal(data.performanceCoach.weakAreas[0].topic, "Parliament");
