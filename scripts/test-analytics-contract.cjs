@@ -17,9 +17,21 @@ test("canonical analytics layer owns provider dispatch", () => {
   assert.match(track, /event_version/);
   assert.match(track, /deployment_environment/);
   assert.match(track, /git_sha/);
-  assert.match(track, /anonymous_id/);\n  assert.match(track, /user_id: currentUserId/);\n  assert.match(track, /auth_state/);\n  assert.match(track, /identifyPostHog\\(userId, anonymousId\\)/);
+  assert.match(track, /anonymous_id/);
+  assert.match(track, /user_id: currentUserId/);
+  assert.match(track, /auth_state/);
+  assert.match(track, /identifyPostHog\(userId, anonymousId\)/);
+
   assert.match(ga4, /dataLayer\.push/);
-  assert.match(posthog, /NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN/);\n  assert.match(posthog, /NEXT_PUBLIC_POSTHOG_HOST/);\n  assert.match(posthog, /\\/i\\/v0\\/e\\//);\n  assert.match(posthog, /\\$identify/);\n  assert.match(posthog, /\\$anon_distinct_id/);\n  assert.match(posthog, /keepalive: true/);
+
+  assert.match(posthog, /NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN/);
+  assert.match(posthog, /NEXT_PUBLIC_POSTHOG_HOST/);
+  assert.match(posthog, /\/i\/v0\/e\//);
+  assert.match(posthog, /\$identify/);
+  assert.match(posthog, /\$anon_distinct_id/);
+  assert.match(posthog, /\$process_person_profile/);
+  assert.match(posthog, /keepalive: true/);
+
   assert.match(legacy, /trackProductEventUnsafe/);
 });
 
