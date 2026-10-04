@@ -388,15 +388,6 @@ export default function QuestionBankExplorer({ meta }: Props) {
           )}
         </div>
 
-        <div className="mt-5 flex flex-wrap items-center gap-2" aria-label="Selected learning context">
-          {[...context.subjects, ...context.topics, ...context.subtopics].map(value => <span key={value} className="rounded-lg bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700">{value}</span>)}
-          <label className="text-xs font-semibold">Practice mode
-            <select aria-label="Practice mode" value={context.mode || "instant"} onChange={e => changeContext({ mode: e.target.value as "instant" | "attempt" })} className="ml-2 rounded-lg border border-slate-200 p-2">
-              <option value="instant">Instant Learning</option><option value="attempt">Timed Exam</option>
-            </select>
-          </label>
-        </div>
-
         {/* Live Filter Selection Badges */}
         <div className="mt-6 flex flex-wrap items-center gap-2 pt-5 border-t border-slate-100">
           <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
