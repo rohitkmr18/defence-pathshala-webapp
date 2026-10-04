@@ -1,4 +1,5 @@
 import Link from "next/link";
+import TrackOnMount from "@/components/analytics/TrackOnMount";
 import {
   ArrowRight,
   BarChart3,
@@ -29,6 +30,7 @@ const outcomes = [
 export default function LoggedOutDashboard() {
   return (
     <main className="min-h-screen bg-white">
+      <TrackOnMount event="dashboard_logged_out_viewed" once="logged_out_dashboard" />
       <section className="border-b border-slate-200 bg-gradient-to-b from-slate-950 via-slate-950 to-blue-950 text-white">
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 sm:py-16 lg:grid-cols-[1.08fr_.92fr] lg:px-10 lg:py-20">
           <div className="flex flex-col justify-center">
