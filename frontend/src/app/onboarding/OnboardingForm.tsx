@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import type { Profile } from "@/lib/profile/types";
 import { authUrl, safeAuthNext } from "@/lib/auth-redirect";
 import { createSetupSaver } from "@/lib/onboarding-save";
+import { trackProductEvent } from "@/lib/analytics/track";
 
 export default function OnboardingForm({ profile, next }: { profile: Profile; next: string }) {
   const [fullName, setFullName] = useState(profile.full_name ?? "");
@@ -18,6 +19,10 @@ export default function OnboardingForm({ profile, next }: { profile: Profile; ne
   const busy = useRef(false);
   const save = useRef(createSetupSaver());
 
+  useEffect(() => {
+    trackProductEvent("onboarding_started", { source_surface: "onboarding" }, "onboarding");
+  }, []);
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (busy.current || !examChoice) return;
@@ -25,8 +30,14 @@ export default function OnboardingForm({ profile, next }: { profile: Profile; ne
     setSaving(true);
     setError(null);
     try {
+      const targetExams = examChoice === "both" ? ["CDS", "CAPF-AC"] : [examChoice];
       await save.current({ full_name: fullName, target_year: targetYear,
-        target_exams: examChoice === "both" ? ["CDS", "CAPF-AC"] : [examChoice] });
+        target_exams: targetExams });
+      trackProductEvent("onboarding_completed", {
+        source_surface: "onboarding",
+        exam: targetExams.length === 1 ? targetExams[0] : "multiple",
+        target_exam_count: targetExams.length,
+      });
       // Fresh request avoids a prefetched incomplete-profile redirect.
       window.location.replace(safeAuthNext(next));
     } catch (cause) {
