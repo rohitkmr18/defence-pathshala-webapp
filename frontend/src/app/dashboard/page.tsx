@@ -1,4 +1,5 @@
 import LearnerDashboardOverview from "@/components/dashboard/LearnerDashboardOverview";
+import LoggedOutDashboard from "@/components/dashboard/LoggedOutDashboard";
 import { getSafeProfile } from "@/lib/profile-server";
 
 export const metadata = {
@@ -9,9 +10,14 @@ export const metadata = {
 
 export default async function DashboardPage() {
   const { profile, user } = await getSafeProfile();
+
+  if (!user) {
+    return <LoggedOutDashboard />;
+  }
+
   const displayName =
     profile.full_name ||
-    user?.email?.split("@")[0] ||
+    user.email?.split("@")[0] ||
     "Aspirant";
   const firstName = displayName.trim().split(" ")[0] || "Aspirant";
 
