@@ -19,18 +19,12 @@ export default function HomePage() {
             </span>
           </Link>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center">
             <Link
               href="/auth/login"
               className="rounded-xl border border-blue-200 bg-blue-50/60 px-4 py-2 text-xs sm:text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
             >
               Login
-            </Link>
-            <Link
-              href="/dashboard/practice"
-              className="rounded-xl bg-blue-600 px-4 py-2 text-xs sm:text-sm font-bold text-white shadow-md shadow-blue-600/20 transition hover:bg-blue-500 active:scale-95"
-            >
-              Start Practicing Free
             </Link>
           </div>
         </div>
