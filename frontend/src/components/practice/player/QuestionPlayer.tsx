@@ -163,7 +163,9 @@ export default function QuestionPlayer({
     if (disabled || !question || navigationRef.current) return;
     navigationRef.current = true;
 
-    trackLearningEvent("question_skipped", { mode, question_id: question.id, practice_session_id: sessionId }, `${sessionId}:${question.id}:skipped`);\n\n    const nextAnswers = { ...answers };
+    trackLearningEvent("question_skipped", { mode, question_id: question.id, practice_session_id: sessionId }, `${sessionId}:${question.id}:skipped`);
+
+    const nextAnswers = { ...answers };
     delete nextAnswers[question.id];
     setAnswers(nextAnswers);
     if (sessionId) updateSessionProgress(sessionId, { answers: nextAnswers });
