@@ -2,7 +2,7 @@ import posthog from "posthog-js";
 import type { ProductEventProperties } from "../events";
 import { releaseContext } from "../environment";
 import { getAnonymousId } from "../identity";
-import { safeAnalyticsUrl, safeEventProperties } from "../privacy";
+import { safeSdkUrls, safeEventProperties } from "../privacy";
 
 let initialized = false;
 
@@ -41,12 +41,7 @@ export function initializePostHog(): void {
       },
       before_send: (event) => {
         if (!event) return null;
-        for (const key of Object.keys(event.properties)) {
-          // SDK-added URL metadata must not retain auth callback credentials.
-          if (/url|referrer/i.test(key) && typeof event.properties[key] === "string") {
-            event.properties[key] = safeAnalyticsUrl(event.properties[key]);
-          }
-        }
+        event.properties = safeSdkUrls(event.properties);
         return event;
       },
     });

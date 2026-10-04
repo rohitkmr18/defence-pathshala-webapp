@@ -166,9 +166,13 @@ test("replay masks input/text/attributes and excludes console/network payloads a
   const event = config.before_send({ properties: {
     $current_url: "https://preview.test/auth/callback?code=secret#access_token=secret",
     $referrer: "https://example.test/?email=secret", source_surface: "login",
+    $set_once: { $initial_current_url: "https://preview.test/auth/callback?code=secret", $initial_referrer: "$direct" },
   } });
   assert.equal(event.properties.$current_url, "https://preview.test/auth/callback");
   assert.equal(event.properties.$referrer, "https://example.test/");
+  assert.equal(event.properties.$set_once.$initial_current_url, "https://preview.test/auth/callback");
+  assert.equal(event.properties.$set_once.$initial_referrer, "$direct");
+  assert.doesNotMatch(JSON.stringify(event), /secret/);
   f.trackProductEvent("otp_verified", { auth_method: "email_otp", email: "secret", otp: "secret",
     password: "secret", access_token: "secret", refresh_token: "secret", auth_token: "secret" });
   for (const payload of [f.calls.capture.at(-1)[1], f.window.dataLayer.at(-1)[2]]) {
