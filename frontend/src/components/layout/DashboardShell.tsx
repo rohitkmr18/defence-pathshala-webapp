@@ -1,9 +1,10 @@
 "use client";
 
-import { Suspense, useEffect, useState, useSyncExternalStore } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { authUrl } from "@/lib/auth-redirect";
 import MobileLearningNavigation from "./MobileLearningNavigation";
+import { showGlobalMobileNav } from "@/lib/learning-navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import DashboardSidebar from "./DashboardSidebar";
@@ -100,19 +101,6 @@ function UserMenu({ user }: { user: SupabaseUser }) {
 
 // ─── Main Shell ───────────────────────────────────────────────────────────────
 
-function subscribeHashChange(onChange: () => void) {
-  window.addEventListener("hashchange", onChange);
-  window.addEventListener("popstate", onChange);
-  window.addEventListener("dp:learning-location-change", onChange);
-  return () => {
-    window.removeEventListener("hashchange", onChange);
-    window.removeEventListener("popstate", onChange);
-    window.removeEventListener("dp:learning-location-change", onChange);
-  };
-}
-const getHash = () => window.location.hash;
-const getServerHash = () => "";
-
 function DashboardShellContent({
   children,
 }: {
@@ -123,12 +111,7 @@ function DashboardShellContent({
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const pathname = usePathname();
-  const hash = useSyncExternalStore(subscribeHashChange, getHash, getServerHash);
-  useEffect(() => {
-    // Next commits cross-page anchor URLs after rendering the new pathname.
-    // Refresh the hash snapshot after that commit as well as native hash changes.
-    window.dispatchEvent(new Event("dp:learning-location-change"));
-  }, [pathname]);
+  const showMobileNav = showGlobalMobileNav(pathname);
   const searchParams = useSearchParams();
   const loginHref = authUrl("/auth/login", `${pathname}${searchParams.size ? `?${searchParams}` : ""}`);
 
@@ -159,7 +142,7 @@ function DashboardShellContent({
   }, [pathname]);
 
   return (
-    <div className="flex min-h-screen max-w-full overflow-x-hidden bg-gray-50">
+    <div className={`flex min-h-screen max-w-full overflow-x-hidden bg-gray-50 ${showMobileNav ? "" : "dp-active-attempt"}`}>
       {/* ── Desktop sidebar ─────────────────────────────────────────────── */}
       <DashboardSidebar
         collapsed={collapsed}
@@ -190,7 +173,7 @@ function DashboardShellContent({
       </div>
 
       {/* ── Main content ─────────────────────────────────────────────────── */}
-      <main className="flex-1 min-w-0 overflow-x-hidden pb-[calc(5rem+env(safe-area-inset-bottom))] lg:pb-0">
+      <main className={`flex-1 min-w-0 overflow-x-hidden lg:pb-0 ${showMobileNav ? "pb-[calc(5rem+env(safe-area-inset-bottom))]" : "pb-[env(safe-area-inset-bottom)]"}`}>
         {/* Mobile top bar */}
         <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur-nav lg:hidden">
           <div className="flex items-center justify-between px-4 py-3">
@@ -233,7 +216,7 @@ function DashboardShellContent({
         {/* Page content */}
         <div className="w-full">{children}</div>
       </main>
-      <MobileLearningNavigation pathname={pathname} hash={hash} />
+      <MobileLearningNavigation pathname={pathname} />
     </div>
   );
 }

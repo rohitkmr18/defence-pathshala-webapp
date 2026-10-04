@@ -203,7 +203,7 @@ export default function QuestionPlayer({
   }
 
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
+    <div className="mx-auto max-w-3xl space-y-5 pb-[calc(8rem+env(safe-area-inset-bottom))] lg:pb-0">
       {/* Top Header: Progress & Navigator Trigger */}
       <div className="flex items-center justify-between gap-3">
         <div className="flex-1">
@@ -307,7 +307,7 @@ export default function QuestionPlayer({
       )}
 
       {/* Sticky Bottom Navigation Row */}
-      <div className="sticky bottom-[calc(5rem+env(safe-area-inset-bottom))] lg:bottom-4 z-10 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200/90 bg-white/95 p-3 sm:p-4 shadow-lg backdrop-blur-md">
+      <div data-session-actions className="sticky bottom-0 lg:bottom-4 z-10 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200/90 bg-white/95 p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] sm:p-4 sm:pb-[calc(1rem+env(safe-area-inset-bottom))] lg:pb-4 shadow-lg backdrop-blur-md">
         {/* Previous Button (Always enabled for earlier questions) */}
         <button
           type="button"

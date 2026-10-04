@@ -54,6 +54,17 @@ section,
 
 /* ── Scroll-safe tables ───────────────────────────────────────────────────── */
 
+/* Mobile attempts scroll with the document. overflow-x:hidden would make
+   these ancestors vertical scroll containers and trap the sticky action row. */
+@media (width < 64rem) {
+  .dp-active-attempt,
+  .dp-active-attempt main,
+  .dp-active-attempt section {
+    overflow-x: clip;
+    overflow-y: visible;
+  }
+}
+
 .table-scroll {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;

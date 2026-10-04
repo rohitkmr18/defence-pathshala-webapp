@@ -28,74 +28,69 @@ test('contextual return keeps nested encodings intact and rejects unsafe or unre
   for (const value of ['https://evil.test', '//evil.test', '/%2f%2fevil.test', '/dashboard/%5cevil', '/auth/login', '/about', '/dashboard/practice/session?resume=true']) {
     assert.equal(safeLearningReturn(value, '/dashboard/practice?exam=CDS'), '/dashboard/practice?exam=CDS');
   }
-  assert.equal(MOBILE_LEARNING_NAV[2].href, '/dashboard#performance-coach');
+  assert.equal(MOBILE_LEARNING_NAV[0].href, '/dashboard');
 });
 
-test('mobile navigation has exactly Explore, Practice, Progress and distinct route/anchor active states', () => {
-  const location = { hash: '' };
-  const load = createLoader({ 'next/link': 'a' }, { window: { location } });
-  const { MOBILE_LEARNING_NAV, isMobileLearningNavActive } = load('frontend/src/lib/learning-navigation.ts');
+test('mobile navigation is Home, Explore, Practice with exact destinations and route-only active states', () => {
+  const load = createLoader({ 'next/link': 'a' });
+  const { MOBILE_LEARNING_NAV, isMobileLearningNavActive, showGlobalMobileNav } = load('frontend/src/lib/learning-navigation.ts');
   const Navigation = load('frontend/src/components/layout/MobileLearningNavigation.tsx').default;
-  assert.deepEqual(Array.from(MOBILE_LEARNING_NAV, item => item.name), ['Explore', 'Practice', 'Progress']);
-  for (const [path, hash, expected] of [
-    ['/dashboard', '', []], ['/dashboard', '#other', []],
-    ['/dashboard', '#performance-coach', ['Progress']],
-    ['/dashboard/question-bank', '', ['Explore']],
-    ['/dashboard/practice', '', ['Practice']],
-    ['/dashboard/practice/session', '', ['Practice']],
-    ['/dashboard/practice/full-paper', '', ['Practice']],
-    ['/dashboard/practice-other', '', []],
-    ['/dashboard/practice', '#performance-coach', ['Practice']],
+  assert.deepEqual(Array.from(MOBILE_LEARNING_NAV, item => [item.name, item.href]), [
+    ['Home', '/dashboard'], ['Explore', '/dashboard/question-bank'], ['Practice', '/dashboard/practice'],
+  ]);
+  for (const [path, expected] of [
+    ['/dashboard', ['Home']], ['/dashboard#performance-coach', ['Home']],
+    ['/dashboard/question-bank', ['Explore']], ['/dashboard/question-bank/topic', ['Explore']],
+    ['/dashboard/practice', ['Practice']], ['/dashboard/practice/configure', ['Practice']],
+    ['/dashboard/practice-other', []], ['/dashboard/other', []],
   ]) {
-    const tree = Navigation({ pathname: path, hash });
+    assert.equal(showGlobalMobileNav(path), true);
+    const tree = Navigation({ pathname: path });
     const links = elements(tree, n => n.type === 'a');
     assert.equal(links.length, 3);
     assert.deepEqual(links.filter(n => n.props['aria-current'] === 'page').map(n => n.props.children[1].props.children), expected);
-    assert.deepEqual(Array.from(MOBILE_LEARNING_NAV).filter(item => isMobileLearningNavActive(item.href, path, hash)).map(item => item.name), expected);
+    assert.deepEqual(Array.from(MOBILE_LEARNING_NAV).filter(item => isMobileLearningNavActive(item.href, path)).map(item => item.name), expected);
     for (const link of links) {
       assert.match(link.props.className, /min-h-14/);
       assert.equal(link.props.children[0].props['aria-hidden'], 'true');
     }
     assert.match(tree.props.className, /safe-area-inset-bottom/);
     assert.match(tree.props.children.props.className, /grid-cols-3/);
-    assert.match(links[1].props.className, /bg-blue-/);
+    for (const link of links) {
+      assert.equal(link.props.className.includes('bg-blue-100'), link.props['aria-current'] === 'page');
+      assert.equal(link.props.className.includes('text-blue-800'), link.props['aria-current'] === 'page');
+    }
+    assert.equal(links[0].props.href, '/dashboard');
+    assert.equal(links[0].props.onNavigate, undefined);
   }
-  let prevented = false;
-  const progress = elements(Navigation({ pathname: '/dashboard', hash: '' }), n => n.type === 'a')[2];
-  progress.props.onNavigate({ preventDefault() { prevented = true; } });
-  assert.equal(prevented, true);
-  assert.equal(location.hash, 'performance-coach');
+  for (const path of ['/dashboard/practice/session', '/dashboard/practice/session/review',
+    '/dashboard/practice/full-paper', '/dashboard/practice/full-paper/review']) {
+    assert.equal(isMobileLearningNavActive('/dashboard/practice', path), true);
+    assert.equal(showGlobalMobileNav(path), false);
+    assert.equal(Navigation({ pathname: path }), null);
+  }
 });
 
-test('shell refreshes the Progress hash after a cross-page Next history commit and on back', () => {
-  const listeners = new Map(); const effects = []; const observed = [];
-  const location = { hash: '' };
-  const window = { location, addEventListener(name, fn) { listeners.set(name, fn); },
-    removeEventListener(name) { listeners.delete(name); },
-    dispatchEvent(event) { listeners.get(event.type)?.(); }, setTimeout: () => 1, clearTimeout() {} };
-  const react = { Suspense: 'suspense', useState: initial => [initial, () => {}],
-    useEffect: effect => effects.push(effect),
-    useSyncExternalStore(subscribe, snapshot) { subscribe(() => observed.push(snapshot())); return snapshot(); } };
+test('shell reserves the global bar space only on normal pages, leaving attempt scrolling to the document', () => {
+  let path = '/dashboard';
+  const react = { Suspense: 'suspense', useState: initial => [initial, () => {}], useEffect() {} };
   const load = createLoader({ react, 'next/link': 'a',
-    'next/navigation': { usePathname: () => '/dashboard', useSearchParams: () => new URLSearchParams() },
+    'next/navigation': { usePathname: () => path, useSearchParams: () => new URLSearchParams() },
     './MobileLearningNavigation': 'mobile-nav', './DashboardSidebar': 'sidebar',
     '@/components/dashboard/EditTargetModal': 'edit-modal',
-    '@/lib/supabase/client': { createClient: () => ({ auth: {
-      getUser: async () => ({ data: { user: null } }),
-      onAuthStateChange: () => ({ data: { subscription: { unsubscribe() {} } } }),
-    } }) },
-  }, { window, Event });
+  });
   const Shell = load('frontend/src/components/layout/DashboardShell.tsx').default;
-  const content = Shell({ children: 'page' }).props.children;
-  content.type(content.props);
-  // Rendering can precede Next's pushState; effects run after the URL commit.
-  location.hash = '#performance-coach';
-  const cleanups = effects.map(effect => effect());
-  assert.ok(observed.includes('#performance-coach'));
-  location.hash = '';
-  window.dispatchEvent(new Event('popstate'));
-  assert.equal(observed.at(-1), '');
-  for (const cleanup of cleanups) if (typeof cleanup === 'function') cleanup();
+  for (const current of ['/dashboard', '/dashboard/question-bank', '/dashboard/practice',
+    '/dashboard/practice/session', '/dashboard/practice/full-paper']) {
+    path = current;
+    const content = Shell({ children: 'page' }).props.children;
+    const tree = content.type(content.props);
+    const attempt = current.endsWith('/session') || current.endsWith('/full-paper');
+    assert.equal(tree.props.className.includes('dp-active-attempt'), attempt);
+    const main = elements(tree, n => n.type === 'main')[0];
+    assert.equal(main.props.className.includes('5rem'), !attempt);
+    assert.equal(elements(tree, n => n.type === 'mobile-nav')[0].props.pathname, current);
+  }
 });
 
 function hooks() {

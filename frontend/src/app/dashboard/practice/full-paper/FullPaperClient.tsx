@@ -386,7 +386,7 @@ export default function FullPaperClient({
       />
 
       {/* Main Examination Workspace */}
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+      <main className="mx-auto max-w-7xl px-4 py-6 pb-[calc(2rem+env(safe-area-inset-bottom))] sm:px-6 lg:pb-6">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
           {/* Left Column: Active Question + Action Toolbar */}
           <div className="space-y-4 lg:col-span-8">

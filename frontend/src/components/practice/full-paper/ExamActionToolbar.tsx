@@ -24,7 +24,7 @@ export default function ExamActionToolbar({
   onSaveAndNext,
 }: ExamActionToolbarProps) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+    <div data-session-actions className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
       {/* Left side actions: Clear Response & Mark for Review */}
       <div className="flex flex-wrap items-center gap-2">
         <button
