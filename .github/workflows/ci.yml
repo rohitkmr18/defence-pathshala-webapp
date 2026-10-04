@@ -48,7 +48,10 @@ jobs:
         run: npm run verify
 
       - name: Verify session resume regressions
-        run: node --experimental-strip-types --test frontend/src/__tests__/practice_resume.test.mjs
+        run: >-
+          node --experimental-strip-types --test
+          frontend/src/__tests__/practice_resume.test.mjs frontend/src/__tests__/question_learning_loop.test.mjs
+          scripts/test-learning-continuity.cjs
 
       - name: Verify auth state and atomic onboarding regressions
         run: >-

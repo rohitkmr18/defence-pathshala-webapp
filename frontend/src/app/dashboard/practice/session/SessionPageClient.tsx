@@ -2,13 +2,17 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import type { PracticeQuestion, PlayerMode, OptionKey } from "@/lib/practice-types";
+import PracticePersistenceStatus from "@/components/practice/PracticePersistenceStatus";
 import QuestionPlayer from "@/components/practice/player/QuestionPlayer";
 import FilteredAttemptDebrief from "@/components/practice/analysis/FilteredAttemptDebrief";
 import {
   initializeSession,
+  completePracticeSession,
   updateSessionProgress,
+  getLocalSession,
   clearLocalSession,
   loadResumeSession,
   restoreQuestionOrder,
@@ -20,6 +24,8 @@ import {
   serializeFiltersToSearchParams,
   buildPracticeUrl,
 } from "@/lib/question-filters";
+import { safeLearningReturn } from "@/lib/learning-navigation";
+import { trackLearningEvent } from "@/lib/learning-events";
 
 // ─── Props ───────────────────────────────────────────────────────────────────
 
@@ -35,6 +41,7 @@ interface SessionPageClientProps {
   intelligenceOnly?: boolean;
   limit?: number;
   returnTo?: string;
+  origin?: string;
   resume?: boolean;
   specificIds?: string;
   resumeSessionId?: string;
@@ -108,10 +115,12 @@ export default function SessionPageClient({
   intelligenceOnly,
   limit,
   returnTo,
+  origin,
   resume,
   specificIds,
   resumeSessionId,
 }: SessionPageClientProps) {
+  const router = useRouter();
   const [questions, setQuestions] = useState<PracticeQuestion[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [completed, setCompleted] = useState(false);
@@ -120,15 +129,25 @@ export default function SessionPageClient({
   const [initialIndex, setInitialIndex] = useState(0);
   const [restoredSession, setRestoredSession] = useState<ActivePracticeSession | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [savingCompletion, setSavingCompletion] = useState(false);
+  const completionRef = useRef(false);
   const sessionMode: PlayerMode = restoredSession?.mode === "attempt" ? "attempt" : restoredSession ? "instant" : mode;
   const startTimeRef = useRef<number>(0);
   const [timeSpentSeconds, setTimeSpentSeconds] = useState<number>(0);
 
+  useEffect(() => {
+    if (!sessionId) return;
+    const url = new URL(window.location.href);
+    if (url.searchParams.get("session_id") === sessionId && url.searchParams.get("resume") === "true") return;
+    url.searchParams.set("resume", "true"); url.searchParams.set("session_id", sessionId);
+    router.replace(`${url.pathname}${url.search}`, { scroll: false });
+  }, [sessionId, router]);
+
   // Keep this stable so state restoration does not restart the loading effect.
   const parsedFilters = useMemo(() => parseFiltersFromSearchParams({
-    exam, year, cycle, subject, topic, subtopic, difficulty,
+    exam, year, cycle, subject, topic, subtopic, difficulty, mode, returnTo, origin,
     intelligence_only: intelligenceOnly ? "true" : undefined,
-  }), [exam, year, cycle, subject, topic, subtopic, difficulty, intelligenceOnly]);
+  }), [exam, year, cycle, subject, topic, subtopic, difficulty, intelligenceOnly, mode, returnTo, origin]);
 
   // Build header label and breadcrumb
   const filterLabel =
@@ -137,10 +156,9 @@ export default function SessionPageClient({
     "Practice Session";
 
   // Determine Back Button destination
-  const backHref = returnTo
-    ? decodeURIComponent(returnTo)
-    : buildPracticeUrl(restoredSession?.filters || parsedFilters);
-  const backLabel = returnTo && returnTo.includes("question-bank")
+  const backHref = safeLearningReturn(returnTo || restoredSession?.filters.returnTo,
+    buildPracticeUrl(restoredSession?.filters || parsedFilters));
+  const backLabel = backHref === "/dashboard" ? "Back to Dashboard" : backHref.includes("question-bank")
     ? "Back to Explore"
     : "Back to Practice";
 
@@ -152,8 +170,17 @@ export default function SessionPageClient({
       setLoading(true);
       setError(null);
       try {
-        const saved = resume ? await loadResumeSession(resumeSessionId) : null;
+        const url = new URL(window.location.href);
+        const saved = resume || url.searchParams.get("resume") === "true"
+          ? await loadResumeSession(resumeSessionId || url.searchParams.get("session_id") || undefined) : null;
         if (cancelled) return;
+        if (saved?.mode === "full_paper") {
+          const params = serializeFiltersToSearchParams({ ...saved.filters,
+            returnTo: returnTo || saved.filters.returnTo, origin: origin || saved.filters.origin });
+          params.set("resume", "true"); params.set("session_id", saved.id);
+          window.location.replace(`/dashboard/practice/full-paper?${params}`);
+          return;
+        }
         const params = serializeFiltersToSearchParams({
           ...(saved?.filters || parsedFilters),
           limit: saved ? saved.question_ids.length : limit || 100,
@@ -188,6 +215,7 @@ export default function SessionPageClient({
               setSessionId(saved.id);
               setAnswers(saved.answers || {});
               setInitialIndex(Math.max(0, Math.min(saved.current_index || 0, fetchedQuestions.length - 1)));
+              trackLearningEvent("practice_resume", { mode: saved.mode, position: saved.current_index, origin }, `${saved.id}:${saved.updated_at}`);
             } else {
               // Initialize a fresh session
               const newSess = await initializeSession({
@@ -201,6 +229,7 @@ export default function SessionPageClient({
                 setAnswers({});
                 setInitialIndex(0);
                 setSessionId(newSess.id);
+                trackLearningEvent("practice_start", { mode, origin }, newSess.id);
               }
             }
           }
@@ -217,9 +246,10 @@ export default function SessionPageClient({
       }
     }
 
-    void loadSessionAndQuestions();
+    const start = window.setTimeout(() => { void loadSessionAndQuestions(); }, 0);
     return () => {
       cancelled = true;
+      window.clearTimeout(start);
     };
   }, [
     exam,
@@ -235,11 +265,27 @@ export default function SessionPageClient({
     specificIds,
     resumeSessionId,
     mode,
+    origin,
     parsedFilters,
   ]);
 
+  useEffect(() => {
+    if (!sessionId || completed) return;
+    const base = getLocalSession()?.time_spent_seconds || 0;
+    const started = Date.now();
+    const persist = () => {
+      if (getLocalSession()?.id === sessionId) updateSessionProgress(sessionId, {
+        time_spent_seconds: base + Math.round((Date.now() - started) / 1000),
+      });
+    };
+    const timer = window.setInterval(persist, 5000);
+    window.addEventListener("pagehide", persist);
+    return () => { window.clearInterval(timer); window.removeEventListener("pagehide", persist); persist(); };
+  }, [sessionId, completed]);
+
   return (
     <div>
+      {sessionId && <PracticePersistenceStatus questions={questions || []} />}
       {/* Back Navigation Bar & Session Breadcrumb */}
       {!completed && (
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200/80">
@@ -280,36 +326,38 @@ export default function SessionPageClient({
           sessionId={sessionId}
           initialIndex={initialIndex}
           initialAnswers={answers}
-          onComplete={(completedAnswers) => {
+          initialCheckedIds={restoredSession?.checked_ids || []}
+          disabled={savingCompletion}
+          onComplete={async (completedAnswers) => {
+            if (completionRef.current) return;
+            completionRef.current = true;
+            setSavingCompletion(true);
+            setError(null);
             setAnswers(completedAnswers);
             const duration = Math.max(
               1,
-              Math.round(
+              (restoredSession?.time_spent_seconds || 0) + Math.round(
                 (Date.now() - (startTimeRef.current || Date.now())) / 1000
               )
             );
             setTimeSpentSeconds(duration);
 
             if (sessionId) {
-              const correctCount = questions.filter(
-                (q) => completedAnswers[q.id] === q.final_opt
-              ).length;
-              const incorrectCount = questions.filter(
-                (q) =>
-                  completedAnswers[q.id] &&
-                  completedAnswers[q.id] !== q.final_opt
-              ).length;
-
-              updateSessionProgress(sessionId, {
-                answers: completedAnswers,
-                is_completed: true,
-                correct_count: correctCount,
-                incorrect_count: incorrectCount,
-                time_spent_seconds: duration,
-              });
+              try {
+                await completePracticeSession({ sessionId, questions, answers: completedAnswers,
+                  mode: sessionMode, timeSpentSeconds: duration });
+              } catch (err) {
+                setError(err instanceof Error ? err.message : "Could not save completion.");
+                completionRef.current = false;
+                setSavingCompletion(false);
+                return;
+              }
             }
 
             setCompleted(true);
+            trackLearningEvent("practice_complete", { mode: sessionMode, duration }, sessionId);
+            completionRef.current = false;
+            setSavingCompletion(false);
           }}
         />
       )}
@@ -325,9 +373,15 @@ export default function SessionPageClient({
             if (sessionId) {
               clearLocalSession();
             }
+            void initializeSession({ title: filterLabel, mode: sessionMode,
+              filters: restoredSession?.filters || parsedFilters, questions }).then(next => {
+                setSessionId(next.id);
+              });
+            setError(null);
             setCompleted(false);
             setAnswers({});
             setInitialIndex(0);
+            setRestoredSession(null);
             startTimeRef.current = Date.now();
           }}
         />

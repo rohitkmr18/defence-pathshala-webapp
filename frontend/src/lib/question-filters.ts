@@ -15,6 +15,12 @@ export interface QuestionSetFilters {
   limit?: number;
   mode?: "instant" | "attempt" | "full_paper";
   returnTo?: string;
+  origin?: string;
+  progress?: { checked_ids: string[]; question_times: Record<string, number> };
+}
+
+function parseMode(value: unknown): QuestionSetFilters["mode"] {
+  return value === "instant" || value === "attempt" || value === "full_paper" ? value : undefined;
 }
 
 export const EMPTY_QUESTION_SET_FILTERS: QuestionSetFilters = {
@@ -70,7 +76,7 @@ export function parseFiltersFromSearchParams(
     | { get: (k: string) => string | null }
     | Record<string, string | string[] | undefined>
 ): QuestionSetFilters {
-  if (params instanceof URLSearchParams || (typeof (params as any)?.get === "function")) {
+  if (params instanceof URLSearchParams || ("get" in params && typeof params.get === "function")) {
     const getter = params as { get: (k: string) => string | null };
     return {
       exams: parseListParam(getter.get("exam") || getter.get("exams")),
@@ -82,8 +88,9 @@ export function parseFiltersFromSearchParams(
       difficulties: parseListParam(getter.get("difficulty") || getter.get("difficulties")),
       intelligenceOnly: getter.get("intelligence_only") === "true",
       limit: getter.get("limit") ? parseInt(getter.get("limit")!, 10) : undefined,
-      mode: (getter.get("mode") as any) || undefined,
+      mode: parseMode(getter.get("mode")),
       returnTo: getter.get("returnTo") || undefined,
+      origin: getter.get("origin") || undefined,
     };
   }
 
@@ -98,8 +105,9 @@ export function parseFiltersFromSearchParams(
     difficulties: parseListParam(record.difficulty || record.difficulties),
     intelligenceOnly: record.intelligence_only === "true" || record.intelligenceOnly === "true",
     limit: record.limit ? parseInt(String(record.limit), 10) : undefined,
-    mode: (record.mode as any) || undefined,
+    mode: parseMode(record.mode),
     returnTo: typeof record.returnTo === "string" ? record.returnTo : undefined,
+    origin: typeof record.origin === "string" ? record.origin : undefined,
   };
 }
 
@@ -144,6 +152,7 @@ export function serializeFiltersToSearchParams(
   if (filters.returnTo) {
     params.set("returnTo", filters.returnTo);
   }
+  if (filters.origin) params.set("origin", filters.origin);
 
   return params;
 }
@@ -184,10 +193,7 @@ export function buildPracticeSessionUrl(
  * Canonical URL builder for Explore / Question Bank.
  */
 export function buildExploreUrl(filters: Partial<QuestionSetFilters>): string {
-  const params = new URLSearchParams();
-  if (filters.exams && filters.exams.length > 0) params.set("exam", filters.exams.join(","));
-  if (filters.years && filters.years.length > 0) params.set("year", filters.years.join(","));
-  if (filters.cycles && filters.cycles.length > 0) params.set("cycle", filters.cycles.join(","));
+  const params = serializeFiltersToSearchParams(filters);
   const qs = params.toString();
   return qs ? `/dashboard/question-bank?${qs}` : "/dashboard/question-bank";
 }
