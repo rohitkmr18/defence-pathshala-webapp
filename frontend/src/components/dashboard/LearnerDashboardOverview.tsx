@@ -11,6 +11,8 @@ import {
   Target,
 } from "lucide-react";
 import type { LearnerIntelligence } from "@/lib/learner-intelligence";
+import MockPerformanceHub from "./MockPerformanceHub";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 interface Props {
   firstName: string;
@@ -252,6 +254,17 @@ export default function LearnerDashboardOverview({
             </p>
           </div>
         )}
+      </section>
+
+      <section id="performance-coach" className="mt-10 scroll-mt-20">
+        <SectionHeader
+          eyebrow="DP Performance Coach"
+          title="Mock Test Analytics & Diagnostics"
+          description="Durable full-paper performance trajectory, recurring weak spots, and recovery upside across your saved attempts."
+        />
+        <div className="mt-6">
+          <MockPerformanceHub snapshot={data.performanceCoach} />
+        </div>
       </section>
     </div>
   );
