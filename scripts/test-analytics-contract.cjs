@@ -64,6 +64,7 @@ test("P0 learner-intelligence surfaces emit canonical events", () => {
 
   assert.match(identity, /identifyAnalyticsUser/);
   assert.match(identity, /resetAnalyticsUser/);
+  assert.match(identity, /auth_return_completed/);
   assert.match(onboarding, /onboarding_started/);
   assert.match(onboarding, /onboarding_completed/);
 });
