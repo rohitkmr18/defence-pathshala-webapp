@@ -12,6 +12,7 @@ import {
 
 const emitted = new Set<string>();
 const ANON_KEY = "dp_analytics_anonymous_id";
+let currentUserId: string | undefined;
 
 function analyticsEnvironment(): string {
   return (
@@ -50,7 +51,10 @@ function commonContext(): ProductEventProperties {
   if (typeof window === "undefined") return {};
   return {
     event_version: PRODUCT_EVENT_VERSION,
+    timestamp: new Date().toISOString(),
     anonymous_id: getAnonymousId(),
+    user_id: currentUserId,
+    auth_state: currentUserId ? "authenticated" : "anonymous",
     route: window.location.pathname,
     deployment_environment: analyticsEnvironment(),
     git_sha: process.env.NEXT_PUBLIC_DP_GIT_SHA,
@@ -96,10 +100,13 @@ export function trackProductEventUnsafe(
 }
 
 export function identifyAnalyticsUser(userId: string): void {
-  if (!userId) return;
-  identifyPostHog(userId);
+  if (!userId || typeof window === "undefined") return;
+  const anonymousId = getAnonymousId();
+  currentUserId = userId;
+  identifyPostHog(userId, anonymousId);
 }
 
 export function resetAnalyticsUser(): void {
+  currentUserId = undefined;
   resetPostHog();
 }
