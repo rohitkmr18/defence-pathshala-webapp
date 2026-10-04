@@ -120,8 +120,8 @@ function feedbackPlayer(initial = {}) {
   });
   const Player = load('frontend/src/components/practice/player/QuestionPlayer.tsx').default;
   const props = { sessionId: 'resume', mode: 'instant', questions: [
-    { id: 'q2', final_opt: 'B', explanation: 'Explanation for q2' },
-    { id: 'q1', final_opt: 'A', explanation: 'Explanation for q1' },
+    { id: 'q2', final_opt: 'B', explanation: 'Explanation for q2', intelligence_eligible: true, student_release_status: 'RELEASED', intelligence_confidence: 'MODEL_DERIVED', topic: 'Topic 2', subject: 'Subject' },
+    { id: 'q1', final_opt: 'A', explanation: 'Explanation for q1', intelligence_eligible: true, student_release_status: 'RELEASED', intelligence_confidence: 'MODEL_DERIVED', topic: 'Topic 1', subject: 'Subject' },
   ], ...initial };
   return {
     render() { h.begin(); return Player(props); },
@@ -147,6 +147,30 @@ test('feedback is absent for fresh/selected unchecked questions, appears on Chec
   next.props.onClick(); tree = player.render();
   assert.equal(elements(tree, n => n.type === 'question')[0].props.question.id, 'q1');
   assert.equal(player.feedback(tree), null);
+});
+
+test('withheld intelligence never exposes Exam Edge, PYQ Intelligence, model-ready labels or concept metadata', () => {
+  const Reveal = createLoader({ react: { useState: initial => [initial, () => {}] }, 'next/link': 'a',
+    '@/components/common/MathText': 'math-text', '@/lib/learning-events': { trackLearningEvent() {} } })('frontend/src/components/practice/player/AnswerReveal.tsx').default;
+  const tree = Reveal({
+    visible: true,
+    selectedOption: 'A',
+    timeSpentSeconds: 30,
+    question: {
+      id: 'withheld', final_opt: 'A', explanation: 'Safe explanation',
+      exam: 'CDS', year: 2025, subject: 'Polity', topic: 'Parliament',
+      concept: 'Money Bill', q_pattern: 'Single MCQ',
+      intelligence_eligible: false, student_release_status: 'WITHHELD',
+      intelligence_trust_tier: 'NOT_ELIGIBLE',
+    },
+  });
+  const rendered = JSON.stringify(tree);
+  assert.match(rendered, /Safe explanation/);
+  assert.match(rendered, /Attempt Intelligence/);
+  assert.doesNotMatch(rendered, /Exam Edge/);
+  assert.doesNotMatch(rendered, /PYQ Intelligence/);
+  assert.doesNotMatch(rendered, /Money Bill/);
+  assert.doesNotMatch(rendered, /Model derived/);
 });
 
 test('resume mounts feedback only for the current checked question ID, independently of selected answers', () => {

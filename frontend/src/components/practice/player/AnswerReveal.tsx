@@ -55,7 +55,11 @@ function DifficultyPill({ category }: { category?: string | null }) {
 function ProvenanceBadge({ question }: { question: PracticeQuestion }) {
   const tier =
     question.intelligence_trust_tier ||
-    (question.intelligence_verified ? "HUMAN_VERIFIED" : "MODEL_READY");
+    (question.intelligence_verified || question.verified_status === "Verified"
+      ? "HUMAN_VERIFIED"
+      : question.intelligence_confidence === "MODEL_DERIVED"
+      ? "MODEL_READY"
+      : null);
 
   if (tier === "HUMAN_VERIFIED") {
     return (
@@ -79,7 +83,7 @@ function ProvenanceBadge({ question }: { question: PracticeQuestion }) {
     return (
       <span className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-slate-100 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-600">
         <Sparkles className="h-3 w-3" />
-        Model ready
+        Model derived
       </span>
     );
   }
@@ -132,8 +136,8 @@ export default function AnswerReveal({
   const correctKey = getCorrectKey(question);
   const isCorrect = selectedOption !== null && selectedOption === correctKey;
   const canShowIntelligence =
-    question.intelligence_eligible !== false &&
-    question.student_release_status !== "WITHHELD";
+    question.intelligence_eligible === true &&
+    question.student_release_status === "RELEASED";
 
   const attempt =
     typeof timeSpentSeconds === "number" && timeSpentSeconds > 0
@@ -292,7 +296,7 @@ export default function AnswerReveal({
                 </span>
               </>
             )}
-            {question.concept && (
+            {canShowIntelligence && question.concept && (
               <>
                 <span className="font-bold text-slate-300">›</span>
                 <span className="rounded-lg border border-blue-200/70 bg-blue-50 px-2.5 py-1 font-bold text-blue-700 shadow-2xs">
