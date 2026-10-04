@@ -1,4 +1,4 @@
-import { buildPracticeUrl } from "./question-filters";
+import { buildPracticeUrl, serializeFiltersToSearchParams } from "./question-filters";
 import { getScoringRules } from "./examScoring";
 
 export type LearnerState = "new" | "early" | "established";
@@ -196,7 +196,7 @@ export function deriveLearnerIntelligence(input: {
         totalQuestions: active.total_questions,
         updatedAt: active.updated_at,
         resumeHref:
-          `/dashboard/practice/session?resume=true&session_id=${encodeURIComponent(active.id)}&returnTo=%2Fdashboard&origin=dashboard`,
+          `/dashboard/practice/session?resume=true&session_id=${encodeURIComponent(active.id)}&${serializeFiltersToSearchParams({ ...active.filters, returnTo: "/dashboard", origin: "dashboard_resume" })}`,
       }
     : null;
 

@@ -17,6 +17,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { fullPaperDestination } from "@/lib/full-paper-intent";
 import { safeLearningReturn } from "@/lib/learning-navigation";
+import { learningContext } from "@/lib/analytics/context";
 import { trackProductEvent } from "@/lib/analytics/track";
 
 import FullPaperHero, { FullPaperDefinition } from "@/components/practice/FullPaperHero";
@@ -260,7 +261,9 @@ export default function PracticePageClient() {
         returnTo: returnTo || undefined,
       }
     );
-    trackProductEvent("practice_cta_clicked", { mode: sessionStyle, source_surface: searchParams.get("origin") || "direct_practice" });
+    trackProductEvent("practice_cta_clicked", learningContext(parseFiltersFromSearchParams(
+      new URL(sessionUrl, "https://learning.invalid").searchParams
+    )));
     router.push(sessionUrl);
   }
 

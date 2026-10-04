@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { MISTAKE_RESOLVED_EVENT } from "@/lib/practice-session-client";
 import { createClient } from "@/lib/supabase/client";
 import {
   identifyAnalyticsUser,
@@ -10,6 +11,11 @@ import {
 
 export default function AnalyticsIdentity() {
   useEffect(() => {
+    const resolved = (event: Event) => {
+      const properties = (event as CustomEvent).detail;
+      if (properties?.attempt_id) trackProductEvent("mistake_resolved", properties, properties.attempt_id);
+    };
+    if (typeof window !== "undefined") window.addEventListener?.(MISTAKE_RESOLVED_EVENT, resolved);
     const supabase = createClient();
     let active = true;
     let authChanged = false;
@@ -55,6 +61,7 @@ export default function AnalyticsIdentity() {
     return () => {
       active = false;
       subscription.unsubscribe();
+      if (typeof window !== "undefined") window.removeEventListener?.(MISTAKE_RESOLVED_EVENT, resolved);
     };
   }, []);
 

@@ -13,6 +13,7 @@ import {
 import type { LearnerIntelligence } from "@/lib/learner-intelligence";
 import MockPerformanceHub from "./MockPerformanceHub";
 import SectionHeader from "@/components/ui/SectionHeader";
+import { recommendationContext, recommendationDestination } from "@/lib/analytics/context";
 import { trackProductEvent } from "@/lib/analytics/track";
 
 interface Props {
@@ -144,12 +145,9 @@ export default function LearnerDashboardOverview({
 
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <Link
-              href={data.nextBestMove.href}
+              href={recommendationDestination(data.nextBestMove.href)}
               onClick={() =>
-                trackProductEvent("next_best_action_clicked", {
-                  source_surface: "dashboard_next_best_move",
-                  recommendation_type: data.nextBestMove.type,
-                })
+                trackProductEvent("next_best_action_clicked", recommendationContext(data.nextBestMove))
               }
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-blue-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-blue-950/30 transition hover:bg-blue-400"
             >

@@ -253,18 +253,21 @@ function apiFixture() {
   const tables = { practice_sessions: new Map(), user_attempts: new Map(), v_dp_question_intelligence_v2: new Map([['q1', { id: 'q1', final_opt: 'B' }]]) };
   const identity = { id: 'learner' };
   const client = { from(table) {
-    const conditions = []; let payload; let writeOptions = {}; let updating = false;
+    const conditions = []; let payload; let writeOptions = {}; let updating = false; let history = false;
     const query = {
       select() { return query; }, eq(key, value) { conditions.push([key, value]); return query; },
       upsert(value, options) { payload = value; writeOptions = options; return query; },
       update(value) { payload = value; updating = true; return query; },
       then(resolve, reject) { return execute().then(resolve, reject); },
+      order() { history = true; return query; }, limit() { return query; },
       single: execute, maybeSingle: execute,
     };
     async function execute() {
       const rows = tables[table];
       if (payload && !updating && !(writeOptions.ignoreDuplicates && rows.has(payload.id))) rows.set(payload.id, { ...rows.get(payload.id), ...payload });
-      let row = [...rows.values()].find(r => conditions.every(([k, v]) => r[k] === v));
+      const matching = [...rows.values()].filter(r => conditions.every(([k, v]) => r[k] === v));
+      if (history) return { data: matching.reverse().slice(0, 2), error: null };
+      let row = matching[0];
       if (updating && row) { row = { ...row, ...payload }; rows.set(row.id, row); }
       return { data: row || null, error: null };
     }

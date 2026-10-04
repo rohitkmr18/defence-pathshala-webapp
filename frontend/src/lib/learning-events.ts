@@ -1,3 +1,4 @@
+import type { ProductEventProperties } from "@/lib/analytics/events";
 import { trackProductEventUnsafe } from "@/lib/analytics/track";
 
 /**
@@ -9,7 +10,7 @@ import { trackProductEventUnsafe } from "@/lib/analytics/track";
  */
 export function trackLearningEvent(
   name: string,
-  context: Record<string, string | number | boolean | undefined> = {},
+  context: ProductEventProperties = {},
   once?: string
 ): void {
   trackProductEventUnsafe(name, context, once);

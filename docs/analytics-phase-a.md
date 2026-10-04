@@ -74,3 +74,46 @@ boundary. Inspect the recording for masked email/OTP/password/profile content
 and absent credentials/network payloads. Verify GA4 still receives the same
 canonical events. Do not fabricate events or dashboards; create the four planned
 dashboards only after actual Preview events exist.
+
+## Repair after failed live acceptance at 83cb67d
+
+Live acceptance of that commit failed. The repository repairs below require a
+fresh targeted Preview retest; these engineering checks do not establish live
+acceptance PASS.
+
+- New sessions propose a UUID to the existing session API. The confirmed row ID
+  replaces browser identity before the authenticated player/lifecycle events
+  mount. Local-only guest/offline events use `local_session_id`, never a device
+  identifier in `practice_session_id`. Existing durable snapshots normalize to
+  their `server_id`.
+- Guest checks remain pending. Authentication restores the preserved questions,
+  creates an owned row through the existing API and replays checked answers with
+  server scoring. Legacy guest snapshots marked saved are also reconciled.
+- `practice_started` describes entry into a newly created durable session.
+  `practice_resumed` requires an existing session with prior progress and uses
+  a stable entry transition key across effect reruns. Addressable URL updates
+  do not re-enter the player. Zero-progress restoration does not imply resume.
+- Explore exposure uses one key per page entry; filter changes have separate
+  selection events. New visits get a new exposure key.
+- Shared context reads selected filters or actual session state, including entry
+  origin and question IDs. NBA navigation and click attribution use the same
+  recommendation target URL; resume links retain saved filters.
+- `mistake_resolved` requires confirmed durable persistence, server-scored
+  correctness and the latest prior durable attempt being incorrect. The response
+  includes bounded canonical question/session context and the durable attempt ID
+  used for event deduplication. Idempotent attempt retries preserve the original
+  attempt rather than overwriting its timestamp. Later correct attempts do not
+  resolve again unless a new incorrect attempt intervenes.
+
+`scripts/test-analytics-acceptance.cjs` exercises real session/attempt API and
+client code with isolated in-memory Supabase responses. It covers durable
+lineage, guest claim and reload, lifecycle separation, repeated effect replay,
+Explore selections/CTA context, NBA target attribution and verified resolution.
+GitHub CI runs it alongside all existing learning, auth, onboarding, migration
+and backend regressions and the production build.
+
+Targeted live retest: Explore exposure and filter context → Practice start and
+Supabase UUID reconciliation → guest/auth continuation and saved attempt →
+interrupted Resume once → Next question lineage → NBA attribution → incorrect
+to correct mistake resolution. Query PostHog by the new Preview SHA/environment.
+GA4 and replay remain separate evidence checks; no project settings are changed.

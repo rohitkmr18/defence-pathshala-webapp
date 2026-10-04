@@ -33,6 +33,7 @@ export interface ActivePracticeSession {
 
 const LOCAL_ACTIVE_SESSION_KEY = "dp_active_practice_session_v1";
 const LOCAL_SESSION_PREFIX = "dp_practice_session_v1:";
+export const MISTAKE_RESOLVED_EVENT = "dp_mistake_resolved";
 export const PRACTICE_SESSION_UPDATED_EVENT = "dp_practice_session_updated";
 const progressWrites = new Map<string, Promise<void>>();
 const creations = new Map<string, Promise<string | null>>();
@@ -58,7 +59,7 @@ async function resolveCloudId(id?: string): Promise<string | null> {
   const pending = creations.get(id);
   if (pending) return pending;
   const latest = getLocalSession();
-  if (latest?.id === id) {
+  if (latest && (latest.id === id || latest.creation_id === id)) {
     if (latest.server_id) return latest.server_id;
     if (latest.cloud_status === "local") return null;
   }
@@ -78,8 +79,7 @@ export async function initializeSession(params: {
   questions: PracticeQuestion[];
 }): Promise<ActivePracticeSession> {
   const session: ActivePracticeSession = {
-    id: `sess_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
-    creation_id: crypto.randomUUID(),
+    id: crypto.randomUUID(),
     checked_ids: [],
     question_times: {},
     saved_attempts: {},
@@ -98,6 +98,7 @@ export async function initializeSession(params: {
     updated_at: new Date().toISOString(),
   };
 
+  session.creation_id = session.id;
   saveLocalSession(session);
 
   startCloudCreation(session);
@@ -122,8 +123,17 @@ function startCloudCreation(session: ActivePracticeSession): Promise<string | nu
     }
     const latest = getLocalSession();
     if (latest?.id === session.id) {
-      saveLocalSession({ ...latest, server_id: data.session.id });
-      updateSessionProgress(latest.id, {
+      // The returned row identity replaces any legacy device-only identity.
+      const canonical = { ...latest, id: data.session.id, server_id: data.session.id };
+      saveLocalSession(canonical);
+      const pendingCreation = creations.get(session.id);
+      if (pendingCreation) creations.set(canonical.id, pendingCreation);
+      // Attempts already waiting on creation share the promoted identity too.
+      for (const [key, write] of inFlightAttempts) {
+        if (key.startsWith(`${latest.id}:`)) inFlightAttempts.set(`${canonical.id}:${key.slice(latest.id.length + 1)}`, write);
+      }
+      Object.assign(session, canonical);
+      updateSessionProgress(canonical.id, {
         current_index: latest.current_index, answers: latest.answers,
         is_completed: latest.is_completed, correct_count: latest.correct_count,
         incorrect_count: latest.incorrect_count, time_spent_seconds: latest.time_spent_seconds,
@@ -141,6 +151,38 @@ function startCloudCreation(session: ActivePracticeSession): Promise<string | nu
   }
 
   return creation;
+}
+
+/** Wait for the initial response before mounting a player or emitting lifecycle events. */
+export async function settledPracticeSession(session: ActivePracticeSession): Promise<ActivePracticeSession> {
+  try { await creations.get(session.id); } catch { /* Keep offline progress and visible retry status. */ }
+  return latestSessionSnapshot(session);
+}
+
+/** Convert preserved guest state into an authenticated row using the same creation UUID. */
+export async function claimPracticeSession(
+  session: ActivePracticeSession,
+  questions: PracticeQuestion[]
+): Promise<ActivePracticeSession> {
+  if (session.cloud_status !== "local") return session;
+  const creationId = session.creation_id || crypto.randomUUID();
+  const pending = { ...session.pending_attempts };
+  // Older guest snapshots incorrectly marked checks as saved. Reconcile only checked answers.
+  for (const id of session.checked_ids || []) {
+    const selectedOption = session.answers[id];
+    if (selectedOption) pending[id] = { selectedOption, timeTakenSeconds: session.question_times?.[id] };
+  }
+  const claiming = { ...session, creation_id: creationId, saved_attempts: {}, pending_attempts: pending,
+    cloud_status: "saving" as const };
+  saveLocalSession(claiming);
+  // Guest creation promises resolve to null; they cannot remain authoritative after login.
+  creations.delete(session.id);
+  const cloudId = await startCloudCreation(claiming);
+  if (!cloudId) throw new Error("Sign in again to save your practice session.");
+  const canonical = getLocalSession();
+  if (!canonical || canonical.id !== cloudId) throw new Error("The active session changed.");
+  await retryPracticePersistence(questions);
+  return getLocalSession()!;
 }
 
 /**
@@ -161,7 +203,10 @@ export function recordQuestionAttempt(params: {
   if (local && local.id === params.sessionId && local.saved_attempts?.[params.question.id] === params.selectedOption) return Promise.resolve();
   const write = persistQuestionAttempt(params);
   inFlightAttempts.set(key, write);
-  void write.then(() => inFlightAttempts.delete(key), () => inFlightAttempts.delete(key));
+  const release = () => {
+    for (const [attemptKey, pendingWrite] of inFlightAttempts) if (pendingWrite === write) inFlightAttempts.delete(attemptKey);
+  };
+  void write.then(release, release);
   return write;
 }
 
@@ -196,7 +241,7 @@ async function persistQuestionAttempt(params: Parameters<typeof recordQuestionAt
         mode: params.mode || "instant" }),
     }) : null;
     if (!response) {
-      acknowledgeAttempt(params);
+      // Guest checks remain pending until authenticated durable persistence.
       return;
     }
     if (!response.ok) throw new Error("Attempt persistence failed");
@@ -204,7 +249,11 @@ async function persistQuestionAttempt(params: Parameters<typeof recordQuestionAt
     if (cloudId && result.guest) throw new Error("Sign in again to save your attempt.");
     if (!result.guest && result.persisted !== true) throw new Error("Attempt save was not confirmed");
     if (params.sessionId) failedAttempts.get(params.sessionId)?.delete(params.question.id);
-    acknowledgeAttempt(params);
+    if (!result.guest) acknowledgeAttempt(params);
+    if (result.persisted === true && result.resolution?.attempt_id && typeof window !== "undefined") {
+      // Only a server-verified durable transition reaches the analytics bridge.
+      window.dispatchEvent(new CustomEvent(MISTAKE_RESOLVED_EVENT, { detail: result.resolution }));
+    }
   } catch (error) {
     if (params.sessionId) {
       const pending = failedAttempts.get(params.sessionId) || new Map();
@@ -218,7 +267,7 @@ async function persistQuestionAttempt(params: Parameters<typeof recordQuestionAt
 
 function acknowledgeAttempt(params: Parameters<typeof recordQuestionAttempt>[0]) {
   const latest = getLocalSession();
-  if (latest?.id !== params.sessionId || !latest) return;
+  if (!latest || (latest.id !== params.sessionId && latest.creation_id !== params.sessionId)) return;
   const pending = { ...latest.pending_attempts };
   if (pending[params.question.id]?.selectedOption === params.selectedOption) delete pending[params.question.id];
   saveLocalSession({ ...latest, pending_attempts: pending,
@@ -257,7 +306,7 @@ export function updateSessionProgress(
     saveLocalSession(updated);
 
     // Wait for background creation before using a local-only ID on the server.
-    if (current.cloud_status === "local" || (!current.server_id && sessionId.startsWith("sess_"))) return;
+    if (current.cloud_status === "local" || (!current.server_id && Boolean(current.creation_id))) return;
     const serverId = current.server_id || sessionId;
     const payload = {
       session_id: serverId,
@@ -308,12 +357,13 @@ export function updateSessionProgress(
 export async function retryPracticePersistence(questions: PracticeQuestion[] = []): Promise<void> {
   let session = getLocalSession();
   if (!session) return;
-  if (!session.server_id && session.id.startsWith("sess_") && session.cloud_status !== "local") {
+  if (!session.server_id && session.creation_id && session.cloud_status !== "local") {
     session = { ...session, creation_id: session.creation_id || crypto.randomUUID() };
     saveLocalSession(session);
     const pending = creations.get(session.id);
     try { await pending; } catch { creations.delete(session.id); }
     if (!getLocalSession()?.server_id) await startCloudCreation(session);
+    session = getLocalSession() || session;
   }
   for (const [questionId, attempt] of Object.entries(getLocalSession()?.pending_attempts || {})) {
     const question = questions.find(q => q.id === questionId);
@@ -403,7 +453,7 @@ export async function loadResumeSession(sessionId?: string): Promise<ActivePract
       if (archived) session = JSON.parse(archived) as ActivePracticeSession;
     } catch { /* Continue with the cloud lookup when no device snapshot is available. */ }
   }
-  const cloudId = session?.server_id || (session?.id && /^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(session.id) ? session.id : null);
+  const cloudId = session?.server_id || (session?.id && !session.creation_id && session.cloud_status !== "local" && /^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(session.id) ? session.id : null);
   if (session && cloudId && (!sessionId || session.id === sessionId || cloudId === sessionId)) {
     const response = await fetch(`/api/practice/session?session_id=${encodeURIComponent(cloudId)}`, { cache: "no-store" });
     if (!response.ok || !(await response.json()).activeSession) throw new Error("Saved session unavailable for this account.");
@@ -418,7 +468,7 @@ export async function loadResumeSession(sessionId?: string): Promise<ActivePract
     throw new Error("This saved session is no longer available. Return to Practice to start a new session.");
   }
   session = latestSessionSnapshot(session);
-  return { ...session,
+  return { ...session, id: session.server_id || session.id,
     checked_ids: session.checked_ids ?? session.filters?.progress?.checked_ids ?? [],
     question_times: session.question_times ?? session.filters?.progress?.question_times ?? {},
   };

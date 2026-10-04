@@ -7,6 +7,7 @@ import AnswerReveal from "@/components/practice/player/AnswerReveal";
 import QuestionCard from "@/components/practice/player/QuestionCard";
 import type { LearnerIntelligence, LearnerMistake } from "@/lib/learner-intelligence";
 import type { PracticeQuestion, OptionKey } from "@/lib/practice-types";
+import { practiceDestination } from "@/lib/analytics/context";
 import { trackProductEvent } from "@/lib/analytics/track";
 
 export default function MistakeReviewPage({
@@ -157,7 +158,7 @@ export default function MistakeReviewPage({
                 </p>
               </div>
               <Link
-                href={mistake.practiceHref}
+                href={practiceDestination(mistake.practiceHref, "check_answer_related_practice")}
                 onClick={() =>
                   trackProductEvent("related_practice_started", {
                     source_surface: "check_answer_related_practice",
