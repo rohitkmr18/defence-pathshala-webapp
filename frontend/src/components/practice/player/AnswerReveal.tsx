@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import {
-  ArrowRight,
   BookCheck,
   BrainCircuit,
   CheckCircle2,
@@ -19,8 +17,6 @@ import {
 import type { PracticeQuestion, OptionKey } from "@/lib/practice-types";
 import { getCorrectKey } from "@/lib/practice-types";
 import { classifyAttempt } from "@/lib/attempt-intelligence";
-import { buildExploreUrl, buildPracticeUrl } from "@/lib/question-filters";
-import { trackLearningEvent } from "@/lib/learning-events";
 import MathText from "@/components/common/MathText";
 
 interface AnswerRevealProps {
@@ -110,30 +106,6 @@ export default function AnswerReveal({
     typeof timeSpentSeconds === "number" && timeSpentSeconds > 0
       ? classifyAttempt(isCorrect, timeSpentSeconds, question.difficulty_category)
       : null;
-
-  const practiceTopicUrl = buildPracticeUrl({
-    exams: question.exam ? [question.exam] : [],
-    years: [],
-    cycles: [],
-    subjects: question.subject ? [question.subject] : [],
-    topics: question.topic ? [question.topic] : [],
-    subtopics: [],
-    difficulties: [],
-    limit: 5,
-    mode: "instant",
-    origin: "check_answer",
-  });
-
-  const exploreTopicUrl = buildExploreUrl({
-    exams: question.exam ? [question.exam] : [],
-    years: [],
-    cycles: [],
-    subjects: question.subject ? [question.subject] : [],
-    topics: question.topic ? [question.topic] : [],
-    subtopics: [],
-    difficulties: [],
-    origin: "check_answer",
-  });
 
   return (
     <div className="overflow-hidden" aria-live="polite" aria-atomic="true">
@@ -337,48 +309,6 @@ export default function AnswerReveal({
           </section>
         )}
 
-        <section className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
-          <div className="flex items-center gap-2">
-            <Target className="h-4 w-4 text-slate-700" />
-            <h3 className="text-xs font-black uppercase tracking-wider text-slate-700">
-              What to do next
-            </h3>
-          </div>
-          <p className="mt-2 text-xs leading-relaxed text-slate-500">
-            Continue with the next question below, or branch into focused practice if this concept needs reinforcement.
-          </p>
-          <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-            <Link
-              href={practiceTopicUrl}
-              onClick={() =>
-                trackLearningEvent("check_answer_topic_practice", {
-                  question_id: question.id,
-                  exam: question.exam,
-                  subject: question.subject,
-                  topic: question.topic,
-                })
-              }
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold text-white transition hover:bg-blue-500"
-            >
-              Practice 5 from this topic
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-            <Link
-              href={exploreTopicUrl}
-              onClick={() =>
-                trackLearningEvent("check_answer_explore_topic", {
-                  question_id: question.id,
-                  exam: question.exam,
-                  subject: question.subject,
-                  topic: question.topic,
-                })
-              }
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold text-slate-700 transition hover:bg-slate-50"
-            >
-              Explore this topic
-            </Link>
-          </div>
-        </section>
       </div>
     </div>
   );
