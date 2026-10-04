@@ -1,20 +1,16 @@
-type AnalyticsWindow = Window & { dataLayer?: unknown[] };
-const emitted = new Set<string>();
+import { trackProductEventUnsafe } from "@/lib/analytics/track";
 
-/** Use the GoogleAnalytics dataLayer already installed in the root layout. */
-export function trackLearningEvent(name: string, context: Record<string, string | number | boolean | undefined> = {}, once?: string): void {
-  if (typeof window === "undefined") return;
-  const key = once ? `${name}:${once}` : undefined;
-  if (key) {
-    if (emitted.has(key)) return;
-    try {
-      if (sessionStorage.getItem(`dp_event:${key}`)) return;
-      sessionStorage.setItem(`dp_event:${key}`, "1");
-    } catch { /* In-memory deduplication remains available. */ }
-    emitted.add(key);
-  }
-  const analytics = window as AnalyticsWindow;
-  analytics.dataLayer ??= [];
-  // Same argument shape as @next/third-parties sendGAEvent.
-  analytics.dataLayer.push(["event", name, context]);
+/**
+ * Backward-compatible bridge for existing learning telemetry.
+ *
+ * New instrumentation should use trackProductEvent() with the canonical v1
+ * event taxonomy. Existing names continue to flow to both configured providers
+ * until their call sites are migrated deliberately.
+ */
+export function trackLearningEvent(
+  name: string,
+  context: Record<string, string | number | boolean | undefined> = {},
+  once?: string
+): void {
+  trackProductEventUnsafe(name, context, once);
 }
