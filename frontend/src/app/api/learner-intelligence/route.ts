@@ -69,7 +69,7 @@ async function getCorpus(supabase: SupabaseClient): Promise<LearnerQuestionMeta[
     supabase
       .from("v_dp_question_intelligence_v2")
       .select(
-        "id,question_id,exam,question,final_opt,subject,topic,taxonomy_subject,taxonomy_topic,taxonomy_concept,production_eligible,intelligence_eligible,student_release_status"
+        "id,question_id,exam,question,final_opt,subject,topic,difficulty_category,taxonomy_subject,taxonomy_topic,taxonomy_concept,production_eligible,intelligence_eligible,student_release_status"
       )
       .eq("production_eligible", true)
       .range(from, to)
