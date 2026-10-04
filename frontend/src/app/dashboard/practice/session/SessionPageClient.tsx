@@ -266,7 +266,7 @@ export default function SessionPageClient({
                   router.replace(`${cleanUrl.pathname}${cleanUrl.search}`, { scroll: false });
                 }
               } else {
-                trackProductEvent("practice_resumed", { mode: saved.mode, position: saved.current_index, source_surface: origin }, `${saved.id}:${saved.updated_at}`);
+                trackProductEvent("practice_resumed", { mode: saved.mode, position: saved.current_index, source_surface: origin, practice_session_id: saved.id }, `${saved.id}:${saved.updated_at}`);
               }
             } else {
               // Initialize a fresh session

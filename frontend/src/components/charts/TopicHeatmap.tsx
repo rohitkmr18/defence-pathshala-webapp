@@ -190,10 +190,12 @@ export default function TopicHeatmap({
   };
 
   const handleSelectSubject = (subjectName: string) => {
-    trackLearningEvent("subject_selected", {
-      source_surface: "explore",
-      subject: subjectName,
-    });
+    if (!onSelectSubject) {
+      trackLearningEvent("subject_selected", {
+        source_surface: "explore",
+        subject: subjectName,
+      });
+    }
     if (onSelectSubject) {
       onSelectSubject(subjectName);
     } else {

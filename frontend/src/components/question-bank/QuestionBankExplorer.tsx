@@ -583,7 +583,7 @@ export default function QuestionBankExplorer({ meta }: Props) {
               </p>
             </div>
             <Link
-              onClick={() => trackLearningEvent("explore_practice", { origin: "explore" })}
+              onClick={() => trackLearningEvent("practice_cta_clicked", { source_surface: "explore" })}
               href={buildPracticeUrl(
                 {
                   ...context,

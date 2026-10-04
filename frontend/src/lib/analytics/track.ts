@@ -10,33 +10,12 @@ import {
   resetPostHog,
 } from "./providers/posthog";
 
+import { releaseContext } from "./environment";
+import { getAnonymousId, rotateAnonymousId } from "./identity";
+import { safeEventProperties } from "./privacy";
+
 const emitted = new Set<string>();
-const ANON_KEY = "dp_analytics_anonymous_id";
 let currentUserId: string | undefined;
-
-function analyticsEnvironment(): string {
-  return (
-    process.env.NEXT_PUBLIC_DP_DEPLOYMENT_ENV ||
-    (typeof window !== "undefined" && window.location.hostname.endsWith(".vercel.app")
-      ? "preview"
-      : process.env.NODE_ENV || "unknown")
-  );
-}
-
-function getAnonymousId(): string | undefined {
-  if (typeof window === "undefined") return undefined;
-  try {
-    const existing = window.localStorage.getItem(ANON_KEY);
-    if (existing) return existing;
-    const generated =
-      globalThis.crypto?.randomUUID?.() ||
-      `dp_${Date.now()}_${Math.random().toString(36).slice(2)}`;
-    window.localStorage.setItem(ANON_KEY, generated);
-    return generated;
-  } catch {
-    return undefined;
-  }
-}
 
 function viewportBucket(): string | undefined {
   if (typeof window === "undefined") return undefined;
@@ -56,8 +35,12 @@ function commonContext(): ProductEventProperties {
     user_id: currentUserId,
     auth_state: currentUserId ? "authenticated" : "anonymous",
     route: window.location.pathname,
-    deployment_environment: analyticsEnvironment(),
-    git_sha: process.env.NEXT_PUBLIC_DP_GIT_SHA,
+    source_surface: window.location.pathname.startsWith("/dashboard/practice") ? "direct_practice"
+      : window.location.pathname.startsWith("/dashboard/question-bank") ? "explore"
+      : window.location.pathname.startsWith("/dashboard/mistakes") ? "mistakes"
+      : window.location.pathname.startsWith("/auth/") ? "auth"
+      : window.location.pathname.startsWith("/onboarding") ? "onboarding" : "dashboard",
+    ...releaseContext(),
     device_category: window.innerWidth < 640 ? "mobile" : "desktop",
     viewport_bucket: viewportBucket(),
   };
@@ -80,6 +63,18 @@ export function trackProductEventUnsafe(
   properties: ProductEventProperties = {},
   once?: string
 ): void {
+  try {
+    dispatchProductEvent(name, properties, once);
+  } catch {
+    // Context/storage failures must also never interrupt a learner action.
+  }
+}
+
+function dispatchProductEvent(
+  name: string,
+  properties: ProductEventProperties,
+  once?: string
+): void {
   if (typeof window === "undefined") return;
 
   const key = once ? `${name}:${once}` : undefined;
@@ -94,19 +89,38 @@ export function trackProductEventUnsafe(
     emitted.add(key);
   }
 
-  const event = { ...commonContext(), ...properties };
-  captureGa4(name, event);
-  capturePostHog(name, event);
+  const event = {
+    ...commonContext(),
+    ...safeEventProperties(properties),
+    practice_mode: properties.practice_mode || properties.mode,
+    // Call sites cannot override the release or identity contract.
+    ...releaseContext(),
+    event_version: PRODUCT_EVENT_VERSION,
+    anonymous_id: getAnonymousId(),
+    user_id: currentUserId,
+    auth_state: currentUserId ? "authenticated" : "anonymous",
+  };
+  try { captureGa4(name, event); } catch { /* Provider failures are isolated. */ }
+  try { capturePostHog(name, event); } catch { /* Provider failures are isolated. */ }
 }
 
 export function identifyAnalyticsUser(userId: string): void {
   if (!userId || typeof window === "undefined") return;
-  const anonymousId = getAnonymousId();
+  if (currentUserId === userId) return;
+  if (currentUserId) resetAnalyticsUser(true);
   currentUserId = userId;
-  identifyPostHog(userId, anonymousId);
+  identifyPostHog(userId);
 }
 
-export function resetAnalyticsUser(): void {
+export function resetAnalyticsUser(signedOut = false): void {
+  if (!currentUserId && !signedOut) return;
   currentUserId = undefined;
-  resetPostHog();
+  emitted.clear();
+  try {
+    for (let i = sessionStorage.length - 1; i >= 0; i--) {
+      const key = sessionStorage.key(i);
+      if (key?.startsWith("dp_event:")) sessionStorage.removeItem(key);
+    }
+  } catch { /* In-memory deduplication is already cleared. */ }
+  resetPostHog(rotateAnonymousId());
 }
