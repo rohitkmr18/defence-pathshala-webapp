@@ -23,7 +23,7 @@ work, authentication changes, corpus changes or schema changes.
 ## Validation
 
 - `npm run verify`: production frontend build and backend import.
-- Frontend/auth/continuity regression suites: 83 passing tests.
+- Frontend/auth/continuity regression suites: 84 passing tests.
 - Onboarding database and migration ledger suites: 12 passing tests.
 - Backend `python -m pytest -q tests`: 25 passing tests.
 - TypeScript and `git diff --check`: pass.

@@ -103,9 +103,11 @@ function UserMenu({ user }: { user: SupabaseUser }) {
 function subscribeHashChange(onChange: () => void) {
   window.addEventListener("hashchange", onChange);
   window.addEventListener("popstate", onChange);
+  window.addEventListener("dp:learning-location-change", onChange);
   return () => {
     window.removeEventListener("hashchange", onChange);
     window.removeEventListener("popstate", onChange);
+    window.removeEventListener("dp:learning-location-change", onChange);
   };
 }
 const getHash = () => window.location.hash;
@@ -122,6 +124,11 @@ function DashboardShellContent({
   const [authLoading, setAuthLoading] = useState(true);
   const pathname = usePathname();
   const hash = useSyncExternalStore(subscribeHashChange, getHash, getServerHash);
+  useEffect(() => {
+    // Next commits cross-page anchor URLs after rendering the new pathname.
+    // Refresh the hash snapshot after that commit as well as native hash changes.
+    window.dispatchEvent(new Event("dp:learning-location-change"));
+  }, [pathname]);
   const searchParams = useSearchParams();
   const loginHref = authUrl("/auth/login", `${pathname}${searchParams.size ? `?${searchParams}` : ""}`);
 

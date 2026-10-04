@@ -67,6 +67,37 @@ test('mobile navigation has exactly Explore, Practice, Progress and distinct rou
   assert.equal(location.hash, 'performance-coach');
 });
 
+test('shell refreshes the Progress hash after a cross-page Next history commit and on back', () => {
+  const listeners = new Map(); const effects = []; const observed = [];
+  const location = { hash: '' };
+  const window = { location, addEventListener(name, fn) { listeners.set(name, fn); },
+    removeEventListener(name) { listeners.delete(name); },
+    dispatchEvent(event) { listeners.get(event.type)?.(); }, setTimeout: () => 1, clearTimeout() {} };
+  const react = { Suspense: 'suspense', useState: initial => [initial, () => {}],
+    useEffect: effect => effects.push(effect),
+    useSyncExternalStore(subscribe, snapshot) { subscribe(() => observed.push(snapshot())); return snapshot(); } };
+  const load = createLoader({ react, 'next/link': 'a',
+    'next/navigation': { usePathname: () => '/dashboard', useSearchParams: () => new URLSearchParams() },
+    './MobileLearningNavigation': 'mobile-nav', './DashboardSidebar': 'sidebar',
+    '@/components/dashboard/EditTargetModal': 'edit-modal',
+    '@/lib/supabase/client': { createClient: () => ({ auth: {
+      getUser: async () => ({ data: { user: null } }),
+      onAuthStateChange: () => ({ data: { subscription: { unsubscribe() {} } } }),
+    } }) },
+  }, { window, Event });
+  const Shell = load('frontend/src/components/layout/DashboardShell.tsx').default;
+  const content = Shell({ children: 'page' }).props.children;
+  content.type(content.props);
+  // Rendering can precede Next's pushState; effects run after the URL commit.
+  location.hash = '#performance-coach';
+  const cleanups = effects.map(effect => effect());
+  assert.ok(observed.includes('#performance-coach'));
+  location.hash = '';
+  window.dispatchEvent(new Event('popstate'));
+  assert.equal(observed.at(-1), '');
+  for (const cleanup of cleanups) if (typeof cleanup === 'function') cleanup();
+});
+
 function hooks() {
   const values = []; let index = 0;
   return { begin() { index = 0; }, react: {
