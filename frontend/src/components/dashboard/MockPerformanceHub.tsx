@@ -2,52 +2,59 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Award, ArrowRight, Play, Sparkles } from "lucide-react";
-import {
-  computeDashboardSnapshot,
-  MOCK_SAVED_EVENT,
-  type DashboardPreparationSnapshot,
-} from "@/lib/mockHistory";
+import { ArrowRight, Play, Sparkles } from "lucide-react";
+import type { DashboardPreparationSnapshot } from "@/lib/mockHistory";
+import type { LearnerIntelligence } from "@/lib/learner-intelligence";
 import PreparationSnapshotCard from "./PreparationSnapshotCard";
 import WeakAreasCard from "./WeakAreasCard";
 import AccuracyCard from "./AccuracyCard";
 
-export default function MockPerformanceHub() {
-  const [mounted, setMounted] = useState(false);
-  const [snapshot, setSnapshot] = useState<DashboardPreparationSnapshot>({
-    mocksCompleted: 0,
-    totalQuestionsAttempted: 0,
-    averageScore: 0,
-    averageAccuracy: 0,
-    totalRecoverableMarks: 0,
-    lastMockTitle: "None",
-    weakAreas: [],
-    recentScores: [],
-    trendDirection: "flat",
-  });
+const EMPTY_SNAPSHOT: DashboardPreparationSnapshot = {
+  mocksCompleted: 0,
+  totalQuestionsAttempted: 0,
+  averageScore: 0,
+  averageAccuracy: 0,
+  totalRecoverableMarks: 0,
+  lastMockTitle: "None",
+  weakAreas: [],
+  recentScores: [],
+  trendDirection: "flat",
+};
 
-  const refreshSnapshot = () => {
-    setSnapshot(computeDashboardSnapshot());
-  };
+export default function MockPerformanceHub() {
+  const [snapshot, setSnapshot] =
+    useState<DashboardPreparationSnapshot | null>(null);
 
   useEffect(() => {
-    setMounted(true);
-    refreshSnapshot();
+    let active = true;
 
-    const handleUpdate = () => {
-      refreshSnapshot();
+    const refreshSnapshot = async () => {
+      try {
+        const response = await fetch("/api/learner-intelligence", {
+          cache: "no-store",
+        });
+        if (!response.ok) throw new Error("Performance intelligence unavailable");
+        const data = (await response.json()) as LearnerIntelligence;
+        if (active) setSnapshot(data.performanceCoach);
+      } catch {
+        if (active) setSnapshot(EMPTY_SNAPSHOT);
+      }
     };
 
-    window.addEventListener(MOCK_SAVED_EVENT, handleUpdate);
-    window.addEventListener("storage", handleUpdate);
+    void refreshSnapshot();
+
+    const refresh = () => void refreshSnapshot();
+    window.addEventListener("dp_question_attempted", refresh);
+    window.addEventListener("dp_practice_session_updated", refresh);
 
     return () => {
-      window.removeEventListener(MOCK_SAVED_EVENT, handleUpdate);
-      window.removeEventListener("storage", handleUpdate);
+      active = false;
+      window.removeEventListener("dp_question_attempted", refresh);
+      window.removeEventListener("dp_practice_session_updated", refresh);
     };
   }, []);
 
-  if (!mounted) {
+  if (!snapshot) {
     return (
       <div className="rounded-3xl border border-slate-100 bg-slate-50/50 p-8 text-center animate-pulse">
         <div className="h-6 w-48 bg-slate-200 rounded mx-auto mb-3" />
@@ -56,7 +63,6 @@ export default function MockPerformanceHub() {
     );
   }
 
-  // If no mocks attempted yet
   if (snapshot.mocksCompleted === 0) {
     return (
       <div className="relative overflow-hidden rounded-3xl border border-dashed border-slate-300 bg-gradient-to-br from-slate-50 via-white to-blue-50/30 p-8 sm:p-10 text-center shadow-xs">
@@ -68,7 +74,8 @@ export default function MockPerformanceHub() {
           Mock Performance Analytics
         </h3>
         <p className="mx-auto mt-2 max-w-lg text-sm text-slate-600">
-          Complete your first full paper mock test or targeted practice to unlock instant AI debriefs, recurring weak areas, and score trajectory charts.
+          Complete your first full paper to unlock durable score trajectory,
+          recurring weak areas and recoverable marks across devices.
         </p>
 
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
@@ -92,13 +99,10 @@ export default function MockPerformanceHub() {
     );
   }
 
-  // When mocks exist
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      {/* 1. Preparation Snapshot Card */}
       <PreparationSnapshotCard snapshot={snapshot} />
 
-      {/* 2. Grid of Weak Areas + Accuracy & Trend */}
       <div className="grid gap-6 md:grid-cols-2">
         <AccuracyCard snapshot={snapshot} />
         <WeakAreasCard weakAreas={snapshot.weakAreas} />
