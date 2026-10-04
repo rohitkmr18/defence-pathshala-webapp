@@ -16,22 +16,6 @@ export default async function QuestionBankPage() {
   return (
     <main className="min-h-screen bg-white">
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
-        <div className="mb-7 sm:mb-8">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 sm:text-sm">
-            Defence Pathshala
-          </p>
-
-          <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">
-            Explore PYQs
-          </h1>
-
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">
-            Explore UPSC question patterns across exams, years, cycles,
-            subjects, topics and difficulty using the proprietary PYQ
-            Intelligence database.
-          </p>
-        </div>
-
         <Suspense
           fallback={
             <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
