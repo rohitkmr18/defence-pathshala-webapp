@@ -142,7 +142,8 @@ test('feedback is absent for fresh/selected unchecked questions, appears on Chec
   assert.ok(feedback);
   assert.match(JSON.stringify(feedback), /Correct|Your answer/);
   assert.match(JSON.stringify(feedback), /Explanation for q2/);
-  assert.match(JSON.stringify(feedback), /PYQ Intelligence|What to do next/);
+  assert.match(JSON.stringify(feedback), /PYQ Intelligence/);
+  assert.doesNotMatch(JSON.stringify(feedback), /What to do next|Practice 5 from this topic|Explore this topic/);
   const next = elements(tree, n => n.type === 'button' && elements(n, s => s.type === 'span' && s.props.children === 'Next Question').length)[0];
   next.props.onClick(); tree = player.render();
   assert.equal(elements(tree, n => n.type === 'question')[0].props.question.id, 'q1');
