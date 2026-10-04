@@ -318,12 +318,9 @@ export default function AnswerReveal({
                 )}
                 {question.source && (
                   <div className="rounded-xl border border-blue-200/60 bg-white p-3 shadow-2xs">
-                    <div className="flex items-center justify-between gap-2 font-semibold text-slate-600">
-                      <span className="flex items-center gap-1.5">
-                        <BookCheck className="h-3.5 w-3.5 text-blue-600" />
-                        Source
-                      </span>
-                      <ProvenanceBadge question={question} />
+                    <div className="flex items-center gap-1.5 font-semibold text-slate-600">
+                      <BookCheck className="h-3.5 w-3.5 text-blue-600" />
+                      Source
                     </div>
                     <p className="mt-1 font-medium text-slate-800">{question.source}</p>
                   </div>
