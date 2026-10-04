@@ -32,7 +32,7 @@ export async function GET() {
     const key = serviceRoleKey || anonKey;
     if (!key) {
       return NextResponse.json(
-        { exams: [], years: {}, cycles: {}, subjects: {}, subtopics: {}, difficulties: ["Easy", "Moderate", "Hard"] },
+        { exams: [], years: {}, cycles: {}, subjects: {}, subtopics: {}, subject_weights: {}, topic_weights: {}, subtopic_weights: {}, difficulties: ["Easy", "Moderate", "Hard"] },
         { status: 200 }
       );
     }
@@ -63,7 +63,7 @@ export async function GET() {
 
     if (rows.length === 0) {
       return NextResponse.json(
-        { exams: [], years: {}, cycles: {}, subjects: {}, subtopics: {}, difficulties: ["Easy", "Moderate", "Hard"] },
+        { exams: [], years: {}, cycles: {}, subjects: {}, subtopics: {}, subject_weights: {}, topic_weights: {}, subtopic_weights: {}, difficulties: ["Easy", "Moderate", "Hard"] },
         { status: 200 }
       );
     }
@@ -73,6 +73,9 @@ export async function GET() {
     const cyclesMap: Record<string, Set<string>> = {};
     const subjectsMap: Record<string, Record<string, Set<string>>> = {};
     const subtopicsMap: Record<string, Record<string, Set<string>>> = {};
+    const subjectWeights: Record<string, Record<string, number>> = {};
+    const topicWeights: Record<string, Record<string, Record<string, number>>> = {};
+    const subtopicWeights: Record<string, Record<string, Record<string, number>>> = {};
 
     for (const row of rows) {
       const exam = row.exam ? String(row.exam).trim() : null;
@@ -105,10 +108,19 @@ export async function GET() {
         if (!subjectsMap[exam][subject]) subjectsMap[exam][subject] = new Set();
         subjectsMap[exam][subject].add(topic);
 
+        if (!subjectWeights[exam]) subjectWeights[exam] = {};
+        subjectWeights[exam][subject] = (subjectWeights[exam][subject] ?? 0) + 1;
+        if (!topicWeights[exam]) topicWeights[exam] = {};
+        if (!topicWeights[exam][subject]) topicWeights[exam][subject] = {};
+        topicWeights[exam][subject][topic] = (topicWeights[exam][subject][topic] ?? 0) + 1;
+
         if (subtopic) {
           if (!subtopicsMap[subject]) subtopicsMap[subject] = {};
           if (!subtopicsMap[subject][topic]) subtopicsMap[subject][topic] = new Set();
           subtopicsMap[subject][topic].add(subtopic);
+          if (!subtopicWeights[subject]) subtopicWeights[subject] = {};
+          if (!subtopicWeights[subject][topic]) subtopicWeights[subject][topic] = {};
+          subtopicWeights[subject][topic][subtopic] = (subtopicWeights[subject][topic][subtopic] ?? 0) + 1;
         }
       }
     }
@@ -147,6 +159,9 @@ export async function GET() {
       cycles: formattedCycles,
       subjects: formattedSubjects,
       subtopics: formattedSubtopics,
+      subject_weights: subjectWeights,
+      topic_weights: topicWeights,
+      subtopic_weights: subtopicWeights,
       difficulties: ["Easy", "Moderate", "Hard"],
     });
   } catch (err: unknown) {

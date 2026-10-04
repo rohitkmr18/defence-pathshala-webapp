@@ -19,6 +19,9 @@ export type PracticeFiltersResponse = {
   cycles: Record<string, string[]>;
   subjects: Record<string, Record<string, string[]>>;
   subtopics?: Record<string, Record<string, string[]>>;
+  subject_weights?: Record<string, Record<string, number>>;
+  topic_weights?: Record<string, Record<string, Record<string, number>>>;
+  subtopic_weights?: Record<string, Record<string, Record<string, number>>>;
   difficulties?: string[];
 };
 
@@ -136,15 +139,16 @@ export default function PracticeFilters({
   const availableSubjects = useMemo(() => {
     if (!filters) return [];
     const activeExams = selectedExams.length > 0 ? selectedExams : filters.exams;
-    const subjectsMap = new Map<string, number>();
+    const weights = new Map<string, number>();
 
     for (const exam of activeExams) {
-      for (const [sub, topics] of Object.entries(filters.subjects[exam] ?? {})) {
-        subjectsMap.set(sub, (subjectsMap.get(sub) ?? 0) + topics.length);
+      for (const sub of Object.keys(filters.subjects[exam] ?? {})) {
+        const weight = filters.subject_weights?.[exam]?.[sub] ?? 0;
+        weights.set(sub, (weights.get(sub) ?? 0) + weight);
       }
     }
 
-    return Array.from(subjectsMap.entries())
+    return Array.from(weights.entries())
       .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
       .map(([sub]) => sub);
   }, [filters, selectedExams]);
@@ -153,17 +157,20 @@ export default function PracticeFilters({
   const availableTopics = useMemo(() => {
     if (!filters || selectedSubjects.length === 0) return [];
     const activeExams = selectedExams.length > 0 ? selectedExams : filters.exams;
-    const topicsSet = new Set<string>();
+    const weights = new Map<string, number>();
 
     for (const exam of activeExams) {
       for (const subject of selectedSubjects) {
         for (const topic of filters.subjects[exam]?.[subject] ?? []) {
-          topicsSet.add(topic);
+          const weight = filters.topic_weights?.[exam]?.[subject]?.[topic] ?? 0;
+          weights.set(topic, (weights.get(topic) ?? 0) + weight);
         }
       }
     }
 
-    return Array.from(topicsSet).sort((a, b) => a.localeCompare(b));
+    return Array.from(weights.entries())
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+      .map(([topic]) => topic);
   }, [filters, selectedExams, selectedSubjects]);
 
   // Available subtopics for selected topic(s)
@@ -172,17 +179,20 @@ export default function PracticeFilters({
       return [];
     }
 
-    const subtopicsSet = new Set<string>();
+    const weights = new Map<string, number>();
     for (const subject of selectedSubjects) {
       const topicMap = filters.subtopics[subject] ?? {};
       for (const topic of selectedTopics) {
         for (const subtopic of topicMap[topic] ?? []) {
-          subtopicsSet.add(subtopic);
+          const weight = filters.subtopic_weights?.[subject]?.[topic]?.[subtopic] ?? 0;
+          weights.set(subtopic, (weights.get(subtopic) ?? 0) + weight);
         }
       }
     }
 
-    return Array.from(subtopicsSet).sort((a, b) => a.localeCompare(b));
+    return Array.from(weights.entries())
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+      .map(([subtopic]) => subtopic);
   }, [filters, selectedSubjects, selectedTopics]);
 
   // Available years for selected exams

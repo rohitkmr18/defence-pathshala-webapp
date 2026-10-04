@@ -20,19 +20,30 @@ def _clean_text(value: Any) -> str | None:
 @router.get("/filters", response_model=PracticeFiltersResponse)
 def get_practice_filters() -> PracticeFiltersResponse:
     try:
-        response = (
-            supabase.table("v_dp_question_intelligence_v2")
-            .select("exam,year,cycle,subject,topic,subtopic")
-            .execute()
-        )
-
-        rows = response.data or []
+        rows: list[dict[str, Any]] = []
+        page_size = 1000
+        start = 0
+        while True:
+            response = (
+                supabase.table("v_dp_question_intelligence_v2")
+                .select("exam,year,cycle,subject,topic,subtopic")
+                .range(start, start + page_size - 1)
+                .execute()
+            )
+            page = response.data or []
+            rows.extend(page)
+            if len(page) < page_size:
+                break
+            start += page_size
 
         exams: set[str] = set()
         years_by_exam: dict[str, set[int]] = {}
         cycles_by_exam: dict[str, set[str]] = {}
         subjects_by_exam: dict[str, dict[str, set[str]]] = {}
         subtopics_by_subject: dict[str, dict[str, set[str]]] = {}
+        subject_weights: dict[str, dict[str, int]] = {}
+        topic_weights: dict[str, dict[str, dict[str, int]]] = {}
+        subtopic_weights: dict[str, dict[str, dict[str, int]]] = {}
 
         for row in rows:
             exam = _clean_text(row.get("exam"))
@@ -63,8 +74,15 @@ def get_practice_filters() -> PracticeFiltersResponse:
                 continue
 
             subjects_by_exam.setdefault(exam, {}).setdefault(subject, set()).add(topic)
+            subject_weights.setdefault(exam, {})[subject] = subject_weights.setdefault(exam, {}).get(subject, 0) + 1
+            topic_weights.setdefault(exam, {}).setdefault(subject, {})[topic] = (
+                topic_weights.setdefault(exam, {}).setdefault(subject, {}).get(topic, 0) + 1
+            )
             if subtopic:
                 subtopics_by_subject.setdefault(subject, {}).setdefault(topic, set()).add(subtopic)
+                subtopic_weights.setdefault(subject, {}).setdefault(topic, {})[subtopic] = (
+                    subtopic_weights.setdefault(subject, {}).setdefault(topic, {}).get(subtopic, 0) + 1
+                )
 
         return PracticeFiltersResponse(
             exams=sorted(exams),
@@ -92,6 +110,9 @@ def get_practice_filters() -> PracticeFiltersResponse:
                 }
                 for subject, topic_map in sorted(subtopics_by_subject.items())
             },
+            subject_weights=subject_weights,
+            topic_weights=topic_weights,
+            subtopic_weights=subtopic_weights,
             difficulties=["Easy", "Moderate", "Hard"],
         )
 

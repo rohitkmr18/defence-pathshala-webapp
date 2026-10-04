@@ -13,7 +13,8 @@ import TimeManagementCard from "./TimeManagementCard";
 import QuestionCard from "@/components/practice/player/QuestionCard";
 import AnswerReveal from "@/components/practice/player/AnswerReveal";
 import { getCorrectKey } from "@/lib/practice-types";
-import { Eye } from "lucide-react";
+import Link from "next/link";
+import { Eye, House, LogIn } from "lucide-react";
 
 interface FilteredAttemptDebriefProps {
   questions: PracticeQuestion[];
@@ -22,6 +23,7 @@ interface FilteredAttemptDebriefProps {
   totalTimeSpentSeconds: number;
   questionTimes?: Record<string, number>;
   onRetake?: () => void;
+  guestSaveHref?: string | null;
 }
 
 export default function FilteredAttemptDebrief({
@@ -31,6 +33,7 @@ export default function FilteredAttemptDebrief({
   totalTimeSpentSeconds,
   questionTimes = {},
   onRetake,
+  guestSaveHref,
 }: FilteredAttemptDebriefProps) {
   const examName = questions[0]?.exam || sessionTitle;
   const metrics = computeAnalysisMetrics(questions, answers, totalTimeSpentSeconds, examName);
@@ -189,6 +192,27 @@ export default function FilteredAttemptDebrief({
           </div>
         )}
       </div>
+
+      <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-xs sm:p-6">
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <Link
+            href="/dashboard"
+            className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-800 transition hover:bg-slate-50"
+          >
+            <House className="h-4 w-4" />
+            Go to Home
+          </Link>
+          {guestSaveHref && (
+            <Link
+              href={guestSaveHref}
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl bg-blue-600 px-5 py-3 text-center text-sm font-bold text-white shadow-sm transition hover:bg-blue-500"
+            >
+              <LogIn className="h-4 w-4" />
+              Log in to save & personalise dashboard
+            </Link>
+          )}
+        </div>
+      </section>
     </div>
   );
 }

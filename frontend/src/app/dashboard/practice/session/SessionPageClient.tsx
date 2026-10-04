@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 import { ArrowLeft } from "lucide-react";
 import type { PracticeQuestion, PlayerMode, OptionKey } from "@/lib/practice-types";
 import PracticePersistenceStatus from "@/components/practice/PracticePersistenceStatus";
@@ -17,6 +18,7 @@ import {
   loadResumeSession,
   restoreQuestionOrder,
   saveLocalSession,
+  PRACTICE_SESSION_UPDATED_EVENT,
   type ActivePracticeSession,
 } from "@/lib/practice-session-client";
 import {
@@ -134,6 +136,7 @@ export default function SessionPageClient({
   const sessionMode: PlayerMode = restoredSession?.mode === "attempt" ? "attempt" : restoredSession ? "instant" : mode;
   const startTimeRef = useRef<number>(0);
   const [timeSpentSeconds, setTimeSpentSeconds] = useState<number>(0);
+  const [guestSaveHref, setGuestSaveHref] = useState<string | null>(null);
 
   useEffect(() => {
     if (!sessionId) return;
@@ -142,6 +145,22 @@ export default function SessionPageClient({
     url.searchParams.set("resume", "true"); url.searchParams.set("session_id", sessionId);
     router.replace(`${url.pathname}${url.search}`, { scroll: false });
   }, [sessionId, router]);
+
+  useEffect(() => {
+    const refreshGuestSaveHref = () => {
+      const local = getLocalSession();
+      if (local?.cloud_status !== "local") {
+        setGuestSaveHref(null);
+        return;
+      }
+      const next = new URL(window.location.href);
+      next.searchParams.set("claim", "1");
+      setGuestSaveHref(`/auth/login?next=${encodeURIComponent(next.pathname + next.search)}`);
+    };
+    refreshGuestSaveHref();
+    window.addEventListener(PRACTICE_SESSION_UPDATED_EVENT, refreshGuestSaveHref);
+    return () => window.removeEventListener(PRACTICE_SESSION_UPDATED_EVENT, refreshGuestSaveHref);
+  }, [sessionId, completed]);
 
   // Keep this stable so state restoration does not restart the loading effect.
   const parsedFilters = useMemo(() => parseFiltersFromSearchParams({
@@ -171,8 +190,18 @@ export default function SessionPageClient({
       setError(null);
       try {
         const url = new URL(window.location.href);
-        const saved = resume || url.searchParams.get("resume") === "true"
-          ? await loadResumeSession(resumeSessionId || url.searchParams.get("session_id") || undefined) : null;
+        const requestedSessionId = resumeSessionId || url.searchParams.get("session_id") || undefined;
+        const localCandidate = getLocalSession();
+        const claimCompletedLocal =
+          url.searchParams.get("claim") === "1" &&
+          localCandidate?.is_completed === true &&
+          (!requestedSessionId ||
+            localCandidate.id === requestedSessionId ||
+            localCandidate.server_id === requestedSessionId)
+            ? localCandidate
+            : null;
+        const saved = claimCompletedLocal || (resume || url.searchParams.get("resume") === "true"
+          ? await loadResumeSession(requestedSessionId) : null);
         if (cancelled) return;
         if (saved?.mode === "full_paper") {
           const params = serializeFiltersToSearchParams({ ...saved.filters,
@@ -215,7 +244,28 @@ export default function SessionPageClient({
               setSessionId(saved.id);
               setAnswers(saved.answers || {});
               setInitialIndex(Math.max(0, Math.min(saved.current_index || 0, fetchedQuestions.length - 1)));
-              trackLearningEvent("practice_resume", { mode: saved.mode, position: saved.current_index, origin }, `${saved.id}:${saved.updated_at}`);
+              setTimeSpentSeconds(saved.time_spent_seconds || 0);
+
+              if (saved.is_completed) {
+                setCompleted(true);
+                window.scrollTo({ top: 0, left: 0 });
+                const { data: authData } = await createClient().auth.getUser();
+                if (authData.user && saved.cloud_status === "local") {
+                  saveLocalSession({ ...saved, cloud_status: "saving" });
+                  await completePracticeSession({
+                    sessionId: saved.id,
+                    questions: fetchedQuestions,
+                    answers: saved.answers || {},
+                    mode: saved.mode,
+                    timeSpentSeconds: saved.time_spent_seconds || 1,
+                  });
+                  const cleanUrl = new URL(window.location.href);
+                  cleanUrl.searchParams.delete("claim");
+                  router.replace(`${cleanUrl.pathname}${cleanUrl.search}`, { scroll: false });
+                }
+              } else {
+                trackLearningEvent("practice_resume", { mode: saved.mode, position: saved.current_index, origin }, `${saved.id}:${saved.updated_at}`);
+              }
             } else {
               // Initialize a fresh session
               const newSess = await initializeSession({
@@ -355,6 +405,7 @@ export default function SessionPageClient({
             }
 
             setCompleted(true);
+            window.scrollTo({ top: 0, left: 0 });
             trackLearningEvent("practice_complete", { mode: sessionMode, duration }, sessionId);
             completionRef.current = false;
             setSavingCompletion(false);
@@ -370,6 +421,7 @@ export default function SessionPageClient({
           sessionTitle={filterLabel}
           totalTimeSpentSeconds={timeSpentSeconds}
           questionTimes={getLocalSession()?.question_times || {}}
+          guestSaveHref={guestSaveHref}
           onRetake={() => {
             if (sessionId) {
               clearLocalSession();
