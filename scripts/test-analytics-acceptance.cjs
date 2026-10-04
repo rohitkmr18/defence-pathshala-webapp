@@ -135,7 +135,9 @@ test('server session UUID is canonical in browser, player, attempts and every le
   assert.equal(new URL(f.window.location.href).searchParams.get('session_id'), id);
   assert.equal(f.events('practice_started').length, 1);
   assert.equal(f.events('practice_resumed').length, 0);
-  assert.equal(f.events('practice_started')[0].practice_session_id, id);
+  const started = f.events('practice_started')[0];
+  assert.equal(started.practice_session_id, id);
+  for (const [key, value] of Object.entries({ exam: 'CDS', year: '2025', cycle: 'II', subject: 'History', topic: 'Ancient History', practice_mode: 'instant', source_surface: 'explore' })) assert.equal(started[key], value);
   // Run the actual player and canonical provider, retaining state across interactions.
   const playerHooks = hooks();
   // Use a separate loader for player hook slots, sharing the production session and analytics modules.
@@ -201,6 +203,7 @@ test('real interrupted resume emits once and fresh addressable zero-progress res
     const Page = f.load('frontend/src/app/dashboard/practice/session/SessionPageClient.tsx').default;
     const props = { mode: 'instant', resume: true, resumeSessionId: session.id, origin: 'dashboard_resume' };
     h.begin(); Page(props); await h.flush(); h.begin(); Page(props); await h.flush();
+    h.replayEffects(); await h.flush();
     assert.equal(f.events('practice_started').length, 0);
     assert.equal(f.events('practice_resumed').length, progress ? 1 : 0);
     if (progress) assert.equal(f.events('practice_resumed')[0].source_surface, 'dashboard_resume');
