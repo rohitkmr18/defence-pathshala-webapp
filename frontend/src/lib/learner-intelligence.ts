@@ -75,6 +75,7 @@ export interface LearnerMistake {
   selectedOption: string;
   correctOption: string | null;
   attemptedAt: string | null;
+  timeTakenSeconds: number | null;
   understandHref: string;
   practiceHref: string;
 }
@@ -218,7 +219,8 @@ export function deriveLearnerIntelligence(input: {
       selectedOption: a.selected_option,
       correctOption: meta.final_opt || null,
       attemptedAt: a.attempted_at,
-      understandHref: `/dashboard/practice/session?ids=${encodeURIComponent(a.question_id)}&returnTo=%2Fdashboard%2Fmistakes&origin=mistakes`,
+      timeTakenSeconds: a.time_taken,
+      understandHref: `/dashboard/mistakes/${encodeURIComponent(a.question_id)}`,
       practiceHref: buildPracticeUrl({
         exams: [exam],
         subjects: [subject],
