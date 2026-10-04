@@ -111,8 +111,8 @@ function elements(tree, predicate) {
 
 function feedbackPlayer(initial = {}) {
   const h = hooks();
-  const Reveal = createLoader({ react: { useState: initial => [initial, () => {}] },
-    '@/components/common/MathText': 'math-text' })('frontend/src/components/practice/player/AnswerReveal.tsx').default;
+  const Reveal = createLoader({ react: { useState: initial => [initial, () => {}] }, 'next/link': 'a',
+    '@/components/common/MathText': 'math-text', '@/lib/learning-events': { trackLearningEvent() {} } })('frontend/src/components/practice/player/AnswerReveal.tsx').default;
   const load = createLoader({ react: h.react, './ProgressHeader': 'progress', './QuestionCard': 'question', './AnswerReveal': Reveal,
     '@/lib/learning-events': { trackLearningEvent() {} },
     '@/lib/practice-session-client': { getLocalSession: () => ({ id: 'resume', question_times: {} }),
@@ -140,9 +140,9 @@ test('feedback is absent for fresh/selected unchecked questions, appears on Chec
   check.props.onClick(); tree = player.render();
   const feedback = player.feedback(tree);
   assert.ok(feedback);
-  assert.match(JSON.stringify(feedback), /Correct Answer!|Your Answer/);
+  assert.match(JSON.stringify(feedback), /Correct|Your answer/);
   assert.match(JSON.stringify(feedback), /Explanation for q2/);
-  assert.match(JSON.stringify(feedback), /Expand Intelligence/);
+  assert.match(JSON.stringify(feedback), /PYQ Intelligence|What to do next/);
   const next = elements(tree, n => n.type === 'button' && elements(n, s => s.type === 'span' && s.props.children === 'Next Question').length)[0];
   next.props.onClick(); tree = player.render();
   assert.equal(elements(tree, n => n.type === 'question')[0].props.question.id, 'q1');
