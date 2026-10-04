@@ -172,6 +172,26 @@ test('withheld intelligence never exposes Exam Edge, PYQ Intelligence or concept
   assert.doesNotMatch(rendered, /Money Bill/);
 });
 
+test('model-derived eligible intelligence shows Exam Edge without exposing provenance wording', () => {
+  const Reveal = createLoader({ react: { useState: initial => [initial, () => {}] }, 'next/link': 'a',
+    '@/components/common/MathText': 'math-text', '@/lib/learning-events': { trackLearningEvent() {} } })('frontend/src/components/practice/player/AnswerReveal.tsx').default;
+  const tree = Reveal({
+    visible: true,
+    selectedOption: 'A',
+    question: {
+      id: 'model-edge', final_opt: 'A', explanation: 'Explanation',
+      exam: 'CDS', year: 2025, subject: 'Polity', topic: 'Parliament',
+      q_pattern: 'Statement based',
+      intelligence_eligible: true, student_release_status: 'WITHHELD',
+      intelligence_trust_tier: 'MODEL_READY', intelligence_confidence: 'MODEL_DERIVED',
+    },
+  });
+  const rendered = JSON.stringify(tree);
+  assert.match(rendered, /Exam Edge/);
+  assert.doesNotMatch(rendered, /Model derived|Model ready|Verified|Under review/);
+  assert.doesNotMatch(rendered, /PYQ Intelligence/);
+});
+
 test('Check Answer keeps provenance metadata internal and never renders provenance labels', () => {
   const Reveal = createLoader({ react: { useState: initial => [initial, () => {}] }, 'next/link': 'a',
     '@/components/common/MathText': 'math-text', '@/lib/learning-events': { trackLearningEvent() {} } })('frontend/src/components/practice/player/AnswerReveal.tsx').default;

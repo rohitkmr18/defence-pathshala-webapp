@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, RotateCcw, Target, Award, Clock, CheckCircle2, XCircle, MinusCircle } from "lucide-react";
+import { House, RotateCcw, Clock, CheckCircle2, XCircle, MinusCircle } from "lucide-react";
 import type { AnalysisMetrics } from "@/lib/analysis/computeAnalysisMetrics";
 
 interface MockDebriefHeroProps {
@@ -47,11 +47,11 @@ export default function MockDebriefHero({
             </button>
           )}
           <Link
-            href="/dashboard/practice"
+            href="/dashboard"
             className="flex items-center gap-1.5 rounded-xl bg-white px-4 py-2 text-xs font-semibold text-slate-900 transition hover:bg-slate-100"
           >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            <span>Practice Home</span>
+            <House className="h-3.5 w-3.5" />
+            <span>Go to Home</span>
           </Link>
         </div>
       </div>

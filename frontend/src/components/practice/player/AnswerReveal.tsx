@@ -95,6 +95,13 @@ export default function AnswerReveal({
 
   const correctKey = getCorrectKey(question);
   const isCorrect = selectedOption !== null && selectedOption === correctKey;
+  const trustTier = question.intelligence_trust_tier;
+  const canShowExamEdge =
+    question.intelligence_eligible === true &&
+    (trustTier === "HUMAN_VERIFIED" ||
+      trustTier === "MODEL_READY" ||
+      question.intelligence_verified === true ||
+      question.intelligence_confidence === "MODEL_DERIVED");
   const canShowIntelligence =
     question.intelligence_eligible === true &&
     question.student_release_status === "RELEASED";
@@ -191,7 +198,7 @@ export default function AnswerReveal({
           </section>
         )}
 
-        {canShowIntelligence && <ExamEdge question={question} />}
+        {canShowExamEdge && <ExamEdge question={question} />}
 
         {attempt && (
           <section className="rounded-2xl border border-violet-200 bg-violet-50/50 p-5 sm:p-6">
