@@ -1,9 +1,9 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useState, useSyncExternalStore } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { authUrl } from "@/lib/auth-redirect";
-import { MOBILE_LEARNING_NAV } from "@/lib/learning-navigation";
+import MobileLearningNavigation from "./MobileLearningNavigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import DashboardSidebar from "./DashboardSidebar";
@@ -100,6 +100,17 @@ function UserMenu({ user }: { user: SupabaseUser }) {
 
 // ─── Main Shell ───────────────────────────────────────────────────────────────
 
+function subscribeHashChange(onChange: () => void) {
+  window.addEventListener("hashchange", onChange);
+  window.addEventListener("popstate", onChange);
+  return () => {
+    window.removeEventListener("hashchange", onChange);
+    window.removeEventListener("popstate", onChange);
+  };
+}
+const getHash = () => window.location.hash;
+const getServerHash = () => "";
+
 function DashboardShellContent({
   children,
 }: {
@@ -110,6 +121,7 @@ function DashboardShellContent({
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const pathname = usePathname();
+  const hash = useSyncExternalStore(subscribeHashChange, getHash, getServerHash);
   const searchParams = useSearchParams();
   const loginHref = authUrl("/auth/login", `${pathname}${searchParams.size ? `?${searchParams}` : ""}`);
 
@@ -214,11 +226,7 @@ function DashboardShellContent({
         {/* Page content */}
         <div className="w-full">{children}</div>
       </main>
-      <nav aria-label="Mobile learning navigation" className="fixed inset-x-0 bottom-0 z-30 grid h-[calc(4rem+env(safe-area-inset-bottom))] grid-cols-4 border-t border-slate-200 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden">
-        {MOBILE_LEARNING_NAV.map(item => <Link key={item.name} href={item.href}
-          aria-current={item.name !== "Progress" && (item.href === "/dashboard" ? pathname === item.href : pathname.startsWith(item.href)) ? "page" : undefined}
-          className="flex min-h-16 items-center justify-center text-xs font-bold text-slate-700 aria-[current=page]:bg-blue-50 aria-[current=page]:text-blue-700">{item.name}</Link>)}
-      </nav>
+      <MobileLearningNavigation pathname={pathname} hash={hash} />
     </div>
   );
 }

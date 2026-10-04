@@ -28,7 +28,43 @@ test('contextual return keeps nested encodings intact and rejects unsafe or unre
   for (const value of ['https://evil.test', '//evil.test', '/%2f%2fevil.test', '/dashboard/%5cevil', '/auth/login', '/about', '/dashboard/practice/session?resume=true']) {
     assert.equal(safeLearningReturn(value, '/dashboard/practice?exam=CDS'), '/dashboard/practice?exam=CDS');
   }
-  assert.equal(MOBILE_LEARNING_NAV[3].href, '/dashboard#performance-coach');
+  assert.equal(MOBILE_LEARNING_NAV[2].href, '/dashboard#performance-coach');
+});
+
+test('mobile navigation has exactly Explore, Practice, Progress and distinct route/anchor active states', () => {
+  const location = { hash: '' };
+  const load = createLoader({ 'next/link': 'a' }, { window: { location } });
+  const { MOBILE_LEARNING_NAV, isMobileLearningNavActive } = load('frontend/src/lib/learning-navigation.ts');
+  const Navigation = load('frontend/src/components/layout/MobileLearningNavigation.tsx').default;
+  assert.deepEqual(Array.from(MOBILE_LEARNING_NAV, item => item.name), ['Explore', 'Practice', 'Progress']);
+  for (const [path, hash, expected] of [
+    ['/dashboard', '', []], ['/dashboard', '#other', []],
+    ['/dashboard', '#performance-coach', ['Progress']],
+    ['/dashboard/question-bank', '', ['Explore']],
+    ['/dashboard/practice', '', ['Practice']],
+    ['/dashboard/practice/session', '', ['Practice']],
+    ['/dashboard/practice/full-paper', '', ['Practice']],
+    ['/dashboard/practice-other', '', []],
+    ['/dashboard/practice', '#performance-coach', ['Practice']],
+  ]) {
+    const tree = Navigation({ pathname: path, hash });
+    const links = elements(tree, n => n.type === 'a');
+    assert.equal(links.length, 3);
+    assert.deepEqual(links.filter(n => n.props['aria-current'] === 'page').map(n => n.props.children[1].props.children), expected);
+    assert.deepEqual(Array.from(MOBILE_LEARNING_NAV).filter(item => isMobileLearningNavActive(item.href, path, hash)).map(item => item.name), expected);
+    for (const link of links) {
+      assert.match(link.props.className, /min-h-14/);
+      assert.equal(link.props.children[0].props['aria-hidden'], 'true');
+    }
+    assert.match(tree.props.className, /safe-area-inset-bottom/);
+    assert.match(tree.props.children.props.className, /grid-cols-3/);
+    assert.match(links[1].props.className, /bg-blue-/);
+  }
+  let prevented = false;
+  const progress = elements(Navigation({ pathname: '/dashboard', hash: '' }), n => n.type === 'a')[2];
+  progress.props.onNavigate({ preventDefault() { prevented = true; } });
+  assert.equal(prevented, true);
+  assert.equal(location.hash, 'performance-coach');
 });
 
 function hooks() {
@@ -46,6 +82,55 @@ function elements(tree, predicate) {
     if (!node?.props) return; if (predicate(node)) found.push(node); visit(node.props.children); }
   visit(tree); return found;
 }
+
+function feedbackPlayer(initial = {}) {
+  const h = hooks();
+  const Reveal = createLoader({ react: { useState: initial => [initial, () => {}] },
+    '@/components/common/MathText': 'math-text' })('frontend/src/components/practice/player/AnswerReveal.tsx').default;
+  const load = createLoader({ react: h.react, './ProgressHeader': 'progress', './QuestionCard': 'question', './AnswerReveal': Reveal,
+    '@/lib/learning-events': { trackLearningEvent() {} },
+    '@/lib/practice-session-client': { getLocalSession: () => ({ id: 'resume', question_times: {} }),
+      updateSessionProgress() {}, recordQuestionAttempt: () => Promise.resolve() },
+  });
+  const Player = load('frontend/src/components/practice/player/QuestionPlayer.tsx').default;
+  const props = { sessionId: 'resume', mode: 'instant', questions: [
+    { id: 'q2', final_opt: 'B', explanation: 'Explanation for q2' },
+    { id: 'q1', final_opt: 'A', explanation: 'Explanation for q1' },
+  ], ...initial };
+  return {
+    render() { h.begin(); return Player(props); },
+    feedback(tree) { return Reveal(elements(tree, n => n.type === Reveal)[0].props); },
+  };
+}
+
+test('feedback is absent for fresh/selected unchecked questions, appears on Check, and is absent on Next', () => {
+  const player = feedbackPlayer();
+  let tree = player.render();
+  assert.equal(player.feedback(tree), null);
+  elements(tree, n => n.type === 'question')[0].props.onSelect('B');
+  tree = player.render();
+  assert.equal(player.feedback(tree), null);
+  const check = elements(tree, n => n.type === 'button' && elements(n, s => s.type === 'span' && s.props.children === 'Check Answer').length)[0];
+  check.props.onClick(); tree = player.render();
+  const feedback = player.feedback(tree);
+  assert.ok(feedback);
+  assert.match(JSON.stringify(feedback), /Correct Answer!|Your Answer/);
+  assert.match(JSON.stringify(feedback), /Explanation for q2/);
+  assert.match(JSON.stringify(feedback), /Expand Intelligence/);
+  const next = elements(tree, n => n.type === 'button' && elements(n, s => s.type === 'span' && s.props.children === 'Next Question').length)[0];
+  next.props.onClick(); tree = player.render();
+  assert.equal(elements(tree, n => n.type === 'question')[0].props.question.id, 'q1');
+  assert.equal(player.feedback(tree), null);
+});
+
+test('resume mounts feedback only for the current checked question ID, independently of selected answers', () => {
+  for (const [index, checked, visible] of [[0, [], false], [1, [], false], [0, ['q2'], true], [1, ['q2'], false], [1, ['q1'], true]]) {
+    const player = feedbackPlayer({ initialIndex: index, initialAnswers: { q2: 'B', q1: 'A' }, initialCheckedIds: checked });
+    const feedback = player.feedback(player.render());
+    assert.equal(feedback !== null, visible, `index ${index}, checked ${checked}`);
+    if (visible) assert.match(JSON.stringify(feedback), new RegExp(`Explanation for ${index === 0 ? 'q2' : 'q1'}`));
+  }
+});
 
 test('Dashboard resume restores checked separately from selected; Check and Next are single interactions', async () => {
   const h = hooks(); const writes = []; const attempts = []; const events = [];

@@ -23,7 +23,7 @@ work, authentication changes, corpus changes or schema changes.
 ## Validation
 
 - `npm run verify`: production frontend build and backend import.
-- Frontend/auth/continuity regression suites: 80 passing tests.
+- Frontend/auth/continuity regression suites: 83 passing tests.
 - Onboarding database and migration ledger suites: 12 passing tests.
 - Backend `python -m pytest -q tests`: 25 passing tests.
 - TypeScript and `git diff --check`: pass.
@@ -34,6 +34,14 @@ work, authentication changes, corpus changes or schema changes.
   Check → Next → Dashboard, failed cloud attempt → visible retry → acknowledged
   save → confirmed completion, and mobile Progress targeting Performance Coach.
   Mobile question controls clear the bottom bar without horizontal overflow.
+
+Acceptance follow-up: unchecked AnswerReveal content is unmounted, so verdict,
+correct answer, explanation and intelligence controls are absent from the DOM
+and accessibility tree. Explicit checking reveals feedback; moving to an
+unchecked question removes it. Resume uses checked question IDs independently
+of selected answers. Mobile navigation is exactly Explore, Practice, Progress,
+with icons, 56px targets, safe-area padding and distinct route/anchor states.
+Desktop navigation is unchanged.
 
 Browser API fixtures do not prove production database or email delivery behavior.
 Before release, use a real account to verify email OTP returns to filtered

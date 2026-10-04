@@ -10,8 +10,13 @@ export function safeLearningReturn(value: string | null | undefined, fallback = 
 }
 
 export const MOBILE_LEARNING_NAV = [
-  { name: "Home", href: "/dashboard" },
   { name: "Explore", href: "/dashboard/question-bank" },
   { name: "Practice", href: "/dashboard/practice" },
   { name: "Progress", href: "/dashboard#performance-coach" },
 ] as const;
+
+export function isMobileLearningNavActive(href: string, pathname: string, hash: string): boolean {
+  const [path, anchor] = href.split("#");
+  if (anchor) return pathname === path && hash === `#${anchor}`;
+  return pathname === path || pathname.startsWith(`${path}/`);
+}

@@ -76,15 +76,14 @@ export default function AnswerReveal({
   visible,
 }: AnswerRevealProps) {
   const [showIntelligence, setShowIntelligence] = useState(false);
+  if (!visible) return null;
+
   const correctKey = getCorrectKey(question);
   const isCorrect = selectedOption !== null && selectedOption === correctKey;
 
   return (
     <div
-      className={`
-        overflow-hidden transition-all duration-300 ease-in-out
-        ${visible ? "max-h-[2500px] opacity-100" : "max-h-0 opacity-0"}
-      `}
+      className="overflow-hidden"
       aria-live="polite"
       aria-atomic="true"
     >
