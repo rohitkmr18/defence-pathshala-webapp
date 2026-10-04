@@ -6,7 +6,7 @@ export interface ParsedItem {
   text: string;
 }
 
-const NUMBERED_ITEM_PATTERN = /(?<![A-Za-z0-9])((?:\(\d{1,2}\))|(?:\d{1,2}|[ivxlcdm]+)[.)])(?=\s)/gi;
+const NUMBERED_ITEM_PATTERN = /(?<![A-Za-z0-9])((?:\(\d{1,2}\))|(?:\d{1,2}|(?:i{1,3}|iv|v(?:i{0,3})?|ix|x))[.)])(?=\s)/gi;
 const LABELED_ITEM_PATTERN = /((?:[A-Da-d])|(?:\d{1,2}))[.)]\s+/g;
 
 export function splitNumberedItems(text: string): {
