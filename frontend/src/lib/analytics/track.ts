@@ -15,10 +15,10 @@ const ANON_KEY = "dp_analytics_anonymous_id";
 
 function analyticsEnvironment(): string {
   return (
-    process.env.NEXT_PUBLIC_VERCEL_ENV ||
-    process.env.NEXT_PUBLIC_APP_ENV ||
-    process.env.NODE_ENV ||
-    "unknown"
+    process.env.NEXT_PUBLIC_DP_DEPLOYMENT_ENV ||
+    (typeof window !== "undefined" && window.location.hostname.endsWith(".vercel.app")
+      ? "preview"
+      : process.env.NODE_ENV || "unknown")
   );
 }
 
@@ -53,7 +53,7 @@ function commonContext(): ProductEventProperties {
     anonymous_id: getAnonymousId(),
     route: window.location.pathname,
     deployment_environment: analyticsEnvironment(),
-    git_sha: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA,
+    git_sha: process.env.NEXT_PUBLIC_DP_GIT_SHA,
     device_category: window.innerWidth < 640 ? "mobile" : "desktop",
     viewport_bucket: viewportBucket(),
   };
