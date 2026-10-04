@@ -251,6 +251,7 @@ export default function SessionPageClient({
                 window.scrollTo({ top: 0, left: 0 });
                 const { data: authData } = await createClient().auth.getUser();
                 if (authData.user && saved.cloud_status === "local") {
+                  saveLocalSession({ ...saved, cloud_status: "saving" });
                   await completePracticeSession({
                     sessionId: saved.id,
                     questions: fetchedQuestions,

@@ -305,7 +305,7 @@ export function updateSessionProgress(
 export async function retryPracticePersistence(questions: PracticeQuestion[] = []): Promise<void> {
   let session = getLocalSession();
   if (!session) return;
-  if (!session.server_id && session.id.startsWith("sess_")) {
+  if (!session.server_id && session.id.startsWith("sess_") && session.cloud_status !== "local") {
     session = { ...session, creation_id: session.creation_id || crypto.randomUUID() };
     saveLocalSession(session);
     const pending = creations.get(session.id);
