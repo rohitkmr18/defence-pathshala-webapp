@@ -14,6 +14,7 @@ import {
 
 // Test 2: Canonical Question Intelligence Normalization
 import { normalizeQuestion } from "../lib/question-intelligence.ts";
+import { classifyAttempt, getPaceTargetSeconds } from "../lib/attempt-intelligence.ts";
 
 test("parseListParam splits and trims comma-separated values and arrays", () => {
   assert.deepEqual(parseListParam("CDS, CAPF-AC"), ["CDS", "CAPF-AC"]);
@@ -152,6 +153,50 @@ test("normalizeQuestion assigns HUMAN_VERIFIED confidence when verified and no d
   assert.equal(normalized.human_review_required, false);
   assert.equal(normalized.intelligence_verified, true);
   assert.equal(normalized.intelligence_confidence, "HUMAN_VERIFIED");
+});
+
+
+test("normalizeQuestion preserves canonical v2 trust fields and numeric intelligence metrics", () => {
+  const normalized = normalizeQuestion({
+    id: "q-trust",
+    question_id: "CDS_2025_TRUST_1",
+    exam: "CDS",
+    year: 2025,
+    subject: "Polity",
+    topic: "Parliament",
+    question: "Question",
+    opt_a: "A",
+    opt_b: "B",
+    opt_c: "C",
+    opt_d: "D",
+    final_opt: "A",
+    intelligence_trust_tier: "MODEL_READY",
+    intelligence_verification_status: "UNVERIFIED_READY",
+    student_release_status: "RELEASED",
+    expected_knowledge: 0.72,
+    source_accessibility: 0.8,
+    preparation_accessibility: 0.64,
+    cognitive_complexity: 0.51,
+  });
+
+  assert.equal(normalized.intelligence_trust_tier, "MODEL_READY");
+  assert.equal(normalized.intelligence_verification_status, "UNVERIFIED_READY");
+  assert.equal(normalized.student_release_status, "RELEASED");
+  assert.equal(normalized.expected_knowledge, 0.72);
+  assert.equal(normalized.source_accessibility, 0.8);
+  assert.equal(normalized.preparation_accessibility, 0.64);
+  assert.equal(normalized.cognitive_complexity, 0.51);
+});
+
+test("attempt intelligence is deterministic across correctness, pace and difficulty", () => {
+  assert.equal(getPaceTargetSeconds("Easy"), 35);
+  assert.equal(getPaceTargetSeconds("Moderate"), 45);
+  assert.equal(getPaceTargetSeconds("Hard"), 60);
+
+  assert.equal(classifyAttempt(true, 30, "Easy").state, "strong_execution");
+  assert.equal(classifyAttempt(true, 50, "Moderate").state, "correct_slow");
+  assert.equal(classifyAttempt(false, 30, "Moderate").state, "incorrect_fast");
+  assert.equal(classifyAttempt(false, 70, "Hard").state, "incorrect_slow");
 });
 
 // Test Suite: 7 Canonical Explore <-> Practice Filter Equivalence Combinations
