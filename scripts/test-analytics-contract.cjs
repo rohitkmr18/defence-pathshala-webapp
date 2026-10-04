@@ -34,6 +34,7 @@ test("P0 learner-intelligence surfaces emit canonical events", () => {
   const player = read("frontend/src/components/practice/player/QuestionPlayer.tsx");
   const otp = read("frontend/src/components/auth/EmailOtpForm.tsx");
   const identity = read("frontend/src/components/analytics/AnalyticsIdentity.tsx");
+  const onboarding = read("frontend/src/app/onboarding/OnboardingForm.tsx");
 
   for (const event of [
     "dashboard_viewed",
@@ -63,4 +64,6 @@ test("P0 learner-intelligence surfaces emit canonical events", () => {
 
   assert.match(identity, /identifyAnalyticsUser/);
   assert.match(identity, /resetAnalyticsUser/);
+  assert.match(onboarding, /onboarding_started/);
+  assert.match(onboarding, /onboarding_completed/);
 });
