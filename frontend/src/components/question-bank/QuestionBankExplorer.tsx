@@ -52,6 +52,11 @@ export default function QuestionBankExplorer({ meta }: Props) {
   function setSelectedExams(value: string[] | ((current: string[]) => string[])) {
     const nextExams = typeof value === "function" ? value(selectedExams) : value;
     const keepsCds = nextExams.some((exam) => exam.toUpperCase().includes("CDS"));
+    trackLearningEvent("exam_selected", {
+      source_surface: "explore",
+      selection_count: nextExams.length,
+      exam: nextExams.length === 1 ? nextExams[0] : undefined,
+    });
     changeContext({ exams: nextExams, ...(keepsCds ? {} : { cycles: [] }) });
   }
   function setSelectedYears(value: number[] | ((current: number[]) => number[])) {
@@ -61,6 +66,12 @@ export default function QuestionBankExplorer({ meta }: Props) {
     changeContext({ cycles: typeof value === "function" ? value(selectedCycles) : value });
   }
   function setSelectedSubject(value: string | null) {
+    if (value) {
+      trackLearningEvent("subject_selected", {
+        source_surface: "explore",
+        subject: value,
+      });
+    }
     changeContext({ subjects: value ? [value] : [], topics: [], subtopics: [] });
   }
 
@@ -136,7 +147,7 @@ export default function QuestionBankExplorer({ meta }: Props) {
   }, [activeSubjectData, data?.summary.questions]);
 
   useEffect(() => {
-    trackLearningEvent("explore_view", { origin: "explore" }, `explore:${searchParams.toString()}`);
+    trackLearningEvent("explore_viewed", { source_surface: "explore" }, `explore:${searchParams.toString()}`);
   }, [searchParams]);
 
   useEffect(() => {
