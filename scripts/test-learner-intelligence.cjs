@@ -102,6 +102,7 @@ test("recent unresolved mistakes outrank weak-topic coaching", () => {
   });
   assert.equal(data.nextBestMove.type, "review_mistakes");
   assert.equal(data.mistakes.unresolved, 2);
+  assert.match(data.mistakes.recent[0].understandHref, /^\/dashboard\/mistakes\//);
   assert.equal(data.needsAttention[0].attempts, 3);
 });
 
