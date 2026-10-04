@@ -105,7 +105,8 @@ export default function QuestionPlayer({
   const handleCheckAnswer = useCallback(() => {
     if (disabled || !question || !selectedOption || checkedRef.current.has(question.id)) return;
     checkedRef.current.add(question.id);
-    trackLearningEvent("practice_check", { mode, question_id: question.id }, `${sessionId}:${question.id}`);
+    trackLearningEvent("question_answered", { mode, question_id: question.id, selected_option: selectedOption, practice_session_id: sessionId }, `${sessionId}:${question.id}:answered`);
+    trackLearningEvent("answer_checked", { mode, question_id: question.id, practice_session_id: sessionId }, `${sessionId}:${question.id}:checked`);
 
     const correctKey = getCorrectKey(question);
     const isCorrect = selectedOption === correctKey;
@@ -146,7 +147,7 @@ export default function QuestionPlayer({
   const handleNext = useCallback(() => {
     if (disabled || navigationRef.current) return;
     navigationRef.current = true;
-    trackLearningEvent("practice_next", { mode, position: currentIndex }, `${sessionId}:${currentIndex}:next`);
+    trackLearningEvent("next_question_clicked", { mode, position: currentIndex, practice_session_id: sessionId }, `${sessionId}:${currentIndex}:next`);
     if (isLast) {
       void Promise.resolve(onComplete?.(answers)).finally(() => { navigationRef.current = false; });
     } else {
@@ -162,7 +163,7 @@ export default function QuestionPlayer({
     if (disabled || !question || navigationRef.current) return;
     navigationRef.current = true;
 
-    const nextAnswers = { ...answers };
+    trackLearningEvent("question_skipped", { mode, question_id: question.id, practice_session_id: sessionId }, `${sessionId}:${question.id}:skipped`);\n\n    const nextAnswers = { ...answers };
     delete nextAnswers[question.id];
     setAnswers(nextAnswers);
     if (sessionId) updateSessionProgress(sessionId, { answers: nextAnswers });
