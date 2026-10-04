@@ -48,9 +48,9 @@ export interface PracticeQuestion {
   human_review_required?: boolean;
   intelligence_verified?: boolean;
   intelligence_confidence?: "MODEL_DERIVED" | "HUMAN_VERIFIED" | string;
-  intelligence_trust_tier?: "HUMAN_VERIFIED" | "REVIEW_REQUIRED" | "MODEL_READY" | "NOT_ELIGIBLE" | string;
-  intelligence_verification_status?: "VERIFIED" | "REVIEW_REQUIRED" | "UNVERIFIED_READY" | "NOT_ELIGIBLE" | string;
-  student_release_status?: "RELEASED" | "WITHHELD" | string;
+  intelligence_trust_tier?: "HUMAN_VERIFIED" | "REVIEW_REQUIRED" | "MODEL_READY" | "NOT_ELIGIBLE" | string | null;
+  intelligence_verification_status?: "VERIFIED" | "REVIEW_REQUIRED" | "UNVERIFIED_READY" | "NOT_ELIGIBLE" | string | null;
+  student_release_status?: "RELEASED" | "WITHHELD" | string | null;
   pattern_id?: string | null;
   taxonomy_subject?: string | null;
   taxonomy_topic?: string | null;
