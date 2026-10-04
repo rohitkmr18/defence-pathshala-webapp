@@ -295,8 +295,14 @@ test('completion remains resumable until the final cloud save is confirmed', asy
   };
   const completion = completePracticeSession({ sessionId: 'confirmation', questions: [], answers: {}, mode: 'instant', timeSpentSeconds: 20 });
   await tick(); assert.ok(attempted > 0); assert.equal(getLocalSession().is_completed, false);
+  updateSessionProgress('confirmation', { time_spent_seconds: 21 });
+  await tick();
+  assert.equal(getLocalSession().time_spent_seconds, 20);
   finish({ ok: true, json: async () => ({ success: true, session: { id: 'cloud-confirmation' } }) });
   await completion; assert.equal(getLocalSession().is_completed, true);
+  updateSessionProgress('confirmation', { time_spent_seconds: 22 });
+  await tick();
+  assert.equal(getLocalSession().is_completed, true);
 });
 
 test('guest Check, refresh/resume and completion stay local without attempt or PATCH requests', async () => {
