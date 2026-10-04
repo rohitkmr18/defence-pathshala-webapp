@@ -57,6 +57,21 @@ test("new learner receives deterministic starter action", () => {
   assert.equal(data.mistakes.unresolved, 0);
 });
 
+test("in-progress recent activity uses saved attempts before session counters finalize", () => {
+  const data = deriveLearnerIntelligence({
+    attempts: [
+      { ...a("a1", "q1", true, "2026-10-04T08:05:00Z"), session_id: baseSession.id },
+      { ...a("a2", "q2", false, "2026-10-04T08:06:00Z"), session_id: baseSession.id },
+    ],
+    sessions: [{ ...baseSession, correct_count: 0, incorrect_count: 0 }],
+    corpus: [q("q1", "CDS", "Polity", "Parliament"), q("q2", "CDS", "Polity", "Parliament")],
+    targetExams: ["CDS"],
+  });
+  assert.equal(data.recentActivity[0].correct, 1);
+  assert.equal(data.recentActivity[0].incorrect, 1);
+  assert.equal(data.recentActivity[0].isCompleted, false);
+});
+
 test("unfinished session has absolute recommendation priority", () => {
   const data = deriveLearnerIntelligence({
     attempts: [a("a1", "q1", false, "2026-10-04T08:05:00Z")],

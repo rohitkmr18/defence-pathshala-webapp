@@ -389,15 +389,18 @@ export function deriveLearnerIntelligence(input: {
   const recentActivity = [...sessions]
     .sort((a, b) => String(b.updated_at).localeCompare(String(a.updated_at)))
     .slice(0, 5)
-    .map((s) => ({
+    .map((s) => {
+      const savedAttempts = attemptsBySession.get(s.id) || [];
+      return ({
       id: s.id,
       title: s.title,
       mode: s.mode,
       isCompleted: s.is_completed,
       updatedAt: s.updated_at,
-      correct: s.correct_count,
-      incorrect: s.incorrect_count,
-    }));
+      correct: savedAttempts.filter((attempt) => attempt.is_correct).length,
+      incorrect: savedAttempts.filter((attempt) => !attempt.is_correct).length,
+    });
+    });
 
   let nextBestMove: LearnerIntelligence["nextBestMove"];
   if (activeSession) {
