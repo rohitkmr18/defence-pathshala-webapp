@@ -190,6 +190,10 @@ export default function TopicHeatmap({
   };
 
   const handleSelectSubject = (subjectName: string) => {
+    trackLearningEvent("subject_selected", {
+      source_surface: "explore",
+      subject: subjectName,
+    });
     if (onSelectSubject) {
       onSelectSubject(subjectName);
     } else {
@@ -537,7 +541,18 @@ export default function TopicHeatmap({
                         </span>
 
                         <Link
-                          onClick={() => trackLearningEvent("explore_practice", { subject: selectedSubject || undefined, topic: topic.name, origin: "explore" })}
+                          onClick={() => {
+                            trackLearningEvent("topic_selected", {
+                              source_surface: "explore",
+                              subject: selectedSubject || undefined,
+                              topic: topic.name,
+                            });
+                            trackLearningEvent("practice_cta_clicked", {
+                              source_surface: "explore",
+                              subject: selectedSubject || undefined,
+                              topic: topic.name,
+                            });
+                          }}
                           href={buildPracticeUrl(
                             {
                               ...parseFiltersFromSearchParams(new URLSearchParams(returnTo?.split("?")[1] || "")),
