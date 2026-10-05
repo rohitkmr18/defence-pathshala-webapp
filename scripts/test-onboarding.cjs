@@ -113,3 +113,27 @@ test('existing dashboard target editor keeps working without marking setup again
   assert.equal(existing.operations[0].name, 'update_preparation_profile');
   assert.equal(response.body.target_exams[0], 'AFCAT');
 });
+
+
+test('profile JWT validation retry revalidates the same owner and remains bounded', async () => {
+  const { readAuthState } = createLoader()('frontend/src/lib/profile-store.ts');
+  for (const scenario of ['transient', 'persistent', 'wrong-owner', 'other-error']) {
+    let profileReads = 0, authReads = 0;
+    const db = {
+      auth: { getUser: async () => ({ data: { user: { id: ++authReads > 1 && scenario === 'wrong-owner' ? 'other-user' : 'current-user' } }, error: null }) },
+      from(table) {
+        const query = { select() { return query; }, eq() { return query; }, maybeSingle() { return run(); }, then(resolve, reject) { return run().then(resolve, reject); } };
+        async function run() {
+          if (table !== 'profiles') return { data: [], error: null };
+          profileReads++;
+          if (profileReads === 1 || scenario === 'persistent') return { data: null, error: { code: scenario === 'other-error' ? '42501' : 'PGRST303' } };
+          return { data: { id: 'current-user', onboarding_completed: true }, error: null };
+        }
+        return query;
+      }
+    };
+    assert.equal(await readAuthState(db), scenario === 'transient' ? 'complete' : 'error');
+    assert.equal(profileReads, ['transient', 'persistent'].includes(scenario) ? 2 : 1);
+    assert.equal(authReads, scenario === 'other-error' ? 1 : 2);
+  }
+});

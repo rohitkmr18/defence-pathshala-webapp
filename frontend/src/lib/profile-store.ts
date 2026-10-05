@@ -4,11 +4,21 @@ import type { AuthState } from "@/lib/auth-redirect";
 
 /** A missing row means setup is needed; a failed read is never completion. */
 export async function readProfile(supabase: SupabaseClient, user: User): Promise<Profile> {
-  const [{ data: row, error: profileError }, { data: exams, error: examError }] = await Promise.all([
+  const read = () => Promise.all([
     supabase.from("profiles").select("id, full_name, target_year, onboarding_completed")
       .eq("id", user.id).maybeSingle(),
     supabase.from("user_exam_preferences").select("exam").eq("user_id", user.id),
   ]);
+  let [profileResult, examResult] = await read();
+  // A freshly verified OTP session can be accepted by Auth while a REST read
+  // rejects its JWT (PGRST303). Revalidate ownership and retry safe reads once.
+  if (profileResult.error?.code === "PGRST303" || examResult.error?.code === "PGRST303") {
+    const { data: { user: verifiedUser }, error } = await supabase.auth.getUser();
+    if (error || verifiedUser?.id !== user.id) throw new Error("Your profile could not be loaded. Please retry.");
+    [profileResult, examResult] = await read();
+  }
+  const { data: row, error: profileError } = profileResult;
+  const { data: exams, error: examError } = examResult;
   if (profileError || examError) throw new Error("Your profile could not be loaded. Please retry.");
   return {
     id: user.id,
