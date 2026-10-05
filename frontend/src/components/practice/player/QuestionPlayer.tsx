@@ -6,6 +6,8 @@ import {
   ChevronRight,
   CheckCircle2,
   LayoutGrid,
+  Bookmark,
+  Clock3,
 } from "lucide-react";
 import type { PracticeQuestion, PlayerMode, OptionKey } from "@/lib/practice-types";
 import { getCorrectKey } from "@/lib/practice-types";
@@ -24,6 +26,8 @@ export interface QuestionPlayerProps {
   initialIndex?: number;
   initialAnswers?: Record<string, OptionKey>;
   initialCheckedIds?: string[];
+  initialMarkedIds?: string[];
+  elapsedSeconds?: number;
   disabled?: boolean;
   onComplete?: (answers: Record<string, OptionKey>) => void | Promise<void>;
 }
@@ -37,6 +41,8 @@ export default function QuestionPlayer({
   initialIndex = 0,
   initialAnswers = {},
   initialCheckedIds = [],
+  initialMarkedIds = [],
+  elapsedSeconds = 0,
   disabled = false,
   onComplete,
 }: QuestionPlayerProps) {
@@ -48,6 +54,7 @@ export default function QuestionPlayer({
   const [answers, setAnswers] = useState<Record<string, OptionKey>>(initialAnswers);
   /** Set of question IDs whose answers have been revealed */
   const [revealed, setRevealed] = useState<Set<string>>(() => new Set(initialCheckedIds));
+  const [markedIds, setMarkedIds] = useState<string[]>(initialMarkedIds);
   const checkedRef = useRef(new Set(initialCheckedIds));
   const navigationRef = useRef(false);
   const [showNavigator, setShowNavigator] = useState(false);
@@ -60,6 +67,7 @@ export default function QuestionPlayer({
   const questionBaseTimeRef = useRef(0);
 
   useEffect(() => {
+    if (disabled) return;
     questionStartTimeRef.current = Date.now();
     navigationRef.current = false;
     const questionId = questions[currentIndex]?.id;
@@ -74,7 +82,7 @@ export default function QuestionPlayer({
     const timer = window.setInterval(persist, 5000);
     window.addEventListener("pagehide", persist);
     return () => { window.clearInterval(timer); window.removeEventListener("pagehide", persist); persist(); };
-  }, [currentIndex, questions, sessionId]);
+  }, [currentIndex, questions, sessionId, disabled]);
 
   // ── Derived state ───────────────────────────────────────────────────────────
   const question = questions[currentIndex];
@@ -186,6 +194,14 @@ export default function QuestionPlayer({
     }
   }, [disabled, questions.length, sessionId]);
 
+  const toggleReview = () => {
+    if (disabled || !question) return;
+    const next = markedIds.includes(question.id)
+      ? markedIds.filter(id => id !== question.id) : [...markedIds, question.id];
+    setMarkedIds(next);
+    if (sessionId) updateSessionProgress(sessionId, { marked_for_review_ids: next });
+  };
+
   // ── Mode-specific nav logic ─────────────────────────────────────────────────
   const showCheckAnswerCTA = mode === "instant" && hasAnswer && !isRevealed;
   const showNextCTA = mode === "instant" ? isRevealed : hasAnswer;
@@ -233,10 +249,22 @@ export default function QuestionPlayer({
         </button>
       </div>
 
+      {mode === "attempt" && (
+        <div className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3">
+          <span className="inline-flex items-center gap-2 text-xs font-semibold text-slate-600" role="timer" aria-label="Elapsed practice time">
+            <Clock3 className="h-4 w-4" />
+            <span className="font-mono tabular-nums">{Math.floor(elapsedSeconds / 60).toString().padStart(2, "0")}:{(elapsedSeconds % 60).toString().padStart(2, "0")}</span>
+          </span>
+          <button type="button" onClick={toggleReview} disabled={disabled} aria-pressed={markedIds.includes(question.id)} className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-violet-200 bg-violet-50 px-3 text-xs font-bold text-violet-700 disabled:opacity-50">
+            <Bookmark className="h-4 w-4" />{markedIds.includes(question.id) ? "Marked for Review" : "Mark for Review"}
+          </button>
+        </div>
+      )}
+
       {/* Question Navigator Grid Drawer */}
       {showNavigator && (
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm animate-in fade-in slide-in-from-top-2 duration-150">
-          <div className="mb-3 flex items-center justify-between border-b border-slate-100 pb-2">
+          <div className="mb-3 flex flex-wrap gap-2 items-center justify-between border-b border-slate-100 pb-2">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
               Jump to Question ({questions.length} Total)
             </span>
@@ -253,6 +281,7 @@ export default function QuestionPlayer({
               <span className="flex items-center gap-1">
                 <span className="h-2.5 w-2.5 rounded-full bg-slate-200" /> Unanswered
               </span>
+              {mode === "attempt" && <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-full bg-violet-500" />Marked ({markedIds.length})</span>}
             </div>
           </div>
 
@@ -266,7 +295,9 @@ export default function QuestionPlayer({
               const isCurrent = idx === currentIndex;
 
               let btnStyle = "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100";
-              if (isCurrent) {
+              if (markedIds.includes(q.id)) {
+                btnStyle = "border-violet-400 bg-violet-100 text-violet-900 font-bold";
+              } else if (isCurrent) {
                 btnStyle = "border-blue-600 bg-blue-600 text-white font-black shadow-2xs ring-2 ring-blue-300";
               } else if (isQCorrect) {
                 btnStyle = "border-emerald-300 bg-emerald-100 text-emerald-900 font-bold";
@@ -281,6 +312,8 @@ export default function QuestionPlayer({
                   key={q.id}
                   type="button"
                   onClick={() => handleJumpToQuestion(idx)}
+                  aria-label={`Question ${idx + 1}${markedIds.includes(q.id) ? ", marked for review" : ""}`}
+                  aria-current={isCurrent ? "step" : undefined}
                   className={`flex h-9 items-center justify-center rounded-xl border text-xs transition active:scale-95 cursor-pointer ${btnStyle}`}
                 >
                   {idx + 1}
@@ -325,7 +358,7 @@ export default function QuestionPlayer({
         </button>
 
         {/* Action CTAs */}
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center justify-end gap-2">
           {/* Check Answer CTA (Prominent and clear) */}
           {showCheckAnswerCTA && (
             <button

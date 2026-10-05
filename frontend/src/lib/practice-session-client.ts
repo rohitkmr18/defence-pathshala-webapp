@@ -428,7 +428,7 @@ export async function loadResumeSession(sessionId?: string): Promise<ActivePract
   return {
     ...session,
     checked_ids: session.checked_ids ?? session.filters?.progress?.checked_ids ?? [],
-    ...(session.mode === "full_paper"
+    ...(session.mode === "full_paper" || (session.mode === "attempt" && (session.marked_for_review_ids !== undefined || session.filters?.progress?.marked_for_review_ids !== undefined))
       ? {
           marked_for_review_ids:
             session.marked_for_review_ids ??

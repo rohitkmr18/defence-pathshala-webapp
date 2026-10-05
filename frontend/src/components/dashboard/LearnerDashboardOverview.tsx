@@ -108,7 +108,7 @@ export default function LearnerDashboardOverview({
         <div className="relative z-10">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-blue-200">
-              Next Best Move
+              Your preparation, your path
             </p>
             <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold text-slate-200">
               {targetExams.length
@@ -117,9 +117,20 @@ export default function LearnerDashboardOverview({
             </span>
           </div>
 
-          <h1 className="mt-4 max-w-3xl text-3xl font-black tracking-tight sm:text-4xl">
-            {data.nextBestMove.title}
+          <h1 className="mt-4 break-words text-3xl font-black tracking-tight sm:text-4xl">
+            Welcome back, {firstName.trim() || "Aspirant"}.
           </h1>
+          <p className="mt-3 text-sm leading-relaxed text-slate-300">
+            {data.overview.attempts > 0
+              ? `${data.overview.attempts} saved answers · ${data.overview.uniqueQuestionsSolved} unique PYQs · ${data.overview.accuracy}% accuracy`
+              : "Every question is a step towards your uniform. Let’s begin."}
+          </p>
+          <div className="mt-6 border-t border-white/15 pt-5">
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-blue-200">Next Best Move</p>
+            <h2 className="mt-2 max-w-3xl break-words text-2xl font-black tracking-tight sm:text-3xl">
+              {data.nextBestMove.title}
+            </h2>
+          </div>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-300 sm:text-base">
             {data.nextBestMove.reason}
           </p>

@@ -37,11 +37,6 @@ const baseItems = [
     href: "/dashboard/practice",
     icon: Pencil,
   },
-  {
-    name: "Current Affairs",
-    href: "/dashboard/current-affairs",
-    icon: Shield,
-  },
 ];
 
 interface SidebarProps {

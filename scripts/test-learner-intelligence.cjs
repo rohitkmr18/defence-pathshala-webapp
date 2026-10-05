@@ -208,9 +208,21 @@ test("performance coach is rebuilt from durable completed full-paper sessions", 
 
   assert.equal(data.performanceCoach.mocksCompleted, 1);
   assert.equal(data.performanceCoach.totalQuestionsAttempted, 3);
-  assert.equal(data.performanceCoach.averageAccuracy, 33);
+  assert.equal(data.performanceCoach.averageAccuracy, 33.3);
   assert.equal(data.performanceCoach.averageScore, 0.6);
   assert.equal(data.performanceCoach.totalRecoverableMarks, 2.23);
   assert.equal(data.performanceCoach.lastMockTitle, "CDS Full Paper");
   assert.equal(data.performanceCoach.weakAreas[0].topic, "Parliament");
+});
+
+
+test("saved-answer accuracy trend works without mocks and keeps five-answer windows across the display boundary", () => {
+  const attempts = Array.from({ length: 24 }, (_, i) => a(`a${i}`, 'q1', i < 4, `2026-10-04T09:${String(i).padStart(2, '0')}:00Z`));
+  const data = deriveLearnerIntelligence({ attempts: attempts.reverse(), sessions: [], corpus: [q('q1', 'CDS', 'Polity', 'Parliament')], targetExams: ['CDS'] });
+  assert.equal(data.performanceCoach.mocksCompleted, 0);
+  assert.equal(data.performanceCoach.averageAccuracy, 16.7);
+  assert.equal(data.performanceCoach.recentAccuracies.length, 20);
+  assert.equal(data.performanceCoach.recentAccuracies[0], 80);
+  assert.equal(data.performanceCoach.recentAccuracies.at(-1), 0);
+  assert.equal(data.performanceCoach.recentScores.length, 0);
 });

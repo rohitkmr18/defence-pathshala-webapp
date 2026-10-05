@@ -79,6 +79,7 @@ export interface DashboardPreparationSnapshot {
   lastMockTitle: string;
   weakAreas: WeakAreaSummary[];
   recentScores: number[];
+  recentAccuracies: number[];
   trendDirection: "up" | "down" | "flat";
 }
 
@@ -95,6 +96,7 @@ export function computeDashboardSnapshot(): DashboardPreparationSnapshot {
       lastMockTitle: "None",
       weakAreas: [],
       recentScores: [],
+      recentAccuracies: [],
       trendDirection: "flat",
     };
   }
@@ -132,6 +134,11 @@ export function computeDashboardSnapshot(): DashboardPreparationSnapshot {
     .reverse()
     .map((h) => h.netScore);
 
+  const recentAccuracies = history
+    .slice(0, 7)
+    .reverse()
+    .map((h) => h.accuracyRate);
+
   // Calculate score trend direction
   let trendDirection: "up" | "down" | "flat" = "flat";
   if (recentScores.length >= 2) {
@@ -151,6 +158,7 @@ export function computeDashboardSnapshot(): DashboardPreparationSnapshot {
     lastMockTitle,
     weakAreas,
     recentScores,
+    recentAccuracies,
     trendDirection,
   };
 }

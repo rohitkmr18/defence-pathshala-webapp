@@ -326,3 +326,24 @@ test('back to a previous guest session retains pending device progress after sta
   assert.equal(restored.time_spent_seconds, 31); assert.deepEqual(restored.checked_ids, ['q4']);
   assert.equal(restored.pending_attempts.q4.selectedOption, 'A');
 });
+
+
+test('timed practice review flags survive cloud restore and subsequent progress writes', async () => {
+  const saved = session({ filters: { progress: { marked_for_review_ids: ['q4', 'q2'] } } });
+  const writes = [];
+  globalThis.fetch = async (_url, options) => {
+    if (options?.method === 'PATCH') {
+      writes.push(JSON.parse(options.body));
+      return { ok: true, json: async () => ({ success: true }) };
+    }
+    return { ok: true, json: async () => ({ activeSession: saved }) };
+  };
+  const restored = await loadResumeSession(saved.id);
+  assert.deepEqual(restored.marked_for_review_ids, ['q4', 'q2']);
+  saveLocalSession({ ...restored, server_id: 'cloud-id' });
+  updateSessionProgress(saved.id, { marked_for_review_ids: ['q2'], time_spent_seconds: 75 });
+  await tick();
+  assert.deepEqual(getLocalSession().marked_for_review_ids, ['q2']);
+  assert.deepEqual(writes.at(-1).filters.progress.marked_for_review_ids, ['q2']);
+  assert.equal(getLocalSession().time_spent_seconds, 75);
+});
