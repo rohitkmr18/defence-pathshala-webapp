@@ -407,10 +407,17 @@ export async function loadResumeSession(sessionId?: string): Promise<ActivePract
   if (!session || session.is_completed || !Array.isArray(session.question_ids) || !session.question_ids.length) {
     throw new Error("This saved session is no longer available. Return to Practice to start a new session.");
   }
-  return { ...session,
+  return {
+    ...session,
     checked_ids: session.checked_ids ?? session.filters?.progress?.checked_ids ?? [],
-    marked_for_review_ids:
-      session.marked_for_review_ids ?? session.filters?.progress?.marked_for_review_ids ?? [],
+    ...(session.mode === "full_paper"
+      ? {
+          marked_for_review_ids:
+            session.marked_for_review_ids ??
+            session.filters?.progress?.marked_for_review_ids ??
+            [],
+        }
+      : {}),
     question_times: session.question_times ?? session.filters?.progress?.question_times ?? {},
   };
 }
