@@ -210,19 +210,17 @@ export default function FullPaperClient({
 
   const handleToggleMarkForReview = useCallback(() => {
     if (!activeQuestion) return;
-    setMarkedForReview((prev) => {
-      const next = new Set(prev);
-      if (next.has(activeQuestion.id)) {
-        next.delete(activeQuestion.id);
-      } else {
-        next.add(activeQuestion.id);
-      }
-      if (sessionId) {
-        updateSessionProgress(sessionId, { marked_for_review_ids: Array.from(next) });
-      }
-      return next;
-    });
-  }, [activeQuestion, sessionId]);
+    const next = new Set(markedForReview);
+    if (next.has(activeQuestion.id)) {
+      next.delete(activeQuestion.id);
+    } else {
+      next.add(activeQuestion.id);
+    }
+    setMarkedForReview(next);
+    if (sessionId) {
+      updateSessionProgress(sessionId, { marked_for_review_ids: Array.from(next) });
+    }
+  }, [activeQuestion, markedForReview, sessionId]);
 
   const handlePrevious = useCallback(() => {
     if (currentIndex > 0) {
