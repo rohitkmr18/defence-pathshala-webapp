@@ -15,6 +15,7 @@ import {
 // Test 2: Canonical Question Intelligence Normalization
 import { normalizeQuestion } from "../lib/question-intelligence.ts";
 import { classifyAttempt, getPaceTargetSeconds } from "../lib/attempt-intelligence.ts";
+import { renderOptionText } from "../components/practice/player/renderers/renderQuestionText.ts";
 
 test("parseListParam splits and trims comma-separated values and arrays", () => {
   assert.deepEqual(parseListParam("CDS, CAPF-AC"), ["CDS", "CAPF-AC"]);
@@ -186,6 +187,13 @@ test("normalizeQuestion preserves canonical v2 trust fields and numeric intellig
   assert.equal(normalized.source_accessibility, 0.8);
   assert.equal(normalized.preparation_accessibility, 0.64);
   assert.equal(normalized.cognitive_complexity, 0.51);
+});
+
+test("option rendering strips only explicit labels and preserves real initial letters", () => {
+  assert.equal(renderOptionText("A. Explicit label", "A"), "Explicit label");
+  assert.equal(renderOptionText("(B) Explicit label", "B"), "Explicit label");
+  assert.equal(renderOptionText("Argentina", "A"), "Argentina");
+  assert.equal(renderOptionText("British Constitution", "B"), "British Constitution");
 });
 
 test("attempt intelligence is deterministic across correctness, pace and difficulty", () => {
