@@ -21,6 +21,25 @@ test('Explore → Practice → Auth → Practice retains every selection, mode a
   assert.equal(player.searchParams.get('returnTo'), explore);
 });
 
+test('question structure parsers handle real statement and matching punctuation variants', () => {
+  const load = createLoader({ '@/components/common/MathText': 'math-text' });
+  const { splitNumberedItems, splitLabeledItems } = load('frontend/src/components/practice/player/renderers/renderer-utils.tsx');
+
+  const statements = splitNumberedItems(
+    'Which statements are correct? 1, First statement text. 2. Second statement text. Select the answer using the code given below.'
+  );
+  assert.equal(statements.items.length, 2);
+  assert.equal(statements.items[0].label, '1,');
+  assert.match(statements.items[0].text, /First statement/);
+  assert.equal(statements.items[1].label, '2.');
+  assert.match(statements.outro, /Select the answer/);
+
+  const list = splitLabeledItems('A. Alpha item; B. Beta item; C. Gamma item; D. Delta item.');
+  assert.deepEqual(list.map(item => item.label), ['A', 'B', 'C', 'D']);
+  assert.match(list[0].text, /Alpha item/);
+  assert.match(list[3].text, /Delta item/);
+});
+
 test('contextual return keeps nested encodings intact and rejects unsafe or unrelated destinations', () => {
   const { safeLearningReturn, MOBILE_LEARNING_NAV } = createLoader()('frontend/src/lib/learning-navigation.ts');
   const valid = '/dashboard/question-bank?topic=Rights%26Duties&subtopic=100%25';
