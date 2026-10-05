@@ -5,14 +5,14 @@ const { PGlite } = require('../frontend/node_modules/@electric-sql/pglite');
 const history = require('../docs/auth/production-migration-history.json');
 const directory = 'supabase/migrations';
 
-test('every observed applied migration has its actual version and recorded SQL; only onboarding is pending', () => {
+test('every observed applied production migration has its exact recorded version and SQL', () => {
   const files = fs.readdirSync(directory).filter(name => name.endsWith('.sql')).sort();
   const applied = history.migrations.map(row => `${row.version}_${row.name}.sql`);
-  assert.deepEqual(files, [...applied, '20261003093440_atomic_onboarding.sql'].sort());
+  assert.deepEqual(files, applied.sort());
   for (const row of history.migrations) {
     assert.equal(fs.readFileSync(`${directory}/${row.version}_${row.name}.sql`, 'utf8').trim(), row.statements.join('\n').replace(/[ \t]+$/gm, '').trim());
   }
-  assert.equal(history.migrations.at(-1).version, '20261003091625');
+  assert.equal(history.migrations.at(-1).version, '20261003191601');
   const config = fs.readFileSync('supabase/config.toml', 'utf8');
   assert.match(config, /\[db\.migrations\][\s\S]*?enabled = false\s+schema_paths = \[\]/);
   assert.match(config, /\[db\.seed\][\s\S]*?enabled = false[\s\S]*?sql_paths = \[\]/);
@@ -35,7 +35,6 @@ test('fresh schema reconstruction includes Phase 0, actual Phase 2 history and a
     await db.exec(`insert into auth.users(id) values ('${id}');
       update public.profiles set full_name='Existing', onboarding_completed=true where id='${id}';
       insert into public.user_exam_preferences(user_id,exam) values ('${id}','NDA');`);
-    await db.exec(fs.readFileSync(`${directory}/20261003093440_atomic_onboarding.sql`, 'utf8'));
     await db.exec(fs.readFileSync('supabase/reconstruction/synthetic-lineage-check.sql', 'utf8'));
     await db.exec(`select set_config('request.jwt.claim.sub', '${id}', false); set role authenticated;`);
     const { rows } = await db.query("select public.complete_onboarding('Overwrite',2028,array['CDS']) as profile");

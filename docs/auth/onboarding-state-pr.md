@@ -10,6 +10,6 @@ Validation: 70 frontend/auth/OTP/onboarding SQL tests passed on Node 22 and 24; 
 
 No authenticated live Supabase, OTP delivery, Google OAuth, PostgREST/RLS or live concurrency acceptance is claimed. No external staging resource, secret/auth setting, merge, production deployment, production DDL/DML, reset or repair was performed. The approved Vercel guard disables only this PR branch; keep this PR Draft.
 
-Migration and rollout: supabase/migrations/20261003093440_atomic_onboarding.sql; docs/auth/onboarding-state-rollout.md. Source receipts, overlap decisions and controlled staging preparation: docs/auth/repository-reconciliation.md. Check results/limits: docs/auth/onboarding-state-verification.md. OTP provider prerequisites: docs/auth/email-otp-rollout.md.
+Migration and rollout: supabase/migrations/20261003184207_atomic_onboarding.sql; docs/auth/onboarding-state-rollout.md. Source receipts, overlap decisions and controlled staging preparation: docs/auth/repository-reconciliation.md. Check results/limits: docs/auth/onboarding-state-verification.md. OTP provider prerequisites: docs/auth/email-otp-rollout.md.
 
 Next action: select an existing isolated Supabase staging environment and review its baseline against the controlled reconstruction plan before applying any SQL or configuring test credentials. Stop before creating paid resources or changing external configuration; these require a separate owner-controlled step.
