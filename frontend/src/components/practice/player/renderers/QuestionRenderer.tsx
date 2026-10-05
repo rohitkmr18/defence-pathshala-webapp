@@ -20,6 +20,16 @@ export default function QuestionRenderer({ text, pattern }: QuestionRendererProp
   const kind = normalized(pattern);
   const lowerText = normalizedText.toLowerCase();
 
+  // Some source rows are tagged "Match the Following" even when the
+  // question is actually a list of independent pairs. Prefer the pair renderer
+  // when the stem itself says "pairs" so the UI follows the paper structure.
+  if (
+    kind.includes("pair") ||
+    /following pairs?|pairs?\s+(?:is|are)\s+correctly matched/i.test(lowerText)
+  ) {
+    return <PairRenderer text={normalizedText} />;
+  }
+
   if (
     kind.includes("matching") ||
     kind.includes("list") ||
@@ -34,13 +44,6 @@ export default function QuestionRenderer({ text, pattern }: QuestionRendererProp
     (/assertion\s*\(?(?:a)\)?\s*:/i.test(normalizedText) && /reason\s*\(?(?:r)\)?\s*:/i.test(normalizedText))
   ) {
     return <AssertionReasonRenderer text={normalizedText} />;
-  }
-
-  if (
-    kind.includes("pair") ||
-    /following pairs?|pairs?\s+(?:is|are)\s+correctly matched/i.test(lowerText)
-  ) {
-    return <PairRenderer text={normalizedText} />;
   }
 
   if (
