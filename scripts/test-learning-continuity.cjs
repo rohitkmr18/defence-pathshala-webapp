@@ -282,10 +282,11 @@ test('lost creation response/retry returns one cloud identity without resetting 
   const f = apiFixture(); const { POST, PATCH } = f.load('frontend/src/app/api/practice/session/route.ts');
   const input = { creation_id: '11111111-1111-4111-8111-111111111111', mode: 'instant', question_ids: ['q1'], filters: { origin: 'explore' } };
   const first = await POST(f.request(input)); assert.equal(first.status, 200);
-  await PATCH(f.request({ session_id: input.creation_id, current_index: 1, answers: { q1: 'B' }, filters: { progress: { checked_ids: ['q1'], question_times: { q1: 12 } } } }));
+  await PATCH(f.request({ session_id: input.creation_id, current_index: 1, answers: { q1: 'B' }, filters: { progress: { checked_ids: ['q1'], marked_for_review_ids: ['q1'], question_times: { q1: 12 } } } }));
   const retry = await POST(f.request(input)); assert.equal(retry.body.session.current_index, 1);
   assert.equal(f.tables.practice_sessions.size, 1);
   assert.equal(retry.body.session.filters.progress.question_times.q1, 12);
+  assert.deepEqual(retry.body.session.filters.progress.marked_for_review_ids, ['q1']);
   f.identity.id = 'other';
   const denied = await POST(f.request(input)); assert.equal(denied.body.session, undefined);
 });
