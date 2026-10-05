@@ -36,10 +36,12 @@ export default function EmailOtpForm({ mode = "login" }: { mode?: "login" | "sig
       setCode("");
       setCooldown(60);
     } catch (failure) {
-      const message = failure instanceof Error ? failure.message : "Could not send a code. Please try again.";
       const details = failure && typeof failure === "object"
-        ? failure as { code?: unknown; status?: unknown }
+        ? failure as { message?: unknown; code?: unknown; status?: unknown }
         : {};
+      const message = typeof details.message === "string"
+        ? details.message
+        : "Could not send a code. Please try again.";
       const code = typeof details.code === "string" ? details.code : "";
       const status = typeof details.status === "number" ? details.status : null;
       const isRateLimit =
@@ -47,7 +49,6 @@ export default function EmailOtpForm({ mode = "login" }: { mode?: "login" | "sig
         code.includes("rate_limit") ||
         /too many requests|rate limit/i.test(message);
       const isAmbiguousNetworkFailure =
-        failure instanceof TypeError ||
         /load failed|failed to fetch|network(?: request)? failed|networkerror/i.test(message);
 
       if (isAmbiguousNetworkFailure) {
