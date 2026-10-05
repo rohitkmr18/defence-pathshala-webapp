@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Loader2, LogIn } from "lucide-react";
+import { ArrowLeft, Loader2, LogIn, RefreshCw, ShieldCheck } from "lucide-react";
 import type { PracticeQuestion, OptionKey } from "@/lib/practice-types";
 import { createClient } from "@/lib/supabase/client";
 import { authUrl } from "@/lib/auth-redirect";
@@ -69,6 +69,8 @@ export default function FullPaperClient({
     router.replace(`${url.pathname}${url.search}`, { scroll: false });
   }, [sessionId, router]);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
+  const [submissionPending, setSubmissionPending] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const submitting = useRef(false);
   const [cloudReady, setCloudReady] = useState(false);
   useEffect(() => {
@@ -132,6 +134,7 @@ export default function FullPaperClient({
           if (saved) {
             saveLocalSession(saved);
             setAnswers(saved.answers);
+            setSubmissionPending(Boolean(saved.submission_pending));
             setMarkedForReview(new Set(saved.marked_for_review_ids || []));
             setCurrentIndex(saved.current_index);
             setTimeRemaining(Math.max(0, paper.durationSeconds - saved.time_spent_seconds));
@@ -163,6 +166,8 @@ export default function FullPaperClient({
       setLoading(true);
       setSessionId(undefined);
       setSubmissionError(null);
+      setSubmissionPending(false);
+      setIsSubmitting(false);
       setAnswers({});
       setMarkedForReview(new Set());
       setVisited(new Set());
@@ -240,16 +245,27 @@ export default function FullPaperClient({
   const handleConfirmSubmit = useCallback(async () => {
     if (submitting.current || !sessionId || !questions || isAuthenticated !== true) return;
     submitting.current = true;
+    setIsSubmitting(true);
+    setSubmissionPending(true);
     setIsSubmitModalOpen(false);
     setSubmissionError(null);
     try {
       await completePracticeSession({ sessionId, questions, answers, mode: "full_paper",
         timeSpentSeconds: selectedPaper.durationSeconds - timeRemaining });
+      setSubmissionPending(false);
       setIsSubmitted(true);
       trackLearningEvent("practice_complete", { mode: "full_paper" }, sessionId);
     } catch (error) {
-      setSubmissionError(error instanceof Error ? error.message : "Submission could not be saved.");
-    } finally { submitting.current = false; }
+      const message = error instanceof Error ? error.message : "";
+      setSubmissionError(
+        /sign in|account|auth/i.test(message)
+          ? "We could not confirm your account session. Your final answers are still safe on this device."
+          : "We could not confirm cloud submission yet. Your final answers are safe on this device."
+      );
+    } finally {
+      submitting.current = false;
+      setIsSubmitting(false);
+    }
   }, [sessionId, questions, answers, selectedPaper.durationSeconds, timeRemaining, isAuthenticated]);
 
   // Authentication and session creation must finish before the timer starts.
@@ -259,10 +275,25 @@ export default function FullPaperClient({
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [loading, isSubmitted, cloudReady, isAuthenticated, sessionId, questions, timeRemaining]);
   useEffect(() => {
-    if (timeRemaining !== 0 || isSubmitted || submissionError) return;
+    if (timeRemaining !== 0 || isSubmitted || submissionPending) return;
     const timeout = setTimeout(() => { void handleConfirmSubmit(); }, 0);
     return () => clearTimeout(timeout);
-  }, [timeRemaining, isSubmitted, submissionError, handleConfirmSubmit]);
+  }, [timeRemaining, isSubmitted, submissionPending, handleConfirmSubmit]);
+
+  // Submission recovery is automatic. The learner should not have to understand
+  // persistence internals after spending two hours on a paper.
+  useEffect(() => {
+    if (!submissionPending || isSubmitted || isSubmitting) return;
+    const retry = () => { void handleConfirmSubmit(); };
+    window.addEventListener("online", retry);
+    const retryTimer = window.setTimeout(() => {
+      if (navigator.onLine) retry();
+    }, 12000);
+    return () => {
+      window.removeEventListener("online", retry);
+      window.clearTimeout(retryTimer);
+    };
+  }, [submissionPending, isSubmitted, isSubmitting, handleConfirmSubmit]);
 
   useEffect(() => {
     if (!sessionId || isSubmitted) return;
@@ -277,6 +308,8 @@ export default function FullPaperClient({
         setSessionId(session.id);
       });
     setSubmissionError(null);
+    setSubmissionPending(false);
+    setIsSubmitting(false);
     setAnswers({});
     setMarkedForReview(new Set());
     setVisited(new Set(questions?.[0] ? [questions[0].id] : []));
@@ -354,7 +387,7 @@ export default function FullPaperClient({
   if (isSubmitted) {
     return (
       <div className="px-4 py-6 sm:px-6">
-        <PracticePersistenceStatus questions={questions || []} />
+        <PracticePersistenceStatus questions={questions || []} variant="exam" />
         <FullPaperDebrief
           questions={questions}
           answers={answers}
@@ -372,8 +405,29 @@ export default function FullPaperClient({
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
-      <PracticePersistenceStatus questions={questions || []} />
-      {submissionError && <p role="alert" className="p-4 text-sm text-amber-900">{submissionError} Retry submission after restoring your connection.</p>}
+      <PracticePersistenceStatus questions={questions || []} variant="exam" />
+      {submissionPending && (
+        <div role={submissionError ? "alert" : "status"} className="mx-4 mt-3 flex items-start gap-3 rounded-xl border border-blue-100 bg-blue-50 px-3.5 py-3 text-sm text-slate-700 sm:mx-6">
+          <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" />
+          <div className="min-w-0 flex-1">
+            <p className="font-semibold text-slate-900">
+              {isSubmitting ? "Submitting your paper…" : "Your paper is safe on this device"}
+            </p>
+            <p className="mt-0.5 text-xs leading-5 text-slate-600">
+              {isSubmitting
+                ? "We are reconciling your final answers with your account."
+                : "Submission is pending. We will retry automatically when the connection is available."}
+            </p>
+            {submissionError && <p className="mt-1 text-xs text-slate-600">{submissionError}</p>}
+          </div>
+          {!isSubmitting && (
+            <button type="button" onClick={() => void handleConfirmSubmit()} className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-blue-200 bg-white px-2.5 py-1.5 text-xs font-bold text-blue-700 hover:bg-blue-50">
+              <RefreshCw className="h-3.5 w-3.5" />
+              Retry now
+            </button>
+          )}
+        </div>
+      )}
       {/* Sticky Header with Exam Switcher, Live Timer & Submit CTA */}
       <ExamHeader
         examTitle={selectedPaper.label}
@@ -382,6 +436,8 @@ export default function FullPaperClient({
         answeredCount={answeredCount}
         totalQuestions={questions.length}
         onSubmitClick={() => setIsSubmitModalOpen(true)}
+        isSubmitting={isSubmitting}
+        submissionPending={submissionPending}
         availablePapers={AVAILABLE_FULL_PAPERS}
         selectedPaperId={selectedPaper.id}
         onSelectPaper={handleSelectPaperById}
