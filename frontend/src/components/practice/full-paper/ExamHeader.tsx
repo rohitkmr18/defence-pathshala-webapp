@@ -10,6 +10,8 @@ interface ExamHeaderProps {
   answeredCount: number;
   totalQuestions: number;
   onSubmitClick: () => void;
+  isSubmitting?: boolean;
+  submissionPending?: boolean;
   availablePapers?: FullPaperDefinition[];
   selectedPaperId?: string;
   onSelectPaper?: (paperId: string) => void;
@@ -34,6 +36,8 @@ export default function ExamHeader({
   answeredCount,
   totalQuestions,
   onSubmitClick,
+  isSubmitting = false,
+  submissionPending = false,
   availablePapers,
   selectedPaperId,
   onSelectPaper,
@@ -105,10 +109,11 @@ export default function ExamHeader({
         <button
           type="button"
           onClick={onSubmitClick}
-          className="flex items-center gap-2 rounded-xl bg-slate-950 px-4 py-2 text-sm font-semibold text-white shadow-xs transition hover:bg-slate-800 active:scale-[0.98]"
+          disabled={isSubmitting}
+          className="flex items-center gap-2 rounded-xl bg-slate-950 px-4 py-2 text-sm font-semibold text-white shadow-xs transition hover:bg-slate-800 active:scale-[0.98] disabled:cursor-wait disabled:opacity-70"
         >
-          <Send className="h-3.5 w-3.5" />
-          <span>Submit Paper</span>
+          {isSubmitting ? <Clock className="h-3.5 w-3.5 animate-pulse" /> : <Send className="h-3.5 w-3.5" />}
+          <span>{isSubmitting ? "Submitting…" : submissionPending ? "Retry Submit" : "Submit Paper"}</span>
         </button>
       </div>
     </header>
