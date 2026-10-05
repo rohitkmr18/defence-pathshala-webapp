@@ -36,9 +36,35 @@ export default function EmailOtpForm({ mode = "login" }: { mode?: "login" | "sig
       setCode("");
       setCooldown(60);
     } catch (failure) {
-      setError(failure instanceof Error ? failure.message : "Could not send a code. Please try again.");
-      // Avoid rapid repeated requests after a delivery/rate-limit failure.
-      setCooldown(60);
+      const message = failure instanceof Error ? failure.message : "Could not send a code. Please try again.";
+      const details = failure && typeof failure === "object"
+        ? failure as { code?: unknown; status?: unknown }
+        : {};
+      const code = typeof details.code === "string" ? details.code : "";
+      const status = typeof details.status === "number" ? details.status : null;
+      const isRateLimit =
+        status === 429 ||
+        code.includes("rate_limit") ||
+        /too many requests|rate limit/i.test(message);
+      const isAmbiguousNetworkFailure =
+        failure instanceof TypeError ||
+        /load failed|failed to fetch|network(?: request)? failed|networkerror/i.test(message);
+
+      if (isAmbiguousNetworkFailure) {
+        // Safari/network interruptions can lose the response after Supabase has
+        // already queued the email. Let the learner use the OTP that may have
+        // arrived instead of stranding them on the send screen.
+        const normalized = (sentEmail || email).trim().toLowerCase();
+        setSentEmail(normalized);
+        setCode("");
+        setCooldown(0);
+        setError("We couldn’t confirm the send response. If you received a code, enter it below.");
+      } else {
+        setError(message);
+        // Only impose the provider resend window when Supabase explicitly
+        // reports throttling. Ordinary failures should be retryable immediately.
+        setCooldown(isRateLimit ? 60 : 0);
+      }
     } finally {
       inFlight.current = false;
       setBusy(false);
