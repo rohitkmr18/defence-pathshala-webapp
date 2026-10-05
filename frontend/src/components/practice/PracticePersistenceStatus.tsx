@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { CheckCircle2, Cloud, CloudOff, Loader2 } from "lucide-react";
+import { CheckCircle2, CloudOff, Loader2 } from "lucide-react";
 import { getLocalSession, PRACTICE_SESSION_UPDATED_EVENT, retryPracticePersistence } from "@/lib/practice-session-client";
 import type { PracticeQuestion } from "@/lib/practice-types";
 
