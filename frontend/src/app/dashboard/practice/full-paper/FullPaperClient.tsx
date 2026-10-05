@@ -132,6 +132,7 @@ export default function FullPaperClient({
           if (saved) {
             saveLocalSession(saved);
             setAnswers(saved.answers);
+            setMarkedForReview(new Set(saved.marked_for_review_ids || []));
             setCurrentIndex(saved.current_index);
             setTimeRemaining(Math.max(0, paper.durationSeconds - saved.time_spent_seconds));
             trackLearningEvent("practice_resume", { mode: "full_paper", position: saved.current_index }, `${saved.id}:${saved.updated_at}`);
@@ -216,9 +217,12 @@ export default function FullPaperClient({
       } else {
         next.add(activeQuestion.id);
       }
+      if (sessionId) {
+        updateSessionProgress(sessionId, { marked_for_review_ids: Array.from(next) });
+      }
       return next;
     });
-  }, [activeQuestion]);
+  }, [activeQuestion, sessionId]);
 
   const handlePrevious = useCallback(() => {
     if (currentIndex > 0) {
