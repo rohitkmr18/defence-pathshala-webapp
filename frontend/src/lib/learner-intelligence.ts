@@ -115,6 +115,7 @@ export interface LearnerIntelligence {
     lastMockTitle: string;
     weakAreas: Array<{ topic: string; count: number }>;
     recentScores: number[];
+    recentAccuracies: number[];
     trendDirection: "up" | "down" | "flat";
   };
   recentActivity: Array<{
@@ -348,12 +349,24 @@ export function deriveLearnerIntelligence(input: {
     .slice(0, 7)
     .reverse()
     .map((metric) => metric.netScore);
+
+  const chronologicalAttempts = [...attempts].sort((a, b) =>
+    String(a.attempted_at || "").localeCompare(String(b.attempted_at || ""))
+  );
+  const recentAttemptWindow = chronologicalAttempts.slice(-20);
+  const recentAccuracies = recentAttemptWindow.map((_, index) => {
+    const rolling = recentAttemptWindow.slice(Math.max(0, index - 4), index + 1);
+    return pct(
+      rolling.filter((attempt) => attempt.is_correct).length,
+      rolling.length
+    );
+  });
   let trendDirection: "up" | "down" | "flat" = "flat";
-  if (recentScores.length >= 2) {
-    const latestScore = recentScores[recentScores.length - 1];
-    const previousScore = recentScores[recentScores.length - 2];
-    if (latestScore > previousScore + 1) trendDirection = "up";
-    else if (latestScore < previousScore - 1) trendDirection = "down";
+  if (recentAccuracies.length >= 2) {
+    const latestAccuracy = recentAccuracies[recentAccuracies.length - 1];
+    const previousAccuracy = recentAccuracies[recentAccuracies.length - 2];
+    if (latestAccuracy > previousAccuracy + 2) trendDirection = "up";
+    else if (latestAccuracy < previousAccuracy - 2) trendDirection = "down";
   }
 
   const performanceCoach = {
@@ -369,12 +382,8 @@ export function deriveLearnerIntelligence(input: {
             10
         ) / 10
       : 0,
-    averageAccuracy: fullPaperMetrics.length
-      ? Math.round(
-          (fullPaperMetrics.reduce((sum, metric) => sum + metric.accuracy, 0) /
-            fullPaperMetrics.length) *
-            10
-        ) / 10
+    averageAccuracy: attempts.length
+      ? Math.round((correct / attempts.length) * 1000) / 10
       : 0,
     totalRecoverableMarks: fullPaperMetrics[0]?.recoverableMarks || 0,
     lastMockTitle: fullPaperMetrics[0]?.title || "None",
@@ -383,6 +392,7 @@ export function deriveLearnerIntelligence(input: {
       .slice(0, 3)
       .map(([topic, count]) => ({ topic, count })),
     recentScores,
+    recentAccuracies,
     trendDirection,
   };
 
