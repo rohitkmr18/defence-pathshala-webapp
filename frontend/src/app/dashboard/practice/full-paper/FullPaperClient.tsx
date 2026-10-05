@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Loader2, LogIn, RefreshCw, ShieldCheck } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Loader2, LogIn, RefreshCw, ShieldCheck, Sparkles } from "lucide-react";
 import type { PracticeQuestion, OptionKey } from "@/lib/practice-types";
 import { createClient } from "@/lib/supabase/client";
 import { authUrl } from "@/lib/auth-redirect";
@@ -72,6 +72,7 @@ export default function FullPaperClient({
   const [submissionPending, setSubmissionPending] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const submitting = useRef(false);
+  const questionTopRef = useRef<HTMLDivElement | null>(null);
   const [cloudReady, setCloudReady] = useState(false);
   useEffect(() => {
     const refresh = () => {
@@ -159,28 +160,6 @@ export default function FullPaperClient({
     return () => { window.clearTimeout(start); controller.abort(); };
   }, [selectedPaper, isAuthenticated, returnTo, origin]);
 
-  // Paper switcher handler
-  const handleSelectPaperById = useCallback((paperId: string) => {
-    const nextPaper = AVAILABLE_FULL_PAPERS.find((p) => p.id === paperId);
-    if (!submitting.current && nextPaper && nextPaper.id !== selectedPaper.id) {
-      setLoading(true);
-      setSessionId(undefined);
-      setSubmissionError(null);
-      setSubmissionPending(false);
-      setIsSubmitting(false);
-      setAnswers({});
-      setMarkedForReview(new Set());
-      setVisited(new Set());
-      setCurrentIndex(0);
-      setTimeRemaining(nextPaper.durationSeconds);
-      setIsSubmitted(false);
-
-      setQuestions(null);
-      window.history.replaceState(null, "", fullPaperDestination(nextPaper));
-      setSelectedPaper(nextPaper);
-    }
-  }, [selectedPaper.id]);
-
   // Update visited state on question navigation
   const navigateToQuestion = useCallback(
     (index: number) => {
@@ -188,6 +167,9 @@ export default function FullPaperClient({
       setCurrentIndex(index);
       if (sessionId) updateSessionProgress(sessionId, { current_index: index });
       setVisited((prev) => new Set(prev).add(questions[index].id));
+      window.requestAnimationFrame(() => {
+        questionTopRef.current?.scrollIntoView({ block: "start", behavior: "auto" });
+      });
     },
     [questions, sessionId, submissionPending]
   );
@@ -234,6 +216,15 @@ export default function FullPaperClient({
   }, [currentIndex, navigateToQuestion]);
 
   const handleSaveAndNext = useCallback(() => {
+    if (!questions || submissionPending || submitting.current) return;
+    if (currentIndex < questions.length - 1) {
+      navigateToQuestion(currentIndex + 1);
+    } else {
+      setIsSubmitModalOpen(true);
+    }
+  }, [currentIndex, questions, navigateToQuestion, submissionPending]);
+
+  const handleSkip = useCallback(() => {
     if (!questions || submissionPending || submitting.current) return;
     if (currentIndex < questions.length - 1) {
       navigateToQuestion(currentIndex + 1);
@@ -354,11 +345,22 @@ export default function FullPaperClient({
 
   if (loading || isAuthenticated === null) {
     return (
-      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-        <p className="text-sm font-semibold text-slate-700">
-          Loading {selectedPaper.label} Examination Questions from Database...
-        </p>
+      <div className="flex min-h-[70vh] items-center justify-center bg-slate-50 px-4">
+        <div className="w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-6 text-center shadow-lg">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+            <Loader2 className="h-6 w-6 animate-spin" />
+          </div>
+          <h2 className="mt-4 text-lg font-bold text-slate-900">Preparing your full mock</h2>
+          <p className="mt-1 text-sm text-slate-500">{selectedPaper.label}</p>
+          <div className="mt-5 space-y-2 text-left text-xs text-slate-600">
+            <div className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-emerald-600" /> Locking exam configuration</div>
+            <div className="flex items-center gap-2"><Loader2 className="h-4 w-4 animate-spin text-blue-600" /> Loading authentic PYQs and saved progress</div>
+            <div className="flex items-center gap-2 text-slate-400"><Sparkles className="h-4 w-4" /> Preparing exam workspace</div>
+          </div>
+          <div className="mt-5 h-1.5 overflow-hidden rounded-full bg-slate-100">
+            <div className="h-full w-2/3 animate-pulse rounded-full bg-blue-600" />
+          </div>
+        </div>
       </div>
     );
   }
@@ -428,19 +430,15 @@ export default function FullPaperClient({
           )}
         </div>
       )}
-      {/* Sticky Header with Exam Switcher, Live Timer & Submit CTA */}
+      {/* Sticky exam identity, live timer & submit CTA */}
       <ExamHeader
         examTitle={selectedPaper.label}
         timeRemaining={timeRemaining}
-        totalTime={selectedPaper.durationSeconds}
         answeredCount={answeredCount}
         totalQuestions={questions.length}
         onSubmitClick={() => submissionPending ? void handleConfirmSubmit() : setIsSubmitModalOpen(true)}
         isSubmitting={isSubmitting}
         submissionPending={submissionPending}
-        availablePapers={AVAILABLE_FULL_PAPERS}
-        selectedPaperId={selectedPaper.id}
-        onSelectPaper={handleSelectPaperById}
       />
 
       {/* Main Examination Workspace */}
@@ -448,6 +446,7 @@ export default function FullPaperClient({
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
           {/* Left Column: Active Question + Action Toolbar */}
           <div className="space-y-4 lg:col-span-8">
+            <div ref={questionTopRef} className="scroll-mt-28" />
             {activeQuestion && (
               <QuestionCard
                 question={activeQuestion}
@@ -466,6 +465,7 @@ export default function FullPaperClient({
               onPrevious={handlePrevious}
               onClearResponse={handleClearResponse}
               onToggleMarkForReview={handleToggleMarkForReview}
+              onSkip={handleSkip}
               onSaveAndNext={handleSaveAndNext}
             />
           </div>
@@ -486,6 +486,64 @@ export default function FullPaperClient({
           </aside>
         </div>
       </main>
+
+      {submissionPending && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/45 px-4 backdrop-blur-sm" role="status" aria-live="polite">
+          <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl sm:p-7">
+            <div className="flex items-start gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+                {submissionError ? <ShieldCheck className="h-5 w-5" /> : <Loader2 className="h-5 w-5 animate-spin" />}
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-slate-900">
+                  {submissionError ? "Your paper is safe" : "Finishing your mock"}
+                </h2>
+                <p className="mt-1 text-sm leading-6 text-slate-600">
+                  {submissionError
+                    ? "Your final responses are secured on this device. Cloud submission will retry automatically."
+                    : "You are done. We are safely closing the attempt and preparing your debrief."}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-6 space-y-3 rounded-2xl bg-slate-50 p-4 text-sm">
+              <div className="flex items-center gap-3 text-slate-800">
+                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <span>Final answers secured on this device</span>
+              </div>
+              <div className="flex items-center gap-3 text-slate-800">
+                {submissionError ? <RefreshCw className="h-4 w-4 text-amber-600" /> : <Loader2 className="h-4 w-4 animate-spin text-blue-600" />}
+                <span>{submissionError ? "Waiting to confirm cloud submission" : "Saving attempts to your account"}</span>
+              </div>
+              <div className="flex items-center gap-3 text-slate-500">
+                <Sparkles className="h-4 w-4" />
+                <span>Preparing score, accuracy and weak-area analysis</span>
+              </div>
+            </div>
+
+            {!submissionError && (
+              <div className="mt-5 h-1.5 overflow-hidden rounded-full bg-slate-100">
+                <div className="h-full w-3/4 animate-pulse rounded-full bg-blue-600" />
+              </div>
+            )}
+
+            {submissionError && (
+              <div className="mt-5">
+                <button
+                  type="button"
+                  onClick={() => void handleConfirmSubmit()}
+                  disabled={isSubmitting}
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-slate-950 px-4 py-3 text-sm font-bold text-white disabled:opacity-60"
+                >
+                  <RefreshCw className={`h-4 w-4 ${isSubmitting ? "animate-spin" : ""}`} />
+                  {isSubmitting ? "Retrying…" : "Retry submission now"}
+                </button>
+                <p className="mt-2 text-center text-xs text-slate-500">You can safely keep this screen open; no answer needs to be re-entered.</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Submission Audit Confirmation Modal */}
       <SubmitModal
