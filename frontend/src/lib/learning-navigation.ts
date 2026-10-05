@@ -5,7 +5,7 @@ export function safeLearningReturn(value: string | null | undefined, fallback = 
   const safe = safeAuthNext(value);
   if (safe === "/dashboard" && value !== "/dashboard") return fallback;
   const path = safe.split(/[?#]/)[0];
-  return path === "/dashboard" || path === "/dashboard/question-bank" || path === "/dashboard/practice"
+  return path === "/dashboard" || path === "/dashboard/question-bank" || path === "/dashboard/practice" || path === "/dashboard/mistakes"
     ? safe : fallback;
 }
 

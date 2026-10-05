@@ -1,7 +1,7 @@
 import test, { beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  loadResumeSession, restoreQuestionOrder, initializeSession,
+  loadResumeSession, latestSessionSnapshot, restoreQuestionOrder, initializeSession,
   updateSessionProgress, getLocalSession, saveLocalSession, recordQuestionAttempt, completePracticeSession, retryPracticePersistence,
 } from '../lib/practice-session-client.ts';
 
@@ -17,6 +17,15 @@ const session = (overrides = {}) => ({
   started_at: new Date().toISOString(), updated_at: new Date().toISOString(), ...overrides,
 });
 const tick = () => new Promise(resolve => setImmediate(resolve));
+
+test('delayed restore retains cloud identity and newer progress after question loading', () => {
+  const stale = session({ id: 'delayed-restore', revision: 1 });
+  const latest = { ...stale, server_id: 'cloud-identity', revision: 2,
+    current_index: 3, answers: { q4: 'A', q1: 'B', q3: 'C' }, cloud_status: 'saved' };
+  saveLocalSession(latest);
+  assert.deepEqual(latestSessionSnapshot(stale), latest);
+  assert.equal(latestSessionSnapshot(session({ id: 'another-session' })).id, 'another-session');
+});
 
 beforeEach(() => {
   const storage = new Map();
@@ -286,8 +295,14 @@ test('completion remains resumable until the final cloud save is confirmed', asy
   };
   const completion = completePracticeSession({ sessionId: 'confirmation', questions: [], answers: {}, mode: 'instant', timeSpentSeconds: 20 });
   await tick(); assert.ok(attempted > 0); assert.equal(getLocalSession().is_completed, false);
+  updateSessionProgress('confirmation', { time_spent_seconds: 21 });
+  await tick();
+  assert.equal(getLocalSession().time_spent_seconds, 20);
   finish({ ok: true, json: async () => ({ success: true, session: { id: 'cloud-confirmation' } }) });
   await completion; assert.equal(getLocalSession().is_completed, true);
+  updateSessionProgress('confirmation', { time_spent_seconds: 22 });
+  await tick();
+  assert.equal(getLocalSession().is_completed, true);
 });
 
 test('guest Check, refresh/resume and completion stay local without attempt or PATCH requests', async () => {
@@ -310,4 +325,25 @@ test('back to a previous guest session retains pending device progress after sta
   const restored = await loadResumeSession('guest-earlier');
   assert.equal(restored.time_spent_seconds, 31); assert.deepEqual(restored.checked_ids, ['q4']);
   assert.equal(restored.pending_attempts.q4.selectedOption, 'A');
+});
+
+
+test('timed practice review flags survive cloud restore and subsequent progress writes', async () => {
+  const saved = session({ filters: { progress: { marked_for_review_ids: ['q4', 'q2'] } } });
+  const writes = [];
+  globalThis.fetch = async (_url, options) => {
+    if (options?.method === 'PATCH') {
+      writes.push(JSON.parse(options.body));
+      return { ok: true, json: async () => ({ success: true }) };
+    }
+    return { ok: true, json: async () => ({ activeSession: saved }) };
+  };
+  const restored = await loadResumeSession(saved.id);
+  assert.deepEqual(restored.marked_for_review_ids, ['q4', 'q2']);
+  saveLocalSession({ ...restored, server_id: 'cloud-id' });
+  updateSessionProgress(saved.id, { marked_for_review_ids: ['q2'], time_spent_seconds: 75 });
+  await tick();
+  assert.deepEqual(getLocalSession().marked_for_review_ids, ['q2']);
+  assert.deepEqual(writes.at(-1).filters.progress.marked_for_review_ids, ['q2']);
+  assert.equal(getLocalSession().time_spent_seconds, 75);
 });

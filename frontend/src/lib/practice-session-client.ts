@@ -39,6 +39,7 @@ const progressWrites = new Map<string, Promise<void>>();
 const creations = new Map<string, Promise<string | null>>();
 const failedSessions = new Set<string>();
 const completionWrites = new Map<string, Promise<void>>();
+const finalizingSessions = new Set<string>();
 const inFlightAttempts = new Map<string, Promise<void>>();
 const failedAttempts = new Map<string, Map<string, Parameters<typeof recordQuestionAttempt>[0]>>();
 
@@ -247,6 +248,8 @@ export function updateSessionProgress(
     question_times?: Record<string, number>;
   }
 ): void {
+  // Timer/player snapshots must not supersede the final completion snapshot.
+  if (finalizingSessions.has(sessionId) && update.is_completed !== true) return;
   const current = getLocalSession();
   if (current && current.id === sessionId) {
     const updated: ActivePracticeSession = {
@@ -363,28 +366,42 @@ async function persistCompletion(params: {
     }
   }
   if (getLocalSession()?.id !== params.sessionId) throw new Error("The active session changed; completion was not saved.");
-  updateSessionProgress(params.sessionId, {
-    answers: params.answers, is_completed: true,
-    correct_count: params.questions.filter(q => params.answers[q.id] === q.final_opt).length,
-    incorrect_count: params.questions.filter(q => params.answers[q.id] && params.answers[q.id] !== q.final_opt).length,
-    time_spent_seconds: params.timeSpentSeconds,
-  });
-  if (cloudId) {
-    try { await progressWrites.get(cloudId); }
-    catch (error) {
-      const latest = getLocalSession();
-      if (latest?.id === params.sessionId) saveLocalSession({ ...latest, is_completed: false, cloud_status: "error" });
-      throw error;
+  finalizingSessions.add(params.sessionId);
+  try {
+    updateSessionProgress(params.sessionId, {
+      answers: params.answers, is_completed: true,
+      correct_count: params.questions.filter(q => params.answers[q.id] === q.final_opt).length,
+      incorrect_count: params.questions.filter(q => params.answers[q.id] && params.answers[q.id] !== q.final_opt).length,
+      time_spent_seconds: params.timeSpentSeconds,
+    });
+    if (cloudId) {
+      try { await progressWrites.get(cloudId); }
+      catch (error) {
+        const latest = getLocalSession();
+        if (latest?.id === params.sessionId) saveLocalSession({ ...latest, is_completed: false, cloud_status: "error" });
+        throw error;
+      }
     }
-  }
-  // All known failed attempts and the final progress snapshot are now confirmed.
-  if (cloudId && !failedAttempts.get(params.sessionId)?.size) {
-    failedSessions.delete(params.sessionId);
-    setCloudStatus(params.sessionId, "saved");
+    // All known failed attempts and the final progress snapshot are now confirmed.
+    if (cloudId && !failedAttempts.get(params.sessionId)?.size) {
+      failedSessions.delete(params.sessionId);
+      setCloudStatus(params.sessionId, "saved");
+    }
+  } finally {
+    finalizingSessions.delete(params.sessionId);
   }
 }
 
 /** Restore the requested saved session before any question query is issued. */
+export function latestSessionSnapshot(snapshot: ActivePracticeSession): ActivePracticeSession {
+  const latest = getLocalSession();
+  // A restore can wait for ownership and question reads while creation/progress
+  // completes. Never replace that newer device snapshot with the earlier read.
+  return latest?.id === snapshot.id &&
+    (latest.revision || 0) >= (snapshot.revision || 0) &&
+    latest.updated_at >= snapshot.updated_at ? latest : snapshot;
+}
+
 export async function loadResumeSession(sessionId?: string): Promise<ActivePracticeSession> {
   let session = getLocalSession();
   if (sessionId && session?.id !== sessionId && session?.server_id !== sessionId) {
@@ -407,10 +424,11 @@ export async function loadResumeSession(sessionId?: string): Promise<ActivePract
   if (!session || session.is_completed || !Array.isArray(session.question_ids) || !session.question_ids.length) {
     throw new Error("This saved session is no longer available. Return to Practice to start a new session.");
   }
+  session = latestSessionSnapshot(session);
   return {
     ...session,
     checked_ids: session.checked_ids ?? session.filters?.progress?.checked_ids ?? [],
-    ...(session.mode === "full_paper"
+    ...(session.mode === "full_paper" || (session.mode === "attempt" && (session.marked_for_review_ids !== undefined || session.filters?.progress?.marked_for_review_ids !== undefined))
       ? {
           marked_for_review_ids:
             session.marked_for_review_ids ??

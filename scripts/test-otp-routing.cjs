@@ -2,7 +2,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const createLoader = require('./test-support/load-ts.cjs');
 
-function harness({ next = '/dashboard', mode = 'login', verify = async () => ({ data: { session: {} }, error: null }) } = {}) {
+function harness({ next = '/dashboard', mode = 'login', verify = async () => ({ data: { session: {} }, error: null }), sendOtp = async () => ({ error: null }) } = {}) {
   let cursor = 0, sends = 0;
   const slots = [], navigations = [], timers = [];
   const react = {
@@ -18,7 +18,7 @@ function harness({ next = '/dashboard', mode = 'login', verify = async () => ({ 
     'next/navigation': { useSearchParams: () => new URLSearchParams({ next }) },
     '@/components/GoogleSignInButton': { __esModule: true, default: 'google-button' },
     '@/lib/supabase/client': { createClient: () => ({ auth: {
-      signInWithOtp: async () => { sends++; return { error: null }; }, verifyOtp: verify,
+      signInWithOtp: async () => { sends++; return sendOtp(); }, verifyOtp: verify,
     } }) },
   }, { window: { location: { replace: url => navigations.push(url) },
     setTimeout: fn => { timers.push(fn); return timers.length; }, clearTimeout() {} } });
@@ -93,6 +93,26 @@ test('expired and sessionless OTP keep code visible, preserve intent, and allow 
   }
   await h.submit();
   assert.equal(new URL(h.navigations[0], 'https://local.test').searchParams.get('next'), intended);
+});
+
+test('ambiguous network failure still exposes OTP entry without client lockout', async () => {
+  const h = harness({ sendOtp: async () => { throw new TypeError('Load failed'); } });
+  await h.send();
+  const codeInput = h.nodes(n => n.props.id === 'email-code')[0];
+  assert.ok(codeInput);
+  assert.equal(h.nodes(n => n.props.role === 'alert')[0].props.children,
+    'We couldn’t confirm the send response. If you received a code, enter it below.');
+  const resend = h.nodes(n => n.props.type === 'button')[0];
+  assert.equal(resend.props.disabled, false);
+});
+
+test('explicit rate limit keeps provider cooldown', async () => {
+  const limited = Object.assign(new Error('Too many requests'), { status: 429, code: 'over_email_send_rate_limit' });
+  const h = harness({ sendOtp: async () => ({ error: limited }) });
+  await h.send();
+  assert.equal(h.nodes(n => n.props.id === 'email-code').length, 0);
+  const submitButton = h.nodes(n => n.props.type === 'submit')[0];
+  assert.equal(submitButton.props.disabled, true);
 });
 
 test('resend cooldown and change-email preserve intent; rapid verification submits establish one navigation', async () => {

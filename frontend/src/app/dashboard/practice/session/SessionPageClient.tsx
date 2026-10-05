@@ -18,6 +18,7 @@ import {
   loadResumeSession,
   restoreQuestionOrder,
   saveLocalSession,
+  latestSessionSnapshot,
   PRACTICE_SESSION_UPDATED_EVENT,
   type ActivePracticeSession,
 } from "@/lib/practice-session-client";
@@ -135,6 +136,8 @@ export default function SessionPageClient({
   const completionRef = useRef(false);
   const sessionMode: PlayerMode = restoredSession?.mode === "attempt" ? "attempt" : restoredSession ? "instant" : mode;
   const startTimeRef = useRef<number>(0);
+  const elapsedBaseRef = useRef(0);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [timeSpentSeconds, setTimeSpentSeconds] = useState<number>(0);
   const [guestSaveHref, setGuestSaveHref] = useState<string | null>(null);
 
@@ -177,7 +180,7 @@ export default function SessionPageClient({
   // Determine Back Button destination
   const backHref = safeLearningReturn(returnTo || restoredSession?.filters.returnTo,
     buildPracticeUrl(restoredSession?.filters || parsedFilters));
-  const backLabel = backHref === "/dashboard" ? "Back to Dashboard" : backHref.includes("question-bank")
+  const backLabel = backHref === "/dashboard/mistakes" ? "Back to Mistakes" : backHref === "/dashboard" ? "Back to Dashboard" : backHref.includes("question-bank")
     ? "Back to Explore"
     : "Back to Practice";
 
@@ -200,7 +203,7 @@ export default function SessionPageClient({
             localCandidate.server_id === requestedSessionId)
             ? localCandidate
             : null;
-        const saved = claimCompletedLocal || (resume || url.searchParams.get("resume") === "true"
+        let saved = claimCompletedLocal || (resume || url.searchParams.get("resume") === "true"
           ? await loadResumeSession(requestedSessionId) : null);
         if (cancelled) return;
         if (saved?.mode === "full_paper") {
@@ -234,6 +237,7 @@ export default function SessionPageClient({
           const fetchedQuestions = saved
             ? restoreQuestionOrder(saved.question_ids, data.questions || [])
             : data.questions || [];
+          if (saved) saved = latestSessionSnapshot(saved);
           setQuestions(fetchedQuestions);
 
           if (fetchedQuestions.length > 0) {
@@ -245,6 +249,7 @@ export default function SessionPageClient({
               setAnswers(saved.answers || {});
               setInitialIndex(Math.max(0, Math.min(saved.current_index || 0, fetchedQuestions.length - 1)));
               setTimeSpentSeconds(saved.time_spent_seconds || 0);
+              setElapsedSeconds(saved.time_spent_seconds || 0);
 
               if (saved.is_completed) {
                 setCompleted(true);
@@ -320,18 +325,21 @@ export default function SessionPageClient({
   ]);
 
   useEffect(() => {
-    if (!sessionId || completed) return;
+    if (!sessionId || completed || savingCompletion) return;
     const base = getLocalSession()?.time_spent_seconds || 0;
+    elapsedBaseRef.current = base;
     const started = Date.now();
+    startTimeRef.current = started;
     const persist = () => {
       if (getLocalSession()?.id === sessionId) updateSessionProgress(sessionId, {
         time_spent_seconds: base + Math.round((Date.now() - started) / 1000),
       });
     };
+    const tick = window.setInterval(() => setElapsedSeconds(base + Math.round((Date.now() - started) / 1000)), 1000);
     const timer = window.setInterval(persist, 5000);
     window.addEventListener("pagehide", persist);
-    return () => { window.clearInterval(timer); window.removeEventListener("pagehide", persist); persist(); };
-  }, [sessionId, completed]);
+    return () => { window.clearInterval(timer); window.clearInterval(tick); window.removeEventListener("pagehide", persist); persist(); };
+  }, [sessionId, completed, savingCompletion]);
 
   return (
     <div>
@@ -350,7 +358,7 @@ export default function SessionPageClient({
 
           <div className="text-right">
             <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
-              {sessionMode === "instant" ? "Targeted Practice" : "Full Mock Paper"}
+              {sessionMode === "instant" ? "Targeted Practice" : "Timed Practice"}
             </span>
             <h1 className="text-xs sm:text-sm font-bold text-slate-900 truncate max-w-xs sm:max-w-md">
               {filterLabel}
@@ -377,6 +385,8 @@ export default function SessionPageClient({
           initialIndex={initialIndex}
           initialAnswers={answers}
           initialCheckedIds={restoredSession?.checked_ids || []}
+          initialMarkedIds={restoredSession?.marked_for_review_ids || []}
+          elapsedSeconds={elapsedSeconds}
           disabled={savingCompletion}
           onComplete={async (completedAnswers) => {
             if (completionRef.current) return;
@@ -386,7 +396,7 @@ export default function SessionPageClient({
             setAnswers(completedAnswers);
             const duration = Math.max(
               1,
-              (restoredSession?.time_spent_seconds || 0) + Math.round(
+              elapsedBaseRef.current + Math.round(
                 (Date.now() - (startTimeRef.current || Date.now())) / 1000
               )
             );
