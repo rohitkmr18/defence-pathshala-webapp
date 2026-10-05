@@ -17,6 +17,8 @@ export interface ActivePracticeSession {
   revision?: number;
   cloud_status?: "local" | "saving" | "saved" | "error";
   pending_attempts?: Record<string, { selectedOption: OptionKey; timeTakenSeconds?: number }>;
+  submission_pending?: boolean;
+  submission_requested_at?: string;
   title: string;
   mode: "instant" | "attempt" | "full_paper";
   filters: Partial<QuestionSetFilters>;
@@ -352,6 +354,26 @@ async function persistCompletion(params: {
   sessionId: string; questions: PracticeQuestion[]; answers: Record<string, OptionKey>;
   mode: "instant" | "attempt" | "full_paper"; timeSpentSeconds: number;
 }): Promise<void> {
+  const localSnapshot = getLocalSession();
+  if (localSnapshot?.id !== params.sessionId) {
+    throw new Error("The active session changed; completion was not saved.");
+  }
+
+  // Freeze the learner's final paper on-device before any network work begins.
+  // A failed request can therefore be retried without reconstructing answers.
+  const correctCount = params.questions.filter(q => params.answers[q.id] === q.final_opt).length;
+  const incorrectCount = params.questions.filter(q => params.answers[q.id] && params.answers[q.id] !== q.final_opt).length;
+  saveLocalSession({
+    ...localSnapshot,
+    answers: { ...params.answers },
+    correct_count: correctCount,
+    incorrect_count: incorrectCount,
+    time_spent_seconds: params.timeSpentSeconds,
+    submission_pending: true,
+    submission_requested_at: localSnapshot.submission_requested_at || new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  });
+
   await retryPracticePersistence(params.questions);
   const cloudId = await resolveCloudId(params.sessionId);
   if (getLocalSession()?.id !== params.sessionId) throw new Error("The active session changed; completion was not saved.");
@@ -370,8 +392,8 @@ async function persistCompletion(params: {
   try {
     updateSessionProgress(params.sessionId, {
       answers: params.answers, is_completed: true,
-      correct_count: params.questions.filter(q => params.answers[q.id] === q.final_opt).length,
-      incorrect_count: params.questions.filter(q => params.answers[q.id] && params.answers[q.id] !== q.final_opt).length,
+      correct_count: correctCount,
+      incorrect_count: incorrectCount,
       time_spent_seconds: params.timeSpentSeconds,
     });
     if (cloudId) {
@@ -385,6 +407,10 @@ async function persistCompletion(params: {
     // All known failed attempts and the final progress snapshot are now confirmed.
     if (cloudId && !failedAttempts.get(params.sessionId)?.size) {
       failedSessions.delete(params.sessionId);
+      const latest = getLocalSession();
+      if (latest?.id === params.sessionId) {
+        saveLocalSession({ ...latest, is_completed: true, submission_pending: false });
+      }
       setCloudStatus(params.sessionId, "saved");
     }
   } finally {
