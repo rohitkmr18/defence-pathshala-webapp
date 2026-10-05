@@ -94,7 +94,7 @@ export default function OptionList({
             correct={correct}
             revealed={revealed}
           />
-          <span className="mt-0.5 whitespace-pre-line leading-[1.6]">
+          <span className="mt-0.5 min-w-0 flex-1 whitespace-pre-line break-words leading-[1.6]">
             <MathText text={renderOptionText(text, key)} />
           </span>
         </button>
