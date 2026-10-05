@@ -38,8 +38,8 @@ const baseItems = [
     icon: Pencil,
   },
   {
-    name: "Current Affairs",
-    href: "/dashboard/current-affairs",
+    name: "About Us",
+    href: "/about",
     icon: Shield,
   },
 ];
@@ -194,12 +194,6 @@ export default function DashboardSidebar({
             );
           })}
         </div>
-      </nav>
-
-      <nav aria-label="Secondary navigation" className="border-t border-slate-100 p-3">
-        <Link href="/about" onClick={() => closeMobile?.()} title="About" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50">
-          <Shield className="h-5 w-5 shrink-0" />{(!collapsed || mobile) && "About"}
-        </Link>
       </nav>
 
       {/* ── Auth CTA at bottom ───────────────────────────────────────────── */}
