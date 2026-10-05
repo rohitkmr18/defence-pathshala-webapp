@@ -184,12 +184,12 @@ export default function FullPaperClient({
   // Update visited state on question navigation
   const navigateToQuestion = useCallback(
     (index: number) => {
-      if (submitting.current || !questions || !questions[index]) return;
+      if (submitting.current || submissionPending || !questions || !questions[index]) return;
       setCurrentIndex(index);
       if (sessionId) updateSessionProgress(sessionId, { current_index: index });
       setVisited((prev) => new Set(prev).add(questions[index].id));
     },
-    [questions, sessionId]
+    [questions, sessionId, submissionPending]
   );
 
   const activeQuestion = questions?.[currentIndex];
@@ -197,24 +197,24 @@ export default function FullPaperClient({
 
   const handleSelectOption = useCallback(
     (key: OptionKey) => {
-      if (!activeQuestion || isSubmitted || timeRemaining === 0 || submitting.current) return;
+      if (!activeQuestion || isSubmitted || submissionPending || timeRemaining === 0 || submitting.current) return;
       const next = { ...answers, [activeQuestion.id]: key };
       setAnswers(next);
       if (sessionId) updateSessionProgress(sessionId, { answers: next });
     },
-    [activeQuestion, isSubmitted, answers, sessionId, timeRemaining]
+    [activeQuestion, isSubmitted, submissionPending, answers, sessionId, timeRemaining]
   );
 
   const handleClearResponse = useCallback(() => {
-    if (!activeQuestion || isSubmitted || timeRemaining === 0 || submitting.current) return;
+    if (!activeQuestion || isSubmitted || submissionPending || timeRemaining === 0 || submitting.current) return;
     const next = { ...answers };
     delete next[activeQuestion.id];
     setAnswers(next);
     if (sessionId) updateSessionProgress(sessionId, { answers: next });
-  }, [activeQuestion, isSubmitted, answers, sessionId, timeRemaining]);
+  }, [activeQuestion, isSubmitted, submissionPending, answers, sessionId, timeRemaining]);
 
   const handleToggleMarkForReview = useCallback(() => {
-    if (!activeQuestion) return;
+    if (!activeQuestion || submissionPending || submitting.current) return;
     const next = new Set(markedForReview);
     if (next.has(activeQuestion.id)) {
       next.delete(activeQuestion.id);
@@ -225,7 +225,7 @@ export default function FullPaperClient({
     if (sessionId) {
       updateSessionProgress(sessionId, { marked_for_review_ids: Array.from(next) });
     }
-  }, [activeQuestion, markedForReview, sessionId]);
+  }, [activeQuestion, markedForReview, sessionId, submissionPending]);
 
   const handlePrevious = useCallback(() => {
     if (currentIndex > 0) {
@@ -234,13 +234,13 @@ export default function FullPaperClient({
   }, [currentIndex, navigateToQuestion]);
 
   const handleSaveAndNext = useCallback(() => {
-    if (!questions) return;
+    if (!questions || submissionPending || submitting.current) return;
     if (currentIndex < questions.length - 1) {
       navigateToQuestion(currentIndex + 1);
     } else {
       setIsSubmitModalOpen(true);
     }
-  }, [currentIndex, questions, navigateToQuestion]);
+  }, [currentIndex, questions, navigateToQuestion, submissionPending]);
 
   const handleConfirmSubmit = useCallback(async () => {
     if (submitting.current || !sessionId || !questions || isAuthenticated !== true) return;
@@ -270,10 +270,10 @@ export default function FullPaperClient({
 
   // Authentication and session creation must finish before the timer starts.
   useEffect(() => {
-    if (loading || isSubmitted || !cloudReady || isAuthenticated !== true || !sessionId || !questions?.length || timeRemaining === 0) return;
+    if (loading || isSubmitted || submissionPending || isSubmitting || !cloudReady || isAuthenticated !== true || !sessionId || !questions?.length || timeRemaining === 0) return;
     timerRef.current = setInterval(() => setTimeRemaining(prev => Math.max(0, prev - 1)), 1000);
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [loading, isSubmitted, cloudReady, isAuthenticated, sessionId, questions, timeRemaining]);
+  }, [loading, isSubmitted, submissionPending, isSubmitting, cloudReady, isAuthenticated, sessionId, questions, timeRemaining]);
   useEffect(() => {
     if (timeRemaining !== 0 || isSubmitted || submissionPending) return;
     const timeout = setTimeout(() => { void handleConfirmSubmit(); }, 0);
@@ -435,7 +435,7 @@ export default function FullPaperClient({
         totalTime={selectedPaper.durationSeconds}
         answeredCount={answeredCount}
         totalQuestions={questions.length}
-        onSubmitClick={() => setIsSubmitModalOpen(true)}
+        onSubmitClick={() => submissionPending ? void handleConfirmSubmit() : setIsSubmitModalOpen(true)}
         isSubmitting={isSubmitting}
         submissionPending={submissionPending}
         availablePapers={AVAILABLE_FULL_PAPERS}
