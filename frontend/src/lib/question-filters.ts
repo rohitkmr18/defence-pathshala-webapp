@@ -16,7 +16,11 @@ export interface QuestionSetFilters {
   mode?: "instant" | "attempt" | "full_paper";
   returnTo?: string;
   origin?: string;
-  progress?: { checked_ids: string[]; question_times: Record<string, number> };
+  progress?: {
+    checked_ids: string[];
+    marked_for_review_ids?: string[];
+    question_times: Record<string, number>;
+  };
 }
 
 function parseMode(value: unknown): QuestionSetFilters["mode"] {
