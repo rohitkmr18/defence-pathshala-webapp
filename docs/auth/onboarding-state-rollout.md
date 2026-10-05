@@ -22,7 +22,7 @@ Setup requires CDS, CAPF AC or both. Name is prefilled where available and edita
 
 ## Migration for review
 
-`supabase/migrations/20261003093440_atomic_onboarding.sql`
+`supabase/migrations/20261003184207_atomic_onboarding.sql`
 
 Prerequisites: existing `profiles` and `user_exam_preferences` tables, ownership RLS, `auth.uid()` and role-protection trigger. This migration adds schema/functions/grants only, without reconstructing historical application tables.
 
@@ -32,7 +32,7 @@ On an explicitly selected disposable/staging database with the prerequisite sche
 
 ```sh
 psql "$STAGING_DATABASE_URL" -v ON_ERROR_STOP=1 \
-  -f supabase/migrations/20261003093440_atomic_onboarding.sql
+  -f supabase/migrations/20261003184207_atomic_onboarding.sql
 ```
 
 Before any separately authorized rollout:
