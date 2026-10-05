@@ -34,6 +34,13 @@ test('question structure parsers handle real statement and matching punctuation 
   assert.equal(statements.items[1].label, '2.');
   assert.match(statements.outro, /Select the answer/);
 
+  const bareLabels = splitNumberedItems(
+    'Consider the following statements: 1 The first statement begins without punctuation. 2. The second statement is normal. Which are correct?'
+  );
+  assert.equal(bareLabels.items.length, 2);
+  assert.equal(bareLabels.items[0].label, '1');
+  assert.match(bareLabels.items[0].text, /first statement/i);
+
   const list = splitLabeledItems('A. Alpha item; B. Beta item; C. Gamma item; D. Delta item.');
   assert.deepEqual(list.map(item => item.label), ['A', 'B', 'C', 'D']);
   assert.match(list[0].text, /Alpha item/);
