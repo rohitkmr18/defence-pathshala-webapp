@@ -11,6 +11,7 @@ export interface ActivePracticeSession {
   server_id?: string;
   creation_id?: string;
   checked_ids?: string[];
+  marked_for_review_ids?: string[];
   question_times?: Record<string, number>;
   saved_attempts?: Record<string, OptionKey>;
   revision?: number;
@@ -50,7 +51,11 @@ function setCloudStatus(id: string, status: ActivePracticeSession["cloud_status"
 }
 
 function progressMetadata(session: ActivePracticeSession) {
-  return { checked_ids: session.checked_ids || [], question_times: session.question_times || {} };
+  return {
+    checked_ids: session.checked_ids || [],
+    marked_for_review_ids: session.marked_for_review_ids || [],
+    question_times: session.question_times || {},
+  };
 }
 
 async function resolveCloudId(id?: string): Promise<string | null> {
@@ -81,6 +86,7 @@ export async function initializeSession(params: {
     id: `sess_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
     creation_id: crypto.randomUUID(),
     checked_ids: [],
+    marked_for_review_ids: [],
     question_times: {},
     saved_attempts: {},
     title: params.title,
@@ -238,6 +244,7 @@ export function updateSessionProgress(
     incorrect_count?: number;
     time_spent_seconds?: number;
     checked_ids?: string[];
+    marked_for_review_ids?: string[];
     question_times?: Record<string, number>;
   }
 ): void {
@@ -418,8 +425,17 @@ export async function loadResumeSession(sessionId?: string): Promise<ActivePract
     throw new Error("This saved session is no longer available. Return to Practice to start a new session.");
   }
   session = latestSessionSnapshot(session);
-  return { ...session,
+  return {
+    ...session,
     checked_ids: session.checked_ids ?? session.filters?.progress?.checked_ids ?? [],
+    ...(session.mode === "full_paper"
+      ? {
+          marked_for_review_ids:
+            session.marked_for_review_ids ??
+            session.filters?.progress?.marked_for_review_ids ??
+            [],
+        }
+      : {}),
     question_times: session.question_times ?? session.filters?.progress?.question_times ?? {},
   };
 }

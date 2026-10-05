@@ -6,10 +6,6 @@ create schema if not exists dp_onboarding_private;
 revoke all on schema dp_onboarding_private from public, anon;
 grant usage on schema dp_onboarding_private to authenticated;
 
--- A narrow definer is needed ONLY to create a missing profile: profiles has no
--- authenticated INSERT policy. No caller-supplied user ID/role, dynamic SQL,
--- metadata-based authorization, broad table grants or RLS changes are used.
--- The public API wrappers are invokers; this schema must stay unexposed.
 create or replace function dp_onboarding_private.save_preparation_profile(
   p_full_name text, p_target_year integer, p_target_exams text[], p_setup boolean
 ) returns jsonb
@@ -32,10 +28,8 @@ begin
   values (v_uid, 'student', false)
   on conflict (id) do nothing;
 
-  -- Serialize missing-profile creation, concurrent submits and target edits.
   select * into strict v_profile from public.profiles where id = v_uid for update;
   if p_setup and v_profile.onboarding_completed then
-    -- An already completed user (including legacy exams/years) is never reset.
     select coalesce(array_agg(exam order by exam), '{}'::text[]) into v_saved_exams
     from public.user_exam_preferences where user_id = v_uid;
     return jsonb_build_object('id', v_uid, 'full_name', v_profile.full_name,
@@ -65,8 +59,6 @@ begin
   update public.profiles set full_name = v_name, target_year = p_target_year,
     onboarding_completed = true where id = v_uid;
 
-  -- Validate persisted rows inside the transaction. Any exception rolls back
-  -- creation, deletes, inserts and completion together, including trigger effects.
   select * into strict v_profile from public.profiles where id = v_uid;
   select coalesce(array_agg(exam order by exam), '{}'::text[]) into v_saved_exams
   from public.user_exam_preferences where user_id = v_uid;
@@ -91,7 +83,6 @@ create or replace function public.complete_onboarding(
 language sql security invoker set search_path = ''
 as $$ select dp_onboarding_private.save_preparation_profile(p_full_name, p_target_year, p_target_exams, true); $$;
 
--- Preserve the dashboard's existing Edit targets flow without repeating setup.
 create or replace function public.update_preparation_profile(
   p_full_name text, p_target_year integer, p_target_exams text[]
 ) returns jsonb

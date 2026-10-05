@@ -132,6 +132,7 @@ export default function FullPaperClient({
           if (saved) {
             saveLocalSession(saved);
             setAnswers(saved.answers);
+            setMarkedForReview(new Set(saved.marked_for_review_ids || []));
             setCurrentIndex(saved.current_index);
             setTimeRemaining(Math.max(0, paper.durationSeconds - saved.time_spent_seconds));
             trackLearningEvent("practice_resume", { mode: "full_paper", position: saved.current_index }, `${saved.id}:${saved.updated_at}`);
@@ -209,16 +210,17 @@ export default function FullPaperClient({
 
   const handleToggleMarkForReview = useCallback(() => {
     if (!activeQuestion) return;
-    setMarkedForReview((prev) => {
-      const next = new Set(prev);
-      if (next.has(activeQuestion.id)) {
-        next.delete(activeQuestion.id);
-      } else {
-        next.add(activeQuestion.id);
-      }
-      return next;
-    });
-  }, [activeQuestion]);
+    const next = new Set(markedForReview);
+    if (next.has(activeQuestion.id)) {
+      next.delete(activeQuestion.id);
+    } else {
+      next.add(activeQuestion.id);
+    }
+    setMarkedForReview(next);
+    if (sessionId) {
+      updateSessionProgress(sessionId, { marked_for_review_ids: Array.from(next) });
+    }
+  }, [activeQuestion, markedForReview, sessionId]);
 
   const handlePrevious = useCallback(() => {
     if (currentIndex > 0) {

@@ -2,7 +2,7 @@ const { test, before, beforeEach, after } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const { PGlite } = require('../frontend/node_modules/@electric-sql/pglite');
-const migration = fs.readFileSync('supabase/migrations/20261003093440_atomic_onboarding.sql', 'utf8');
+const migration = fs.readFileSync('supabase/migrations/20261003184207_atomic_onboarding.sql', 'utf8');
 const uid = '11111111-1111-4111-8111-111111111111';
 const other = '22222222-2222-4222-8222-222222222222';
 let db;
