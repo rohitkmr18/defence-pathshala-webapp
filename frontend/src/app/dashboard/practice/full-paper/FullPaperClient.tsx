@@ -26,6 +26,8 @@ interface FullPaperClientProps {
   initialCycle?: string;
   returnTo?: string;
   origin?: string;
+  resumeSessionId?: string;
+  analysis?: boolean;
 }
 
 export default function FullPaperClient({
@@ -34,6 +36,8 @@ export default function FullPaperClient({
   initialCycle,
   returnTo,
   origin,
+  resumeSessionId,
+  analysis = false,
 }: FullPaperClientProps) {
   const router = useRouter();
   // Resolve initial paper based on query params or default to most recent exam (CDS II 2026)
@@ -107,8 +111,9 @@ export default function FullPaperClient({
     async function loadPaperQuestions() {
       try {
         const url = new URL(window.location.href);
-        const saved = url.searchParams.get("resume") === "true"
-          ? await loadResumeSession(url.searchParams.get("session_id") || undefined) : null;
+        const requestedSessionId = resumeSessionId || url.searchParams.get("session_id") || undefined;
+        const saved = analysis || url.searchParams.get("resume") === "true"
+          ? await loadResumeSession(requestedSessionId, { allowCompleted: analysis }) : null;
         if (signal.aborted) return;
         if (saved && saved.mode !== "full_paper") throw new Error("This is not a full paper session.");
         const params = new URLSearchParams();
@@ -137,6 +142,7 @@ export default function FullPaperClient({
             setAnswers(saved.answers);
             setSubmissionPending(Boolean(saved.submission_pending));
             setMarkedForReview(new Set(saved.marked_for_review_ids || []));
+            if (analysis && saved.is_completed) setIsSubmitted(true);
             setCurrentIndex(saved.current_index);
             setTimeRemaining(Math.max(0, paper.durationSeconds - saved.time_spent_seconds));
             trackLearningEvent("practice_resume", { mode: "full_paper", position: saved.current_index }, `${saved.id}:${saved.updated_at}`);
@@ -158,7 +164,7 @@ export default function FullPaperClient({
     }
     const start = window.setTimeout(() => { void loadPaperQuestions(); }, 0);
     return () => { window.clearTimeout(start); controller.abort(); };
-  }, [selectedPaper, isAuthenticated, returnTo, origin]);
+  }, [selectedPaper, isAuthenticated, returnTo, origin, resumeSessionId, analysis]);
 
   // Update visited state on question navigation
   const navigateToQuestion = useCallback(
