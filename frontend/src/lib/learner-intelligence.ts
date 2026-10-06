@@ -126,6 +126,7 @@ export interface LearnerIntelligence {
     updatedAt: string;
     correct: number;
     incorrect: number;
+    analysisHref: string | null;
   }>;
   nextBestMove: {
     type: NextBestMoveType;
@@ -399,18 +400,27 @@ export function deriveLearnerIntelligence(input: {
 
   const recentActivity = [...sessions]
     .sort((a, b) => String(b.updated_at).localeCompare(String(a.updated_at)))
-    .slice(0, 5)
     .map((s) => {
       const savedAttempts = attemptsBySession.get(s.id) || [];
-      return ({
-      id: s.id,
-      title: s.title,
-      mode: s.mode,
-      isCompleted: s.is_completed,
-      updatedAt: s.updated_at,
-      correct: savedAttempts.filter((attempt) => attempt.is_correct).length,
-      incorrect: savedAttempts.filter((attempt) => !attempt.is_correct).length,
-    });
+      const attemptCorrect = savedAttempts.filter((attempt) => attempt.is_correct).length;
+      const attemptIncorrect = savedAttempts.filter((attempt) => !attempt.is_correct).length;
+      const correct = savedAttempts.length ? attemptCorrect : Math.max(0, Number(s.correct_count || 0));
+      const incorrect = savedAttempts.length ? attemptIncorrect : Math.max(0, Number(s.incorrect_count || 0));
+      const analysisHref = s.is_completed
+        ? s.mode === "full_paper"
+          ? `/dashboard/practice/full-paper?analysis=true&session_id=${encodeURIComponent(s.id)}&returnTo=%2Fdashboard&origin=dashboard`
+          : `/dashboard/practice/session?analysis=true&session_id=${encodeURIComponent(s.id)}&returnTo=%2Fdashboard&origin=dashboard`
+        : null;
+      return {
+        id: s.id,
+        title: s.title,
+        mode: s.mode,
+        isCompleted: s.is_completed,
+        updatedAt: s.updated_at,
+        correct,
+        incorrect,
+        analysisHref,
+      };
     });
 
   let nextBestMove: LearnerIntelligence["nextBestMove"];
