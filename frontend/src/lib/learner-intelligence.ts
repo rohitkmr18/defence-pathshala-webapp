@@ -407,9 +407,25 @@ export function deriveLearnerIntelligence(input: {
       const correct = savedAttempts.length ? attemptCorrect : Math.max(0, Number(s.correct_count || 0));
       const incorrect = savedAttempts.length ? attemptIncorrect : Math.max(0, Number(s.incorrect_count || 0));
       const analysisHref = s.is_completed
-        ? s.mode === "full_paper"
-          ? `/dashboard/practice/full-paper?analysis=true&session_id=${encodeURIComponent(s.id)}&returnTo=%2Fdashboard&origin=dashboard`
-          : `/dashboard/practice/session?analysis=true&session_id=${encodeURIComponent(s.id)}&returnTo=%2Fdashboard&origin=dashboard`
+        ? (() => {
+            if (s.mode !== "full_paper") {
+              return `/dashboard/practice/session?analysis=true&session_id=${encodeURIComponent(s.id)}&returnTo=%2Fdashboard&origin=dashboard`;
+            }
+            const params = new URLSearchParams({
+              analysis: "true",
+              session_id: s.id,
+              returnTo: "/dashboard",
+              origin: "dashboard",
+            });
+            const filters = s.filters || {};
+            const exams = Array.isArray(filters.exams) ? filters.exams : [];
+            const years = Array.isArray(filters.years) ? filters.years : [];
+            const cycles = Array.isArray(filters.cycles) ? filters.cycles : [];
+            if (exams[0]) params.set("exam", String(exams[0]));
+            if (years[0]) params.set("year", String(years[0]));
+            if (cycles[0]) params.set("cycle", String(cycles[0]));
+            return `/dashboard/practice/full-paper?${params.toString()}`;
+          })()
         : null;
       return {
         id: s.id,
