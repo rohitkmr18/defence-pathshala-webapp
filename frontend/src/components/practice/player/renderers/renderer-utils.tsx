@@ -6,7 +6,22 @@ export interface ParsedItem {
   text: string;
 }
 
-const NUMBERED_ITEM_PATTERN = /(?<![A-Za-z0-9])((?:\(\d{1,2}\))|(?:\d{1,2}|(?:i{1,3}|iv|v(?:i{0,3})?|ix|x))[.),]|(?:\d{1,2})(?=\s+[A-Z]))(?=\s)/gi;
+const NUMBERED_ITEM_PATTERN = /(?<![A-Za-z0-9-])((?:\(\d{1,2}\))|(?:\d{1,2}|(?:i{1,3}|iv|v(?:i{0,3})?|ix|x))[.),])(?=\s)/gi;
+const BARE_NUMBERED_ITEM_PATTERN = /(^|\n|:\s)(\d{1,2})(?=\s+[A-Z])/gm;
+
+function numberedItemMatches(text: string): Array<{ index: number; length: number; label: string }> {
+  const punctuated = Array.from(text.matchAll(NUMBERED_ITEM_PATTERN)).map((match) => ({
+    index: match.index ?? 0,
+    length: match[0].length,
+    label: match[1],
+  }));
+  const bare = Array.from(text.matchAll(BARE_NUMBERED_ITEM_PATTERN)).map((match) => ({
+    index: (match.index ?? 0) + match[1].length,
+    length: match[2].length,
+    label: match[2],
+  }));
+  return [...punctuated, ...bare].sort((a, b) => a.index - b.index);
+}
 const LABELED_ITEM_PATTERN = /((?:[A-Da-d])|(?:\d{1,2}))[.),]\s+/g;
 
 export function splitNumberedItems(text: string): {
@@ -15,7 +30,7 @@ export function splitNumberedItems(text: string): {
   outro: string;
 } {
   const normalizedText = renderQuestionText(text);
-  const matches = Array.from(normalizedText.matchAll(NUMBERED_ITEM_PATTERN));
+  const matches = numberedItemMatches(normalizedText);
 
   if (matches.length < 2) {
     return { intro: normalizedText, items: [], outro: "" };
@@ -25,10 +40,10 @@ export function splitNumberedItems(text: string): {
   const items: ParsedItem[] = [];
 
   matches.forEach((match, index) => {
-    const start = (match.index ?? 0) + match[0].length;
+    const start = match.index + match.length;
     const end = matches[index + 1]?.index ?? normalizedText.length;
     items.push({
-      label: match[1],
+      label: match.label,
       text: normalizedText.slice(start, end).trim(),
     });
   });
