@@ -19,13 +19,13 @@ export const EXAM_SCORING_PRESETS: Record<string, ExamScoringRule> = {
   CDS: {
     exam: "CDS",
     totalQuestions: 120,
-    totalMarks: 200,
-    correctMarks: 1.67, // 200 / 120 = 1.666...
-    penaltyMarks: 0.56, // 1.666... * 1/3 = 0.555...
-    recoverableSwingPerQuestion: 2.23, // 1.67 + 0.56
-    correctFormatted: "+1.67",
-    penaltyFormatted: "-0.56",
-    schemeLabel: "+1.67 / -0.56",
+    totalMarks: 100,
+    correctMarks: 100 / 120,
+    penaltyMarks: 100 / 360, // one-third of the marks assigned to a question
+    recoverableSwingPerQuestion: 100 / 90, // correct mark regained + wrong-answer penalty avoided
+    correctFormatted: "+0.83",
+    penaltyFormatted: "-0.28",
+    schemeLabel: "+0.83 / -0.28",
   },
   "CAPF-AC": {
     exam: "CAPF-AC",
