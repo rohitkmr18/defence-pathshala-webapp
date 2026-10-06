@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
-  Brain,
+  Award,
   CheckCircle2,
   Clock3,
   ChevronDown,
@@ -187,24 +187,30 @@ export default function LearnerDashboardOverview({
             label="Attempts"
             value={String(data.overview.attempts)}
             detail="All saved answers"
+            tone="blue"
           />
           <MetricCard
-            icon={<Brain className="h-4 w-4" />}
-            label="Unique PYQs"
-            value={String(data.overview.uniqueQuestionsSolved)}
-            detail="Distinct questions solved"
+            icon={<Award className="h-4 w-4" />}
+            label="Score so far"
+            value={`${data.overview.scorePercent}%`}
+            detail="Net marks after negative marking"
+            tone="indigo"
+            progress={Math.max(0, Math.min(100, data.overview.scorePercent))}
           />
           <MetricCard
             icon={<Target className="h-4 w-4" />}
             label="Accuracy"
             value={`${data.overview.accuracy}%`}
             detail={`${data.overview.correct} correct · ${data.overview.incorrect} incorrect`}
+            tone="emerald"
+            progress={data.overview.accuracy}
           />
           <MetricCard
             icon={<Clock3 className="h-4 w-4" />}
             label="Practice Time"
             value={formatDuration(data.overview.practiceTimeSeconds)}
             detail={`${data.overview.completedSessions} completed sessions`}
+            tone="amber"
           />
         </div>
       </section>
@@ -375,26 +381,68 @@ function MetricCard({
   label,
   value,
   detail,
+  tone,
+  progress,
 }: {
   icon: React.ReactNode;
   label: string;
   value: string;
   detail: string;
+  tone: "blue" | "indigo" | "emerald" | "amber";
+  progress?: number;
 }) {
+  const tones = {
+    blue: {
+      card: "from-blue-50/90 via-white to-white border-blue-100",
+      icon: "bg-blue-100 text-blue-700",
+      value: "text-blue-950",
+      bar: "bg-blue-600",
+    },
+    indigo: {
+      card: "from-indigo-50/90 via-white to-white border-indigo-100",
+      icon: "bg-indigo-100 text-indigo-700",
+      value: "text-indigo-950",
+      bar: "bg-indigo-600",
+    },
+    emerald: {
+      card: "from-emerald-50/90 via-white to-white border-emerald-100",
+      icon: "bg-emerald-100 text-emerald-700",
+      value: "text-emerald-950",
+      bar: "bg-emerald-600",
+    },
+    amber: {
+      card: "from-amber-50/90 via-white to-white border-amber-100",
+      icon: "bg-amber-100 text-amber-700",
+      value: "text-amber-950",
+      bar: "bg-amber-500",
+    },
+  } as const;
+  const style = tones[tone];
+
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
-      <div className="flex items-center gap-2 text-slate-500">
-        {icon}
-        <span className="text-xs font-bold uppercase tracking-wider">
+    <div className={`relative overflow-hidden rounded-2xl border bg-gradient-to-br p-4 shadow-[0_8px_24px_rgba(15,23,42,0.06)] sm:p-5 ${style.card}`}>
+      <div className="flex items-center gap-2.5 text-slate-500">
+        <span className={`flex h-8 w-8 items-center justify-center rounded-xl ${style.icon}`}>
+          {icon}
+        </span>
+        <span className="text-[11px] font-extrabold uppercase tracking-[0.11em]">
           {label}
         </span>
       </div>
-      <p className="mt-2 text-2xl font-black text-slate-900 sm:text-3xl">
+      <p className={`mt-3 text-3xl font-black tracking-tight sm:text-4xl ${style.value}`}>
         {value}
       </p>
-      <p className="mt-1 text-[11px] font-medium text-slate-500 sm:text-xs">
+      <p className="mt-1 min-h-8 text-[11px] font-medium leading-4 text-slate-500 sm:text-xs">
         {detail}
       </p>
+      {typeof progress === "number" && (
+        <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-200/70" aria-hidden="true">
+          <div
+            className={`h-full rounded-full ${style.bar}`}
+            style={{ width: `${Math.max(0, Math.min(100, progress))}%` }}
+          />
+        </div>
+      )}
     </div>
   );
 }
