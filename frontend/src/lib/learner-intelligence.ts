@@ -151,6 +151,51 @@ function topicOf(meta?: LearnerQuestionMeta) {
   return meta?.taxonomy_topic || meta?.topic || "Other";
 }
 
+function firstFilterValue(
+  filters: Record<string, unknown> | null | undefined,
+  key: string
+): string | null {
+  const value = filters?.[key];
+  if (!Array.isArray(value)) return null;
+  const first = value.find((item) => typeof item === "string" && item.trim());
+  return typeof first === "string" ? first.trim() : null;
+}
+
+function compactResumeTitle(session: LearnerSession): string {
+  const topic = firstFilterValue(session.filters, "topics");
+  if (topic) return `Resume ${topic} practice`;
+
+  const subject = firstFilterValue(session.filters, "subjects");
+  if (subject) return `Resume ${subject} practice`;
+
+  const exam = firstFilterValue(session.filters, "exams");
+  if (exam) return `Resume ${exam} practice`;
+
+  const compact = session.title
+    .split("›")
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .slice(0, 2)
+    .join(" › ");
+
+  return compact ? `Resume ${compact}` : "Resume practice";
+}
+
+function compactResumeReason(session: LearnerSession, completedQuestions: number): string {
+  const subtopics = session.filters?.subtopics;
+  const selectedSubtopics = Array.isArray(subtopics)
+    ? subtopics.filter((item): item is string => typeof item === "string" && Boolean(item.trim()))
+    : [];
+
+  const progress = `${completedQuestions} of ${session.total_questions} questions completed.`;
+  if (selectedSubtopics.length > 1) {
+    return `${progress} ${selectedSubtopics.length} selected subtopics.`;
+  }
+
+  const subject = firstFilterValue(session.filters, "subjects");
+  return subject ? `${progress} ${subject}.` : progress;
+}
+
 function latestAttemptsByQuestion(attempts: LearnerAttempt[]) {
   const sorted = [...attempts].sort((a, b) =>
     String(b.attempted_at || "").localeCompare(String(a.attempted_at || ""))
@@ -440,11 +485,11 @@ export function deriveLearnerIntelligence(input: {
     });
 
   let nextBestMove: LearnerIntelligence["nextBestMove"];
-  if (activeSession) {
+  if (activeSession && active) {
     nextBestMove = {
       type: "resume_session",
-      title: `Resume ${activeSession.title}`,
-      reason: `${activeSession.completedQuestions} of ${activeSession.totalQuestions} questions completed.`,
+      title: compactResumeTitle(active),
+      reason: compactResumeReason(active, activeSession.completedQuestions),
       href: activeSession.resumeHref,
     };
   } else if (recentMistakes.length) {
