@@ -107,6 +107,34 @@ test("unfinished session has absolute recommendation priority", () => {
   assert.match(data.nextBestMove.href, /resume=true/);
 });
 
+test("resume recommendation stays compact for multi-subtopic sessions", () => {
+  const data = deriveLearnerIntelligence({
+    attempts: [],
+    sessions: [{
+      ...baseSession,
+      title: "Science & Technology › Chemistry › Industrial, Materials & Applied Chemistry,Acids, Bases, pH & Commercial Inorganic Salts,Atomic Structure, Isotopes & Periodicity",
+      total_questions: 92,
+      current_index: 0,
+      filters: {
+        exams: ["CDS", "CAPF-AC"],
+        subjects: ["Science & Technology"],
+        topics: ["Chemistry"],
+        subtopics: [
+          "Industrial, Materials & Applied Chemistry",
+          "Acids, Bases, pH & Commercial Inorganic Salts",
+          "Atomic Structure, Isotopes & Periodicity",
+        ],
+      },
+    }],
+    corpus: [],
+    targetExams: ["CDS"],
+  });
+
+  assert.equal(data.nextBestMove.title, "Resume Chemistry practice");
+  assert.equal(data.nextBestMove.reason, "1 of 92 questions completed. 3 selected subtopics.");
+  assert.ok(data.nextBestMove.title.length < 40);
+});
+
 test("a later correct answer resolves an earlier mistake", () => {
   const data = deriveLearnerIntelligence({
     attempts: [
@@ -167,6 +195,25 @@ test("weak areas require minimum evidence and combine weakness with corpus value
   assert.equal(data.needsAttention[0].topic, "Parliament");
   assert.equal(data.needsAttention[0].corpusQuestions, 8);
   assert.equal(data.needsAttention[0].accuracy, 33);
+});
+
+
+test("score so far uses exam-aware negative marking rather than duplicating accuracy", () => {
+  const data = deriveLearnerIntelligence({
+    attempts: [
+      a("a1", "q1", true, "2026-10-04T01:00:00Z", "B"),
+      a("a2", "q2", false, "2026-10-04T02:00:00Z", "A"),
+    ],
+    sessions: [],
+    corpus: [
+      q("q1", "CDS", "Polity", "Parliament"),
+      q("q2", "CDS", "Polity", "Parliament"),
+    ],
+    targetExams: ["CDS"],
+  });
+
+  assert.equal(data.overview.accuracy, 50);
+  assert.equal(data.overview.scorePercent, 33.3);
 });
 
 test("lifetime metrics are not capped at the former 200-attempt window", () => {
