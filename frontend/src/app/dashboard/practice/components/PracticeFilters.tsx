@@ -22,6 +22,14 @@ export type PracticeFiltersResponse = {
   subject_weights?: Record<string, Record<string, number>>;
   topic_weights?: Record<string, Record<string, Record<string, number>>>;
   subtopic_weights?: Record<string, Record<string, Record<string, number>>>;
+  facet_rows?: Array<{
+    exam: string;
+    year: number | null;
+    cycle: string | null;
+    subject: string;
+    topic: string;
+    subtopic: string | null;
+  }>;
   difficulties?: string[];
 };
 
@@ -130,70 +138,154 @@ export default function PracticeFilters({
     return () => { isMounted = false; };
   }, []);
 
-  // Available subjects for selected exams (or all exams if none selected)
-  useEffect(() => {
-    const timer = window.setTimeout(() => { if (filters) applyInitialSelection(filters); }, 0);
-    return () => window.clearTimeout(timer);
-  }, [searchParams, filters]);
+  // Contextual taxonomy rows. These are the canonical source for dependent
+  // filter availability after exam/year/cycle selections. A facet is shown
+  // only when at least one eligible question exists in the current context.
+  const scopedFacetRows = useMemo(() => {
+    if (!filters?.facet_rows?.length) return null;
 
-  const availableSubjects = useMemo(() => {
-    if (!filters) return [];
     const activeExams = selectedExams.length > 0 ? selectedExams : filters.exams;
+    return filters.facet_rows.filter((row) => {
+      if (!activeExams.includes(row.exam)) return false;
+      if (selectedYears.length > 0 && (row.year == null || !selectedYears.includes(row.year))) {
+        return false;
+      }
+      if (selectedCycles.length > 0) {
+        const cycleMatches =
+          (row.cycle != null && selectedCycles.includes(row.cycle)) ||
+          (row.cycle == null && selectedCycles.includes("I"));
+        if (!cycleMatches) return false;
+      }
+      return true;
+    });
+  }, [filters, selectedExams, selectedYears, selectedCycles]);
+
+  const availableSubjectWeights = useMemo(() => {
     const weights = new Map<string, number>();
 
+    if (scopedFacetRows) {
+      for (const row of scopedFacetRows) {
+        if (row.subject) weights.set(row.subject, (weights.get(row.subject) ?? 0) + 1);
+      }
+      return weights;
+    }
+
+    if (!filters) return weights;
+    const activeExams = selectedExams.length > 0 ? selectedExams : filters.exams;
     for (const exam of activeExams) {
       for (const sub of Object.keys(filters.subjects[exam] ?? {})) {
         const weight = filters.subject_weights?.[exam]?.[sub] ?? 0;
-        weights.set(sub, (weights.get(sub) ?? 0) + weight);
+        if (weight > 0) weights.set(sub, (weights.get(sub) ?? 0) + weight);
       }
     }
+    return weights;
+  }, [filters, scopedFacetRows, selectedExams]);
 
-    return Array.from(weights.entries())
-      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-      .map(([sub]) => sub);
-  }, [filters, selectedExams]);
+  const availableSubjects = useMemo(
+    () =>
+      Array.from(availableSubjectWeights.entries())
+        .filter(([, count]) => count > 0)
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+        .map(([subject]) => subject),
+    [availableSubjectWeights]
+  );
 
-  // Available topics for selected subject(s)
-  const availableTopics = useMemo(() => {
-    if (!filters || selectedSubjects.length === 0) return [];
-    const activeExams = selectedExams.length > 0 ? selectedExams : filters.exams;
+  const availableTopicWeights = useMemo(() => {
     const weights = new Map<string, number>();
+    if (selectedSubjects.length === 0) return weights;
 
+    if (scopedFacetRows) {
+      for (const row of scopedFacetRows) {
+        if (selectedSubjects.includes(row.subject) && row.topic) {
+          weights.set(row.topic, (weights.get(row.topic) ?? 0) + 1);
+        }
+      }
+      return weights;
+    }
+
+    if (!filters) return weights;
+    const activeExams = selectedExams.length > 0 ? selectedExams : filters.exams;
     for (const exam of activeExams) {
       for (const subject of selectedSubjects) {
         for (const topic of filters.subjects[exam]?.[subject] ?? []) {
           const weight = filters.topic_weights?.[exam]?.[subject]?.[topic] ?? 0;
-          weights.set(topic, (weights.get(topic) ?? 0) + weight);
+          if (weight > 0) weights.set(topic, (weights.get(topic) ?? 0) + weight);
         }
       }
     }
+    return weights;
+  }, [filters, scopedFacetRows, selectedExams, selectedSubjects]);
 
-    return Array.from(weights.entries())
-      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-      .map(([topic]) => topic);
-  }, [filters, selectedExams, selectedSubjects]);
+  const availableTopics = useMemo(
+    () =>
+      Array.from(availableTopicWeights.entries())
+        .filter(([, count]) => count > 0)
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+        .map(([topic]) => topic),
+    [availableTopicWeights]
+  );
 
-  // Available subtopics for selected topic(s)
-  const availableSubtopics = useMemo(() => {
-    if (!filters?.subtopics || selectedSubjects.length === 0 || selectedTopics.length === 0) {
-      return [];
+  const availableSubtopicWeights = useMemo(() => {
+    const weights = new Map<string, number>();
+    if (selectedSubjects.length === 0 || selectedTopics.length === 0) return weights;
+
+    if (scopedFacetRows) {
+      for (const row of scopedFacetRows) {
+        if (
+          selectedSubjects.includes(row.subject) &&
+          selectedTopics.includes(row.topic) &&
+          row.subtopic
+        ) {
+          weights.set(row.subtopic, (weights.get(row.subtopic) ?? 0) + 1);
+        }
+      }
+      return weights;
     }
 
-    const weights = new Map<string, number>();
+    if (!filters?.subtopics) return weights;
     for (const subject of selectedSubjects) {
       const topicMap = filters.subtopics[subject] ?? {};
       for (const topic of selectedTopics) {
         for (const subtopic of topicMap[topic] ?? []) {
           const weight = filters.subtopic_weights?.[subject]?.[topic]?.[subtopic] ?? 0;
-          weights.set(subtopic, (weights.get(subtopic) ?? 0) + weight);
+          if (weight > 0) weights.set(subtopic, (weights.get(subtopic) ?? 0) + weight);
         }
       }
     }
+    return weights;
+  }, [filters, scopedFacetRows, selectedSubjects, selectedTopics]);
 
-    return Array.from(weights.entries())
-      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-      .map(([subtopic]) => subtopic);
-  }, [filters, selectedSubjects, selectedTopics]);
+  const availableSubtopics = useMemo(
+    () =>
+      Array.from(availableSubtopicWeights.entries())
+        .filter(([, count]) => count > 0)
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+        .map(([subtopic]) => subtopic),
+    [availableSubtopicWeights]
+  );
+
+  // Keep dependent selections valid when exam/year/cycle changes. This also
+  // prevents impossible states such as "18 of 10 selected".
+  useEffect(() => {
+    setSelectedSubjects((prev) => {
+      const next = prev.filter((value) => availableSubjects.includes(value));
+      return next.length === prev.length ? prev : next;
+    });
+  }, [availableSubjects]);
+
+  useEffect(() => {
+    setSelectedTopics((prev) => {
+      const next = prev.filter((value) => availableTopics.includes(value));
+      return next.length === prev.length ? prev : next;
+    });
+  }, [availableTopics]);
+
+  useEffect(() => {
+    setSelectedSubtopics((prev) => {
+      const next = prev.filter((value) => availableSubtopics.includes(value));
+      return next.length === prev.length ? prev : next;
+    });
+  }, [availableSubtopics]);
 
   // Available years for selected exams
   const availableYears = useMemo(() => {
@@ -601,7 +693,10 @@ export default function PracticeFilters({
                   >
                     {isSelected ? "✓" : null}
                   </span>
-                  <span className="min-w-0 whitespace-normal break-words">{subtop}</span>
+                  <span className="min-w-0 flex-1 whitespace-normal break-words">{subtop}</span>
+                  <span className="shrink-0 rounded-full bg-white/80 px-2 py-0.5 text-[11px] font-semibold text-slate-500">
+                    {availableSubtopicWeights.get(subtop) ?? 0} Q{(availableSubtopicWeights.get(subtop) ?? 0) === 1 ? "" : "s"}
+                  </span>
                 </button>
               );
             })}
