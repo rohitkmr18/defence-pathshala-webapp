@@ -346,9 +346,21 @@ export function completePracticeSession(params: {
 }): Promise<void> {
   const pending = completionWrites.get(params.sessionId);
   if (pending) return pending;
+  // Freeze all ordinary timer/player snapshots before the final device snapshot is
+  // captured. This prevents a late progress tick from superseding the submitted paper.
+  finalizingSessions.add(params.sessionId);
   const completion = persistCompletion(params);
   completionWrites.set(params.sessionId, completion);
-  void completion.then(() => completionWrites.delete(params.sessionId), () => completionWrites.delete(params.sessionId));
+  void completion.then(
+    () => {
+      completionWrites.delete(params.sessionId);
+      finalizingSessions.delete(params.sessionId);
+    },
+    () => {
+      completionWrites.delete(params.sessionId);
+      finalizingSessions.delete(params.sessionId);
+    }
+  );
   return completion;
 }
 
