@@ -70,6 +70,18 @@ test('missing/completed saved sessions and missing questions fail instead of sta
   assert.throws(() => restoreQuestionOrder(['q4', 'missing'], [{ id: 'q4' }]), /preserved/);
 });
 
+test('completed session can be reopened only when explicitly requested for analysis', async () => {
+  const completed = session({ id: 'completed-analysis', is_completed: true });
+  saveLocalSession(completed);
+  globalThis.fetch = async url => {
+    assert.match(url, /include_completed=true/);
+    return { ok: true, json: async () => ({ activeSession: completed }) };
+  };
+  const restored = await loadResumeSession('completed-analysis', { allowCompleted: true });
+  assert.equal(restored.is_completed, true);
+  assert.equal(restored.id, 'completed-analysis');
+});
+
 test('late server creation preserves progress and keeps the player session identity stable', async () => {
   let resolveCreate; const writes = [];
   globalThis.fetch = async (_url, options) => {
