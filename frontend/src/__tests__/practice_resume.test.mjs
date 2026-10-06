@@ -169,7 +169,7 @@ test('HTTP progress failures remain visible and completion cannot report saved',
   updateSessionProgress('progress-failure', { current_index: 3 });
   await tick();
   assert.equal(getLocalSession().cloud_status, 'error');
-  await assert.rejects(completePracticeSession({ sessionId: 'progress-failure', questions: [{ id: 'q4', final_opt: 'A' }], answers: { q4: 'A' }, mode: 'instant', timeSpentSeconds: 5 }), /save failed/);
+  await assert.rejects(completePracticeSession({ sessionId: 'progress-failure', questions: [{ id: 'q4', final_opt: 'A' }], answers: { q4: 'A' }, mode: 'instant', timeSpentSeconds: 5 }), /Final submission/);
   assert.equal(getLocalSession().cloud_status, 'error');
 });
 
@@ -254,6 +254,7 @@ test('completion waits for an in-flight first answer without duplicating the att
     const body = JSON.parse(options.body);
     if (options.method === 'POST' && url.endsWith('/session')) return new Promise(resolve => { resolveCreate = resolve; });
     if (url.endsWith('/attempt')) { attemptCount++; return new Promise(resolve => { finishAttempt = resolve; }); }
+    if (url.endsWith('/finalize')) return { ok: true, json: async () => ({ persisted: true, session: { id: 'cloud-concurrent' } }) };
     return { ok: true, json: async () => ({ success: true, session: { id: body.session_id } }) };
   };
   const created = await initializeSession({ title: 'Concurrent completion', mode: 'instant', filters: {}, questions: [{ id: 'q1', final_opt: 'B' }] });
@@ -303,9 +304,9 @@ test('creation retry after a lost response reuses the stored creation ID and pen
 test('completion remains resumable until the final cloud save is confirmed', async () => {
   saveLocalSession(session({ id: 'confirmation', server_id: 'cloud-confirmation' }));
   let finish; let attempted = 0;
-  globalThis.fetch = async (_url, options) => {
+  globalThis.fetch = async (url, options) => {
     const body = JSON.parse(options.body);
-    if (body.is_completed) return new Promise(resolve => { finish = resolve; });
+    if (url.endsWith('/finalize')) return new Promise(resolve => { finish = resolve; });
     attempted++;
     return { ok: true, json: async () => ({ success: true, session: { id: body.session_id } }) };
   };
@@ -314,7 +315,7 @@ test('completion remains resumable until the final cloud save is confirmed', asy
   updateSessionProgress('confirmation', { time_spent_seconds: 21 });
   await tick();
   assert.equal(getLocalSession().time_spent_seconds, 20);
-  finish({ ok: true, json: async () => ({ success: true, session: { id: 'cloud-confirmation' } }) });
+  finish({ ok: true, json: async () => ({ persisted: true, session: { id: 'cloud-confirmation' } }) });
   await completion; assert.equal(getLocalSession().is_completed, true);
   updateSessionProgress('confirmation', { time_spent_seconds: 22 });
   await tick();
