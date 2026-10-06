@@ -204,7 +204,9 @@ async function persistQuestionAttempt(params: Parameters<typeof recordQuestionAt
         mode: params.mode || "instant" }),
     }) : null;
     if (!response) {
-      acknowledgeAttempt(params);
+      // Device-only/guest progress is not a cloud-saved attempt. Keep it in
+      // pending_attempts so a later sign-in/claim can replay it into user_attempts.
+      // Marking it as saved here would make completion incorrectly skip persistence.
       return;
     }
     if (!response.ok) throw new Error("Attempt persistence failed");
