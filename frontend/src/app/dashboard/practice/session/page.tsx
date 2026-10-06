@@ -17,6 +17,7 @@ interface SessionPageProps {
     resume?: string;
     ids?: string;
     session_id?: string;
+    analysis?: string;
   }>;
 }
 
@@ -45,6 +46,7 @@ export default async function SessionPage({ searchParams }: SessionPageProps) {
           resume={params.resume === "true"}
           specificIds={params.ids}
           resumeSessionId={params.session_id}
+          analysis={params.analysis === "true"}
         />
       </div>
     </main>
