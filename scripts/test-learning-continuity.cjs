@@ -276,12 +276,12 @@ test('Dashboard resume restores checked separately from selected; Check and Next
 });
 
 function apiFixture() {
-  const tables = { practice_sessions: new Map(), user_attempts: new Map(), v_dp_question_intelligence_v2: new Map([['q1', { id: 'q1', final_opt: 'B' }]]) };
+  const tables = { practice_sessions: new Map(), user_attempts: new Map(), v_dp_question_intelligence_v2: new Map([['q1', { id: 'q1', final_opt: 'B', question: 'Which?', opt_a: 'A car', opt_b: 'None', opt_c: '0101', opt_d: '2/3', content_version: 1, content_eligible: true }]]) };
   const identity = { id: 'learner' };
   const client = { from(table) {
     const conditions = []; let payload; let writeOptions = {}; let updating = false;
     const query = {
-      select() { return query; }, eq(key, value) { conditions.push([key, value]); return query; },
+      select() { return query; }, in(key, values) { conditions.push([key, values]); return query; }, eq(key, value) { conditions.push([key, value]); return query; },
       upsert(value, options) { payload = value; writeOptions = options; return query; },
       update(value) { payload = value; updating = true; return query; },
       then(resolve, reject) { return execute().then(resolve, reject); },
@@ -290,9 +290,9 @@ function apiFixture() {
     async function execute() {
       const rows = tables[table];
       if (payload && !updating && !(writeOptions.ignoreDuplicates && rows.has(payload.id))) rows.set(payload.id, { ...rows.get(payload.id), ...payload });
-      let row = [...rows.values()].find(r => conditions.every(([k, v]) => r[k] === v));
+      let row = [...rows.values()].find(r => conditions.every(([k, v]) => Array.isArray(v) ? v.includes(r[k]) : r[k] === v));
       if (updating && row) { row = { ...row, ...payload }; rows.set(row.id, row); }
-      return { data: row || null, error: null };
+      return { data: conditions.some(([,v]) => Array.isArray(v)) ? [...rows.values()].filter(r => conditions.every(([k,v]) => Array.isArray(v) ? v.includes(r[k]) : r[k] === v)) : row || null, error: null };
     }
     return query;
   } };
@@ -322,11 +322,38 @@ test('attempt replay is idempotent, cloud-linked and server-scored; another acco
   const f = apiFixture(); const sessionId = '11111111-1111-4111-8111-111111111111';
   f.tables.practice_sessions.set(sessionId, { id: sessionId, user_id: 'learner', question_ids: ['q1'] });
   const { POST } = f.load('frontend/src/app/api/practice/attempt/route.ts');
-  const body = { question_id: 'q1', session_id: sessionId, selected_option: 'B', is_correct: false, time_taken: 12 };
+  const body = { question_id: 'q1', content_version: 1, session_id: sessionId, selected_option: 'B', is_correct: false, time_taken: 12 };
   assert.equal((await POST(f.request(body))).body.persisted, true);
   assert.equal((await POST(f.request(body))).body.persisted, true);
   assert.equal(f.tables.user_attempts.size, 1);
   const saved = [...f.tables.user_attempts.values()][0];
   assert.equal(saved.session_id, sessionId); assert.equal(saved.is_correct, true); assert.equal(saved.time_taken, 12);
   f.identity.id = 'other'; assert.equal((await POST(f.request(body))).status, 404);
+});
+
+test('attempt write rejects withheld content and stale versions without changing saved attempts', async () => {
+  const f = apiFixture(); const { POST } = f.load('frontend/src/app/api/practice/attempt/route.ts');
+  const body = { question_id: 'q1', selected_option: 'B', is_correct: true, content_version: 0 };
+  assert.equal((await POST(f.request(body))).status,409);
+  assert.equal(f.tables.user_attempts.size,0);
+  f.tables.v_dp_question_intelligence_v2.get('q1').content_status='WITHHELD';
+  assert.equal((await POST(f.request({...body,content_version:1}))).status,409);
+  assert.equal(f.tables.user_attempts.size,0);
+});
+
+test('session creation refuses damaged sets and incomplete full papers', async () => {
+  const f = apiFixture(); const { POST } = f.load('frontend/src/app/api/practice/session/route.ts');
+  const input = { creation_id: '11111111-1111-4111-8111-111111111111', mode: 'full_paper', question_ids: ['q1'] };
+  assert.equal((await POST(f.request(input))).status,409);
+  f.tables.v_dp_question_intelligence_v2.get('q1').opt_a='';
+  assert.equal((await POST(f.request({...input,mode:'instant'}))).status,409);
+  assert.equal(f.tables.practice_sessions.size,0);
+});
+
+test('completion cannot score a saved incomplete full paper', async () => {
+ const f=apiFixture(); const id='11111111-1111-4111-8111-111111111111';
+ f.tables.practice_sessions.set(id,{id,user_id:'learner',question_ids:['q1'],mode:'full_paper',is_completed:false});
+ const {PATCH}=f.load('frontend/src/app/api/practice/session/route.ts');
+ assert.equal((await PATCH(f.request({session_id:id,is_completed:true,correct_count:1}))).status,409);
+ assert.equal(f.tables.practice_sessions.get(id).is_completed,false);
 });

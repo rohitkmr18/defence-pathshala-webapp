@@ -134,6 +134,8 @@ export function normalizeQuestion(raw: Record<string, unknown>): PracticeQuestio
   return {
     id: String(raw.id),
     question_id: String(raw.question_id || raw.id),
+    content_version: typeof raw.content_version === "number" ? raw.content_version : undefined,
+    content_status: typeof raw.content_status === "string" ? raw.content_status : undefined,
     exam: String(raw.exam || ""),
     year: Number(raw.year) || 0,
     cycle: raw.cycle ? String(raw.cycle).trim() : null,

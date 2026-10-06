@@ -16,6 +16,7 @@ import logging
 from typing import Any
 
 import pandas as pd
+from app.services.content_quality import dataframe_content_issues, content_warnings
 
 logger = logging.getLogger(__name__)
 
@@ -101,6 +102,8 @@ def validate_dataset(df: pd.DataFrame) -> dict[str, Any]:
         }
 
     total_rows = len(df)
+    df = df.copy()
+    df.columns = df.columns.astype(str).str.strip()
 
     # 1. Check required columns existence
     cleaned_cols = [str(c).strip() for c in df.columns]
@@ -184,6 +187,10 @@ def validate_dataset(df: pd.DataFrame) -> dict[str, Any]:
                 errors.append(
                     f"{int(invalid_status_mask.sum())} row(s) have invalid verified_status (allowed: {sorted(VALID_VERIFIED_STATUSES)}, found: {bad_statuses})"
                 )
+
+    if all(field in df.columns for field in ("question", "opt_a", "opt_b", "opt_c", "opt_d")):
+        errors.extend(dataframe_content_issues(df))
+        warnings.extend(content_warnings(df))
 
     is_valid = len(errors) == 0
 

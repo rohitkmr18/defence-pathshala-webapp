@@ -22,6 +22,7 @@ from typing import Any
 import httpx
 import pandas as pd
 
+from app.services.content_quality import require_content_integrity, require_reviewed_content_preserved
 from app.core.config import settings
 from app.core.supabase import supabase
 from app.services.validate_dataset import (
@@ -106,7 +107,7 @@ def download_worksheet_csv(
                         )
 
                     # Parse into DataFrame
-                    df = pd.read_csv(io.BytesIO(csv_content), encoding="utf-8")
+                    df = pd.read_csv(io.BytesIO(csv_content), encoding="utf-8", dtype=str, keep_default_na=False)
                     df.columns = df.columns.astype(str).str.strip()
 
                     logger.info(
@@ -145,6 +146,7 @@ def normalize_questions_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     - Converts NaN/NaT to Python None for SQL NULL
     - Keeps only valid table schema columns
     """
+    require_content_integrity(df)
     clean_df = df.copy()
 
     # Clean headers
@@ -352,6 +354,7 @@ def sync_dataset_to_supabase(
 
     # Step 1: Normalize records for JSON upsert
     records = prepare_records_for_upsert(df)
+    require_reviewed_content_preserved(supabase, records)
     total_records = len(records)
 
     incoming_ids = set(str(r["question_id"]).strip() for r in records if r.get("question_id"))

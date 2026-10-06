@@ -198,7 +198,7 @@ async function persistQuestionAttempt(params: Parameters<typeof recordQuestionAt
     const response = cloudId || !params.sessionId ? await fetch("/api/practice/attempt", {
       method: "POST", headers: { "Content-Type": "application/json" },
       signal: AbortSignal.timeout(15000),
-      body: JSON.stringify({ question_id: params.question.id,
+      body: JSON.stringify({ question_id: params.question.id, content_version: params.question.content_version,
         selected_option: params.selectedOption, is_correct: params.isCorrect,
         time_taken: params.timeTakenSeconds || 0, session_id: cloudId || undefined,
         mode: params.mode || "instant" }),

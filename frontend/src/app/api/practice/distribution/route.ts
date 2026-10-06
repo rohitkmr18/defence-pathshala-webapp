@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
 
     let query = supabase
       .from("v_dp_question_intelligence_v2")
-      .select("id, question_id, exam, year, cycle");
+      .select("id, question_id, exam, year, cycle").eq("content_eligible", true);
 
     if (exam) {
       const expanded = expandExamQuery(exam);
@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
 
     // Paginate to fetch all matching rows (handling PostgREST 1000-row limit)
     const pageSize = 1000;
-    const allRawRows: any[] = [];
+    const allRawRows: { id: string; question_id: string; exam: string; year: number; cycle: string | null }[] = [];
     let start = 0;
     while (true) {
       const { data: pageData, error: pageErr } = await query.range(
@@ -109,7 +109,7 @@ export async function GET(request: NextRequest) {
 
     // Deduplicate rows by question_id / id to prevent double counting
     const seenQuestionIds = new Set<string>();
-    const dedupedRows: any[] = [];
+    const dedupedRows: typeof allRawRows = [];
     for (const r of allRawRows) {
       const qid = String(r.question_id || r.id || "");
       if (qid) {
@@ -127,7 +127,7 @@ export async function GET(request: NextRequest) {
           .filter(Boolean)
       : [];
 
-    const getEffectiveCycle = (r: any): string => {
+    const getEffectiveCycle = (r: (typeof allRawRows)[number]): string => {
       if (r.cycle) return String(r.cycle).trim();
       const examName = String(r.exam || "").toUpperCase();
       if (examName.includes("CAPF")) return "I";

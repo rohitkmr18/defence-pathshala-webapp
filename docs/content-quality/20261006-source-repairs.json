@@ -1,0 +1,382 @@
+{
+  "batch_id": "20261006_source_repairs_v1",
+  "scope": "19 audit-critical rows plus one source-confirmed binary option. SOURCE_MATCHED applies to stated fields; it does not certify all keys, explanations or derived intelligence.",
+  "repairs": [
+    {
+      "question_id": "CAPF_2022_P1_025",
+      "before": {
+        "opt_a": "#ERROR!",
+        "opt_c": "#ERROR!"
+      },
+      "after": {
+        "opt_a": "+0.5 dioptre",
+        "opt_c": "+2.0 dioptre"
+      },
+      "evidence": {
+        "url": "https://cdn.aglasem.com/aglasem-doc/95a6a838-93f1-11ed-a457-0a5e36bc6706/95a6a838-93f1-11ed-a457-0a5e36bc6706.pdf",
+        "sha256": "b83d6cd826776088f65004b1073f183e9e835036c6a229532fac5a0b725fcaf3",
+        "booklet": "JDFG-U-PFT/48A",
+        "printed_page": "9",
+        "source_question": 25,
+        "method": "Manual visual comparison of original UPSC booklet scan; mirror annotations ignored",
+        "reason": "Restore spreadsheet errors from printed choices"
+      }
+    },
+    {
+      "question_id": "CAPF_2024_P1_075",
+      "before": {
+        "opt_d": ""
+      },
+      "after": {
+        "opt_d": "None"
+      },
+      "evidence": {
+        "url": "https://cdn.aglasem.com/aglasem-doc/095d59b2-8ce0-11f1-913c-0aa932765c8b/095d59b2-8ce0-11f1-913c-0aa932765c8b.pdf",
+        "sha256": "786c401851b5172dcc5af5da4904523576dba68a999476c79a1a9bd859156610",
+        "booklet": "KSCB-A-GAI A",
+        "printed_page": "29",
+        "source_question": 75,
+        "method": "Manual visual comparison of original UPSC booklet scan; mirror annotations ignored",
+        "reason": "Restore blank choice"
+      }
+    },
+    {
+      "question_id": "CAPF_2026_P1_110",
+      "before": {
+        "opt_a": "#ERROR!",
+        "opt_b": "#ERROR!",
+        "opt_c": "#ERROR!",
+        "opt_d": "#ERROR!"
+      },
+      "after": {
+        "opt_a": "+7, +2, +4, +3",
+        "opt_b": "+2, -1, -3, +4",
+        "opt_c": "+7, +1, +3, -3",
+        "opt_d": "+7, +1, +5, +3"
+      },
+      "evidence": {
+        "url": "https://cdn.aglasem.com/aglasem-doc/c8e5af76-8ce2-11f1-a349-0aa932765c8b/c8e5af76-8ce2-11f1-a349-0aa932765c8b.pdf",
+        "sha256": "8dd7ad9114ceed4ac1479f434e8e55851154b3721a83696b3388b8e7153d2ceb",
+        "booklet": "TARP-A-GAT/82A",
+        "printed_page": "47",
+        "source_question": 110,
+        "method": "Manual visual comparison of original UPSC booklet scan; mirror annotations ignored",
+        "reason": "Restore four spreadsheet errors"
+      }
+    },
+    {
+      "question_id": "CDS_I_2024_GK_050",
+      "before": {
+        "opt_d": ""
+      },
+      "after": {
+        "opt_d": "None"
+      },
+      "evidence": {
+        "url": "https://iasexamportal.com/sites/default/files/cds-exam-paper-i-2024-general-knowledge.pdf",
+        "sha256": "3681cde059d2aa79a34f990cd4cd0412680f17a90bd868e722eecd51ee122c04",
+        "booklet": "SRSU-S-GKL/59A",
+        "printed_page": "19",
+        "source_question": 50,
+        "method": "Manual visual comparison of original UPSC booklet scan; mirror annotations ignored",
+        "reason": "Restore blank choice"
+      }
+    },
+    {
+      "question_id": "CDS_I_2024_GK_052",
+      "before": {
+        "opt_d": ""
+      },
+      "after": {
+        "opt_d": "None"
+      },
+      "evidence": {
+        "url": "https://iasexamportal.com/sites/default/files/cds-exam-paper-i-2024-general-knowledge.pdf",
+        "sha256": "3681cde059d2aa79a34f990cd4cd0412680f17a90bd868e722eecd51ee122c04",
+        "booklet": "SRSU-S-GKL/59A",
+        "printed_page": "21",
+        "source_question": 52,
+        "method": "Manual visual comparison of original UPSC booklet scan; mirror annotations ignored",
+        "reason": "Restore blank choice"
+      }
+    },
+    {
+      "question_id": "CDS_I_2024_GK_095",
+      "before": {
+        "opt_d": ""
+      },
+      "after": {
+        "opt_d": "None"
+      },
+      "evidence": {
+        "url": "https://iasexamportal.com/sites/default/files/cds-exam-paper-i-2024-general-knowledge.pdf",
+        "sha256": "3681cde059d2aa79a34f990cd4cd0412680f17a90bd868e722eecd51ee122c04",
+        "booklet": "SRSU-S-GKL/59A",
+        "printed_page": "37",
+        "source_question": 95,
+        "method": "Manual visual comparison of original UPSC booklet scan; mirror annotations ignored",
+        "reason": "Restore blank choice"
+      }
+    },
+    {
+      "question_id": "CDS_I_2024_GK_096",
+      "before": {
+        "opt_d": ""
+      },
+      "after": {
+        "opt_d": "None"
+      },
+      "evidence": {
+        "url": "https://iasexamportal.com/sites/default/files/cds-exam-paper-i-2024-general-knowledge.pdf",
+        "sha256": "3681cde059d2aa79a34f990cd4cd0412680f17a90bd868e722eecd51ee122c04",
+        "booklet": "SRSU-S-GKL/59A",
+        "printed_page": "37",
+        "source_question": 96,
+        "method": "Manual visual comparison of original UPSC booklet scan; mirror annotations ignored",
+        "reason": "Restore blank choice"
+      }
+    },
+    {
+      "question_id": "CDS_II_2022_GK_004",
+      "before": {
+        "opt_d": ""
+      },
+      "after": {
+        "opt_d": "None"
+      },
+      "evidence": {
+        "url": "https://iasexamportal.com/sites/default/files/download-cds-exam-papers-2022-exam-ii-general-knowledge.pdf",
+        "sha256": "4013ae2d5c54f072e4162fc0752a902de390348b7cd10ea83d59bcf2392bf2d6",
+        "booklet": "FDGT-S-GKL A",
+        "printed_page": "3-A",
+        "source_question": 4,
+        "method": "Manual visual comparison of original UPSC booklet scan; mirror annotations ignored",
+        "reason": "Restore blank choice"
+      }
+    },
+    {
+      "question_id": "CDS_II_2022_GK_010",
+      "before": {
+        "opt_a": ""
+      },
+      "after": {
+        "opt_a": "None"
+      },
+      "evidence": {
+        "url": "https://iasexamportal.com/sites/default/files/download-cds-exam-papers-2022-exam-ii-general-knowledge.pdf",
+        "sha256": "4013ae2d5c54f072e4162fc0752a902de390348b7cd10ea83d59bcf2392bf2d6",
+        "booklet": "FDGT-S-GKL A",
+        "printed_page": "5-A",
+        "source_question": 10,
+        "method": "Manual visual comparison of original UPSC booklet scan; mirror annotations ignored",
+        "reason": "Restore blank choice"
+      }
+    },
+    {
+      "question_id": "CDS_II_2022_GK_015",
+      "before": {
+        "opt_d": ""
+      },
+      "after": {
+        "opt_d": "None"
+      },
+      "evidence": {
+        "url": "https://iasexamportal.com/sites/default/files/download-cds-exam-papers-2022-exam-ii-general-knowledge.pdf",
+        "sha256": "4013ae2d5c54f072e4162fc0752a902de390348b7cd10ea83d59bcf2392bf2d6",
+        "booklet": "FDGT-S-GKL A",
+        "printed_page": "7-A",
+        "source_question": 15,
+        "method": "Manual visual comparison of original UPSC booklet scan; mirror annotations ignored",
+        "reason": "Restore blank choice"
+      }
+    },
+    {
+      "question_id": "CDS_I_2026_GK_089",
+      "before": {
+        "opt_a": "",
+        "final_opt": "D",
+        "explanation": "Dr. Sarvepalli Radhakrishnan, Dr. Zakir Hussain and Neelam Sanjiva Reddy all served as Vice-President of India before becoming President."
+      },
+      "after": {
+        "opt_a": "None",
+        "final_opt": "C",
+        "explanation": "Dr. Sarvepalli Radhakrishnan served as Vice-President from 1952 to 1962, and Dr. Zakir Hussain from 1962 to 1967. Neelam Sanjiva Reddy did not serve as Vice-President. Therefore, two of the listed Presidents had also served as Vice-President; option C is correct."
+      },
+      "evidence": {
+        "url": "https://defencedirecteducation.com/wp-content/uploads/2026/04/QP-CDS-I-26-GENERAL-KNOWLEDGE-130426.pdf",
+        "sha256": "6671f97485021a43c6d1e194cd02663e873b4aacf989a7478d9d43faa6723628",
+        "booklet": "KPRS-S-KLG A",
+        "printed_page": "33-A",
+        "source_question": 89,
+        "method": "Manual visual comparison of original UPSC booklet scan; mirror annotations ignored",
+        "reason": "Restore blank choice; correct D to C using Government of India former Vice-Presidents register https://vicepresidentofindia.nic.in/former-vice-Presidents/. No official_opt populated; provisional UPSC Set A key also shows 89 C."
+      }
+    },
+    {
+      "question_id": "CDS_II_2025_GK_009",
+      "before": {
+        "question": "Provisions for the functioning of the State Governments , The ‘Durand Line’ is a border demarcation that separates which of the following countries ?"
+      },
+      "after": {
+        "question": "The ‘Durand Line’ is a border demarcation that separates which of the following countries ?"
+      },
+      "evidence": {
+        "url": "https://doondefencedreamers.com/wp-content/uploads/2025/09/cds-2-gs-paper-c-2025.pdf.pdf",
+        "sha256": "4f04661e02867277fe5058218e4d7737539d1f93420ea2f0c81bb770a8546dd5",
+        "booklet": "ANFB-S-GKL C",
+        "printed_page": "13-C",
+        "source_question": 39,
+        "method": "Manual visual comparison of original UPSC booklet scan; mirror annotations ignored",
+        "reason": "Remove preceding option contamination"
+      }
+    },
+    {
+      "question_id": "CDS_II_2025_GK_019",
+      "before": {
+        "question": "Malaysia"
+      },
+      "after": {
+        "question": "Which of the following criteria are specified for granting Special Category Status to States in India?\n1. Hilly and difficult terrain\n2. Economic and infrastructural backwardness\n3. Strategic coastal zone\n4. Sizeable share of tribal population\nSelect the answer using the code given below :"
+      },
+      "evidence": {
+        "url": "https://doondefencedreamers.com/wp-content/uploads/2025/09/cds-2-gs-paper-c-2025.pdf.pdf",
+        "sha256": "4f04661e02867277fe5058218e4d7737539d1f93420ea2f0c81bb770a8546dd5",
+        "booklet": "ANFB-S-GKL C",
+        "printed_page": "15-C",
+        "source_question": 49,
+        "method": "Manual visual comparison of original UPSC booklet scan; mirror annotations ignored",
+        "reason": "Restore missing stem from matched content, not booklet question number"
+      }
+    },
+    {
+      "question_id": "CDS_II_2025_GK_022",
+      "before": {
+        "question": "Hund’s Rule. 2. Acar travels a total distance L. It travels half the distance with speed v, and the other half with speed v.. The average speed of the car is: Vy +V",
+        "opt_b": "2v₁v₂/(v₁ + v₂",
+        "opt_c": "(v₁ + v₂)L/(2v₁v₂"
+      },
+      "after": {
+        "question": "A car travels a total distance L. It travels half the distance with speed v₁ and the other half with speed v₂. The average speed of the car is :",
+        "opt_b": "2v₁v₂/(v₁ + v₂)",
+        "opt_c": "(v₁ + v₂)L/(2v₁v₂)"
+      },
+      "evidence": {
+        "url": "https://doondefencedreamers.com/wp-content/uploads/2025/09/cds-2-gs-paper-c-2025.pdf.pdf",
+        "sha256": "4f04661e02867277fe5058218e4d7737539d1f93420ea2f0c81bb770a8546dd5",
+        "booklet": "ANFB-S-GKL C",
+        "printed_page": "7-C",
+        "source_question": 22,
+        "method": "Manual visual comparison of original UPSC booklet scan; mirror annotations ignored",
+        "reason": "Restore stem, velocity subscripts and denominator parentheses"
+      }
+    },
+    {
+      "question_id": "CDS_II_2025_GK_023",
+      "before": {
+        "question": "0 3. The linear momentum of a particle is conserved if :"
+      },
+      "after": {
+        "question": "The linear momentum of a particle is conserved if :"
+      },
+      "evidence": {
+        "url": "https://doondefencedreamers.com/wp-content/uploads/2025/09/cds-2-gs-paper-c-2025.pdf.pdf",
+        "sha256": "4f04661e02867277fe5058218e4d7737539d1f93420ea2f0c81bb770a8546dd5",
+        "booklet": "ANFB-S-GKL C",
+        "printed_page": "7-C",
+        "source_question": 23,
+        "method": "Manual visual comparison of original UPSC booklet scan; mirror annotations ignored",
+        "reason": "Remove preceding option and question number contamination"
+      }
+    },
+    {
+      "question_id": "CDS_II_2025_GK_024",
+      "before": {
+        "question": "the net work done on it is maximum. 4. When a stone tied to a string is whirled in a circle, the work done on it by the string :"
+      },
+      "after": {
+        "question": "When a stone tied to a string is whirled in a circle, the work done on it by the string :"
+      },
+      "evidence": {
+        "url": "https://doondefencedreamers.com/wp-content/uploads/2025/09/cds-2-gs-paper-c-2025.pdf.pdf",
+        "sha256": "4f04661e02867277fe5058218e4d7737539d1f93420ea2f0c81bb770a8546dd5",
+        "booklet": "ANFB-S-GKL C",
+        "printed_page": "7-C",
+        "source_question": 24,
+        "method": "Manual visual comparison of original UPSC booklet scan; mirror annotations ignored",
+        "reason": "Remove preceding option contamination"
+      }
+    },
+    {
+      "question_id": "CDS_II_2025_GK_025",
+      "before": {
+        "question": "depends on the mass of the stone. 5. Assume ‘A’ does 500 J of work in ‘x’ minutes and ‘B’ does 1000 J of work in 20 minutes. If the power delivered by ‘A’ is P, and ‘B’ is P, and P, = 2Pp, then ‘x’, in minutes is :"
+      },
+      "after": {
+        "question": "Assume ‘A’ does 500 J of work in ‘x’ minutes and ‘B’ does 1000 J of work in 20 minutes. If the power delivered by ‘A’ is P₁ and ‘B’ is P₂ and P₁ = 2P₂, then ‘x’, in minutes is :"
+      },
+      "evidence": {
+        "url": "https://doondefencedreamers.com/wp-content/uploads/2025/09/cds-2-gs-paper-c-2025.pdf.pdf",
+        "sha256": "4f04661e02867277fe5058218e4d7737539d1f93420ea2f0c81bb770a8546dd5",
+        "booklet": "ANFB-S-GKL C",
+        "printed_page": "7-C",
+        "source_question": 25,
+        "method": "Manual visual comparison of original UPSC booklet scan; mirror annotations ignored",
+        "reason": "Remove contamination and restore power subscripts"
+      }
+    },
+    {
+      "question_id": "CDS_II_2025_GK_066",
+      "before": {
+        "opt_d": ""
+      },
+      "after": {
+        "opt_d": "None"
+      },
+      "evidence": {
+        "url": "https://doondefencedreamers.com/wp-content/uploads/2025/09/cds-2-gs-paper-c-2025.pdf.pdf",
+        "sha256": "4f04661e02867277fe5058218e4d7737539d1f93420ea2f0c81bb770a8546dd5",
+        "booklet": "ANFB-S-GKL C",
+        "printed_page": "43-C",
+        "source_question": 116,
+        "method": "Manual visual comparison of original UPSC booklet scan; mirror annotations ignored",
+        "reason": "Restore blank choice"
+      }
+    },
+    {
+      "question_id": "CDS_II_2025_GK_097",
+      "before": {
+        "opt_a": "3"
+      },
+      "after": {
+        "opt_a": "1"
+      },
+      "evidence": {
+        "url": "https://doondefencedreamers.com/wp-content/uploads/2025/09/cds-2-gs-paper-c-2025.pdf.pdf",
+        "sha256": "4f04661e02867277fe5058218e4d7737539d1f93420ea2f0c81bb770a8546dd5",
+        "booklet": "ANFB-S-GKL C",
+        "printed_page": "29-C",
+        "source_question": 82,
+        "method": "Manual visual comparison of original UPSC booklet scan; mirror annotations ignored",
+        "reason": "Restore duplicate option from printed 1,2,3,4 sequence"
+      }
+    },
+    {
+      "question_id": "CDS_II_2025_GK_083",
+      "before": {
+        "opt_a": "101"
+      },
+      "after": {
+        "opt_a": "0101"
+      },
+      "evidence": {
+        "url": "https://doondefencedreamers.com/wp-content/uploads/2025/09/cds-2-gs-paper-c-2025.pdf.pdf",
+        "sha256": "4f04661e02867277fe5058218e4d7737539d1f93420ea2f0c81bb770a8546dd5",
+        "booklet": "ANFB-S-GKL C",
+        "printed_page": "23-C",
+        "source_question": 68,
+        "method": "Manual visual comparison of original UPSC booklet scan; mirror annotations ignored",
+        "reason": "Restore lost leading zero"
+      }
+    }
+  ]
+}

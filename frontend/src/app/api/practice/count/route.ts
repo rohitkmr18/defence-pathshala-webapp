@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
 
     let query = supabase
       .from("v_dp_question_intelligence_v2")
-      .select("id", { count: "exact", head: true });
+      .select("id", { count: "exact", head: true }).eq("content_eligible", true);
 
     if (specificIds.length > 0) {
       query = query.in("id", specificIds);

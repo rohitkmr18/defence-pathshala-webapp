@@ -64,6 +64,11 @@ jobs:
       - name: Verify recorded migration ledger and fresh reconstruction
         run: node --test --experimental-test-isolation=none scripts/test-migration-ledger.cjs
 
+      - name: Verify question content integrity
+        run: |
+          node --test scripts/test-content-integrity.cjs
+          python -m pytest -q backend/tests/test_content_quality.py
+
       - name: Verify retired legacy profile writer
         env:
           SUPABASE_URL: https://placeholder.supabase.co

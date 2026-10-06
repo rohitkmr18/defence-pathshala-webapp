@@ -27,6 +27,9 @@ import pandas as pd
 from dotenv import load_dotenv
 from supabase import create_client
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from app.services.content_quality import require_content_integrity, require_reviewed_content_preserved
+
 # ---------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------
@@ -36,13 +39,6 @@ load_dotenv()
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 
-if not SUPABASE_URL:
-    raise RuntimeError("SUPABASE_URL missing in .env")
-
-if not SUPABASE_KEY:
-    raise RuntimeError("SUPABASE_SERVICE_ROLE_KEY missing in .env")
-
-supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 REPORT_DIR = Path("backend/reports")
 REPORT_DIR.mkdir(parents=True, exist_ok=True)
@@ -120,9 +116,24 @@ def load_file(file_path: str) -> pd.DataFrame:
         raise FileNotFoundError(path)
 
     if path.suffix.lower() == ".xlsx":
-        df = pd.read_excel(path)
+        from openpyxl import load_workbook
+        workbook = load_workbook(path, data_only=False, read_only=True)
+        try:
+            sheet = workbook.active
+            headers = [str(c.value).strip() for c in next(sheet.iter_rows())]
+            content_indices = [i for i, h in enumerate(headers) if h in ("question", "opt_a", "opt_b", "opt_c", "opt_d")]
+            for cells in sheet.iter_rows(min_row=2):
+                for i in content_indices:
+                    cell = cells[i]
+                    if cell.data_type in ("f", "e") or isinstance(cell.value, (datetime, date, time)):
+                        raise ValueError(f"{cell.coordinate}: content must be original plain text, not a formula/error/date cell")
+                    if isinstance(cell.value, (int, float)) and cell.number_format not in ("General", "0"):
+                        raise ValueError(f"{cell.coordinate}: formatted numeric content must be restored as plain text")
+        finally:
+            workbook.close()
+        df = pd.read_excel(path, dtype=object, keep_default_na=False)
     elif path.suffix.lower() == ".csv":
-        df = pd.read_csv(path, encoding="utf-8-sig")
+        df = pd.read_csv(path, encoding="utf-8-sig", dtype=str, keep_default_na=False)
     else:
         raise ValueError("Only .xlsx and .csv files are supported.")
 
@@ -191,6 +202,7 @@ def validate_difficulty(df: pd.DataFrame):
 
 
 def normalize_dataframe(df: pd.DataFrame) -> pd.DataFrame:
+    require_content_integrity(df)
     df = df.copy()
 
     # Boolean fields
@@ -220,6 +232,7 @@ def normalize_dataframe(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def validate_source(df: pd.DataFrame):
+    require_content_integrity(df)
     validate_schema(df)
     validate_duplicates(df)
     validate_required_fields(df)
@@ -232,8 +245,13 @@ def validate_source(df: pd.DataFrame):
 
 
 def import_records(df: pd.DataFrame):
+    require_content_integrity(df)
+    if not SUPABASE_URL or not SUPABASE_KEY:
+        raise RuntimeError("SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required to import")
+    client = create_client(SUPABASE_URL, SUPABASE_KEY)
     records = df[EXPECTED_COLUMNS].to_dict(orient="records")
 
+    require_reviewed_content_preserved(client, records)
     total = len(records)
 
     print("\nStarting import...\n")
@@ -242,7 +260,7 @@ def import_records(df: pd.DataFrame):
         batch = records[start:start + BATCH_SIZE]
 
         try:
-            supabase.table("questions").upsert(
+            client.table("questions").upsert(
                 batch,
                 on_conflict="question_id"
             ).execute()
@@ -301,15 +319,6 @@ def main():
         return
 
     df = normalize_dataframe(df)
-
-    # Detect unexpected date/time objects in option columns
-    for col in ["opt_a", "opt_b", "opt_c", "opt_d"]:
-        bad = df[df[col].apply(lambda x: isinstance(x, (datetime, date, time)))]
-        if not bad.empty:
-            print(
-                f"Warning: {len(bad)} {col} values were Excel date/time objects "
-                "and were normalized."
-            )
 
     import_records(df)
 

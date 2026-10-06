@@ -17,7 +17,7 @@ def overview():
         # One fetch from Supabase
         response = (
             supabase.table("v_dp_question_intelligence_v2")
-            .select("exam,year,subject,difficulty_category", count="exact")
+            .select("exam,year,subject,difficulty_category", count="exact").eq("content_eligible", True)
             .execute()
         )
 
@@ -51,7 +51,7 @@ def dashboard():
     try:
         response = (
             supabase.table("v_dp_question_intelligence_v2")
-            .select("exam,year,subject", count="exact")
+            .select("exam,year,subject", count="exact").eq("content_eligible", True)
             .execute()
         )
 
@@ -85,7 +85,7 @@ def question_bank(
     try:
         query = supabase.table("v_dp_question_intelligence_v2").select(
             "exam,year,cycle,subject,topic,q_type,q_pattern,difficulty_category"
-        )
+        ).eq("content_eligible", True)
 
         if exam:
             exams = expand_exam_query(exam)
@@ -234,7 +234,7 @@ def question_bank_meta():
         while True:
             response = (
                 supabase.table("v_dp_question_intelligence_v2")
-                .select("exam,year,cycle")
+                .select("exam,year,cycle").eq("content_eligible", True)
                 .range(start, start + page_size - 1)
                 .execute()
             )
@@ -289,7 +289,7 @@ def subjects():
     try:
         response = (
             supabase.table("v_dp_question_intelligence_v2")
-            .select("subject")
+            .select("subject").eq("content_eligible", True)
             .execute()
         )
 
@@ -317,7 +317,7 @@ def subjects():
 def debug_questions():
     response = (
         supabase.table("v_dp_question_intelligence_v2")
-        .select("exam,year,cycle")
+        .select("exam,year,cycle").eq("content_eligible", True)
         .limit(20)
         .execute()
     )
@@ -328,7 +328,7 @@ def debug_questions():
 def debug_exams():
     response = (
         supabase.table("v_dp_question_intelligence_v2")
-        .select("exam,year")
+        .select("exam,year").eq("content_eligible", True)
         .execute()
     )
 

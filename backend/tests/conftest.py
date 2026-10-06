@@ -16,7 +16,7 @@ ROW = dict(id='00000000-0000-0000-0000-000000000001', question_id='TEST_001',
            subject='Polity', topic='Constitution', subtopic='Rights',
            question='Test?', opt_a='A', opt_b='B', opt_c='C', opt_d='D',
            final_opt='B', official_opt='B', difficulty_category='Moderate',
-           intelligence_eligible=True, production_eligible=True)
+           intelligence_eligible=True, production_eligible=True, content_eligible=True)
 
 class Query:
     def __init__(self):

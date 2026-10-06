@@ -41,6 +41,7 @@ export async function GET() {
     const query = supabase
       .from("v_dp_question_intelligence_v2")
       .select("exam,year,cycle,subject,topic,subtopic")
+      .eq("content_eligible", true)
       ;
 
     const pageSize = 1000;

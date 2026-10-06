@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { isContentEligible, CONTENT_UNAVAILABLE_MESSAGE } from "@/lib/content-quality";
 import { createHash } from "node:crypto";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://afhwegrxnvgsqbqadvwr.supabase.co";
@@ -15,6 +16,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const {
       question_id,
+      content_version,
       selected_option,
       is_correct,
       time_taken,
@@ -76,10 +78,14 @@ export async function POST(request: NextRequest) {
 
     const { data: question, error: questionError } = await supabase
       .from("v_dp_question_intelligence_v2")
-      .select("id, final_opt, official_opt")
+      .select("id, final_opt, official_opt, question, opt_a, opt_b, opt_c, opt_d, content_status, content_eligible, content_version")
       .eq("id", question_id).maybeSingle();
     if (questionError || !question) {
       return NextResponse.json({ error: "Question is not in the canonical release" }, { status: 400 });
+    }
+    if (!isContentEligible(question)) return NextResponse.json({ error: CONTENT_UNAVAILABLE_MESSAGE, code: "CONTENT_WITHHELD" }, { status: 409 });
+    if (!Number.isInteger(content_version) || content_version !== question.content_version) {
+      return NextResponse.json({ error: "This question was corrected. Reload it before answering.", code: "CONTENT_VERSION_CHANGED" }, { status: 409 });
     }
     const selected = String(selected_option).trim().toUpperCase();
     if (!["A", "B", "C", "D"].includes(selected)) {
@@ -101,6 +107,7 @@ export async function POST(request: NextRequest) {
       question_id: question_id,
       selected_option: selected,
       is_correct: scoredCorrect,
+      content_version: question.content_version,
       time_taken: typeof time_taken === "number" && Number.isFinite(time_taken) ? Math.max(0, Math.round(time_taken)) : 0,
     };
 
