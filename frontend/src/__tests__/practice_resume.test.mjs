@@ -311,7 +311,7 @@ test('completion remains resumable until the final cloud save is confirmed', asy
     return { ok: true, json: async () => ({ success: true, session: { id: body.session_id } }) };
   };
   const completion = completePracticeSession({ sessionId: 'confirmation', questions: [], answers: {}, mode: 'instant', timeSpentSeconds: 20 });
-  await tick(); assert.ok(attempted > 0); assert.equal(getLocalSession().is_completed, false);
+  await tick(); assert.equal(typeof finish, 'function'); assert.equal(getLocalSession().is_completed, false);
   updateSessionProgress('confirmation', { time_spent_seconds: 21 });
   await tick();
   assert.equal(getLocalSession().time_spent_seconds, 20);
