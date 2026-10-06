@@ -72,6 +72,29 @@ test("in-progress recent activity uses saved attempts before session counters fi
   assert.equal(data.recentActivity[0].isCompleted, false);
 });
 
+test("completed session activity falls back to durable session counters and exposes analysis", () => {
+  const sessions = Array.from({ length: 5 }, (_, index) => ({
+    ...baseSession,
+    id: `session-${index + 1}`,
+    title: index === 0 ? "Indian Drainage" : `Session ${index + 1}`,
+    is_completed: true,
+    correct_count: index === 0 ? 2 : 1,
+    incorrect_count: index === 0 ? 2 : 0,
+    updated_at: `2026-10-04T0${9 - index}:00:00Z`,
+  }));
+  const data = deriveLearnerIntelligence({
+    attempts: [],
+    sessions,
+    corpus: [],
+    targetExams: ["CAPF-AC"],
+  });
+  assert.equal(data.recentActivity.length, 5);
+  assert.equal(data.recentActivity[0].title, "Indian Drainage");
+  assert.equal(data.recentActivity[0].correct, 2);
+  assert.equal(data.recentActivity[0].incorrect, 2);
+  assert.match(data.recentActivity[0].analysisHref, /analysis=true/);
+});
+
 test("unfinished session has absolute recommendation priority", () => {
   const data = deriveLearnerIntelligence({
     attempts: [a("a1", "q1", false, "2026-10-04T08:05:00Z")],
