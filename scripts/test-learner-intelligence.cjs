@@ -107,6 +107,34 @@ test("unfinished session has absolute recommendation priority", () => {
   assert.match(data.nextBestMove.href, /resume=true/);
 });
 
+test("resume recommendation stays compact for multi-subtopic sessions", () => {
+  const data = deriveLearnerIntelligence({
+    attempts: [],
+    sessions: [{
+      ...baseSession,
+      title: "Science & Technology › Chemistry › Industrial, Materials & Applied Chemistry,Acids, Bases, pH & Commercial Inorganic Salts,Atomic Structure, Isotopes & Periodicity",
+      total_questions: 92,
+      current_index: 0,
+      filters: {
+        exams: ["CDS", "CAPF-AC"],
+        subjects: ["Science & Technology"],
+        topics: ["Chemistry"],
+        subtopics: [
+          "Industrial, Materials & Applied Chemistry",
+          "Acids, Bases, pH & Commercial Inorganic Salts",
+          "Atomic Structure, Isotopes & Periodicity",
+        ],
+      },
+    }],
+    corpus: [],
+    targetExams: ["CDS"],
+  });
+
+  assert.equal(data.nextBestMove.title, "Resume Chemistry practice");
+  assert.equal(data.nextBestMove.reason, "0 of 92 questions completed. 3 selected subtopics.");
+  assert.ok(data.nextBestMove.title.length < 40);
+});
+
 test("a later correct answer resolves an earlier mistake", () => {
   const data = deriveLearnerIntelligence({
     attempts: [
