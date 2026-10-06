@@ -42,7 +42,7 @@ test('question structure parsers handle real statement and matching punctuation 
   assert.match(bareLabels.items[0].text, /first statement/i);
 
   const list = splitLabeledItems('A. Alpha item; B. Beta item; C. Gamma item; D. Delta item.');
-  assert.deepEqual(list.map(item => item.label), ['A', 'B', 'C', 'D']);
+  assert.equal(JSON.stringify(Array.from(list, item => item.label)), JSON.stringify(['A', 'B', 'C', 'D']));
   assert.match(list[0].text, /Alpha item/);
   assert.match(list[3].text, /Delta item/);
 });
