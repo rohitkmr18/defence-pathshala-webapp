@@ -67,6 +67,26 @@ test("serializeFiltersToSearchParams preserves all active dimensions", () => {
   assert.equal(params.get("returnTo"), "/dashboard/question-bank?exam=CDS");
 });
 
+
+test("session-style browser URL parsing preserves repeated comma-bearing subtopics", () => {
+  const params = new URLSearchParams();
+  params.set("filter_format", "v2");
+  params.append("exam", "CDS");
+  params.append("subject", "Science & Technology");
+  params.append("topic", "Chemistry");
+  params.append("subtopic", "Industrial, Materials & Applied Chemistry");
+  params.append("subtopic", "Acids, Bases, pH & Commercial Inorganic Salts");
+
+  const reconstructed = parseFiltersFromSearchParams(
+    new URLSearchParams(params.toString())
+  );
+
+  assert.deepEqual(reconstructed.subtopics, [
+    "Industrial, Materials & Applied Chemistry",
+    "Acids, Bases, pH & Commercial Inorganic Salts",
+  ]);
+});
+
 test("v2 filter serialization preserves commas inside taxonomy labels", () => {
   const filters = {
     exams: ["CDS", "CAPF-AC"],
