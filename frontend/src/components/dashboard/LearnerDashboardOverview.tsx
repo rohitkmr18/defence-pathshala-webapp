@@ -131,11 +131,11 @@ export default function LearnerDashboardOverview({
           </p>
           <div className="mt-6 border-t border-white/15 pt-5">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-blue-200">Next Best Move</p>
-            <h2 className="mt-2 max-w-3xl break-words text-2xl font-black tracking-tight sm:text-3xl">
+            <h2 className="mt-2 max-w-3xl break-words text-2xl font-black tracking-tight line-clamp-2 sm:text-3xl">
               {data.nextBestMove.title}
             </h2>
           </div>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-300 sm:text-base">
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-300 line-clamp-2 sm:text-base">
             {data.nextBestMove.reason}
           </p>
 
