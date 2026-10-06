@@ -197,6 +197,25 @@ test("weak areas require minimum evidence and combine weakness with corpus value
   assert.equal(data.needsAttention[0].accuracy, 33);
 });
 
+
+test("score so far uses exam-aware negative marking rather than duplicating accuracy", () => {
+  const data = deriveLearnerIntelligence({
+    attempts: [
+      a("a1", "q1", true, "2026-10-04T01:00:00Z", "B"),
+      a("a2", "q2", false, "2026-10-04T02:00:00Z", "A"),
+    ],
+    sessions: [],
+    corpus: [
+      q("q1", "CDS", "Polity", "Parliament"),
+      q("q2", "CDS", "Polity", "Parliament"),
+    ],
+    targetExams: ["CDS"],
+  });
+
+  assert.equal(data.overview.accuracy, 50);
+  assert.equal(data.overview.scorePercent, 33.2);
+});
+
 test("lifetime metrics are not capped at the former 200-attempt window", () => {
   const corpus = [q("q1", "CDS", "Polity", "Parliament")];
   const attempts = Array.from({ length: 250 }, (_, index) =>
