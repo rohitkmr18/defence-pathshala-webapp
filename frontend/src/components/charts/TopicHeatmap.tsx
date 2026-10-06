@@ -4,6 +4,13 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
+  Cell,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+} from "recharts";
+import {
   Flame,
   Search,
   ArrowUpRight,
@@ -82,6 +89,28 @@ export default function TopicHeatmap({
   const maxSubjectQuestions = useMemo(() => {
     return Math.max(...activeSubjects.map((s) => s.value), 1);
   }, [activeSubjects]);
+
+  const subjectMix = useMemo(
+    () =>
+      activeSubjects.map((subject) => ({
+        ...subject,
+        percent: Number(((subject.value / (totalQuestions || 1)) * 100).toFixed(1)),
+      })),
+    [activeSubjects, totalQuestions]
+  );
+
+  const subjectMixColors = [
+    "#2563eb",
+    "#4f46e5",
+    "#0891b2",
+    "#059669",
+    "#65a30d",
+    "#ca8a04",
+    "#ea580c",
+    "#dc2626",
+    "#9333ea",
+    "#475569",
+  ];
 
   // Topics for selected subject (Level 2)
   const currentSubjectTopics = useMemo<TopicItem[]>(() => {
@@ -252,6 +281,87 @@ export default function TopicHeatmap({
                 <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600">
                   Standard
                 </span>
+              </div>
+            </div>
+
+            {/* Subject composition chart */}
+            <div className="mb-6 rounded-2xl border border-slate-200 bg-slate-50/70 p-4 sm:p-5">
+              <div className="mb-4">
+                <p className="text-[11px] font-extrabold uppercase tracking-[0.12em] text-blue-700">
+                  Subject-wise corpus mix
+                </p>
+                <h3 className="mt-1 text-lg font-black text-slate-900">
+                  Where the PYQs are concentrated
+                </h3>
+                <p className="mt-1 text-xs text-slate-500">
+                  Percentage share of the {totalQuestions} currently released PYQs.
+                </p>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-[220px_1fr] md:items-center">
+                <div className="mx-auto h-52 w-full max-w-[220px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={subjectMix}
+                        dataKey="value"
+                        nameKey="name"
+                        innerRadius={58}
+                        outerRadius={88}
+                        paddingAngle={1}
+                        strokeWidth={0}
+                        onClick={(entry) => {
+                          const name = String(entry?.name || "");
+                          if (name) handleSelectSubject(name);
+                        }}
+                      >
+                        {subjectMix.map((subject, index) => (
+                          <Cell
+                            key={subject.name}
+                            fill={subjectMixColors[index % subjectMixColors.length]}
+                            className="cursor-pointer"
+                          />
+                        ))}
+                      </Pie>
+                      <Tooltip
+                        formatter={(value, _name, item) => {
+                          const payload = item?.payload as (SubjectItem & { percent?: number }) | undefined;
+                          const displayValue =
+                            typeof value === "number" || typeof value === "string" ? value : 0;
+                          return [
+                            `${displayValue} Qs · ${payload?.percent ?? 0}%`,
+                            payload?.name || "Subject",
+                          ];
+                        }}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+
+                <div className="grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3 lg:grid-cols-5">
+                  {subjectMix.map((subject, index) => (
+                    <button
+                      key={subject.name}
+                      type="button"
+                      onClick={() => handleSelectSubject(subject.name)}
+                      className="min-w-0 rounded-xl border border-transparent p-2 text-left transition hover:border-slate-200 hover:bg-white"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span
+                          className="h-2.5 w-2.5 shrink-0 rounded-full"
+                          style={{ backgroundColor: subjectMixColors[index % subjectMixColors.length] }}
+                          aria-hidden="true"
+                        />
+                        <span className="truncate text-[11px] font-bold text-slate-700">
+                          {subject.name}
+                        </span>
+                      </div>
+                      <p className="mt-1 pl-[18px] text-sm font-black text-slate-900">
+                        {subject.percent}%
+                      </p>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 
