@@ -361,11 +361,9 @@ async function persistCompletion(params: {
     throw new Error("The active session changed; completion was not saved.");
   }
 
-  // Freeze the learner's final paper on-device before any network work begins.
-  // A failed request can therefore be retried without reconstructing answers.
   const correctCount = params.questions.filter(q => params.answers[q.id] === q.final_opt).length;
   const incorrectCount = params.questions.filter(q => params.answers[q.id] && params.answers[q.id] !== q.final_opt).length;
-  saveLocalSession({
+  const frozenSnapshot: ActivePracticeSession = {
     ...localSnapshot,
     answers: { ...params.answers },
     correct_count: correctCount,
@@ -374,49 +372,72 @@ async function persistCompletion(params: {
     submission_pending: true,
     submission_requested_at: localSnapshot.submission_requested_at || new Date().toISOString(),
     updated_at: new Date().toISOString(),
-  });
+  };
+  saveLocalSession(frozenSnapshot);
 
-  await retryPracticePersistence(params.questions);
   const cloudId = await resolveCloudId(params.sessionId);
-  if (getLocalSession()?.id !== params.sessionId) throw new Error("The active session changed; completion was not saved.");
-  if (cloudId) {
-    for (const question of params.questions) {
-      const selectedOption = params.answers[question.id];
-      if (!selectedOption) continue;
-      await recordQuestionAttempt({ question, selectedOption,
-        isCorrect: selectedOption === question.final_opt,
-        sessionId: params.sessionId, mode: params.mode,
-        timeTakenSeconds: getLocalSession()?.question_times?.[question.id] || 0 });
-    }
+  if (getLocalSession()?.id !== params.sessionId) {
+    throw new Error("The active session changed; completion was not saved.");
   }
-  if (getLocalSession()?.id !== params.sessionId) throw new Error("The active session changed; completion was not saved.");
-  finalizingSessions.add(params.sessionId);
-  try {
-    updateSessionProgress(params.sessionId, {
-      answers: params.answers, is_completed: true,
+
+  // Guest/device-only sessions complete locally. Authenticated sessions use one
+  // finalization request that persists every answer and closes the session server-side.
+  if (!cloudId) {
+    saveLocalSession({
+      ...frozenSnapshot,
+      is_completed: true,
+      submission_pending: false,
+      cloud_status: "local",
+    });
+    return;
+  }
+
+  // A previously queued progress PATCH may still be in flight. It is safe to ignore
+  // its failure because the final snapshot below supersedes it, but let it settle so
+  // it cannot race and reopen the session after finalization.
+  await progressWrites.get(cloudId)?.catch(() => {});
+  progressWrites.delete(cloudId);
+
+  const latest = getLocalSession();
+  if (latest?.id !== params.sessionId) {
+    throw new Error("The active session changed; completion was not saved.");
+  }
+
+  const response = await fetch("/api/practice/finalize", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    signal: AbortSignal.timeout(20000),
+    body: JSON.stringify({
+      session_id: cloudId,
+      answers: params.answers,
+      time_spent_seconds: params.timeSpentSeconds,
+      question_times: latest.question_times || {},
+      current_index: latest.current_index,
+      mode: params.mode,
+    }),
+  });
+  if (!response.ok) throw new Error("Final submission could not be confirmed.");
+  const result = await response.json();
+  if (result.guest || result.persisted !== true || result.session?.id !== cloudId) {
+    throw new Error("Final submission could not be confirmed. Sign in again if your session expired.");
+  }
+
+  failedAttempts.delete(params.sessionId);
+  failedSessions.delete(params.sessionId);
+  const confirmed = getLocalSession();
+  if (confirmed?.id === params.sessionId) {
+    saveLocalSession({
+      ...confirmed,
+      answers: { ...params.answers },
       correct_count: correctCount,
       incorrect_count: incorrectCount,
       time_spent_seconds: params.timeSpentSeconds,
+      pending_attempts: {},
+      saved_attempts: { ...confirmed.saved_attempts, ...params.answers },
+      is_completed: true,
+      submission_pending: false,
+      cloud_status: "saved",
     });
-    if (cloudId) {
-      try { await progressWrites.get(cloudId); }
-      catch (error) {
-        const latest = getLocalSession();
-        if (latest?.id === params.sessionId) saveLocalSession({ ...latest, is_completed: false, cloud_status: "error" });
-        throw error;
-      }
-    }
-    // All known failed attempts and the final progress snapshot are now confirmed.
-    if (cloudId && !failedAttempts.get(params.sessionId)?.size) {
-      failedSessions.delete(params.sessionId);
-      const latest = getLocalSession();
-      if (latest?.id === params.sessionId) {
-        saveLocalSession({ ...latest, is_completed: true, submission_pending: false });
-      }
-      setCloudStatus(params.sessionId, "saved");
-    }
-  } finally {
-    finalizingSessions.delete(params.sessionId);
   }
 }
 

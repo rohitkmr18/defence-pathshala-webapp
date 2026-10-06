@@ -21,6 +21,17 @@ test('Explore → Practice → Auth → Practice retains every selection, mode a
   assert.equal(player.searchParams.get('returnTo'), explore);
 });
 
+
+test('CDS objective-paper scoring uses the official 100-mark denominator and one-third penalty', () => {
+  const load = createLoader();
+  const { getScoringRules } = load('frontend/src/lib/examScoring.ts');
+  const rules = getScoringRules('CDS II 2026');
+  assert.equal(rules.totalQuestions, 120);
+  assert.equal(rules.totalMarks, 100);
+  assert.equal(Number(rules.correctMarks.toFixed(6)), Number((100 / 120).toFixed(6)));
+  assert.equal(Number(rules.penaltyMarks.toFixed(6)), Number((100 / 360).toFixed(6)));
+});
+
 test('question structure parsers handle real statement and matching punctuation variants', () => {
   const load = createLoader({ '@/components/common/MathText': 'math-text' });
   const { splitNumberedItems, splitLabeledItems } = load('frontend/src/components/practice/player/renderers/renderer-utils.tsx');
@@ -40,6 +51,14 @@ test('question structure parsers handle real statement and matching punctuation 
   assert.equal(bareLabels.items.length, 2);
   assert.equal(bareLabels.items[0].label, '1');
   assert.match(bareLabels.items[0].text, /first statement/i);
+
+  const moneyAndDates = splitNumberedItems(
+    'Consider the following statements:\\n1. The defence budget rose from ₹2·50 lakh crore in FY 2013-14 to ₹7·80 lakh crore.\\n2. Capital expenditure rose from ₹94,000 crore in 2014-15 to ₹2·00 lakh crore in 2026-27.\\nWhich statements are correct?'
+  );
+  assert.equal(moneyAndDates.items.length, 2);
+  assert.deepEqual(Array.from(moneyAndDates.items, item => item.label), ['1.', '2.']);
+  assert.match(moneyAndDates.items[0].text, /₹2·50/);
+  assert.match(moneyAndDates.items[1].text, /2014-15/);
 
   const list = splitLabeledItems('A. Alpha item; B. Beta item; C. Gamma item; D. Delta item.');
   assert.equal(JSON.stringify(Array.from(list, item => item.label)), JSON.stringify(['A', 'B', 'C', 'D']));

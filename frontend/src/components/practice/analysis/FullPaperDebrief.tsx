@@ -34,7 +34,7 @@ export default function FullPaperDebrief({
   onRetake,
 }: FullPaperDebriefProps) {
   const examName = questions[0]?.exam || examTitle;
-  const metrics = computeAnalysisMetrics(questions, answers, totalTimeSpentSeconds, examName);
+  const metrics = computeAnalysisMetrics(questions, answers, totalTimeSpentSeconds, examName, true);
   const savedRef = useRef(false);
 
   useEffect(() => {
