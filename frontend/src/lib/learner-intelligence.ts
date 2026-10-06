@@ -88,6 +88,7 @@ export interface LearnerIntelligence {
     correct: number;
     incorrect: number;
     accuracy: number;
+    scorePercent: number;
     practiceTimeSeconds: number;
     completedSessions: number;
   };
@@ -219,6 +220,20 @@ export function deriveLearnerIntelligence(input: {
   const uniqueQuestionsSolved = new Set(attempts.map((a) => a.question_id)).size;
   const correct = attempts.filter((a) => a.is_correct).length;
   const incorrect = attempts.length - correct;
+
+  let earnedMarks = 0;
+  let possibleMarks = 0;
+  for (const attempt of attempts) {
+    const meta = metaById.get(attempt.question_id);
+    if (!meta) continue;
+    const rules = getScoringRules(meta.exam || targetExams[0] || "CDS");
+    possibleMarks += rules.correctMarks;
+    earnedMarks += attempt.is_correct ? rules.correctMarks : -rules.penaltyMarks;
+  }
+  const scorePercent = possibleMarks > 0
+    ? Math.round((earnedMarks / possibleMarks) * 1000) / 10
+    : 0;
+
   const practiceTimeSeconds = attempts.reduce(
     (sum, a) => sum + Math.max(0, Number(a.time_taken || 0)),
     0
@@ -532,6 +547,7 @@ export function deriveLearnerIntelligence(input: {
       correct,
       incorrect,
       accuracy: pct(correct, attempts.length),
+      scorePercent,
       practiceTimeSeconds,
       completedSessions,
     },
