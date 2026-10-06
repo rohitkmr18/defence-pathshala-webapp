@@ -317,6 +317,20 @@ export default function PracticeFilters({
     return Array.from(cyclesSet).sort();
   }, [filters, selectedExams]);
 
+  useEffect(() => {
+    setSelectedYears((prev) => {
+      const next = prev.filter((value) => availableYears.includes(value));
+      return next.length === prev.length ? prev : next;
+    });
+  }, [availableYears]);
+
+  useEffect(() => {
+    setSelectedCycles((prev) => {
+      const next = prev.filter((value) => cycleOptions.includes(value));
+      return next.length === prev.length ? prev : next;
+    });
+  }, [cycleOptions]);
+
   const allExamsSelected =
     Boolean(filters?.exams?.length) &&
     selectedExams.length === (filters?.exams?.length ?? 0) &&
