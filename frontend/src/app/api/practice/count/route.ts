@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { backendGET } from "@/lib/backend";
 import { createClient } from "@supabase/supabase-js";
 import { expandExamQuery } from "@/lib/exams";
 import { parseFiltersFromSearchParams, parseListParam } from "@/lib/question-filters";
@@ -8,23 +7,7 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://afhwegrxnvg
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 export async function GET(request: NextRequest) {
-  // 1. Try FastAPI backend first
-  try {
-    const response = await backendGET(
-      `/practice/count${request.nextUrl.search}`
-    );
-
-    if (response.ok) {
-      const data = await response.json();
-      if (typeof data?.count === "number") {
-        return NextResponse.json(data, { status: 200 });
-      }
-    }
-  } catch {
-    // Backend unreachable, fallback to direct Supabase query
-  }
-
-  // 2. Direct Supabase query fallback
+  // Read canonical content directly so an older backend cannot bypass holds or omit versions.
   try {
     if (!serviceRoleKey) {
       return NextResponse.json({ count: 0 }, { status: 200 });

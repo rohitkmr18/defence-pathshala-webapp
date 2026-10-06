@@ -143,7 +143,7 @@ export default function FounderCredibility() {
                   Why This Matters
                 </h4>
                 <p className="text-sm sm:text-base text-slate-600 leading-relaxed pt-1">
-                  Most aspirants solve PYQs. Defence Pathshala converts every question into structured exam intelligence using <strong className="text-slate-900 font-bold">29 verified data points</strong>, helping you identify recurring topics, revision priorities, and avoidable mistakes.
+                  Most aspirants solve PYQs. Defence Pathshala organises previous year questions using <strong className="text-slate-900 font-bold">29 intelligence fields</strong>, helping you identify recurring topics, revision priorities, and avoidable mistakes.
                 </p>
               </div>
 
@@ -165,8 +165,8 @@ export default function FounderCredibility() {
                       <p className="font-bold text-blue-700 mt-0.5">88% Repetition</p>
                     </div>
                     <div className="rounded-lg bg-slate-50 p-2 border border-slate-200/80">
-                      <span className="text-slate-500 font-medium">Verified Keys</span>
-                      <p className="font-bold text-slate-900 mt-0.5">100% Official</p>
+                      <span className="text-slate-500 font-medium">Answer Keys</span>
+                      <p className="font-bold text-slate-900 mt-0.5">Source Review</p>
                     </div>
                   </div>
                 </div>

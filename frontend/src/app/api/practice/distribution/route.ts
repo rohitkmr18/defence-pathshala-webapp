@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { backendGET } from "@/lib/backend";
 import { createClient } from "@supabase/supabase-js";
 import { expandExamQuery, getExamLabel } from "@/lib/exams";
 
@@ -8,23 +7,7 @@ const supabaseUrl =
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 export async function GET(request: NextRequest) {
-  // 1. Try FastAPI backend first
-  try {
-    const response = await backendGET(
-      `/practice/distribution${request.nextUrl.search}`
-    );
-
-    if (response.ok) {
-      const data = await response.json();
-      if (Array.isArray(data?.distribution)) {
-        return NextResponse.json(data, { status: 200 });
-      }
-    }
-  } catch {
-    // Backend unreachable, fallback to direct Supabase query
-  }
-
-  // 2. Direct Supabase query fallback
+  // Read canonical content directly so an older backend cannot bypass holds or omit versions.
   try {
     if (!serviceRoleKey) {
       return NextResponse.json(

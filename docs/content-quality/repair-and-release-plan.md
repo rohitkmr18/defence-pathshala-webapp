@@ -1,3 +1,29 @@
+# Follow-up release — 6 October 2026
+
+## Current state (supersedes the earlier baseline below)
+
+The live corpus now has 1,825 rows: four reconstructed items were added after the 1,821-row audit. Twelve further rows have documented changes: five source-backed repairs and seven review holds. Combined with the original batches, there are 128 revision records for 128 distinct questions. There are 1,818 structurally eligible rows and seven held rows. All 287 historical student attempts remain unchanged. The 1,145 missing final-key provenance rows remain OPEN; text repairs do not close key reviews.
+
+The five repairs are CAPF 2025 Q105 final D → B (UPSC final Set A key and printed options), CDS II 2025 Q35 option C (OCR debris), CDS II 2025 Q55 option D (stray `~A)`), CAPF 2026 Q95 option B (`NH₃` → printed `NH₄⁺`), and CAPF 2022 Q92 option B (Cyrillic letter inside “reduce” → source spelling).
+
+Seven items are WITHHELD. CAPF 2025 Q106 and Q113 are marked dropped in the published final key. Q108 has a published Set A answer D that conflicts with the stored final C and the educational explanation; official provenance is corrected but scoring is withheld for adjudication. The four later reconstructed items (CAPF 2025 Q98, CAPF 2026 Q41/Q103, CDS II 2026 Q55) are preserved under review because replacement wording/options cannot be labelled source-matched official PYQs. The three affected full papers remain held; completeness cannot be established by inserting adapted replacements.
+
+The current application changes read practice questions, counts, filters and distributions directly from the canonical Supabase view. This removes dependence on the deployed FastAPI version for learner eligibility/version enforcement. The backend import protections still require the new backend code when running imports. Homepage wording no longer claims all keys or intelligence fields are independently verified.
+
+The bulk OCR run covers eight booklets / 380 page columns. A read-only candidate matcher compared 977 baseline question rows and found possible source locations for 969; eight were unmatched. These are triage candidates, not source approvals. OCR alone never rewrites content or assigns keys. Visual checks found three further repairs and also demonstrated that apparent errors in distractors must be preserved when printed that way. Scripts and exact repair execution records are included in this PR.
+
+Validation: production frontend build/backend import, TypeScript, 70 practice/learner regressions and three database/content-integrity checks pass. The initial preview loaded and returned canonical full papers, but it predates the follow-up gate and must be refreshed before release acceptance. Authenticated production persistence has not been tested with a live account in this follow-up.
+
+## Remaining exception work
+
+1. Adjudicate CAPF 2025 Q108 against the published key, retaining an explicit educational explanation of the discrepancy.
+2. Add paper manifests and scoring rules for officially dropped questions; distinguish original papers from adapted practice material before reopening affected full mocks.
+3. Reconcile missing final-key provenance in bulk, recording booklet order and source hashes. Recent final keys that are not yet published must remain pending.
+4. Continue source comparison for the other seven booklets and visually review OCR differences; never normalise meaningful initials, fractions, signs, distractors or dates by guesswork.
+5. Add an editor workflow and student issue reporting after the core release. The present private queue and immutable revisions provide the persistence foundation.
+
+---
+
 # Question content integrity — 6 October 2026
 
 ## Live outcome

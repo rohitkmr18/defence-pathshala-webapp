@@ -1,0 +1,63 @@
+{
+  "batch_id": "20261006_ocr_confirmed_repairs_v1",
+  "scope": "Three OCR candidates visually confirmed against printed source; no key changes.",
+  "repairs": [
+    {
+      "question_id": "CAPF_2022_P1_092",
+      "before": {
+        "opt_b": "Storm water drainage to reducе flooding",
+        "content_version": 1
+      },
+      "after": {
+        "opt_b": "Storm water drainage to reduce flooding",
+        "content_status": "SOURCE_MATCHED"
+      },
+      "evidence": {
+        "paper_url": "https://cdn.aglasem.com/aglasem-doc/95a6a838-93f1-11ed-a457-0a5e36bc6706/95a6a838-93f1-11ed-a457-0a5e36bc6706.pdf",
+        "paper_sha256": "b83d6cd826776088f65004b1073f183e9e835036c6a229532fac5a0b725fcaf3",
+        "printed_page": "33",
+        "source_question": 92,
+        "method": "Manual visual confirmation of candidate from bulk OCR triage; ignore mirror annotations.",
+        "reason": "Restore printed option; preserve the question and scoring key."
+      }
+    },
+    {
+      "question_id": "CAPF_2026_P1_095",
+      "before": {
+        "opt_b": "It converts N₂ (nitrogen gas) to NH₃ (ammonium ion) first.",
+        "content_version": 1
+      },
+      "after": {
+        "opt_b": "It converts N₂ (nitrogen gas) to NH₄⁺ (ammonium ion) first.",
+        "content_status": "SOURCE_MATCHED"
+      },
+      "evidence": {
+        "paper_url": "https://cdn.aglasem.com/aglasem-doc/c8e5af76-8ce2-11f1-a349-0aa932765c8b/c8e5af76-8ce2-11f1-a349-0aa932765c8b.pdf",
+        "paper_sha256": "8dd7ad9114ceed4ac1479f434e8e55851154b3721a83696b3388b8e7153d2ceb",
+        "printed_page": "41",
+        "source_question": 95,
+        "method": "Manual visual confirmation of candidate from bulk OCR triage; ignore mirror annotations.",
+        "reason": "Restore printed option; preserve the question and scoring key."
+      }
+    },
+    {
+      "question_id": "CDS_II_2025_GK_055",
+      "before": {
+        "opt_d": "Chalcolithic ~A)",
+        "content_version": 1
+      },
+      "after": {
+        "opt_d": "Chalcolithic",
+        "content_status": "SOURCE_MATCHED"
+      },
+      "evidence": {
+        "paper_url": "https://doondefencedreamers.com/wp-content/uploads/2025/09/cds-2-gs-paper-c-2025.pdf.pdf",
+        "paper_sha256": "4f04661e02867277fe5058218e4d7737539d1f93420ea2f0c81bb770a8546dd5",
+        "printed_page": "39-C",
+        "source_question": 105,
+        "method": "Manual visual confirmation of candidate from bulk OCR triage; ignore mirror annotations.",
+        "reason": "Restore printed option; preserve the question and scoring key."
+      }
+    }
+  ]
+}

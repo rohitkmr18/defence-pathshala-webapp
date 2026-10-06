@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { backendGET } from "@/lib/backend";
 import { createClient } from "@supabase/supabase-js";
 import { expandExamQuery } from "@/lib/exams";
 import { normalizeQuestion } from "@/lib/question-intelligence";
@@ -13,26 +12,7 @@ const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 export async function GET(request: NextRequest) {
   const specificIds = parseListParam(request.nextUrl.searchParams.get("ids") || request.nextUrl.searchParams.get("id"));
   const fullPaper = request.nextUrl.searchParams.get("mode") === "full_paper";
-  // Full-paper completeness is validated here, not by an older backend.
-  // 1. Try FastAPI backend first
-  // FastAPI does not implement ID selection; never send resume/review requests there.
-  if (specificIds.length === 0 && !fullPaper) try {
-    const response = await backendGET(
-      `/practice/questions${request.nextUrl.search}`
-    );
-
-    if (response.ok) {
-      const data = await response.json();
-      if (data?.questions && Array.isArray(data.questions)) {
-        const normalized = data.questions.filter(isContentEligible).map(normalizeQuestion);
-        return NextResponse.json({ questions: normalized, total: normalized.length }, { status: 200 });
-      }
-    }
-  } catch {
-    // Backend unreachable, fallback to direct Supabase query
-  }
-
-  // 2. Direct Supabase query fallback (using canonical v2 read model)
+  // Read canonical content directly so an older backend cannot bypass holds or omit versions.
   try {
     if (!serviceRoleKey) {
       return NextResponse.json({ error: "Service role key missing" }, { status: 500 });
