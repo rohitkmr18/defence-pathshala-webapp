@@ -56,13 +56,14 @@ export async function GET(request: NextRequest) {
     const supabase = createClient(supabaseUrl, serviceRoleKey);
     const requestedSessionId = request.nextUrl.searchParams.get("session_id");
     if (requestedSessionId) {
-      const { data, error } = await supabase
+      const includeCompleted = request.nextUrl.searchParams.get("include_completed") === "true";
+      let query = supabase
         .from("practice_sessions")
         .select("*")
         .eq("user_id", userId)
-        .eq("id", requestedSessionId)
-        .eq("is_completed", false)
-        .maybeSingle();
+        .eq("id", requestedSessionId);
+      if (!includeCompleted) query = query.eq("is_completed", false);
+      const { data, error } = await query.maybeSingle();
       if (error) return NextResponse.json({ error: "Saved session unavailable" }, { status: 503 });
       if (!data) {
         return NextResponse.json({ error: "Saved session unavailable" }, { status: 404 });

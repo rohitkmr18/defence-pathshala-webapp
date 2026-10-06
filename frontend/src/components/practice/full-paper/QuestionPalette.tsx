@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { ChevronDown, ChevronUp, Grid3X3 } from "lucide-react";
 import type { OptionKey } from "@/lib/practice-types";
 
 interface QuestionPaletteProps {
@@ -45,7 +47,8 @@ export default function QuestionPalette({
   visited,
   onSelect,
 }: QuestionPaletteProps) {
-  // Counters for legend
+  const [open, setOpen] = useState(false);
+
   let answered = 0;
   let marked = 0;
   let unanswered = 0;
@@ -71,9 +74,7 @@ export default function QuestionPalette({
     let base =
       "relative flex h-9 w-9 items-center justify-center rounded-lg text-xs font-bold transition-all shadow-2xs ";
 
-    if (isCurrent) {
-      base += "ring-2 ring-blue-600 ring-offset-2 ";
-    }
+    if (isCurrent) base += "ring-2 ring-blue-600 ring-offset-2 ";
 
     switch (status) {
       case "answered":
@@ -81,10 +82,7 @@ export default function QuestionPalette({
       case "marked":
         return base + "bg-purple-600 text-white hover:bg-purple-700";
       case "answered_marked":
-        return (
-          base +
-          "bg-purple-600 text-white hover:bg-purple-700 ring-2 ring-emerald-500 ring-offset-1"
-        );
+        return base + "bg-purple-600 text-white hover:bg-purple-700 ring-2 ring-emerald-500 ring-offset-1";
       case "unanswered":
         return base + "bg-amber-100 text-amber-900 border border-amber-300 hover:bg-amber-200";
       case "not_visited":
@@ -94,54 +92,53 @@ export default function QuestionPalette({
   }
 
   return (
-    <div className="flex h-full flex-col rounded-3xl border border-slate-200 bg-white p-5 shadow-[0_10px_30px_rgba(15,23,42,0.06)]">
-      {/* Header */}
-      <div className="mb-4">
-        <h3 className="text-sm font-bold text-slate-900">Question Palette</h3>
-        <p className="text-xs text-slate-500">
-          Jump to any question instantly
-        </p>
-      </div>
+    <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <button
+        type="button"
+        onClick={() => setOpen((value) => !value)}
+        className="flex w-full items-center gap-3 px-4 py-3 text-left"
+        aria-expanded={open}
+      >
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700">
+          <Grid3X3 className="h-4 w-4" />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-sm font-bold text-slate-900">Question Palette</span>
+          <span className="block text-xs text-slate-500">
+            Q{currentIndex + 1} of {total} · {answered} answered · {marked} marked
+          </span>
+        </span>
+        {open ? <ChevronUp className="h-4 w-4 text-slate-500" /> : <ChevronDown className="h-4 w-4 text-slate-500" />}
+      </button>
 
-      {/* Grid of question chips */}
-      <div className="max-h-[360px] flex-1 overflow-y-auto pr-1 sm:max-h-[460px]">
-        <div className="grid grid-cols-5 gap-2 sm:grid-cols-6 lg:grid-cols-5">
-          {Array.from({ length: total }, (_, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => onSelect(i)}
-              className={getButtonClasses(i)}
-              aria-label={`Question ${i + 1}`}
-            >
-              {i + 1}
-            </button>
-          ))}
-        </div>
-      </div>
+      {open && (
+        <div className="border-t border-slate-100 p-4">
+          <div className="max-h-[360px] overflow-y-auto pr-1 sm:max-h-[460px]">
+            <div className="grid grid-cols-7 gap-2 sm:grid-cols-9 lg:grid-cols-5">
+              {Array.from({ length: total }, (_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => onSelect(i)}
+                  className={getButtonClasses(i)}
+                  aria-label={`Question ${i + 1}`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
+          </div>
 
-      {/* Legend */}
-      <div className="mt-4 border-t border-slate-100 pt-4 text-xs">
-        <p className="mb-2 font-semibold text-slate-700">Status Legend</p>
-        <div className="grid grid-cols-2 gap-2 text-slate-600">
-          <div className="flex items-center gap-2">
-            <span className="h-3 w-3 rounded-xs bg-emerald-600" />
-            <span>Answered ({answered})</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="h-3 w-3 rounded-xs bg-purple-600" />
-            <span>Marked ({marked})</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="h-3 w-3 rounded-xs border border-amber-300 bg-amber-100" />
-            <span>Unanswered ({unanswered})</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="h-3 w-3 rounded-xs border border-slate-200 bg-slate-50" />
-            <span>Not Visited ({notVisited})</span>
+          <div className="mt-4 border-t border-slate-100 pt-3 text-[11px] text-slate-600">
+            <div className="grid grid-cols-2 gap-2">
+              <div>Answered <strong className="text-slate-800">{answered}</strong></div>
+              <div>Marked <strong className="text-slate-800">{marked}</strong></div>
+              <div>Unanswered <strong className="text-slate-800">{unanswered}</strong></div>
+              <div>Not visited <strong className="text-slate-800">{notVisited}</strong></div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

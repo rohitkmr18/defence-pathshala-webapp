@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Loader2, Sparkles } from "lucide-react";
 import type { PracticeQuestion, PlayerMode, OptionKey } from "@/lib/practice-types";
 import PracticePersistenceStatus from "@/components/practice/PracticePersistenceStatus";
 import QuestionPlayer from "@/components/practice/player/QuestionPlayer";
@@ -48,6 +48,7 @@ interface SessionPageClientProps {
   resume?: boolean;
   specificIds?: string;
   resumeSessionId?: string;
+  analysis?: boolean;
 }
 
 // ─── Loading skeleton ─────────────────────────────────────────────────────────
@@ -122,6 +123,7 @@ export default function SessionPageClient({
   resume,
   specificIds,
   resumeSessionId,
+  analysis = false,
 }: SessionPageClientProps) {
   const router = useRouter();
   const [questions, setQuestions] = useState<PracticeQuestion[] | null>(null);
@@ -203,8 +205,8 @@ export default function SessionPageClient({
             localCandidate.server_id === requestedSessionId)
             ? localCandidate
             : null;
-        let saved = claimCompletedLocal || (resume || url.searchParams.get("resume") === "true"
-          ? await loadResumeSession(requestedSessionId) : null);
+        let saved = claimCompletedLocal || (analysis || resume || url.searchParams.get("resume") === "true"
+          ? await loadResumeSession(requestedSessionId, { allowCompleted: analysis }) : null);
         if (cancelled) return;
         if (saved?.mode === "full_paper") {
           const params = serializeFiltersToSearchParams({ ...saved.filters,
@@ -319,6 +321,7 @@ export default function SessionPageClient({
     resume,
     specificIds,
     resumeSessionId,
+    analysis,
     mode,
     origin,
     parsedFilters,
@@ -421,6 +424,41 @@ export default function SessionPageClient({
             setSavingCompletion(false);
           }}
         />
+      )}
+
+      {savingCompletion && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/45 px-4 backdrop-blur-sm" role="status" aria-live="polite">
+          <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl sm:p-7">
+            <div className="flex items-start gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+                <Loader2 className="h-5 w-5 animate-spin" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-slate-900">Finishing your session</h2>
+                <p className="mt-1 text-sm leading-6 text-slate-600">
+                  Your answers are safe. We are saving the final attempt and preparing your analysis.
+                </p>
+              </div>
+            </div>
+            <div className="mt-6 space-y-3 rounded-2xl bg-slate-50 p-4 text-sm">
+              <div className="flex items-center gap-3 text-slate-800">
+                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <span>Final answers secured</span>
+              </div>
+              <div className="flex items-center gap-3 text-slate-800">
+                <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+                <span>Saving your attempt to the dashboard</span>
+              </div>
+              <div className="flex items-center gap-3 text-slate-500">
+                <Sparkles className="h-4 w-4" />
+                <span>Preparing accuracy, mistakes and next-best actions</span>
+              </div>
+            </div>
+            <div className="mt-5 h-1.5 overflow-hidden rounded-full bg-slate-100">
+              <div className="h-full w-3/4 animate-pulse rounded-full bg-blue-600" />
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Completion Debrief */}

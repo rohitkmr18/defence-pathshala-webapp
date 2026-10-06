@@ -17,6 +17,8 @@ export interface ActivePracticeSession {
   revision?: number;
   cloud_status?: "local" | "saving" | "saved" | "error";
   pending_attempts?: Record<string, { selectedOption: OptionKey; timeTakenSeconds?: number }>;
+  submission_pending?: boolean;
+  submission_requested_at?: string;
   title: string;
   mode: "instant" | "attempt" | "full_paper";
   filters: Partial<QuestionSetFilters>;
@@ -202,7 +204,9 @@ async function persistQuestionAttempt(params: Parameters<typeof recordQuestionAt
         mode: params.mode || "instant" }),
     }) : null;
     if (!response) {
-      acknowledgeAttempt(params);
+      // Device-only/guest progress is not a cloud-saved attempt. Keep it in
+      // pending_attempts so a later sign-in/claim can replay it into user_attempts.
+      // Marking it as saved here would make completion incorrectly skip persistence.
       return;
     }
     if (!response.ok) throw new Error("Attempt persistence failed");
@@ -352,6 +356,26 @@ async function persistCompletion(params: {
   sessionId: string; questions: PracticeQuestion[]; answers: Record<string, OptionKey>;
   mode: "instant" | "attempt" | "full_paper"; timeSpentSeconds: number;
 }): Promise<void> {
+  const localSnapshot = getLocalSession();
+  if (localSnapshot?.id !== params.sessionId) {
+    throw new Error("The active session changed; completion was not saved.");
+  }
+
+  // Freeze the learner's final paper on-device before any network work begins.
+  // A failed request can therefore be retried without reconstructing answers.
+  const correctCount = params.questions.filter(q => params.answers[q.id] === q.final_opt).length;
+  const incorrectCount = params.questions.filter(q => params.answers[q.id] && params.answers[q.id] !== q.final_opt).length;
+  saveLocalSession({
+    ...localSnapshot,
+    answers: { ...params.answers },
+    correct_count: correctCount,
+    incorrect_count: incorrectCount,
+    time_spent_seconds: params.timeSpentSeconds,
+    submission_pending: true,
+    submission_requested_at: localSnapshot.submission_requested_at || new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  });
+
   await retryPracticePersistence(params.questions);
   const cloudId = await resolveCloudId(params.sessionId);
   if (getLocalSession()?.id !== params.sessionId) throw new Error("The active session changed; completion was not saved.");
@@ -370,8 +394,8 @@ async function persistCompletion(params: {
   try {
     updateSessionProgress(params.sessionId, {
       answers: params.answers, is_completed: true,
-      correct_count: params.questions.filter(q => params.answers[q.id] === q.final_opt).length,
-      incorrect_count: params.questions.filter(q => params.answers[q.id] && params.answers[q.id] !== q.final_opt).length,
+      correct_count: correctCount,
+      incorrect_count: incorrectCount,
       time_spent_seconds: params.timeSpentSeconds,
     });
     if (cloudId) {
@@ -385,6 +409,10 @@ async function persistCompletion(params: {
     // All known failed attempts and the final progress snapshot are now confirmed.
     if (cloudId && !failedAttempts.get(params.sessionId)?.size) {
       failedSessions.delete(params.sessionId);
+      const latest = getLocalSession();
+      if (latest?.id === params.sessionId) {
+        saveLocalSession({ ...latest, is_completed: true, submission_pending: false });
+      }
       setCloudStatus(params.sessionId, "saved");
     }
   } finally {
@@ -402,7 +430,11 @@ export function latestSessionSnapshot(snapshot: ActivePracticeSession): ActivePr
     latest.updated_at >= snapshot.updated_at ? latest : snapshot;
 }
 
-export async function loadResumeSession(sessionId?: string): Promise<ActivePracticeSession> {
+export async function loadResumeSession(
+  sessionId?: string,
+  options: { allowCompleted?: boolean } = {}
+): Promise<ActivePracticeSession> {
+  const allowCompleted = options.allowCompleted === true;
   let session = getLocalSession();
   if (sessionId && session?.id !== sessionId && session?.server_id !== sessionId) {
     try {
@@ -412,16 +444,21 @@ export async function loadResumeSession(sessionId?: string): Promise<ActivePract
   }
   const cloudId = session?.server_id || (session?.id && /^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(session.id) ? session.id : null);
   if (session && cloudId && (!sessionId || session.id === sessionId || cloudId === sessionId)) {
-    const response = await fetch(`/api/practice/session?session_id=${encodeURIComponent(cloudId)}`, { cache: "no-store" });
+    const response = await fetch(
+      `/api/practice/session?session_id=${encodeURIComponent(cloudId)}${allowCompleted ? "&include_completed=true" : ""}`,
+      { cache: "no-store" }
+    );
     if (!response.ok || !(await response.json()).activeSession) throw new Error("Saved session unavailable for this account.");
   }
   if (!session || (sessionId && session.id !== sessionId && session.server_id !== sessionId)) {
-    const query = sessionId ? `?session_id=${encodeURIComponent(sessionId)}` : "";
+    const query = sessionId
+      ? `?session_id=${encodeURIComponent(sessionId)}${allowCompleted ? "&include_completed=true" : ""}`
+      : "";
     const response = await fetch(`/api/practice/session${query}`, { cache: "no-store" });
     if (!response.ok) throw new Error("Could not load your saved session. Please try again.");
     session = (await response.json()).activeSession;
   }
-  if (!session || session.is_completed || !Array.isArray(session.question_ids) || !session.question_ids.length) {
+  if (!session || (!allowCompleted && session.is_completed) || !Array.isArray(session.question_ids) || !session.question_ids.length) {
     throw new Error("This saved session is no longer available. Return to Practice to start a new session.");
   }
   session = latestSessionSnapshot(session);

@@ -14,6 +14,8 @@ export default function renderQuestionText(value: string): string {
 export function renderOptionText(value: string, optionKey: string): string {
   return renderQuestionText(value)
     .replace(/^\(\s*\n\s*/i, "")
-    .replace(new RegExp(`^\\(?${optionKey}\\)?[.)]?\\s*`, "i"), "")
+    // Strip only an explicit option label such as "A.", "A)" or "(A)".
+    // Never strip a bare leading letter: "Argentina" must not become "rgentina".
+    .replace(new RegExp(`^(?:\\(${optionKey}\\)|${optionKey}[.)])\\s+`, "i"), "")
     .trim();
 }

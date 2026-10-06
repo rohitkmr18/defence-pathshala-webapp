@@ -7,6 +7,8 @@ interface FullPaperPageProps {
     cycle?: string;
     returnTo?: string;
     origin?: string;
+    session_id?: string;
+    analysis?: string;
   }>;
 }
 
@@ -21,6 +23,8 @@ export default async function FullPaperPage({ searchParams }: FullPaperPageProps
         initialCycle={params.cycle}
         returnTo={params.returnTo}
         origin={params.origin}
+        resumeSessionId={params.session_id}
+        analysis={params.analysis === "true"}
       />
     </div>
   );

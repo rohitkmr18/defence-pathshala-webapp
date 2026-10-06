@@ -70,6 +70,18 @@ test('missing/completed saved sessions and missing questions fail instead of sta
   assert.throws(() => restoreQuestionOrder(['q4', 'missing'], [{ id: 'q4' }]), /preserved/);
 });
 
+test('completed session can be reopened only when explicitly requested for analysis', async () => {
+  const completed = session({ id: 'completed-analysis', is_completed: true });
+  saveLocalSession(completed);
+  globalThis.fetch = async url => {
+    assert.match(url, /include_completed=true/);
+    return { ok: true, json: async () => ({ activeSession: completed }) };
+  };
+  const restored = await loadResumeSession('completed-analysis', { allowCompleted: true });
+  assert.equal(restored.is_completed, true);
+  assert.equal(restored.id, 'completed-analysis');
+});
+
 test('late server creation preserves progress and keeps the player session identity stable', async () => {
   let resolveCreate; const writes = [];
   globalThis.fetch = async (_url, options) => {
@@ -181,9 +193,15 @@ test('Full Paper completion persists owned answers before completion and retries
     questions: [{ id: 'q1', final_opt: 'A' }, { id: 'q2', final_opt: 'C' }, { id: 'q3', final_opt: 'D' }], answers: { q1: 'A', q2: 'B' } };
   await assert.rejects(completePracticeSession(params), /persistence failed/);
   assert.equal(calls.some(c => c.body.is_completed), false);
+  assert.equal(getLocalSession().submission_pending, true);
+  assert.deepEqual(getLocalSession().answers, { q1: 'A', q2: 'B' });
+  assert.equal(getLocalSession().time_spent_seconds, 25);
+  assert.equal(getLocalSession().is_completed, false);
   failSecond = false;
   await completePracticeSession(params);
   assert.equal(getLocalSession().cloud_status, "saved");
+  assert.equal(getLocalSession().submission_pending, false);
+  assert.equal(getLocalSession().is_completed, true);
   assert.equal(calls.filter(c => c.body.question_id === 'q1').length, 1);
   assert.equal(calls.filter(c => c.body.question_id === 'q2').length, 2);
   const final = calls.at(-1).body;
