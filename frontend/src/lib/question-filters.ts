@@ -81,15 +81,37 @@ export function parseFiltersFromSearchParams(
     | Record<string, string | string[] | undefined>
 ): QuestionSetFilters {
   if (params instanceof URLSearchParams || ("get" in params && typeof params.get === "function")) {
-    const getter = params as { get: (k: string) => string | null };
+    const getter = params as {
+      get: (k: string) => string | null;
+      getAll?: (k: string) => string[];
+    };
+    const v2 = getter.get("filter_format") === "v2";
+    const exactList = (singular: string, plural: string): string[] => {
+      if (v2 && typeof getter.getAll === "function") {
+        const values = getter.getAll(singular);
+        if (values.length > 0) {
+          return Array.from(new Set(values.map((value) => value.trim()).filter(Boolean)));
+        }
+        const pluralValues = getter.getAll(plural);
+        if (pluralValues.length > 0) {
+          return Array.from(new Set(pluralValues.map((value) => value.trim()).filter(Boolean)));
+        }
+      }
+      return parseListParam(getter.get(singular) || getter.get(plural));
+    };
+    const exactNumbers = (singular: string, plural: string): number[] =>
+      exactList(singular, plural)
+        .map(Number)
+        .filter((value) => Number.isFinite(value) && value > 0);
+
     return {
-      exams: parseListParam(getter.get("exam") || getter.get("exams")),
-      years: parseNumberListParam(getter.get("year") || getter.get("years")),
-      cycles: parseListParam(getter.get("cycle") || getter.get("cycles")),
-      subjects: parseListParam(getter.get("subject") || getter.get("subjects")),
-      topics: parseListParam(getter.get("topic") || getter.get("topics")),
-      subtopics: parseListParam(getter.get("subtopic") || getter.get("subtopics")),
-      difficulties: parseListParam(getter.get("difficulty") || getter.get("difficulties")),
+      exams: exactList("exam", "exams"),
+      years: exactNumbers("year", "years"),
+      cycles: exactList("cycle", "cycles"),
+      subjects: exactList("subject", "subjects"),
+      topics: exactList("topic", "topics"),
+      subtopics: exactList("subtopic", "subtopics"),
+      difficulties: exactList("difficulty", "difficulties"),
       intelligenceOnly: getter.get("intelligence_only") === "true",
       limit: getter.get("limit") ? parseInt(getter.get("limit")!, 10) : undefined,
       mode: parseMode(getter.get("mode")),
@@ -123,39 +145,35 @@ export function serializeFiltersToSearchParams(
 ): URLSearchParams {
   const params = new URLSearchParams();
 
-  if (filters.exams && filters.exams.length > 0) {
-    params.set("exam", filters.exams.join(","));
-  }
-  if (filters.years && filters.years.length > 0) {
-    params.set("year", filters.years.join(","));
-  }
-  if (filters.cycles && filters.cycles.length > 0) {
-    params.set("cycle", filters.cycles.join(","));
-  }
-  if (filters.subjects && filters.subjects.length > 0) {
-    params.set("subject", filters.subjects.join(","));
-  }
-  if (filters.topics && filters.topics.length > 0) {
-    params.set("topic", filters.topics.join(","));
-  }
-  if (filters.subtopics && filters.subtopics.length > 0) {
-    params.set("subtopic", filters.subtopics.join(","));
-  }
-  if (filters.difficulties && filters.difficulties.length > 0) {
-    params.set("difficulty", filters.difficulties.join(","));
-  }
-  if (filters.intelligenceOnly) {
-    params.set("intelligence_only", "true");
-  }
-  if (filters.limit) {
-    params.set("limit", String(filters.limit));
-  }
-  if (filters.mode) {
-    params.set("mode", filters.mode);
-  }
-  if (filters.returnTo) {
-    params.set("returnTo", filters.returnTo);
-  }
+  // v2 uses repeated query keys rather than comma-joined values. Taxonomy
+  // labels legitimately contain commas (for example "Industrial, Materials &
+  // Applied Chemistry"), so comma-separated serialization is lossy.
+  params.set("filter_format", "v2");
+
+  const appendStrings = (key: string, values?: string[]) => {
+    for (const value of values ?? []) {
+      const cleaned = value.trim();
+      if (cleaned) params.append(key, cleaned);
+    }
+  };
+  const appendNumbers = (key: string, values?: number[]) => {
+    for (const value of values ?? []) {
+      if (Number.isFinite(value) && value > 0) params.append(key, String(value));
+    }
+  };
+
+  appendStrings("exam", filters.exams);
+  appendNumbers("year", filters.years);
+  appendStrings("cycle", filters.cycles);
+  appendStrings("subject", filters.subjects);
+  appendStrings("topic", filters.topics);
+  appendStrings("subtopic", filters.subtopics);
+  appendStrings("difficulty", filters.difficulties);
+
+  if (filters.intelligenceOnly) params.set("intelligence_only", "true");
+  if (filters.limit) params.set("limit", String(filters.limit));
+  if (filters.mode) params.set("mode", filters.mode);
+  if (filters.returnTo) params.set("returnTo", filters.returnTo);
   if (filters.origin) params.set("origin", filters.origin);
 
   return params;
