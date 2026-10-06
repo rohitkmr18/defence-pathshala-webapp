@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { backendGET } from "@/lib/backend";
 import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl =
@@ -9,25 +8,7 @@ const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 export async function GET() {
-  // 1. Try FastAPI backend first
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 1500);
-
-    const response = await backendGET("/practice/filters");
-    clearTimeout(timeoutId);
-
-    if (response.ok) {
-      const data = await response.json();
-      if (data?.exams && Array.isArray(data.exams) && data.exams.length > 0) {
-        return NextResponse.json(data, { status: 200 });
-      }
-    }
-  } catch {
-    // Backend unreachable — fallback to direct Supabase query
-  }
-
-  // 2. Direct Supabase query fallback (bulletproof)
+  // Read canonical content directly so an older backend cannot bypass holds or omit versions.
   try {
     const key = serviceRoleKey || anonKey;
     if (!key) {
@@ -41,6 +22,7 @@ export async function GET() {
     const query = supabase
       .from("v_dp_question_intelligence_v2")
       .select("exam,year,cycle,subject,topic,subtopic")
+      .eq("content_eligible", true)
       ;
 
     const pageSize = 1000;

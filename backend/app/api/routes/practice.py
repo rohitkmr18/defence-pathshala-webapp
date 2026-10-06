@@ -26,7 +26,7 @@ def get_practice_filters() -> PracticeFiltersResponse:
         while True:
             response = (
                 supabase.table("v_dp_question_intelligence_v2")
-                .select("exam,year,cycle,subject,topic,subtopic")
+                .select("exam,year,cycle,subject,topic,subtopic").eq("content_eligible", True)
                 .range(start, start + page_size - 1)
                 .execute()
             )
@@ -132,7 +132,7 @@ def get_practice_count(
     intelligence_only: bool = False,
 ) -> dict[str, int]:
     try:
-        query = supabase.table("v_dp_question_intelligence_v2").select("id", count="exact")
+        query = supabase.table("v_dp_question_intelligence_v2").select("id", count="exact").eq("content_eligible", True)
 
         if exam:
             expanded = expand_exam_query(exam)
@@ -201,7 +201,7 @@ def get_practice_questions(
     limit: int = 150,
 ) -> dict[str, Any]:
     try:
-        query = supabase.table("v_dp_question_intelligence_v2").select("*")
+        query = supabase.table("v_dp_question_intelligence_v2").select("*").eq("content_eligible", True)
 
         if exam:
             expanded = expand_exam_query(exam)
@@ -269,7 +269,7 @@ def get_practice_distribution(
     topic: str | None = None,
 ) -> dict[str, Any]:
     try:
-        query = supabase.table("v_dp_question_intelligence_v2").select("id,question_id,exam,year,cycle")
+        query = supabase.table("v_dp_question_intelligence_v2").select("id,question_id,exam,year,cycle").eq("content_eligible", True)
 
         if exam:
             expanded = expand_exam_query(exam)

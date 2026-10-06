@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
 
     let query = supabase
       .from("v_dp_question_intelligence_v2")
-      .select("exam,year,cycle,subject,topic,q_type,q_pattern,difficulty_category");
+      .select("exam,year,cycle,subject,topic,q_type,q_pattern,difficulty_category").eq("content_eligible", true);
     if (examParam) {
       const expanded = expandExamQuery(examParam);
       if (expanded.length > 0) {

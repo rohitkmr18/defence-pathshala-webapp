@@ -324,7 +324,7 @@ export default function ProductShowcase() {
             </div>
             <div className="px-4 py-2">
               <p className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">29</p>
-              <p className="mt-1 text-xs font-bold text-slate-500 uppercase tracking-wider">Verified Data Points</p>
+              <p className="mt-1 text-xs font-bold text-slate-500 uppercase tracking-wider">Intelligence Fields</p>
             </div>
             <div className="px-4 py-2">
               <p className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">9</p>

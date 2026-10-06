@@ -1,34 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import { backendGET } from "@/lib/backend";
 import { createClient } from "@supabase/supabase-js";
 import { expandExamQuery } from "@/lib/exams";
 import { normalizeQuestion } from "@/lib/question-intelligence";
 import { parseFiltersFromSearchParams, parseListParam } from "@/lib/question-filters";
+
+import { isContentEligible, isCompletePaper, CONTENT_UNAVAILABLE_MESSAGE, PAPER_UNAVAILABLE_MESSAGE } from "@/lib/content-quality";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://afhwegrxnvgsqbqadvwr.supabase.co";
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 export async function GET(request: NextRequest) {
   const specificIds = parseListParam(request.nextUrl.searchParams.get("ids") || request.nextUrl.searchParams.get("id"));
-  // 1. Try FastAPI backend first
-  // FastAPI does not implement ID selection; never send resume/review requests there.
-  if (specificIds.length === 0) try {
-    const response = await backendGET(
-      `/practice/questions${request.nextUrl.search}`
-    );
-
-    if (response.ok) {
-      const data = await response.json();
-      if (data?.questions && Array.isArray(data.questions)) {
-        const normalized = data.questions.map(normalizeQuestion);
-        return NextResponse.json({ questions: normalized, total: normalized.length }, { status: 200 });
-      }
-    }
-  } catch {
-    // Backend unreachable, fallback to direct Supabase query
-  }
-
-  // 2. Direct Supabase query fallback (using canonical v2 read model)
+  const fullPaper = request.nextUrl.searchParams.get("mode") === "full_paper";
+  // Read canonical content directly so an older backend cannot bypass holds or omit versions.
   try {
     if (!serviceRoleKey) {
       return NextResponse.json({ error: "Service role key missing" }, { status: 500 });
@@ -41,7 +25,8 @@ export async function GET(request: NextRequest) {
 
     let query = supabase
       .from("v_dp_question_intelligence_v2")
-      .select("*");
+      .select("*")
+      .eq("content_eligible", true);
 
     if (specificIds.length > 0) {
       query = query.in("id", specificIds);
@@ -98,7 +83,16 @@ export async function GET(request: NextRequest) {
     }
 
     const rawRows = data || [];
-    const normalizedQuestions = rawRows.map(normalizeQuestion);
+    const eligibleRows = rawRows.filter(isContentEligible);
+    if (specificIds.length > 0 && eligibleRows.length !== new Set(specificIds).size) {
+      return NextResponse.json({ error: CONTENT_UNAVAILABLE_MESSAGE, code: "CONTENT_WITHHELD" }, { status: 409 });
+    }
+    if (fullPaper) {
+      if (!isCompletePaper(eligibleRows)) {
+        return NextResponse.json({ error: PAPER_UNAVAILABLE_MESSAGE, code: "PAPER_CONTENT_INCOMPLETE" }, { status: 409 });
+      }
+    }
+    const normalizedQuestions = eligibleRows.map(normalizeQuestion);
 
     return NextResponse.json(
       { questions: normalizedQuestions, total: normalizedQuestions.length },

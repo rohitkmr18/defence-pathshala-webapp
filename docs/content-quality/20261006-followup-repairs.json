@@ -1,0 +1,173 @@
+{
+  "batch_id": "20261006_followup_repairs_v1",
+  "scope": "Two source-backed repairs and seven evidence-backed review holds. No historical scores changed.",
+  "repairs": [
+    {
+      "question_id": "CAPF_2025_P1_105",
+      "before": {
+        "final_opt": "D",
+        "official_opt": "B",
+        "content_version": 1
+      },
+      "after": {
+        "final_opt": "B",
+        "content_status": "SOURCE_MATCHED"
+      },
+      "evidence": {
+        "paper_url": "https://cdn.aglasem.com/aglasem-doc/2a7ea460-8ce1-11f1-9c3b-0aa932765c8b/2a7ea460-8ce1-11f1-9c3b-0aa932765c8b.pdf",
+        "paper_sha256": "938a640529ea2f53109cd8e7b397460b2abb6e616cdec7e77920e0b2f5fa34b8",
+        "booklet": "FKKB-O-GAIT/39A",
+        "key_url": "https://www.upsc.gov.in/sites/default/files/AnsKey-CAPFACs-Exam-2025-GAI-110826.pdf",
+        "key_page": 1,
+        "key_method": "Visual inspection of UPSC final key Set A; numeric 1/2/3/4 = A/B/C/D, asterisk = dropped. Printed question and all options visually matched.",
+        "printed_page": 43,
+        "source_question": 105,
+        "reason": "Published final key 105=2 (B), agreeing with the existing chemistry explanation. No historical attempts at verification."
+      }
+    },
+    {
+      "question_id": "CAPF_2025_P1_108",
+      "before": {
+        "final_opt": "C",
+        "official_opt": "A",
+        "content_version": 1
+      },
+      "after": {
+        "official_opt": "D",
+        "content_status": "WITHHELD"
+      },
+      "evidence": {
+        "paper_url": "https://cdn.aglasem.com/aglasem-doc/2a7ea460-8ce1-11f1-9c3b-0aa932765c8b/2a7ea460-8ce1-11f1-9c3b-0aa932765c8b.pdf",
+        "paper_sha256": "938a640529ea2f53109cd8e7b397460b2abb6e616cdec7e77920e0b2f5fa34b8",
+        "booklet": "FKKB-O-GAIT/39A",
+        "key_url": "https://www.upsc.gov.in/sites/default/files/AnsKey-CAPFACs-Exam-2025-GAI-110826.pdf",
+        "key_page": 1,
+        "key_method": "Visual inspection of UPSC final key Set A; numeric 1/2/3/4 = A/B/C/D, asterisk = dropped. Printed question and all options visually matched.",
+        "printed_page": 45,
+        "source_question": 108,
+        "reason": "Published final key 108=4 (D). Stored official A and final C disagree. Option D says minimum energy while explanation describes energy loss; withhold pending subject adjudication, do not silently change scoring to an educationally disputed answer."
+      }
+    },
+    {
+      "question_id": "CAPF_2025_P1_106",
+      "before": {
+        "final_opt": "C",
+        "official_opt": "C",
+        "content_version": 1
+      },
+      "after": {
+        "official_opt": null,
+        "content_status": "WITHHELD"
+      },
+      "evidence": {
+        "paper_url": "https://cdn.aglasem.com/aglasem-doc/2a7ea460-8ce1-11f1-9c3b-0aa932765c8b/2a7ea460-8ce1-11f1-9c3b-0aa932765c8b.pdf",
+        "paper_sha256": "938a640529ea2f53109cd8e7b397460b2abb6e616cdec7e77920e0b2f5fa34b8",
+        "booklet": "FKKB-O-GAIT/39A",
+        "key_url": "https://www.upsc.gov.in/sites/default/files/AnsKey-CAPFACs-Exam-2025-GAI-110826.pdf",
+        "key_page": 1,
+        "key_method": "Visual inspection of UPSC final key Set A; numeric 1/2/3/4 = A/B/C/D, asterisk = dropped. Printed question and all options visually matched.",
+        "printed_page": 45,
+        "source_question": 106,
+        "reason": "UPSC final Set A key marks this item with an asterisk (dropped); remove unsupported official option and exclude from scored practice."
+      }
+    },
+    {
+      "question_id": "CAPF_2025_P1_113",
+      "before": {
+        "final_opt": "A",
+        "official_opt": "A",
+        "content_version": 1
+      },
+      "after": {
+        "official_opt": null,
+        "content_status": "WITHHELD"
+      },
+      "evidence": {
+        "paper_url": "https://cdn.aglasem.com/aglasem-doc/2a7ea460-8ce1-11f1-9c3b-0aa932765c8b/2a7ea460-8ce1-11f1-9c3b-0aa932765c8b.pdf",
+        "paper_sha256": "938a640529ea2f53109cd8e7b397460b2abb6e616cdec7e77920e0b2f5fa34b8",
+        "booklet": "FKKB-O-GAIT/39A",
+        "key_url": "https://www.upsc.gov.in/sites/default/files/AnsKey-CAPFACs-Exam-2025-GAI-110826.pdf",
+        "key_page": 1,
+        "key_method": "Visual inspection of UPSC final key Set A; numeric 1/2/3/4 = A/B/C/D, asterisk = dropped. Printed question and all options visually matched.",
+        "printed_page": 47,
+        "source_question": 113,
+        "reason": "UPSC final Set A key marks this item with an asterisk (dropped); remove unsupported official option and exclude from scored practice."
+      }
+    },
+    {
+      "question_id": "CDS_II_2025_GK_035",
+      "before": {
+        "opt_c": "The length of C-C_ bonds _ is} intermediate between single and double bonds.",
+        "content_version": 1
+      },
+      "after": {
+        "opt_c": "The length of C-C bonds is intermediate between single and double bonds.",
+        "content_status": "SOURCE_MATCHED"
+      },
+      "evidence": {
+        "paper_url": "https://doondefencedreamers.com/wp-content/uploads/2025/09/cds-2-gs-paper-c-2025.pdf.pdf",
+        "paper_sha256": "4f04661e02867277fe5058218e4d7737539d1f93420ea2f0c81bb770a8546dd5",
+        "booklet": "ANFB-S-GKL C",
+        "printed_page": "3-C",
+        "source_question": 5,
+        "reason": "Restore option C from original printed text; remove OCR underscores and brace. Mirror handwriting ignored."
+      }
+    },
+    {
+      "question_id": "CAPF_2025_P1_098",
+      "before": {
+        "content_status": "SOURCE_MATCHED",
+        "content_version": 1
+      },
+      "after": {
+        "content_status": "WITHHELD"
+      },
+      "evidence": {
+        "reason": "Live row source explicitly states DP reconstructed, with replacement/sharpened options or statements. An adapted question must not be presented as a source-matched official PYQ. Preserve row until original/adapted classification and paper scoring manifest are approved. No historical attempts at verification.",
+        "observed_source_prefix": "DP reconstructed from UPSC"
+      }
+    },
+    {
+      "question_id": "CAPF_2026_P1_041",
+      "before": {
+        "content_status": "SOURCE_MATCHED",
+        "content_version": 1
+      },
+      "after": {
+        "content_status": "WITHHELD"
+      },
+      "evidence": {
+        "reason": "Live row source explicitly states DP reconstructed, with replacement/sharpened options or statements. An adapted question must not be presented as a source-matched official PYQ. Preserve row until original/adapted classification and paper scoring manifest are approved. No historical attempts at verification.",
+        "observed_source_prefix": "DP reconstructed from UPSC"
+      }
+    },
+    {
+      "question_id": "CAPF_2026_P1_103",
+      "before": {
+        "content_status": "SOURCE_MATCHED",
+        "content_version": 1
+      },
+      "after": {
+        "content_status": "WITHHELD"
+      },
+      "evidence": {
+        "reason": "Live row source explicitly states DP reconstructed, with replacement/sharpened options or statements. An adapted question must not be presented as a source-matched official PYQ. Preserve row until original/adapted classification and paper scoring manifest are approved. No historical attempts at verification.",
+        "observed_source_prefix": "DP reconstructed from UPSC"
+      }
+    },
+    {
+      "question_id": "CDS_II_2026_GK_055",
+      "before": {
+        "content_status": "SOURCE_MATCHED",
+        "content_version": 1
+      },
+      "after": {
+        "content_status": "WITHHELD"
+      },
+      "evidence": {
+        "reason": "Live row source explicitly states DP reconstructed, with replacement/sharpened options or statements. An adapted question must not be presented as a source-matched official PYQ. Preserve row until original/adapted classification and paper scoring manifest are approved. No historical attempts at verification.",
+        "observed_source_prefix": "DP reconstructed from UPSC"
+      }
+    }
+  ]
+}

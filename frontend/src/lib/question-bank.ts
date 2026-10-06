@@ -71,7 +71,7 @@ export async function getQuestionBankMeta(): Promise<QuestionBankMeta> {
     const supabase = createSupabaseClient(supabaseUrl, key);
     const query = supabase
       .from("v_dp_question_intelligence_v2")
-      .select("exam,year,cycle");
+      .select("exam,year,cycle").eq("content_eligible", true);
 
     const pageSize = 1000;
     const rows: any[] = [];

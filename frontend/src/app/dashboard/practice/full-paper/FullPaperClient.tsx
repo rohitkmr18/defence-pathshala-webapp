@@ -118,6 +118,7 @@ export default function FullPaperClient({
         if (saved && saved.mode !== "full_paper") throw new Error("This is not a full paper session.");
         const params = new URLSearchParams();
         params.set("exam", paper.exam);
+        params.set("mode", "full_paper");
         params.set("year", paper.year.toString());
         if (paper.cycle) {
           params.set("cycle", paper.cycle);
@@ -154,6 +155,8 @@ export default function FullPaperClient({
             setVisited(new Set([fetchedQuestions[0].id]));
           }
         } else {
+          const failure = await res.json();
+          setSubmissionError(failure.error || "Could not load this paper.");
           setQuestions([]);
         }
       } catch (err) {
@@ -378,7 +381,7 @@ export default function FullPaperClient({
         <div className="mb-4 text-5xl">📄</div>
         <h2 className="text-xl font-bold text-slate-900">Paper Not Available</h2>
         <p className="mt-2 text-sm text-slate-500">
-          No questions were found for {selectedPaper.label}. Please try selecting a different exam.
+          {submissionError || `No questions were found for ${selectedPaper.label}. Please try selecting a different exam.`}
         </p>
         <Link
           href={safeLearningReturn(returnTo)}

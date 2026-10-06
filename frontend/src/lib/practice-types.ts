@@ -6,6 +6,8 @@
 export interface PracticeQuestion {
   id: string;
   question_id: string;
+  content_version?: number;
+  content_status?: string;
 
   exam: string;
   year: number;

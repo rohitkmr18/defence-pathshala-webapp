@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { isContentEligible, isCompletePaper, CONTENT_UNAVAILABLE_MESSAGE, PAPER_UNAVAILABLE_MESSAGE } from "@/lib/content-quality";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://afhwegrxnvgsqbqadvwr.supabase.co";
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -116,7 +117,6 @@ export async function POST(request: NextRequest) {
       mode = "instant",
       filters = {},
       question_ids = [],
-      total_questions = 0,
     } = body;
 
     if (!["instant", "attempt", "full_paper"].includes(mode) || !Array.isArray(question_ids) || !question_ids.length || question_ids.length > 150) {
@@ -136,6 +136,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Missing stable creation identity" }, { status: 400 });
     }
 
+    const { data: canonicalQuestions, error: contentError } = await supabase
+      .from("v_dp_question_intelligence_v2").select("*").in("id", question_ids);
+    if (contentError) return NextResponse.json({ error: "Question validation unavailable" }, { status: 503 });
+    if (!canonicalQuestions || new Set(question_ids).size !== question_ids.length ||
+        canonicalQuestions.length !== question_ids.length || !canonicalQuestions.every(isContentEligible)) {
+      return NextResponse.json({ error: CONTENT_UNAVAILABLE_MESSAGE, code: "CONTENT_WITHHELD" }, { status: 409 });
+    }
+    if (mode === "full_paper" && !isCompletePaper(canonicalQuestions)) {
+      return NextResponse.json({ error: PAPER_UNAVAILABLE_MESSAGE, code: "PAPER_CONTENT_INCOMPLETE" }, { status: 409 });
+    }
+
     const sessionPayload = {
       id: creation_id,
       user_id: userId,
@@ -146,7 +157,7 @@ export async function POST(request: NextRequest) {
       current_index: 0,
       answers: {},
       is_completed: false,
-      total_questions: total_questions || question_ids.length,
+      total_questions: question_ids.length,
       started_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };
@@ -197,6 +208,22 @@ export async function PATCH(request: NextRequest) {
     const key = serviceRoleKey;
     if (!key) return NextResponse.json({ error: "Session persistence unavailable" }, { status: 503 });
     const supabase = createClient(supabaseUrl, key);
+
+    if (is_completed === true) {
+      const { data: ownedSession, error: sessionError } = await supabase.from("practice_sessions")
+        .select("question_ids, mode").eq("id", session_id).eq("user_id", userId).maybeSingle();
+      if (sessionError) return NextResponse.json({ error: "Saved session unavailable" }, { status: 503 });
+      if (!ownedSession) return NextResponse.json({ error: "Session not found" }, { status: 404 });
+      const { data: canonicalQuestions, error: contentError } = await supabase.from("v_dp_question_intelligence_v2")
+        .select("*").in("id", ownedSession.question_ids);
+      if (contentError) return NextResponse.json({ error: "Question validation unavailable" }, { status: 503 });
+      if (!canonicalQuestions || canonicalQuestions.length !== ownedSession.question_ids.length || !canonicalQuestions.every(isContentEligible)) {
+        return NextResponse.json({ error: CONTENT_UNAVAILABLE_MESSAGE, code: "CONTENT_WITHHELD" }, { status: 409 });
+      }
+      if (ownedSession.mode === "full_paper" && !isCompletePaper(canonicalQuestions)) {
+        return NextResponse.json({ error: PAPER_UNAVAILABLE_MESSAGE, code: "PAPER_CONTENT_INCOMPLETE" }, { status: 409 });
+      }
+    }
 
     const updatePayload: Record<string, unknown> = {
       updated_at: new Date().toISOString(),

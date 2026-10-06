@@ -28,7 +28,7 @@ const FAQS: FAQItem[] = [
   {
     question: "Are these official questions with verified answer keys?",
     answer:
-      "Yes. Every question is sourced directly from official UPSC examination papers and mapped strictly to verified commission answer keys.",
+      "Our question bank is based on UPSC examination papers. We are checking transcriptions and answer-key provenance against the original papers and published keys. Some recent papers have provisional answers while final keys are awaited. Explanations and topic labels are reviewed separately.",
   },
   {
     question: "How is this different from solving PYQ PDFs or standard mock apps?",
