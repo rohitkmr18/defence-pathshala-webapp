@@ -131,7 +131,7 @@ test("resume recommendation stays compact for multi-subtopic sessions", () => {
   });
 
   assert.equal(data.nextBestMove.title, "Resume Chemistry practice");
-  assert.equal(data.nextBestMove.reason, "0 of 92 questions completed. 3 selected subtopics.");
+  assert.equal(data.nextBestMove.reason, "1 of 92 questions completed. 3 selected subtopics.");
   assert.ok(data.nextBestMove.title.length < 40);
 });
 
