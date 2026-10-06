@@ -430,7 +430,11 @@ export function latestSessionSnapshot(snapshot: ActivePracticeSession): ActivePr
     latest.updated_at >= snapshot.updated_at ? latest : snapshot;
 }
 
-export async function loadResumeSession(sessionId?: string): Promise<ActivePracticeSession> {
+export async function loadResumeSession(
+  sessionId?: string,
+  options: { allowCompleted?: boolean } = {}
+): Promise<ActivePracticeSession> {
+  const allowCompleted = options.allowCompleted === true;
   let session = getLocalSession();
   if (sessionId && session?.id !== sessionId && session?.server_id !== sessionId) {
     try {
@@ -440,16 +444,21 @@ export async function loadResumeSession(sessionId?: string): Promise<ActivePract
   }
   const cloudId = session?.server_id || (session?.id && /^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(session.id) ? session.id : null);
   if (session && cloudId && (!sessionId || session.id === sessionId || cloudId === sessionId)) {
-    const response = await fetch(`/api/practice/session?session_id=${encodeURIComponent(cloudId)}`, { cache: "no-store" });
+    const response = await fetch(
+      `/api/practice/session?session_id=${encodeURIComponent(cloudId)}${allowCompleted ? "&include_completed=true" : ""}`,
+      { cache: "no-store" }
+    );
     if (!response.ok || !(await response.json()).activeSession) throw new Error("Saved session unavailable for this account.");
   }
   if (!session || (sessionId && session.id !== sessionId && session.server_id !== sessionId)) {
-    const query = sessionId ? `?session_id=${encodeURIComponent(sessionId)}` : "";
+    const query = sessionId
+      ? `?session_id=${encodeURIComponent(sessionId)}${allowCompleted ? "&include_completed=true" : ""}`
+      : "";
     const response = await fetch(`/api/practice/session${query}`, { cache: "no-store" });
     if (!response.ok) throw new Error("Could not load your saved session. Please try again.");
     session = (await response.json()).activeSession;
   }
-  if (!session || session.is_completed || !Array.isArray(session.question_ids) || !session.question_ids.length) {
+  if (!session || (!allowCompleted && session.is_completed) || !Array.isArray(session.question_ids) || !session.question_ids.length) {
     throw new Error("This saved session is no longer available. Return to Practice to start a new session.");
   }
   session = latestSessionSnapshot(session);
