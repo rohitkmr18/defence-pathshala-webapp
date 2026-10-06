@@ -6,7 +6,7 @@ export interface ParsedItem {
   text: string;
 }
 
-const NUMBERED_ITEM_PATTERN = /(?<![A-Za-z0-9])((?:\(\d{1,2}\))|(?:\d{1,2}|(?:i{1,3}|iv|v(?:i{0,3})?|ix|x))[.),])(?=\s)/gi;
+const NUMBERED_ITEM_PATTERN = /(?<![A-Za-z0-9-])((?:\(\d{1,2}\))|(?:\d{1,2}|(?:i{1,3}|iv|v(?:i{0,3})?|ix|x))[.),])(?=\s)/gi;
 const BARE_NUMBERED_ITEM_PATTERN = /(^|\n|:\s)(\d{1,2})(?=\s+[A-Z])/gm;
 
 function numberedItemMatches(text: string): Array<{ index: number; length: number; label: string }> {
