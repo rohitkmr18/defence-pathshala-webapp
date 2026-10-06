@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ArrowLeft, CheckCircle2, Loader2, Sparkles } from "lucide-react";
 import type { PracticeQuestion, PlayerMode, OptionKey } from "@/lib/practice-types";
@@ -126,6 +126,7 @@ export default function SessionPageClient({
   analysis = false,
 }: SessionPageClientProps) {
   const router = useRouter();
+  const liveSearchParams = useSearchParams();
   const [questions, setQuestions] = useState<PracticeQuestion[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [completed, setCompleted] = useState(false);
@@ -167,11 +168,13 @@ export default function SessionPageClient({
     return () => window.removeEventListener(PRACTICE_SESSION_UPDATED_EVENT, refreshGuestSaveHref);
   }, [sessionId, completed]);
 
-  // Keep this stable so state restoration does not restart the loading effect.
-  const parsedFilters = useMemo(() => parseFiltersFromSearchParams({
-    exam, year, cycle, subject, topic, subtopic, difficulty, mode, returnTo, origin,
-    intelligence_only: intelligenceOnly ? "true" : undefined,
-  }), [exam, year, cycle, subject, topic, subtopic, difficulty, intelligenceOnly, mode, returnTo, origin]);
+  // Parse the browser URL directly so repeated v2 filter keys remain intact.
+  // Server searchParams can collapse repeated keys into arrays, and the legacy
+  // array parser treats commas inside taxonomy labels as separators.
+  const parsedFilters = useMemo(
+    () => parseFiltersFromSearchParams(new URLSearchParams(liveSearchParams.toString())),
+    [liveSearchParams]
+  );
 
   // Build header label and breadcrumb
   const filterLabel =
