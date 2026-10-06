@@ -67,6 +67,58 @@ test("serializeFiltersToSearchParams preserves all active dimensions", () => {
   assert.equal(params.get("returnTo"), "/dashboard/question-bank?exam=CDS");
 });
 
+
+test("session-style browser URL parsing preserves repeated comma-bearing subtopics", () => {
+  const params = new URLSearchParams();
+  params.set("filter_format", "v2");
+  params.append("exam", "CDS");
+  params.append("subject", "Science & Technology");
+  params.append("topic", "Chemistry");
+  params.append("subtopic", "Industrial, Materials & Applied Chemistry");
+  params.append("subtopic", "Acids, Bases, pH & Commercial Inorganic Salts");
+
+  const reconstructed = parseFiltersFromSearchParams(
+    new URLSearchParams(params.toString())
+  );
+
+  assert.deepEqual(reconstructed.subtopics, [
+    "Industrial, Materials & Applied Chemistry",
+    "Acids, Bases, pH & Commercial Inorganic Salts",
+  ]);
+});
+
+test("v2 filter serialization preserves commas inside taxonomy labels", () => {
+  const filters = {
+    exams: ["CDS", "CAPF-AC"],
+    subjects: ["Science & Technology"],
+    topics: ["Chemistry"],
+    subtopics: [
+      "Industrial, Materials & Applied Chemistry",
+      "Acids, Bases, pH & Commercial Inorganic Salts",
+    ],
+  };
+  const params = serializeFiltersToSearchParams(filters);
+  assert.equal(params.get("filter_format"), "v2");
+  assert.deepEqual(params.getAll("exam"), ["CDS", "CAPF-AC"]);
+  assert.deepEqual(params.getAll("subtopic"), filters.subtopics);
+
+  const reconstructed = parseFiltersFromSearchParams(params);
+  assert.deepEqual(reconstructed.exams, filters.exams);
+  assert.deepEqual(reconstructed.subjects, filters.subjects);
+  assert.deepEqual(reconstructed.topics, filters.topics);
+  assert.deepEqual(reconstructed.subtopics, filters.subtopics);
+});
+
+test("legacy comma-separated filter URLs remain backward compatible", () => {
+  const legacy = new URLSearchParams(
+    "exam=CDS,CAPF-AC&year=2024,2025&subject=History"
+  );
+  const parsed = parseFiltersFromSearchParams(legacy);
+  assert.deepEqual(parsed.exams, ["CDS", "CAPF-AC"]);
+  assert.deepEqual(parsed.years, [2024, 2025]);
+  assert.deepEqual(parsed.subjects, ["History"]);
+});
+
 test("buildPracticeUrl and buildPracticeSessionUrl generate deterministic URLs", () => {
   const practiceUrl = buildPracticeUrl(
     {
@@ -78,7 +130,9 @@ test("buildPracticeUrl and buildPracticeSessionUrl generate deterministic URLs",
   );
 
   assert.ok(practiceUrl.startsWith("/dashboard/practice?"));
-  assert.ok(practiceUrl.includes("exam=CDS%2CCAPF-AC"));
+  assert.ok(practiceUrl.includes("filter_format=v2"));
+  assert.ok(practiceUrl.includes("exam=CDS"));
+  assert.ok(practiceUrl.includes("exam=CAPF-AC"));
   assert.ok(practiceUrl.includes("year=2024"));
   assert.ok(practiceUrl.includes("subject=Indian+Polity"));
   assert.ok(practiceUrl.includes("returnTo="));

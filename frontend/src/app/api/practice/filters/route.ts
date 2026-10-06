@@ -13,7 +13,7 @@ export async function GET() {
     const key = serviceRoleKey || anonKey;
     if (!key) {
       return NextResponse.json(
-        { exams: [], years: {}, cycles: {}, subjects: {}, subtopics: {}, subject_weights: {}, topic_weights: {}, subtopic_weights: {}, difficulties: ["Easy", "Moderate", "Hard"] },
+        { exams: [], years: {}, cycles: {}, subjects: {}, subtopics: {}, subject_weights: {}, topic_weights: {}, subtopic_weights: {}, facet_rows: [], difficulties: ["Easy", "Moderate", "Hard"] },
         { status: 200 }
       );
     }
@@ -45,7 +45,7 @@ export async function GET() {
 
     if (rows.length === 0) {
       return NextResponse.json(
-        { exams: [], years: {}, cycles: {}, subjects: {}, subtopics: {}, subject_weights: {}, topic_weights: {}, subtopic_weights: {}, difficulties: ["Easy", "Moderate", "Hard"] },
+        { exams: [], years: {}, cycles: {}, subjects: {}, subtopics: {}, subject_weights: {}, topic_weights: {}, subtopic_weights: {}, facet_rows: [], difficulties: ["Easy", "Moderate", "Hard"] },
         { status: 200 }
       );
     }
@@ -135,6 +135,19 @@ export async function GET() {
       }
     }
 
+    // Raw taxonomy facet rows let the client derive *contextual* availability
+    // after exam/year/cycle selections. This prevents "ghost" subjects/topics/
+    // subtopics that exist elsewhere in the corpus but have zero questions in
+    // the learner's current selection.
+    const facetRows = rows.map((row) => ({
+      exam: row.exam ? String(row.exam).trim() : "",
+      year: row.year == null ? null : Number(row.year),
+      cycle: row.cycle ? String(row.cycle).trim() : null,
+      subject: row.subject ? String(row.subject).trim() : "",
+      topic: row.topic ? String(row.topic).trim() : "",
+      subtopic: row.subtopic ? String(row.subtopic).trim() : null,
+    }));
+
     return NextResponse.json({
       exams: sortedExams,
       years: formattedYears,
@@ -144,6 +157,7 @@ export async function GET() {
       subject_weights: subjectWeights,
       topic_weights: topicWeights,
       subtopic_weights: subtopicWeights,
+      facet_rows: facetRows,
       difficulties: ["Easy", "Moderate", "Hard"],
     });
   } catch (err: unknown) {
