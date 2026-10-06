@@ -324,9 +324,14 @@ export default function TopicHeatmap({
                         ))}
                       </Pie>
                       <Tooltip
-                        formatter={(value: number | string, _name, item) => {
-                          const payload = item?.payload as SubjectItem & { percent?: number };
-                          return [`${value} Qs · ${payload?.percent ?? 0}%`, payload?.name || "Subject"];
+                        formatter={(value, _name, item) => {
+                          const payload = item?.payload as (SubjectItem & { percent?: number }) | undefined;
+                          const displayValue =
+                            typeof value === "number" || typeof value === "string" ? value : 0;
+                          return [
+                            `${displayValue} Qs · ${payload?.percent ?? 0}%`,
+                            payload?.name || "Subject",
+                          ];
                         }}
                       />
                     </PieChart>
