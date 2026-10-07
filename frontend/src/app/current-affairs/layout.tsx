@@ -1,9 +1,13 @@
+import type { Metadata } from "next";
 import DashboardShell from "@/components/layout/DashboardShell";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Daily Current Affairs | Defence Pathshala",
   description:
-    "Authentic exam-focused daily visual current affairs updates for UPSC CDS, CAPF AC, NDA, and AFCAT.",
+    "Exam-focused daily current affairs for CDS, CAPF AC, NDA and AFCAT with structured key facts, static linkages and daily MCQs.",
+  alternates: {
+    canonical: "/current-affairs",
+  },
 };
 
 export default function CurrentAffairsLayout({
