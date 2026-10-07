@@ -150,6 +150,20 @@
       "statements": [
         "create index if not exists current_affairs_candidates_published_story_idx\n  on public.current_affairs_candidates (published_story_id);\n\ndrop policy if exists \"current affairs candidates admin access\" on public.current_affairs_candidates;\ncreate policy \"current affairs candidates admin access\"\non public.current_affairs_candidates\nfor all\nto authenticated\nusing (((select auth.jwt()) -> 'app_metadata' ->> 'role') = 'admin')\nwith check (((select auth.jwt()) -> 'app_metadata' ->> 'role') = 'admin');\n"
       ]
+    },
+    {
+      "version": "20261007121412",
+      "name": "current_affairs_story_dp_score",
+      "statements": [
+        "alter table public.current_affairs_stories\n  add column if not exists dp_score smallint;\n\nalter table public.current_affairs_stories\n  drop constraint if exists current_affairs_stories_dp_score_check;\n\nalter table public.current_affairs_stories\n  add constraint current_affairs_stories_dp_score_check\n  check (dp_score is null or dp_score between 0 and 100);\n\nupdate public.current_affairs_stories s\nset dp_score = v.score,\n    updated_at = now()\nfrom (values\n  ('DRDO flight-tests indigenous High-Altitude Platform at 21 km'::text, 94::smallint),\n  ('MoD signs ₹661.50 crore BrahMos systems contract for Indian Navy ships'::text, 92::smallint),\n  ('Cabinet approves Integrated Transport & Logistics Authority'::text, 89::smallint),\n  ('Cabinet approves ₹10,000 crore Government commitment to SME Growth Fund'::text, 87::smallint),\n  ('World Bank projects India to grow 7.1% in FY27'::text, 84::smallint)\n) as v(headline,score)\nwhere s.headline=v.headline\n  and s.post_id=(select id from public.current_affairs_posts where date='2026-10-07');\n"
+      ]
+    },
+    {
+      "version": "20261007121502",
+      "name": "current_affairs_candidate_rls_reconstruction_compat",
+      "statements": [
+        "drop policy if exists \"current affairs candidates admin access\" on public.current_affairs_candidates;\n\ncreate policy \"current affairs candidates admin access\"\non public.current_affairs_candidates\nfor all\nto authenticated\nusing (\n  coalesce(\n    nullif(current_setting('request.jwt.claims', true), '')::jsonb\n      -> 'app_metadata' ->> 'role',\n    ''\n  ) = 'admin'\n)\nwith check (\n  coalesce(\n    nullif(current_setting('request.jwt.claims', true), '')::jsonb\n      -> 'app_metadata' ->> 'role',\n    ''\n  ) = 'admin'\n);\n"
+      ]
     }
   ]
 }
