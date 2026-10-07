@@ -12,7 +12,7 @@ test('every observed applied production migration has its exact recorded version
   for (const row of history.migrations) {
     assert.equal(fs.readFileSync(`${directory}/${row.version}_${row.name}.sql`, 'utf8').trim(), row.statements.join('\n').replace(/[ \t]+$/gm, '').trim());
   }
-  assert.equal(history.migrations.at(-1).version, '20261007120012');
+  assert.equal(history.migrations.at(-1).version, '20261007121502');
   const config = fs.readFileSync('supabase/config.toml', 'utf8');
   assert.match(config, /\[db\.migrations\][\s\S]*?enabled = false\s+schema_paths = \[\]/);
   assert.match(config, /\[db\.seed\][\s\S]*?enabled = false[\s\S]*?sql_paths = \[\]/);
