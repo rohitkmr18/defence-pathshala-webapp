@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { CurrentAffairsMcq } from "@/lib/current-affairs";
+import { trackLearningEvent } from "@/lib/learning-events";
 
-type Props = { questions: CurrentAffairsMcq[] };
+type Props = { questions: CurrentAffairsMcq[]; editionDate: string };
 
-export default function CurrentAffairsQuiz({ questions }: Props) {
+export default function CurrentAffairsQuiz({ questions, editionDate }: Props) {
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState<Record<string, string>>({});
   const [checked, setChecked] = useState<Record<string, boolean>>({});
@@ -18,6 +19,21 @@ export default function CurrentAffairsQuiz({ questions }: Props) {
     () => questions.reduce((sum, item) => sum + (selected[item.id] === item.correctOption ? 1 : 0), 0),
     [questions, selected],
   );
+
+  useEffect(() => {
+    if (!complete) return;
+    trackLearningEvent(
+      "current_affairs_quiz_complete",
+      {
+        source_surface: "current_affairs",
+        edition_date: editionDate,
+        score,
+        total_questions: questions.length,
+        accuracy: questions.length ? Math.round((score / questions.length) * 100) : 0,
+      },
+      editionDate,
+    );
+  }, [complete, editionDate, questions.length, score]);
 
   if (complete) {
     return (
@@ -38,6 +54,19 @@ export default function CurrentAffairsQuiz({ questions }: Props) {
     if (!chosen || hasChecked) return;
     setChecked((current) => ({ ...current, [question.id]: true }));
     const elapsed = Math.max(0, Math.round((Date.now() - startedAt) / 1000));
+    const isCorrect = chosen === question.correctOption;
+    trackLearningEvent(
+      "current_affairs_quiz_check",
+      {
+        source_surface: "current_affairs",
+        edition_date: editionDate,
+        question_id: question.id,
+        question_number: index + 1,
+        is_correct: isCorrect,
+        time_taken_seconds: elapsed,
+      },
+      `${editionDate}:${question.id}`,
+    );
 
     try {
       await fetch("/api/current-affairs/attempt", {
@@ -79,7 +108,18 @@ export default function CurrentAffairsQuiz({ questions }: Props) {
               key={option.key}
               type="button"
               disabled={hasChecked}
-              onClick={() => setSelected((current) => ({ ...current, [question.id]: option.key }))}
+              onClick={() => {
+                trackLearningEvent(
+                  "current_affairs_quiz_start",
+                  {
+                    source_surface: "current_affairs",
+                    edition_date: editionDate,
+                    total_questions: questions.length,
+                  },
+                  editionDate,
+                );
+                setSelected((current) => ({ ...current, [question.id]: option.key }));
+              }}
               className={[
                 "flex w-full items-start gap-3 rounded-2xl border p-4 text-left text-sm transition",
                 isCorrect ? "border-emerald-300 bg-emerald-50" : "",
