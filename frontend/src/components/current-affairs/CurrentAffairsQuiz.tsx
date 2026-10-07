@@ -5,7 +5,17 @@ import { CheckCircle2, ChevronRight, CircleHelp, FastForward, Lightbulb, RotateC
 import type { CurrentAffairsMcq } from "@/lib/current-affairs";
 import { trackLearningEvent } from "@/lib/learning-events";
 
-type Props = { questions: CurrentAffairsMcq[]; editionDate: string };
+type RevisionTakeaway = {
+  title: string;
+  subject: string | null;
+  points: string[];
+};
+
+type Props = {
+  questions: CurrentAffairsMcq[];
+  editionDate: string;
+  revisionTakeaways: RevisionTakeaway[];
+};
 
 type ParsedQuestion = {
   intro: string | null;
@@ -14,7 +24,7 @@ type ParsedQuestion = {
 };
 
 function parseQuestion(text: string): ParsedQuestion {
-  const statementStart = text.match(/^([\\s\\S]*?):\\s*1\\.\\s*/);
+  const statementStart = text.match(/^([\s\S]*?):\s*1\.\s*/);
   if (!statementStart) {
     return { intro: null, statements: [], prompt: text };
   }
@@ -37,7 +47,7 @@ function parseQuestion(text: string): ParsedQuestion {
   };
 }
 
-export default function CurrentAffairsQuiz({ questions, editionDate }: Props) {
+export default function CurrentAffairsQuiz({ questions, editionDate, revisionTakeaways }: Props) {
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState<Record<string, string>>({});
   const [checked, setChecked] = useState<Record<string, boolean>>({});
@@ -96,10 +106,14 @@ export default function CurrentAffairsQuiz({ questions, editionDate }: Props) {
   }
 
   if (complete) {
-    const revisionItems = questions
-      .map((item) => item.examEdge || item.explanation)
-      .filter((item): item is string => Boolean(item))
-      .slice(0, 5);
+    const revisionItems =
+      revisionTakeaways.length > 0
+        ? revisionTakeaways
+        : questions.slice(0, 5).map((item) => ({
+            title: item.topic || item.subject || "Current Affairs",
+            subject: item.subject,
+            points: [item.examEdge || item.explanation || "Review the key fact tested in this question."],
+          }));
 
     return (
       <div ref={quizTopRef} className="space-y-4 scroll-mt-24">
@@ -135,11 +149,27 @@ export default function CurrentAffairsQuiz({ questions, editionDate }: Props) {
 
           <div className="mt-4 space-y-3">
             {revisionItems.map((item, idx) => (
-              <div key={`${idx}-${item}`} className="flex gap-3 rounded-2xl border border-blue-100 bg-white p-3.5">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-[11px] font-black text-blue-700">
-                  {idx + 1}
-                </span>
-                <p className="text-sm font-semibold leading-5 text-slate-700">{item}</p>
+              <div key={`${idx}-${item.title}`} className="rounded-2xl border border-blue-100 bg-white p-4">
+                <div className="flex items-start gap-3">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-100 text-[11px] font-black text-blue-700">
+                    {idx + 1}
+                  </span>
+                  <div className="min-w-0">
+                    {item.subject && (
+                      <p className="text-[10px] font-black uppercase tracking-[0.14em] text-blue-600">
+                        {item.subject}
+                      </p>
+                    )}
+                    <p className="mt-0.5 text-sm font-black leading-5 text-slate-950">{item.title}</p>
+                  </div>
+                </div>
+                <ul className="mt-3 space-y-2 pl-10">
+                  {item.points.slice(0, 4).map((point) => (
+                    <li key={point} className="relative text-sm font-semibold leading-5 text-slate-700 before:absolute before:-left-4 before:top-2 before:h-1.5 before:w-1.5 before:rounded-full before:bg-blue-500">
+                      {point}
+                    </li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>
