@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowRight, BookOpen, ExternalLink } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 import { getAdjacentDays, getCurrentAffairsByDate } from "@/lib/current-affairs";
 import CurrentAffairsQuiz from "@/components/current-affairs/CurrentAffairsQuiz";
 import CurrentAffairsEditionTracker from "@/components/current-affairs/CurrentAffairsEditionTracker";
@@ -29,6 +29,18 @@ export default async function CurrentAffairsDayPage({ params }: { params: Promis
 
   const { prevDate, nextDate } = await getAdjacentDays(date);
   const questions = post.stories.flatMap((story) => story.mcqs).slice(0, 5);
+  const revisionTakeaways = post.stories.slice(0, 5).map((story) => {
+    const points = [
+      ...story.keyFacts.slice(0, 3),
+      story.examRelevance ? `Exam angle: ${story.examRelevance}` : null,
+    ].filter((item): item is string => Boolean(item));
+
+    return {
+      title: story.headline,
+      subject: story.subject,
+      points: points.length > 0 ? points : [story.summary || "Revise the key development and its static linkage."],
+    };
+  });
 
   return (
     <main className="min-h-screen bg-slate-50">
@@ -53,20 +65,27 @@ export default async function CurrentAffairsDayPage({ params }: { params: Promis
           {post.stories.map((story) => (
             <details key={story.id} className="group rounded-3xl border border-slate-200 bg-white p-5 shadow-sm open:shadow-md sm:p-6">
               <summary className="cursor-pointer list-none">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <div className="flex flex-wrap gap-2">
-                      {story.subject && <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-bold text-blue-700">{story.subject}</span>}
-                      {story.examTags.map((tag) => <span key={tag} className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600">{tag}</span>)}
-                    </div>
-                    <h2 className="mt-3 text-xl font-black leading-snug text-slate-950">{story.storyNumber}. {story.headline}</h2>
-                    {story.summary && <p className="mt-2 text-sm leading-6 text-slate-600">{story.summary}</p>}
-                  </div>
-                  <span className="mt-1 text-lg text-slate-400 group-open:rotate-45">＋</span>
+                <div className="flex items-center justify-between gap-3">
+                  {story.subject ? (
+                    <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-bold text-blue-700">{story.subject}</span>
+                  ) : <span />}
+                  <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-bold text-slate-600">
+                    DP Score {story.dpScore ?? "—"}/100
+                  </span>
+                </div>
+                <h2 className="mt-4 text-xl font-black leading-snug text-slate-950">{story.storyNumber}. {story.headline}</h2>
+                {story.summary && <p className="mt-2 text-sm leading-6 text-slate-600">{story.summary}</p>}
+                <div className="mt-4 flex justify-end border-t border-slate-100 pt-3">
+                  <span className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-500 group-open:hidden">
+                    Read more <ChevronDown className="h-3.5 w-3.5" />
+                  </span>
+                  <span className="hidden items-center gap-1 text-[11px] font-bold text-slate-500 group-open:inline-flex">
+                    Read less <ChevronUp className="h-3.5 w-3.5" />
+                  </span>
                 </div>
               </summary>
 
-              <div className="mt-6 space-y-5 border-t border-slate-100 pt-5 text-sm leading-6 text-slate-700">
+              <div className="mt-4 space-y-5 border-t border-slate-100 pt-5 text-sm leading-6 text-slate-700">
                 {story.whatHappened && <section><h3 className="font-black text-slate-950">What happened?</h3><p className="mt-1">{story.whatHappened}</p></section>}
                 {story.keyFacts.length > 0 && <section><h3 className="font-black text-slate-950">Key exam facts</h3><ul className="mt-2 space-y-2">{story.keyFacts.map((fact) => <li key={fact} className="flex gap-2"><span className="text-blue-600">•</span><span>{fact}</span></li>)}</ul></section>}
                 {story.conceptualLinkage && <section className="rounded-2xl bg-blue-50 p-4"><h3 className="font-black text-blue-950">Conceptual linkage</h3><p className="mt-1 text-blue-900">{story.conceptualLinkage}</p></section>}
@@ -85,7 +104,11 @@ export default async function CurrentAffairsDayPage({ params }: { params: Promis
               <BookOpen className="h-5 w-5 text-blue-600" />
               <h2 className="text-2xl font-black text-slate-950">Test today’s Current Affairs</h2>
             </div>
-            <CurrentAffairsQuiz questions={questions} editionDate={post.date} />
+            <CurrentAffairsQuiz
+              questions={questions}
+              editionDate={post.date}
+              revisionTakeaways={revisionTakeaways}
+            />
           </section>
         )}
 
