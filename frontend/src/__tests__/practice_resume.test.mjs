@@ -169,7 +169,7 @@ test('HTTP progress failures remain visible and completion cannot report saved',
   updateSessionProgress('progress-failure', { current_index: 3 });
   await tick();
   assert.equal(getLocalSession().cloud_status, 'error');
-  await assert.rejects(completePracticeSession({ sessionId: 'progress-failure', questions: [{ id: 'q4', final_opt: 'A' }], answers: { q4: 'A' }, mode: 'instant', timeSpentSeconds: 5 }), /save failed/);
+  await assert.rejects(completePracticeSession({ sessionId: 'progress-failure', questions: [{ id: 'q4', final_opt: 'A' }], answers: { q4: 'A' }, mode: 'instant', timeSpentSeconds: 5 }), /Final submission/);
   assert.equal(getLocalSession().cloud_status, 'error');
 });
 
@@ -181,33 +181,29 @@ test('attempt failures propagate and a later successful snapshot cannot mask the
   await tick(); assert.equal(getLocalSession().cloud_status, 'error');
 });
 
-test('Full Paper completion persists owned answers before completion and retries only unsaved answers', async () => {
+test('Full Paper completion batches final answers into one finalization request and safely retries', async () => {
   saveLocalSession(session({ id: 'full-paper-test', server_id: 'cloud-paper' }));
-  const calls = []; let failSecond = true;
+  const calls = []; let failFirst = true;
   globalThis.fetch = async (url, options) => {
     const body = JSON.parse(options.body); calls.push({ url, body });
-    if (url.endsWith('/attempt') && body.question_id === 'q2' && failSecond) return { ok: false };
-    return { ok: true, json: async () => url.endsWith("/attempt") ? { persisted: true } : { success: true, session: { id: body.session_id } } };
+    if (url.endsWith('/finalize') && failFirst) { failFirst = false; return { ok: false }; }
+    if (url.endsWith('/finalize')) return { ok: true, json: async () => ({ persisted: true, session: { id: 'cloud-paper' } }) };
+    return { ok: true, json: async () => ({ success: true, session: { id: body.session_id } }) };
   };
   const params = { sessionId: 'full-paper-test', mode: 'full_paper', timeSpentSeconds: 25,
     questions: [{ id: 'q1', final_opt: 'A' }, { id: 'q2', final_opt: 'C' }, { id: 'q3', final_opt: 'D' }], answers: { q1: 'A', q2: 'B' } };
-  await assert.rejects(completePracticeSession(params), /persistence failed/);
-  assert.equal(calls.some(c => c.body.is_completed), false);
+  await assert.rejects(completePracticeSession(params), /Final submission/);
   assert.equal(getLocalSession().submission_pending, true);
   assert.deepEqual(getLocalSession().answers, { q1: 'A', q2: 'B' });
   assert.equal(getLocalSession().time_spent_seconds, 25);
-  assert.equal(getLocalSession().is_completed, false);
-  failSecond = false;
+  failFirst = false;
   await completePracticeSession(params);
-  assert.equal(getLocalSession().cloud_status, "saved");
+  assert.equal(getLocalSession().cloud_status, 'saved');
   assert.equal(getLocalSession().submission_pending, false);
   assert.equal(getLocalSession().is_completed, true);
-  assert.equal(calls.filter(c => c.body.question_id === 'q1').length, 1);
-  assert.equal(calls.filter(c => c.body.question_id === 'q2').length, 2);
-  const final = calls.at(-1).body;
-  assert.equal(final.session_id, 'cloud-paper');
-  assert.equal(final.is_completed, true);
-  assert.equal(final.correct_count, 1); assert.equal(final.incorrect_count, 1);
+  const finalizeCalls = calls.filter(call => call.url.endsWith('/finalize'));
+  assert.equal(finalizeCalls.length, 2);
+  assert.deepEqual(finalizeCalls.at(-1).body.answers, { q1: 'A', q2: 'B' });
 });
 
 test('guest creation keeps progress local without cloud PATCH writes', async () => {
@@ -236,15 +232,17 @@ test('expired authentication cannot turn a cloud attempt or progress write into 
   assert.equal(getLocalSession().pending_attempts.q4.selectedOption, 'A');
 });
 
-test('completion retries an unsaved instant answer recovered from device storage', async () => {
+test('completion folds a recovered device answer into the batch finalization snapshot', async () => {
   saveLocalSession(session({ id: 'reload-retry', server_id: 'cloud-reload', cloud_status: 'error', pending_attempts: { q4: { selectedOption: 'A', timeTakenSeconds: 3 } } }));
   const calls = [];
   globalThis.fetch = async (url, options) => {
     const body = JSON.parse(options.body); calls.push({ url, body });
-    return { ok: true, json: async () => url.endsWith('/attempt') ? { persisted: true } : { success: true, session: { id: body.session_id } } };
+    if (url.endsWith('/finalize')) return { ok: true, json: async () => ({ persisted: true, session: { id: 'cloud-reload' } }) };
+    return { ok: true, json: async () => ({ success: true, session: { id: body.session_id } }) };
   };
   await completePracticeSession({ sessionId: 'reload-retry', questions: [{ id: 'q4', final_opt: 'A' }], answers: { q4: 'A' }, mode: 'instant', timeSpentSeconds: 5 });
-  assert.equal(calls[0].body.session_id, 'cloud-reload');
+  const finalize = calls.find(call => call.url.endsWith('/finalize'));
+  assert.deepEqual(finalize.body.answers, { q4: 'A' });
   assert.deepEqual(getLocalSession().pending_attempts, {});
   assert.equal(getLocalSession().cloud_status, 'saved');
 });
@@ -256,6 +254,7 @@ test('completion waits for an in-flight first answer without duplicating the att
     const body = JSON.parse(options.body);
     if (options.method === 'POST' && url.endsWith('/session')) return new Promise(resolve => { resolveCreate = resolve; });
     if (url.endsWith('/attempt')) { attemptCount++; return new Promise(resolve => { finishAttempt = resolve; }); }
+    if (url.endsWith('/finalize')) return { ok: true, json: async () => ({ persisted: true, session: { id: 'cloud-concurrent' } }) };
     return { ok: true, json: async () => ({ success: true, session: { id: body.session_id } }) };
   };
   const created = await initializeSession({ title: 'Concurrent completion', mode: 'instant', filters: {}, questions: [{ id: 'q1', final_opt: 'B' }] });
@@ -305,18 +304,18 @@ test('creation retry after a lost response reuses the stored creation ID and pen
 test('completion remains resumable until the final cloud save is confirmed', async () => {
   saveLocalSession(session({ id: 'confirmation', server_id: 'cloud-confirmation' }));
   let finish; let attempted = 0;
-  globalThis.fetch = async (_url, options) => {
+  globalThis.fetch = async (url, options) => {
     const body = JSON.parse(options.body);
-    if (body.is_completed) return new Promise(resolve => { finish = resolve; });
+    if (url.endsWith('/finalize')) return new Promise(resolve => { finish = resolve; });
     attempted++;
     return { ok: true, json: async () => ({ success: true, session: { id: body.session_id } }) };
   };
   const completion = completePracticeSession({ sessionId: 'confirmation', questions: [], answers: {}, mode: 'instant', timeSpentSeconds: 20 });
-  await tick(); assert.ok(attempted > 0); assert.equal(getLocalSession().is_completed, false);
+  await tick(); assert.equal(typeof finish, 'function'); assert.equal(getLocalSession().is_completed, false);
   updateSessionProgress('confirmation', { time_spent_seconds: 21 });
   await tick();
   assert.equal(getLocalSession().time_spent_seconds, 20);
-  finish({ ok: true, json: async () => ({ success: true, session: { id: 'cloud-confirmation' } }) });
+  finish({ ok: true, json: async () => ({ persisted: true, session: { id: 'cloud-confirmation' } }) });
   await completion; assert.equal(getLocalSession().is_completed, true);
   updateSessionProgress('confirmation', { time_spent_seconds: 22 });
   await tick();

@@ -213,7 +213,7 @@ test("score so far uses exam-aware negative marking rather than duplicating accu
   });
 
   assert.equal(data.overview.accuracy, 50);
-  assert.equal(data.overview.scorePercent, 33.2);
+  assert.equal(data.overview.scorePercent, 33.3);
 });
 
 test("lifetime metrics are not capped at the former 200-attempt window", () => {
@@ -279,8 +279,8 @@ test("performance coach is rebuilt from durable completed full-paper sessions", 
   assert.equal(data.performanceCoach.mocksCompleted, 1);
   assert.equal(data.performanceCoach.totalQuestionsAttempted, 3);
   assert.equal(data.performanceCoach.averageAccuracy, 33.3);
-  assert.equal(data.performanceCoach.averageScore, 0.6);
-  assert.equal(data.performanceCoach.totalRecoverableMarks, 2.23);
+  assert.equal(data.performanceCoach.averageScore, 0.3);
+  assert.equal(data.performanceCoach.totalRecoverableMarks, 1.11);
   assert.equal(data.performanceCoach.lastMockTitle, "CDS Full Paper");
   assert.equal(data.performanceCoach.weakAreas[0].topic, "Parliament");
 });

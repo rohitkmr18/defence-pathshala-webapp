@@ -123,14 +123,16 @@ export function computeAnalysisMetrics(
   questions: PracticeQuestion[],
   answers: Record<string, OptionKey>,
   totalTimeSeconds: number,
-  examIdentifier?: string
+  examIdentifier?: string,
+  isFullPaper = false
 ): AnalysisMetrics {
   const total = questions.length;
   let correct = 0;
   let incorrect = 0;
   let skipped = 0;
 
-  // Resolve Exam Scoring Rules (CDS +1.67/-0.56, CAPF +2.00/-0.67, etc.)
+  // Resolve exam-aware scoring rules. A complete full paper retains the official
+  // denominator; manifest-backed subsets use only the marks actually in play.
   const sampleExam = examIdentifier || questions[0]?.exam || "CAPF-AC";
   const scoringRule = getScoringRules(sampleExam);
   const marksPerCorrect = scoringRule.correctMarks;
@@ -235,7 +237,9 @@ export function computeAnalysisMetrics(
 
   // UPSC Standard Marking computed with exam-aware scoring rules
   const netScore = Math.max(0, Number((correct * marksPerCorrect - incorrect * penaltyPerWrong).toFixed(2)));
-  const maxMarks = Number((total * marksPerCorrect).toFixed(0));
+  const maxMarks = isFullPaper && total === scoringRule.totalQuestions
+    ? scoringRule.totalMarks
+    : Number((total * marksPerCorrect).toFixed(2));
 
   // Recoverable marks per topic
   const recoverableTopicList: RecoverableTopicItem[] = [];
