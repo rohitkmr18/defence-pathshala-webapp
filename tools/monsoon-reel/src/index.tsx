@@ -57,7 +57,12 @@ const Hook=()=>{
   </AbsoluteFill></AbsoluteFill>;
 };
 
-const Path=({pts,color,p,width=12}:{pts:P[];color:string;p:number;width?:number})=><><path d={route(pts)} fill="none" stroke={color} strokeWidth={width+20} opacity=.1 strokeLinecap="round" pathLength={1} strokeDasharray={1} strokeDashoffset={1-p}/><path d={route(pts)} fill="none" stroke={color} strokeWidth={width} strokeLinecap="round" strokeLinejoin="round" pathLength={1} strokeDasharray={1} strokeDashoffset={1-p}/></>;
+const Path=({pts,color,p,width=12}:{pts:P[];color:string;p:number;width?:number})=>(
+  <g>
+    <path d={route(pts)} fill="none" stroke={color} strokeWidth={width+20} opacity={0.1} strokeLinecap="round" pathLength={1} strokeDasharray={1} strokeDashoffset={1-p}/>
+    <path d={route(pts)} fill="none" stroke={color} strokeWidth={width} strokeLinecap="round" strokeLinejoin="round" pathLength={1} strokeDasharray={1} strokeDashoffset={1-p}/>
+  </g>
+);
 
 const MapScene=()=>{
   const f=useCurrentFrame();
@@ -80,7 +85,10 @@ const MapScene=()=>{
   </AbsoluteFill></AbsoluteFill>;
 };
 
-const Rain=({count=34,color=CYAN}:{count?:number;color?:string})=>{const f=useCurrentFrame();return <>{Array.from({length:count},(_,i)=>{const x=(i*83)%760,y=((i*137+f*18)%720)-120;return <div key={i} style={{position:'absolute',left:x,top:y,width:4,height:34,borderRadius:3,background:color,opacity:.18+(i%4)*.08,transform:'rotate(12deg)'}}/>})}</>};
+const Rain=({count=34,color=CYAN}:{count?:number;color?:string})=>{
+  const f=useCurrentFrame();
+  return <div>{Array.from({length:count},(_,i)=>{const x=(i*83)%760,y=((i*137+f*18)%720)-120;return <div key={i} style={{position:'absolute',left:x,top:y,width:4,height:34,borderRadius:3,background:color,opacity:.18+(i%4)*.08,transform:'rotate(12deg)'}}/>})}</div>;
+};
 
 const ReliefScene=()=>{
   const f=useCurrentFrame(), lift=interpolate(f,[12,75],[0,1],clamp), rain=interpolate(f,[54,102],[0,1],clamp);
