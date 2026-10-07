@@ -1,10 +1,26 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, BookOpen, ExternalLink } from "lucide-react";
 import { getAdjacentDays, getCurrentAffairsByDate } from "@/lib/current-affairs";
 import CurrentAffairsQuiz from "@/components/current-affairs/CurrentAffairsQuiz";
+import CurrentAffairsEditionTracker from "@/components/current-affairs/CurrentAffairsEditionTracker";
 
 export const revalidate = 300;
+
+export async function generateMetadata({ params }: { params: Promise<{ date: string }> }): Promise<Metadata> {
+  const { date } = await params;
+  const post = await getCurrentAffairsByDate(date);
+  if (!post) return {};
+
+  return {
+    title: `${post.title} | Defence Pathshala`,
+    description: post.summary || `Exam-focused current affairs for ${post.formattedDate} with structured key facts and daily MCQs.`,
+    alternates: {
+      canonical: `/current-affairs/${date}`,
+    },
+  };
+}
 
 export default async function CurrentAffairsDayPage({ params }: { params: Promise<{ date: string }> }) {
   const { date } = await params;
@@ -17,6 +33,7 @@ export default async function CurrentAffairsDayPage({ params }: { params: Promis
   return (
     <main className="min-h-screen bg-slate-50">
       <article className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:py-12">
+        <CurrentAffairsEditionTracker date={post.date} storyCount={post.storyCount} quizCount={questions.length} />
         <Link href="/current-affairs" className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-blue-700">
           <ArrowLeft className="h-4 w-4" /> All Current Affairs
         </Link>
@@ -68,7 +85,7 @@ export default async function CurrentAffairsDayPage({ params }: { params: Promis
               <BookOpen className="h-5 w-5 text-blue-600" />
               <h2 className="text-2xl font-black text-slate-950">Test today’s Current Affairs</h2>
             </div>
-            <CurrentAffairsQuiz questions={questions} />
+            <CurrentAffairsQuiz questions={questions} editionDate={post.date} />
           </section>
         )}
 
