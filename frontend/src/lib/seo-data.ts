@@ -60,6 +60,17 @@ export function slugToSubject(slug: string, availableSubjects: string[]): string
   return availableSubjects.find((s) => subjectToSlug(s) === target) || null;
 }
 
+export const MIN_INDEXABLE_TOPIC_QUESTIONS = 10;
+
+export function topicToSlug(topic: string): string {
+  return subjectToSlug(topic);
+}
+
+export function slugToTopic(slug: string, availableTopics: string[]): string | null {
+  const target = slug.toLowerCase().trim();
+  return availableTopics.find((topic) => topicToSlug(topic) === target) || null;
+}
+
 // ─── Cached Raw Metadata Access ───────────────────────────────────────────────
 
 interface QuestionMetaRow {
@@ -360,6 +371,18 @@ export interface TopicStat {
   count: number;
 }
 
+export interface TopicArchive {
+  exam: string;
+  examSlug: string;
+  subject: string;
+  subjectSlug: string;
+  topic: string;
+  topicSlug: string;
+  totalQuestions: number;
+  years: YearStat[];
+  questions: PublicQuestion[];
+}
+
 export interface SubjectArchive {
   exam: string;
   examSlug: string;
@@ -504,6 +527,39 @@ export async function getSubjectArchive(
   return fetchArchive(examDb, subjectName);
 }
 
+export async function getTopicArchive(
+  examDb: string,
+  subjectName: string,
+  topicName: string
+): Promise<TopicArchive | null> {
+  const subjectArchive = await getSubjectArchive(examDb, subjectName);
+  if (!subjectArchive) return null;
+
+  const questions = subjectArchive.questions.filter(
+    (q) => q.topic?.trim().toLowerCase() === topicName.trim().toLowerCase()
+  );
+  if (questions.length === 0) return null;
+
+  const yearMap = new Map<number, number>();
+  for (const q of questions) {
+    yearMap.set(q.year, (yearMap.get(q.year) || 0) + 1);
+  }
+
+  return {
+    exam: examDb,
+    examSlug: examToSlug(examDb),
+    subject: subjectArchive.subject,
+    subjectSlug: subjectArchive.subjectSlug,
+    topic: topicName,
+    topicSlug: topicToSlug(topicName),
+    totalQuestions: questions.length,
+    years: Array.from(yearMap.entries())
+      .map(([year, count]) => ({ year, count }))
+      .sort((a, b) => b.year - a.year),
+    questions,
+  };
+}
+
 // ─── Sitemap Generator Helper ─────────────────────────────────────────────────
 
 export interface EligibleRoute {
@@ -555,6 +611,22 @@ export async function getAllEligibleSeoRoutes(): Promise<EligibleRoute[]> {
           path: `/pyqs/${examSlug}/${subSlug}`,
           priority: 0.85,
         });
+      }
+    }
+
+    // Index topic pages only when the parent subject archive has enough real
+    // questions to make the page independently useful. Low-volume topics stay
+    // visible on the subject page but are deliberately kept out of the sitemap.
+    for (const subj of examSubjectMap.keys()) {
+      const archive = await getSubjectArchive(examDb, subj);
+      if (!archive) continue;
+      for (const topic of archive.topics) {
+        if (topic.count >= MIN_INDEXABLE_TOPIC_QUESTIONS) {
+          routes.push({
+            path: `/pyqs/${examSlug}/${subjectToSlug(subj)}/${topicToSlug(topic.topic)}`,
+            priority: 0.75,
+          });
+        }
       }
     }
 
