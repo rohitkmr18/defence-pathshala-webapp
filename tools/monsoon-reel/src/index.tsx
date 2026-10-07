@@ -113,7 +113,7 @@ const FlowScene=()=>{
   return <AbsoluteFill><Bg/><Grain/><AbsoluteFill style={{padding:'100px 72px',alignItems:'center'}}><Pill>BAY OF BENGAL BRANCH</Pill><div style={{height:26}}/><Big size={61}>Northeast first. Then westward across the Ganga plains.</Big>
     <div style={{marginTop:120,width:890,height:760,position:'relative'}}>
       <svg viewBox="0 0 890 760" width="100%" height="100%"><defs><filter id="g"><feGaussianBlur stdDeviation="8"/></filter></defs>
-        <path d="M760 590 C 790 430 770 270 650 190" fill="none" stroke={CYAN} strokeWidth={42} opacity=.08 filter="url(#g)"/><path d="M760 590 C 790 430 770 270 650 190" fill="none" stroke={CYAN} strokeWidth={15} strokeLinecap="round" pathLength={1} strokeDasharray={1} strokeDashoffset={1-p}/>
+        <path d="M760 590 C 790 430 770 270 650 190" fill="none" stroke={CYAN} strokeWidth={42} opacity={0.08} filter="url(#g)"/><path d="M760 590 C 790 430 770 270 650 190" fill="none" stroke={CYAN} strokeWidth={15} strokeLinecap="round" pathLength={1} strokeDasharray={1} strokeDashoffset={1-p}/>
         <path d="M650 190 C 540 210 430 250 320 300 C 240 335 180 380 120 440" fill="none" stroke={CYAN} strokeWidth={15} strokeLinecap="round" pathLength={1} strokeDasharray={1} strokeDashoffset={1-q}/>
       </svg>
       <div style={{position:'absolute',right:38,bottom:110,color:CYAN,fontFamily:FONT,fontWeight:900,fontSize:30}}>BAY OF BENGAL</div>
