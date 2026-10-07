@@ -35,6 +35,7 @@ export type CurrentAffairsStory = {
   subtopic: string | null;
   theme: string | null;
   examTags: string[];
+  dpScore: number | null;
   sourceName: string | null;
   sourceUrl: string | null;
   sourceDate: string | null;
@@ -89,6 +90,7 @@ type RawStory = {
   subtopic: string | null;
   theme: string | null;
   exam_tags: string[] | null;
+  dp_score: number | null;
   source_name: string | null;
   source_url: string | null;
   source_date: string | null;
@@ -155,6 +157,7 @@ function normalizePost(row: RawPost): CurrentAffairsPost {
       subtopic: story.subtopic,
       theme: story.theme,
       examTags: story.exam_tags ?? [],
+      dpScore: story.dp_score,
       sourceName: story.source_name,
       sourceUrl: story.source_url,
       sourceDate: story.source_date,
@@ -183,7 +186,7 @@ const nestedSelect = `
   current_affairs_stories (
     id,story_number,headline,summary,what_happened,why_it_matters,key_facts,
     conceptual_linkage,static_link,exam_relevance,subject,topic,subtopic,theme,
-    exam_tags,source_name,source_url,source_date,
+    exam_tags,dp_score,source_name,source_url,source_date,
     current_affairs_mcqs (
       id,question_number,question,option_a,option_b,option_c,option_d,correct_option,
       explanation,exam_edge,difficulty,subject,topic,exam_tags
