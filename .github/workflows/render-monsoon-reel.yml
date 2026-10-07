@@ -1,0 +1,41 @@
+name: Render Monsoon Reel
+
+on:
+  push:
+    branches:
+      - experiment/monsoon-reel-render
+    paths:
+      - 'tools/monsoon-reel/**'
+      - '.github/workflows/render-monsoon-reel.yml'
+  workflow_dispatch:
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: tools/monsoon-reel/package.json
+      - name: Install dependencies
+        working-directory: tools/monsoon-reel
+        run: npm install --no-audit --no-fund
+      - name: Fetch India map
+        working-directory: tools/monsoon-reel
+        run: npm run setup:map
+      - name: Ensure browser
+        working-directory: tools/monsoon-reel
+        run: npx remotion browser ensure
+      - name: Render reel
+        working-directory: tools/monsoon-reel
+        run: npm run render
+      - name: Upload MP4
+        uses: actions/upload-artifact@v4
+        with:
+          name: monsoon-reel-final
+          path: tools/monsoon-reel/out/monsoon-reel-final.mp4
+          if-no-files-found: error
+          retention-days: 7
