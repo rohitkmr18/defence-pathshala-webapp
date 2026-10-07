@@ -1,5 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
 
+export type CurrentAffairsSlide = {
+  slideNumber: number;
+  imageUrl: string;
+};
+
 export type CurrentAffairsMcq = {
   id: string;
   questionNumber: number;
@@ -44,6 +49,9 @@ export type CurrentAffairsPost = {
   summary: string | null;
   storyCount: number;
   quizCount: number;
+  slideCount: number;
+  readingTimeMinutes: number;
+  slides: CurrentAffairsSlide[];
   stories: CurrentAffairsStory[];
   isLatest?: boolean;
 };
@@ -163,6 +171,9 @@ function normalizePost(row: RawPost): CurrentAffairsPost {
     summary: row.summary,
     storyCount: row.total_stories ?? stories.length,
     quizCount: stories.reduce((sum, story) => sum + story.mcqs.length, 0),
+    slideCount: 0,
+    readingTimeMinutes: Math.max(2, Math.ceil(stories.length * 1.5)),
+    slides: [],
     stories,
   };
 }
