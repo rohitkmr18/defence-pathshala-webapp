@@ -4,10 +4,16 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, BookOpenCheck, RefreshCcw } from "lucide-react";
 import type { LearnerIntelligence } from "@/lib/learner-intelligence";
+import { trackProductEvent } from "@/lib/analytics/track";
 
 export default function MistakesPage() {
   const [data, setData] = useState<LearnerIntelligence | null>(null);
   const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    trackProductEvent("mistake_list_viewed", { source_surface: "mistakes" }, "mistake_list");
+    trackProductEvent("mistake_review_started", { source_surface: "mistakes" }, "mistake_review");
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -56,6 +62,11 @@ export default function MistakesPage() {
             {data?.mistakes.practiceHref && (
               <Link
                 href={data.mistakes.practiceHref}
+                onClick={() =>
+                  trackProductEvent("related_practice_started", {
+                    source_surface: "mistakes",
+                  })
+                }
                 className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-bold text-white"
               >
                 <RefreshCcw className="h-4 w-4" />
@@ -144,6 +155,15 @@ export default function MistakesPage() {
                   </Link>
                   <Link
                     href={mistake.practiceHref}
+                    onClick={() =>
+                      trackProductEvent("related_practice_started", {
+                        source_surface: "mistakes",
+                        question_id: mistake.questionId,
+                        exam: mistake.exam,
+                        subject: mistake.subject,
+                        topic: mistake.topic,
+                      })
+                    }
                     className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-700"
                   >
                     Practise Related PYQs

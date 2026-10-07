@@ -15,6 +15,7 @@ import ProgressHeader from "./ProgressHeader";
 import QuestionCard from "./QuestionCard";
 import AnswerReveal from "./AnswerReveal";
 import { getLocalSession, recordQuestionAttempt, updateSessionProgress } from "@/lib/practice-session-client";
+import { learningContext, practiceContext } from "@/lib/analytics/context";
 import { trackLearningEvent } from "@/lib/learning-events";
 
 // ─── Props ───────────────────────────────────────────────────────────────────
@@ -92,6 +93,13 @@ export default function QuestionPlayer({
   const isRevealed = question ? revealed.has(question.id) : false;
   const hasAnswer = selectedOption !== null;
 
+  function eventContext(currentQuestion = question) {
+    const session = getLocalSession();
+    return session && session.id === sessionId
+      ? practiceContext(session, currentQuestion)
+      : { ...learningContext({ mode }, currentQuestion), practice_session_id: sessionId };
+  }
+
   // ── Handlers ────────────────────────────────────────────────────────────────
 
   const handleSelect = useCallback(
@@ -113,7 +121,8 @@ export default function QuestionPlayer({
   const handleCheckAnswer = useCallback(() => {
     if (disabled || !question || !selectedOption || checkedRef.current.has(question.id)) return;
     checkedRef.current.add(question.id);
-    trackLearningEvent("practice_check", { mode, question_id: question.id }, `${sessionId}:${question.id}`);
+    trackLearningEvent("question_answered", { ...eventContext(), selected_option: selectedOption }, `${sessionId}:${question.id}:answered`);
+    trackLearningEvent("answer_checked", eventContext(), `${sessionId}:${question.id}:checked`);
 
     const correctKey = getCorrectKey(question);
     const isCorrect = selectedOption === correctKey;
@@ -154,7 +163,7 @@ export default function QuestionPlayer({
   const handleNext = useCallback(() => {
     if (disabled || navigationRef.current) return;
     navigationRef.current = true;
-    trackLearningEvent("practice_next", { mode, position: currentIndex }, `${sessionId}:${currentIndex}:next`);
+    trackLearningEvent("next_question_clicked", { ...eventContext(), position: currentIndex, next_question_id: questions[currentIndex + 1]?.id }, `${sessionId}:${currentIndex}:next`);
     if (isLast) {
       void Promise.resolve(onComplete?.(answers)).finally(() => { navigationRef.current = false; });
     } else {
@@ -164,11 +173,13 @@ export default function QuestionPlayer({
         updateSessionProgress(sessionId, { current_index: nextIdx });
       }
     }
-  }, [disabled, mode, isLast, onComplete, answers, currentIndex, sessionId]);
+  }, [disabled, mode, isLast, onComplete, answers, currentIndex, sessionId, question, questions]);
 
   const handleSkip = useCallback(() => {
     if (disabled || !question || navigationRef.current) return;
     navigationRef.current = true;
+
+    trackLearningEvent("question_skipped", eventContext(), `${sessionId}:${question.id}:skipped`);
 
     const nextAnswers = { ...answers };
     delete nextAnswers[question.id];

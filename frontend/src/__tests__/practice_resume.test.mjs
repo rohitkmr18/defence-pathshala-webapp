@@ -82,7 +82,7 @@ test('completed session can be reopened only when explicitly requested for analy
   assert.equal(restored.id, 'completed-analysis');
 });
 
-test('late server creation preserves progress and keeps the player session identity stable', async () => {
+test('late server creation adopts the returned durable ID and preserves progress', async () => {
   let resolveCreate; const writes = [];
   globalThis.fetch = async (_url, options) => {
     if (options.method === 'POST') return new Promise(resolve => { resolveCreate = resolve; });
@@ -90,10 +90,13 @@ test('late server creation preserves progress and keeps the player session ident
     return { ok: true, json: async () => ({ success: true, session: { id: JSON.parse(options.body).session_id } }) };
   };
   const created = await initializeSession({ title: 'Practice', mode: 'instant', filters: {}, questions: [{ id: 'q1' }, { id: 'q2' }] });
-  updateSessionProgress(created.id, { current_index: 1, answers: { q1: 'C' } });
+  const proposedId = created.id;
+  updateSessionProgress(proposedId, { current_index: 1, answers: { q1: 'C' } });
   resolveCreate({ ok: true, json: async () => ({ session: { id: 'server-id' } }) });
   await tick();
-  assert.equal(getLocalSession().id, created.id);
+  assert.notEqual(proposedId, 'server-id');
+  assert.equal(created.id, 'server-id');
+  assert.equal(getLocalSession().id, 'server-id');
   assert.equal(getLocalSession().server_id, 'server-id');
   assert.equal(getLocalSession().current_index, 1);
   assert.deepEqual(getLocalSession().answers, { q1: 'C' });

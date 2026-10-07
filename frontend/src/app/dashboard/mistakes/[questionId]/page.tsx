@@ -7,6 +7,8 @@ import AnswerReveal from "@/components/practice/player/AnswerReveal";
 import QuestionCard from "@/components/practice/player/QuestionCard";
 import type { LearnerIntelligence, LearnerMistake } from "@/lib/learner-intelligence";
 import type { PracticeQuestion, OptionKey } from "@/lib/practice-types";
+import { practiceDestination } from "@/lib/analytics/context";
+import { trackProductEvent } from "@/lib/analytics/track";
 
 export default function MistakeReviewPage({
   params,
@@ -63,6 +65,21 @@ export default function MistakeReviewPage({
       active = false;
     };
   }, [questionId]);
+
+  useEffect(() => {
+    if (!mistake || !questionId) return;
+    trackProductEvent(
+      "mistake_question_opened",
+      {
+        source_surface: "mistakes",
+        question_id: questionId,
+        exam: mistake.exam,
+        subject: mistake.subject,
+        topic: mistake.topic,
+      },
+      questionId
+    );
+  }, [mistake, questionId]);
 
   const selectedOption = useMemo<OptionKey | null>(() => {
     const value = mistake?.selectedOption;
@@ -141,7 +158,16 @@ export default function MistakeReviewPage({
                 </p>
               </div>
               <Link
-                href={mistake.practiceHref}
+                href={practiceDestination(mistake.practiceHref, "check_answer_related_practice")}
+                onClick={() =>
+                  trackProductEvent("related_practice_started", {
+                    source_surface: "check_answer_related_practice",
+                    question_id: mistake.questionId,
+                    exam: mistake.exam,
+                    subject: mistake.subject,
+                    topic: mistake.topic,
+                  })
+                }
                 className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white"
               >
                 Practise Related PYQs

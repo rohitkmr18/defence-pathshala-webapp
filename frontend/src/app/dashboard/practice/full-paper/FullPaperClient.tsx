@@ -2,15 +2,15 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { ArrowLeft, CheckCircle2, Loader2, LogIn, RefreshCw, ShieldCheck, Sparkles } from "lucide-react";
 import type { PracticeQuestion, OptionKey } from "@/lib/practice-types";
 import { createClient } from "@/lib/supabase/client";
 import { authUrl } from "@/lib/auth-redirect";
 import { fullPaperDestination } from "@/lib/full-paper-intent";
 import { safeLearningReturn } from "@/lib/learning-navigation";
+import { practiceContext, hasPracticeProgress } from "@/lib/analytics/context";
 import { trackLearningEvent } from "@/lib/learning-events";
-import { initializeSession, completePracticeSession, updateSessionProgress, loadResumeSession, restoreQuestionOrder, saveLocalSession, getLocalSession, PRACTICE_SESSION_UPDATED_EVENT } from "@/lib/practice-session-client";
+import { initializeSession, settledPracticeSession, completePracticeSession, updateSessionProgress, loadResumeSession, restoreQuestionOrder, saveLocalSession, getLocalSession, PRACTICE_SESSION_UPDATED_EVENT } from "@/lib/practice-session-client";
 import PracticePersistenceStatus from "@/components/practice/PracticePersistenceStatus";
 import QuestionCard from "@/components/practice/player/QuestionCard";
 import ExamHeader from "@/components/practice/full-paper/ExamHeader";
@@ -39,7 +39,6 @@ export default function FullPaperClient({
   resumeSessionId,
   analysis = false,
 }: FullPaperClientProps) {
-  const router = useRouter();
   // Resolve initial paper based on query params or default to most recent exam (CDS II 2026)
   const initialPaper =
     AVAILABLE_FULL_PAPERS.find((p) => {
@@ -65,13 +64,14 @@ export default function FullPaperClient({
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [sessionId, setSessionId] = useState<string>();
+  const entryRef = useRef<{ sessionId?: string; transitionId?: string }>({});
   useEffect(() => {
     if (!sessionId) return;
     const url = new URL(window.location.href);
     if (url.searchParams.get("session_id") === sessionId && url.searchParams.get("resume") === "true") return;
     url.searchParams.set("resume", "true"); url.searchParams.set("session_id", sessionId);
-    router.replace(`${url.pathname}${url.search}`, { scroll: false });
-  }, [sessionId, router]);
+    window.history.replaceState(null, "", `${url.pathname}${url.search}`);
+  }, [sessionId]);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
   const [submissionPending, setSubmissionPending] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -81,7 +81,7 @@ export default function FullPaperClient({
   useEffect(() => {
     const refresh = () => {
       const local = getLocalSession();
-      setCloudReady(!!local && local.id === sessionId && !!(local.server_id || !local.id.startsWith("sess_")));
+      setCloudReady(!!local && local.id === sessionId && !!(local.server_id || (!local.creation_id && !local.id.startsWith("sess_"))));
     };
     const start = window.setTimeout(refresh, 0);
     window.addEventListener(PRACTICE_SESSION_UPDATED_EVENT, refresh);
@@ -112,7 +112,9 @@ export default function FullPaperClient({
       try {
         const url = new URL(window.location.href);
         const requestedSessionId = resumeSessionId || url.searchParams.get("session_id") || undefined;
-        const saved = analysis || url.searchParams.get("resume") === "true"
+        if (requestedSessionId && entryRef.current.sessionId === requestedSessionId) return;
+        entryRef.current.transitionId ||= crypto.randomUUID();
+        let saved = analysis || url.searchParams.get("resume") === "true"
           ? await loadResumeSession(requestedSessionId, { allowCompleted: analysis }) : null;
         if (signal.aborted) return;
         if (saved && saved.mode !== "full_paper") throw new Error("This is not a full paper session.");
@@ -136,18 +138,22 @@ export default function FullPaperClient({
           const data = (await res.json()) as { questions: PracticeQuestion[] };
           if (signal.aborted) return;
           const fetchedQuestions = saved ? restoreQuestionOrder(saved.question_ids, data.questions || []) : data.questions || [];
-          const session = saved || await initializeSession({ title: paper.label, mode: "full_paper",
-            filters: { exams: [paper.exam], years: [paper.year], cycles: paper.cycle ? [paper.cycle] : [], returnTo, origin }, questions: fetchedQuestions });
+          const session = saved || await settledPracticeSession(await initializeSession({ title: paper.label, mode: "full_paper",
+            filters: { exams: [paper.exam], years: [paper.year], cycles: paper.cycle ? [paper.cycle] : [], returnTo, origin }, questions: fetchedQuestions }));
+          if (signal.aborted) return;
+          entryRef.current.sessionId = session.id;
           if (saved) {
+            if (origin) saved = { ...saved, filters: { ...saved.filters, origin: origin === "dashboard" ? "dashboard_resume" : origin } };
             saveLocalSession(saved);
+            updateSessionProgress(saved.id, {});
             setAnswers(saved.answers);
             setSubmissionPending(Boolean(saved.submission_pending));
             setMarkedForReview(new Set(saved.marked_for_review_ids || []));
             if (analysis && saved.is_completed) setIsSubmitted(true);
             setCurrentIndex(saved.current_index);
             setTimeRemaining(Math.max(0, paper.durationSeconds - saved.time_spent_seconds));
-            trackLearningEvent("practice_resume", { mode: "full_paper", position: saved.current_index }, `${saved.id}:${saved.updated_at}`);
-          } else trackLearningEvent("practice_start", { mode: "full_paper", origin }, session.id);
+            if (hasPracticeProgress(saved)) trackLearningEvent("practice_resumed", { ...practiceContext(saved), position: saved.current_index }, `${saved.id}:${entryRef.current.transitionId}`);
+          } else if (session.server_id) trackLearningEvent("practice_started", practiceContext(session), session.id);
           if (signal.aborted) return;
           setSessionId(session.id);
           setQuestions(fetchedQuestions);
@@ -254,7 +260,8 @@ export default function FullPaperClient({
         timeSpentSeconds: selectedPaper.durationSeconds - timeRemaining });
       setSubmissionPending(false);
       setIsSubmitted(true);
-      trackLearningEvent("practice_complete", { mode: "full_paper" }, sessionId);
+      const persisted = getLocalSession();
+      if (persisted) trackLearningEvent("practice_completed", practiceContext(persisted), persisted.id);
     } catch (error) {
       const message = error instanceof Error ? error.message : "";
       setSubmissionError(

@@ -11,6 +11,8 @@ import QuestionPlayer from "@/components/practice/player/QuestionPlayer";
 import FilteredAttemptDebrief from "@/components/practice/analysis/FilteredAttemptDebrief";
 import {
   initializeSession,
+  settledPracticeSession,
+  claimPracticeSession,
   completePracticeSession,
   updateSessionProgress,
   getLocalSession,
@@ -28,7 +30,8 @@ import {
   buildPracticeUrl,
 } from "@/lib/question-filters";
 import { safeLearningReturn } from "@/lib/learning-navigation";
-import { trackLearningEvent } from "@/lib/learning-events";
+import { practiceContext, hasPracticeProgress } from "@/lib/analytics/context";
+import { trackProductEvent } from "@/lib/analytics/track";
 
 // ─── Props ───────────────────────────────────────────────────────────────────
 
@@ -137,6 +140,7 @@ export default function SessionPageClient({
   const [error, setError] = useState<string | null>(null);
   const [savingCompletion, setSavingCompletion] = useState(false);
   const completionRef = useRef(false);
+  const entryRef = useRef<{ sessionId?: string; transitionId?: string }>({});
   const sessionMode: PlayerMode = restoredSession?.mode === "attempt" ? "attempt" : restoredSession ? "instant" : mode;
   const startTimeRef = useRef<number>(0);
   const elapsedBaseRef = useRef(0);
@@ -149,8 +153,9 @@ export default function SessionPageClient({
     const url = new URL(window.location.href);
     if (url.searchParams.get("session_id") === sessionId && url.searchParams.get("resume") === "true") return;
     url.searchParams.set("resume", "true"); url.searchParams.set("session_id", sessionId);
-    router.replace(`${url.pathname}${url.search}`, { scroll: false });
-  }, [sessionId, router]);
+    // Keep reload/resume addressable without re-entering this freshly created session.
+    window.history.replaceState(null, "", `${url.pathname}${url.search}`);
+  }, [sessionId]);
 
   useEffect(() => {
     const refreshGuestSaveHref = () => {
@@ -199,6 +204,8 @@ export default function SessionPageClient({
       try {
         const url = new URL(window.location.href);
         const requestedSessionId = resumeSessionId || url.searchParams.get("session_id") || undefined;
+        if (requestedSessionId && entryRef.current.sessionId === requestedSessionId) return;
+        entryRef.current.transitionId ||= crypto.randomUUID();
         const localCandidate = getLocalSession();
         const claimCompletedLocal =
           url.searchParams.get("claim") === "1" &&
@@ -242,14 +249,29 @@ export default function SessionPageClient({
           const fetchedQuestions = saved
             ? restoreQuestionOrder(saved.question_ids, data.questions || [])
             : data.questions || [];
-          if (saved) saved = latestSessionSnapshot(saved);
+          let claimed = false;
+          if (saved) {
+            saved = latestSessionSnapshot(saved);
+            if (origin) saved = { ...saved, filters: { ...saved.filters, origin: origin === "dashboard" ? "dashboard_resume" : origin } };
+            if (saved.cloud_status === "local") {
+              const { data: authData } = await createClient().auth.getUser();
+              if (cancelled) return;
+              if (authData.user) {
+                saved = await claimPracticeSession(saved, fetchedQuestions);
+                claimed = true;
+              }
+            }
+          }
+          if (cancelled) return;
           setQuestions(fetchedQuestions);
 
           if (fetchedQuestions.length > 0) {
             // Check if resuming active session
             if (saved) {
               saveLocalSession(saved);
+              updateSessionProgress(saved.id, {});
               setRestoredSession(saved);
+              entryRef.current.sessionId = saved.id;
               setSessionId(saved.id);
               setAnswers(saved.answers || {});
               setInitialIndex(Math.max(0, Math.min(saved.current_index || 0, fetchedQuestions.length - 1)));
@@ -259,37 +281,33 @@ export default function SessionPageClient({
               if (saved.is_completed) {
                 setCompleted(true);
                 window.scrollTo({ top: 0, left: 0 });
-                const { data: authData } = await createClient().auth.getUser();
-                if (authData.user && saved.cloud_status === "local") {
-                  saveLocalSession({ ...saved, cloud_status: "saving" });
-                  await completePracticeSession({
-                    sessionId: saved.id,
-                    questions: fetchedQuestions,
-                    answers: saved.answers || {},
-                    mode: saved.mode,
-                    timeSpentSeconds: saved.time_spent_seconds || 1,
-                  });
-                  const cleanUrl = new URL(window.location.href);
-                  cleanUrl.searchParams.delete("claim");
-                  router.replace(`${cleanUrl.pathname}${cleanUrl.search}`, { scroll: false });
+                if (saved.server_id) {
+                  await completePracticeSession({ sessionId: saved.id, questions: fetchedQuestions,
+                    answers: saved.answers || {}, mode: saved.mode, timeSpentSeconds: saved.time_spent_seconds || 1 });
                 }
-              } else {
-                trackLearningEvent("practice_resume", { mode: saved.mode, position: saved.current_index, origin }, `${saved.id}:${saved.updated_at}`);
+              } else if (claimed) {
+                trackProductEvent("practice_started", practiceContext(saved), saved.id);
+              } else if (saved.server_id || !saved.creation_id) {
+                const event = hasPracticeProgress(saved) ? "practice_resumed" : null;
+                if (event) trackProductEvent(event, {
+                  ...practiceContext(saved), position: saved.current_index,
+                }, `${saved.id}:${entryRef.current.transitionId}`);
               }
             } else {
               // Initialize a fresh session
-              const newSess = await initializeSession({
+              const newSess = await settledPracticeSession(await initializeSession({
                 title: [subject, topic, subtopic].filter(Boolean).join(" › ") || exam || "Practice Session",
                 mode,
                 filters: parsedFilters,
                 questions: fetchedQuestions,
-              });
+              }));
               if (!cancelled) {
-                setRestoredSession(null);
+                entryRef.current.sessionId = newSess.id;
+                setRestoredSession(newSess);
                 setAnswers({});
                 setInitialIndex(0);
                 setSessionId(newSess.id);
-                trackLearningEvent("practice_start", { mode, origin }, newSess.id);
+                if (newSess.server_id) trackProductEvent("practice_started", practiceContext(newSess), newSess.id);
               }
             }
           }
@@ -422,7 +440,8 @@ export default function SessionPageClient({
 
             setCompleted(true);
             window.scrollTo({ top: 0, left: 0 });
-            trackLearningEvent("practice_complete", { mode: sessionMode, duration }, sessionId);
+            const persisted = getLocalSession();
+            if (persisted?.server_id) trackProductEvent("practice_completed", { ...practiceContext(persisted), duration }, persisted.id);
             completionRef.current = false;
             setSavingCompletion(false);
           }}
@@ -477,9 +496,14 @@ export default function SessionPageClient({
             if (sessionId) {
               clearLocalSession();
             }
+            setLoading(true);
             void initializeSession({ title: filterLabel, mode: sessionMode,
-              filters: restoredSession?.filters || parsedFilters, questions }).then(next => {
+              filters: restoredSession?.filters || parsedFilters, questions }).then(settledPracticeSession).then(next => {
+                entryRef.current = { sessionId: next.id, transitionId: crypto.randomUUID() };
+                setRestoredSession(next);
                 setSessionId(next.id);
+                if (next.server_id) trackProductEvent("practice_started", practiceContext(next), next.id);
+                setLoading(false);
               });
             setError(null);
             setCompleted(false);
