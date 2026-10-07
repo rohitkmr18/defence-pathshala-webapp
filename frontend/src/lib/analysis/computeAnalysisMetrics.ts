@@ -131,7 +131,8 @@ export function computeAnalysisMetrics(
   let incorrect = 0;
   let skipped = 0;
 
-  // Resolve exam-aware scoring rules. Full papers retain the official paper denominator.
+  // Resolve exam-aware scoring rules. A complete full paper retains the official
+  // denominator; manifest-backed subsets use only the marks actually in play.
   const sampleExam = examIdentifier || questions[0]?.exam || "CAPF-AC";
   const scoringRule = getScoringRules(sampleExam);
   const marksPerCorrect = scoringRule.correctMarks;
@@ -236,7 +237,7 @@ export function computeAnalysisMetrics(
 
   // UPSC Standard Marking computed with exam-aware scoring rules
   const netScore = Math.max(0, Number((correct * marksPerCorrect - incorrect * penaltyPerWrong).toFixed(2)));
-  const maxMarks = isFullPaper
+  const maxMarks = isFullPaper && total === scoringRule.totalQuestions
     ? scoringRule.totalMarks
     : Number((total * marksPerCorrect).toFixed(2));
 
