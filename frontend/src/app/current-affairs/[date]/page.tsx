@@ -29,6 +29,18 @@ export default async function CurrentAffairsDayPage({ params }: { params: Promis
 
   const { prevDate, nextDate } = await getAdjacentDays(date);
   const questions = post.stories.flatMap((story) => story.mcqs).slice(0, 5);
+  const revisionTakeaways = post.stories.slice(0, 5).map((story) => {
+    const points = [
+      ...story.keyFacts.slice(0, 3),
+      story.examRelevance ? `Exam angle: ${story.examRelevance}` : null,
+    ].filter((item): item is string => Boolean(item));
+
+    return {
+      title: story.headline,
+      subject: story.subject,
+      points: points.length > 0 ? points : [story.summary || "Revise the key development and its static linkage."],
+    };
+  });
 
   return (
     <main className="min-h-screen bg-slate-50">
@@ -92,7 +104,11 @@ export default async function CurrentAffairsDayPage({ params }: { params: Promis
               <BookOpen className="h-5 w-5 text-blue-600" />
               <h2 className="text-2xl font-black text-slate-950">Test today’s Current Affairs</h2>
             </div>
-            <CurrentAffairsQuiz questions={questions} editionDate={post.date} />
+            <CurrentAffairsQuiz
+              questions={questions}
+              editionDate={post.date}
+              revisionTakeaways={revisionTakeaways}
+            />
           </section>
         )}
 
