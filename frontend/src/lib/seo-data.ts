@@ -77,6 +77,7 @@ interface QuestionMetaRow {
   exam: string;
   year: number;
   subject: string;
+  topic: string | null;
 }
 
 /**
@@ -99,7 +100,7 @@ export const getCachedQuestionsMeta = unstable_cache(
     while (true) {
       const { data, error } = await client
         .from("v_dp_question_intelligence_v2")
-        .select("exam,year,subject").eq("content_eligible", true)
+        .select("exam,year,subject,topic").eq("content_eligible", true)
         .range(start, start + pageSize - 1);
 
       if (error) {
@@ -114,6 +115,7 @@ export const getCachedQuestionsMeta = unstable_cache(
             exam: String(row.exam).trim(),
             year: Number(row.year),
             subject: String(row.subject).trim(),
+            topic: row.topic ? String(row.topic).trim() : null,
           });
         }
       }
@@ -614,19 +616,26 @@ export async function getAllEligibleSeoRoutes(): Promise<EligibleRoute[]> {
       }
     }
 
-    // Index topic pages only when the parent subject archive has enough real
-    // questions to make the page independently useful. Low-volume topics stay
-    // visible on the subject page but are deliberately kept out of the sitemap.
-    for (const subj of examSubjectMap.keys()) {
-      const archive = await getSubjectArchive(examDb, subj);
-      if (!archive) continue;
-      for (const topic of archive.topics) {
-        if (topic.count >= MIN_INDEXABLE_TOPIC_QUESTIONS) {
-          routes.push({
-            path: `/pyqs/${examSlug}/${subjectToSlug(subj)}/${topicToSlug(topic.topic)}`,
-            priority: 0.75,
-          });
-        }
+    // Index topic pages only when the exam+subject+topic combination has enough
+    // real questions to be independently useful. Compute this from the cached
+    // lightweight metadata scan rather than loading full question archives.
+    const topicCounts = new Map<string, { subject: string; topic: string; count: number }>();
+    for (const r of eRows) {
+      if (!r.topic) continue;
+      const key = `${r.subject}::${r.topic}`;
+      const current = topicCounts.get(key);
+      topicCounts.set(key, {
+        subject: r.subject,
+        topic: r.topic,
+        count: (current?.count || 0) + 1,
+      });
+    }
+    for (const { subject, topic, count } of topicCounts.values()) {
+      if (count >= MIN_INDEXABLE_TOPIC_QUESTIONS) {
+        routes.push({
+          path: `/pyqs/${examSlug}/${subjectToSlug(subject)}/${topicToSlug(topic)}`,
+          priority: 0.75,
+        });
       }
     }
 
