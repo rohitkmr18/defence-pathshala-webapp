@@ -14,7 +14,7 @@ type ParsedQuestion = {
 };
 
 function parseQuestion(text: string): ParsedQuestion {
-  const statementStart = text.match(/^(.*?):\s*1\.\s*/s);
+  const statementStart = text.match(/^([\\s\\S]*?):\\s*1\\.\\s*/);
   if (!statementStart) {
     return { intro: null, statements: [], prompt: text };
   }
