@@ -11,6 +11,8 @@ export interface FullPaperDefinition {
   cycle?: string;
   label: string;
   questions: number;
+  attemptableQuestions?: number;
+  availabilityNote?: string;
   duration: string;
   durationSeconds: number;
   marks: number;
@@ -24,6 +26,8 @@ export const AVAILABLE_FULL_PAPERS: FullPaperDefinition[] = [
     cycle: "II",
     label: "CDS II 2026",
     questions: 120,
+    attemptableQuestions: 119,
+    availabilityNote: "1 question is withheld pending source verification.",
     duration: "2 Hours",
     durationSeconds: 7200,
     marks: 100,
@@ -46,6 +50,8 @@ export const AVAILABLE_FULL_PAPERS: FullPaperDefinition[] = [
     cycle: "I",
     label: "CAPF 2026",
     questions: 125,
+    attemptableQuestions: 123,
+    availabilityNote: "2 questions are withheld pending source verification.",
     duration: "2 Hours",
     durationSeconds: 7200,
     marks: 250,
@@ -145,6 +151,8 @@ export const AVAILABLE_FULL_PAPERS: FullPaperDefinition[] = [
     cycle: "I",
     label: "CAPF 2025",
     questions: 125,
+    attemptableQuestions: 121,
+    availabilityNote: "4 questions are excluded while dropped/source-disputed items remain under review.",
     duration: "2 Hours",
     durationSeconds: 7200,
     marks: 250,
@@ -264,7 +272,9 @@ export default function FullPaperHero({
             </span>
           </div>
           <p className="mt-2 text-base sm:text-xl font-bold text-white">
-            {selectedPaper.questions}
+            {selectedPaper.attemptableQuestions
+              ? `${selectedPaper.attemptableQuestions} / ${selectedPaper.questions}`
+              : selectedPaper.questions}
           </p>
         </div>
 
@@ -281,6 +291,13 @@ export default function FullPaperHero({
           </p>
         </div>
       </div>
+
+      {selectedPaper.availabilityNote && (
+        <div className="mt-4 rounded-xl border border-amber-300/20 bg-amber-300/10 px-4 py-3 text-xs leading-5 text-amber-100">
+          <span className="font-bold">Verified mock subset:</span> {selectedPaper.availabilityNote}
+          {" "}Held items are not scored or shown.
+        </div>
+      )}
 
       {/* Primary CTA */}
       <button
