@@ -1,0 +1,20 @@
+{
+  "name": "dp-monsoon-reel-render",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "setup:map": "node scripts/fetch-map.mjs",
+    "render": "remotion render src/index.tsx MonsoonReel out/monsoon-reel-final.mp4 --codec=h264 --crf=18 --pixel-format=yuv420p --concurrency=2"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.533",
+    "remotion": "4.0.533",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.31",
+    "@types/react-dom": "18.3.1",
+    "typescript": "5.6.3"
+  }
+}
