@@ -7,6 +7,8 @@ import {
   getExamCoverage,
   getYearCoverage,
   getSubjectArchive,
+  MIN_INDEXABLE_TOPIC_QUESTIONS,
+  topicToSlug,
 } from "@/lib/seo-data";
 import Breadcrumbs from "@/components/public/Breadcrumbs";
 import {
@@ -482,19 +484,37 @@ async function SubjectPageView({
 
         {archive.topics.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {archive.topics.map((t) => (
-              <div
-                key={t.topic}
-                className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50/70 p-3"
-              >
-                <span className="text-xs font-medium text-slate-800 truncate mr-2">
-                  {t.topic}
-                </span>
-                <span className="shrink-0 rounded bg-blue-100 px-2 py-0.5 text-xs font-bold text-blue-800">
-                  {t.count} Qs
-                </span>
-              </div>
-            ))}
+            {archive.topics.map((t) => {
+              const eligible = t.count >= MIN_INDEXABLE_TOPIC_QUESTIONS;
+              const content = (
+                <>
+                  <span className="text-xs font-medium text-slate-800 truncate mr-2">
+                    {t.topic}
+                  </span>
+                  <span className="shrink-0 rounded bg-blue-100 px-2 py-0.5 text-xs font-bold text-blue-800">
+                    {t.count} Qs
+                  </span>
+                </>
+              );
+
+              return eligible ? (
+                <Link
+                  key={t.topic}
+                  href={`/pyqs/${archive.examSlug}/${archive.subjectSlug}/${topicToSlug(t.topic)}`}
+                  className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50/70 p-3 transition hover:border-blue-400 hover:bg-blue-50/50"
+                >
+                  {content}
+                </Link>
+              ) : (
+                <div
+                  key={t.topic}
+                  className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50/70 p-3"
+                  title="Included in the subject archive; not yet published as a standalone SEO page."
+                >
+                  {content}
+                </div>
+              );
+            })}
           </div>
         ) : (
           <p className="text-xs text-slate-500 italic">
