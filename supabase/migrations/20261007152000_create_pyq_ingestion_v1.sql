@@ -58,6 +58,11 @@ create table if not exists dp_ingest.rows (
   opt_d text,
   content_hash text,
 
+  source_key_opt text check (source_key_opt is null or source_key_opt in ('A','B','C','D','X')),
+  key_authority text check (
+    key_authority is null or key_authority in ('OFFICIAL','TRUSTED_SECONDARY','MODEL_ONLY')
+  ),
+  key_source_url text,
   official_opt text check (official_opt is null or official_opt in ('A','B','C','D','X')),
   llm_opt text check (llm_opt is null or llm_opt in ('A','B','C','D')),
   final_opt text check (final_opt is null or final_opt in ('A','B','C','D')),
@@ -144,8 +149,13 @@ with base as (
         select 1 from unnest(array[r.opt_a,r.opt_b,r.opt_c,r.opt_d]) x
         where coalesce(trim(x),'') = ''
       ) then 'MISSING_CANONICAL_OPTION' end,
+      case when r.source_key_opt is null then 'MISSING_SOURCE_KEY' end,
+      case when r.source_key_opt = 'X' then 'CANCELLED_QUESTION_REQUIRES_POLICY' end,
+      case when r.source_key_opt is not null and r.source_key_opt not in ('A','B','C','D','X') then 'INVALID_SOURCE_KEY' end,
+      case when r.key_authority not in ('OFFICIAL','TRUSTED_SECONDARY') then 'UNTRUSTED_KEY_AUTHORITY' end,
+      case when coalesce(trim(r.key_source_url),'') = '' then 'MISSING_KEY_SOURCE_URL' end,
       case when r.final_opt not in ('A','B','C','D') then 'INVALID_FINAL_ANSWER' end,
-      case when r.official_opt not in ('A','B','C','D') then 'OFFICIAL_KEY_NOT_RECONCILED' end,
+      case when r.key_authority = 'OFFICIAL' and r.official_opt not in ('A','B','C','D') then 'OFFICIAL_KEY_NOT_RECONCILED' end,
       case when r.key_discrepancy then 'ANSWER_KEY_DISCREPANCY' end,
       case when coalesce(trim(r.subject),'') = ''
              or coalesce(trim(r.topic),'') = ''
