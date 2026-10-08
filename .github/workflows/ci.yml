@@ -64,6 +64,9 @@ jobs:
       - name: Verify recorded migration ledger and fresh reconstruction
         run: node --test --experimental-test-isolation=none scripts/test-migration-ledger.cjs
 
+      - name: Verify Current Affairs atomic publisher safety contracts
+        run: node --test scripts/test-current-affairs-atomic-publisher.cjs
+
       - name: Verify question content integrity
         run: |
           node --test scripts/test-content-integrity.cjs
