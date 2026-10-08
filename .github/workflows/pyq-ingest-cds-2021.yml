@@ -1,4 +1,4 @@
-name: PYQ Ingestion — CDS 2021 UnlockIAS
+name: PYQ Ingestion — 2021 UnlockIAS
 
 on:
   push:
@@ -29,7 +29,7 @@ jobs:
           python -m pip install --disable-pip-version-check \
             requests==2.32.3 beautifulsoup4==4.12.3
 
-      - name: Scrape CDS 2021 I & II
+      - name: Scrape CAPF + CDS 2021
         run: python scripts/scrape-unlockias-cds-2021.py
 
       - name: Validate generated row counts
@@ -39,8 +39,9 @@ jobs:
           from pathlib import Path
           p=Path('data/ingestion/cds_2021_unlockias_manifest.json')
           rows=json.loads(p.read_text())
-          assert len(rows)==2, rows
-          assert all(x['rows']==120 for x in rows), rows
+          assert len(rows)==3, rows
+          expected={'CAPF_AC_2021_I_GAI':125,'CDS_2021_I_GK':120,'CDS_2021_II_GK':120}
+          assert {x['batch_code']:x['rows'] for x in rows}==expected, rows
           print(rows)
           PY
 
@@ -50,7 +51,7 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add data/ingestion
-            git commit -m "Generate CDS 2021 UnlockIAS ingestion artifacts"
+            git commit -m "Generate 2021 UnlockIAS ingestion artifacts"
             git fetch origin data/pyq-ingestion-v1-2021-pilot
             git rebase origin/data/pyq-ingestion-v1-2021-pilot
             git push origin HEAD:data/pyq-ingestion-v1-2021-pilot
