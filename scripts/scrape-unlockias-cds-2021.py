@@ -39,9 +39,10 @@ def clean_space(s):
 
 def option_label_and_text(text):
     text = clean_space(text)
-    m = re.match(r"^\(?([a-dA-D])\)?[\s.:-]*(.*)$", text)
+    m = re.match(r"^(?:\(\s*([a-dA-D])\s*\)|([a-dA-D]))[\s.:-]*(.*)$", text)
     if m:
-        return m.group(1).upper(), clean_space(m.group(2))
+        label = (m.group(1) or m.group(2)).upper()
+        return label, clean_space(m.group(3))
     return None, text
 
 def extract_question_links(summary_html, base_url):
@@ -153,7 +154,7 @@ def scrape(batch_code, base_url):
         row.update({
             "batch_code": batch_code,
             "q_num": qn,
-            "question_id": f"CDS_2021_{'I' if '_I_' in batch_code and '_II_' not in batch_code else 'II'}_GK_{qn:03d}",
+            "question_id": f"CDS_{'I' if batch_code == 'CDS_2021_I_GK' else 'II'}_2021_GK_{qn:03d}",
             "exam": "CDS",
             "year": 2021,
             "cycle": "I" if batch_code == "CDS_2021_I_GK" else "II",
