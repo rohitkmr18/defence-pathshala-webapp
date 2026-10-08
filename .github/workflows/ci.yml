@@ -65,7 +65,7 @@ jobs:
         run: node --test --experimental-test-isolation=none scripts/test-migration-ledger.cjs
 
       - name: Verify Current Affairs atomic publisher safety contracts
-        run: node --test scripts/test-current-affairs-atomic-publisher.cjs
+        run: node --test scripts/test-current-affairs-atomic-publisher.cjs scripts/test-current-affairs-db-rollback.cjs
 
       - name: Verify question content integrity
         run: |
