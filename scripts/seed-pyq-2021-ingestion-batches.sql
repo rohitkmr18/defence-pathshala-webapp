@@ -3,7 +3,8 @@
 
 insert into dp_ingest.batches (
   batch_code, exam, year, cycle, paper, expected_question_count,
-  source_question_url, source_answer_key_url, source_version, status
+  source_question_url, source_answer_key_url, source_question_sha256,
+  source_version, status
 )
 values
 (
@@ -15,6 +16,7 @@ values
   125,
   'https://www.upsc.gov.in/sites/default/files/GENERAL%20ABILITY%20AND%20INTELLIGENCE_0.pdf',
   null,
+  '3751053c5b4ef4473fa45533f7c9b0e6e99975c89fa4f8ac459c15b71cc7e9ab',
   'UPSC_OFFICIAL_QP_2021',
   'CREATED'
 ),
@@ -27,6 +29,7 @@ values
   120,
   'https://www.upsc.gov.in/sites/default/files/CDS-I-21-Gen_Knowledge.pdf',
   null,
+  null,
   'UPSC_OFFICIAL_QP_2021',
   'CREATED'
 ),
@@ -38,6 +41,7 @@ values
   'General Knowledge',
   120,
   'https://www.upsc.gov.in/sites/default/files/QP-GK-CDS-EXAM-II-2021-161121.pdf',
+  null,
   null,
   'UPSC_OFFICIAL_QP_2021',
   'CREATED'
