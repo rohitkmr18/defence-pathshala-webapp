@@ -14,10 +14,10 @@ values
   'I',
   'General Ability and Intelligence',
   125,
-  'https://www.upsc.gov.in/sites/default/files/GENERAL%20ABILITY%20AND%20INTELLIGENCE_0.pdf',
-  null,
+  'https://www.unlockias.in/capf-2021-general-ability',
+  'https://www.unlockias.in/capf-2021-general-ability',
   '3751053c5b4ef4473fa45533f7c9b0e6e99975c89fa4f8ac459c15b71cc7e9ab',
-  'UPSC_OFFICIAL_QP_2021',
+  'UNLOCKIAS_TRUSTED_SECONDARY_UPSC_PDF_CORROBORATED_2026-10-08',
   'CREATED'
 ),
 (
