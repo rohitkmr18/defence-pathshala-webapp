@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { learningContext } from "@/lib/analytics/context";
 import { isContentEligible, CONTENT_UNAVAILABLE_MESSAGE } from "@/lib/content-quality";
 import { createHash } from "node:crypto";
 
@@ -78,7 +79,7 @@ export async function POST(request: NextRequest) {
 
     const { data: question, error: questionError } = await supabase
       .from("v_dp_question_intelligence_v2")
-      .select("id, final_opt, official_opt, question, opt_a, opt_b, opt_c, opt_d, content_status, content_eligible, content_version")
+      .select("id, final_opt, official_opt, question, opt_a, opt_b, opt_c, opt_d, content_status, content_eligible, content_version, exam, year, cycle, subject, topic, concept, taxonomy_subject, taxonomy_topic, taxonomy_concept")
       .eq("id", question_id).maybeSingle();
     if (questionError || !question) {
       return NextResponse.json({ error: "Question is not in the canonical release" }, { status: 400 });
@@ -95,11 +96,16 @@ export async function POST(request: NextRequest) {
     if (!["A", "B", "C", "D"].includes(authoritativeAnswer)) {
       return NextResponse.json({ error: "Canonical answer unavailable" }, { status: 409 });
     }
+    let sessionFilters = {};
+    let sessionMode = mode;
     if (session_id) {
-      const { data: ownedSession } = await supabase.from("practice_sessions")
-        .select("id, question_ids").eq("id", session_id).eq("user_id", userId).maybeSingle();
+      const { data: ownedSession, error: sessionError } = await supabase.from("practice_sessions")
+        .select("id, question_ids, filters, mode").eq("id", session_id).eq("user_id", userId).maybeSingle();
+      if (sessionError) return NextResponse.json({ error: "Session lookup failed" }, { status: 503 });
       if (!ownedSession) return NextResponse.json({ error: "Session not found" }, { status: 404 });
       if (!ownedSession.question_ids.includes(question_id)) return NextResponse.json({ error: "Question is outside this session" }, { status: 400 });
+      sessionFilters = ownedSession.filters || {};
+      sessionMode = ownedSession.mode;
     }
     const scoredCorrect = selected === authoritativeAnswer;
     const attemptPayload: Record<string, unknown> = {
@@ -121,18 +127,37 @@ export async function POST(request: NextRequest) {
       attemptPayload.mode = mode;
     }
 
-    const { data, error } = await supabase
+    const { data: inserted, error } = await supabase
       .from("user_attempts")
-      .upsert(attemptPayload, { onConflict: "id" })
+      .upsert(attemptPayload, { onConflict: "id", ignoreDuplicates: true })
       .select()
-      .single();
+      .maybeSingle();
 
     if (error) {
       console.error("Failed to insert user attempt:", error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ success: true, attempt: data, persisted: true });
+    // A replay returns the original durable attempt instead of rewriting its timestamp/truth.
+    const existing = !inserted && attemptPayload.id
+      ? await supabase.from("user_attempts").select("*").eq("id", attemptPayload.id).eq("user_id", userId).single()
+      : null;
+    const data = inserted || existing?.data;
+    if (!data || existing?.error) return NextResponse.json({ error: "Attempt confirmation failed" }, { status: 503 });
+
+    // Post-write durable history defines resolution. Concurrent/later correct writes cannot
+    // both be the latest correct attempt immediately preceded by an incorrect attempt.
+    const { data: history, error: historyError } = await supabase.from("user_attempts")
+      .select("id, is_correct, attempted_at").eq("user_id", userId).eq("question_id", question_id)
+      .order("attempted_at", { ascending: false }).order("id", { ascending: false }).limit(2);
+    const resolved = !historyError && data.is_correct === true && history?.[0]?.id === data.id && history?.[1]?.is_correct === false;
+    const resolution = resolved ? {
+      ...learningContext({ ...sessionFilters, mode: sessionMode }, question),
+      attempt_id: data.id,
+      question_id,
+      practice_session_id: session_id,
+    } : undefined;
+    return NextResponse.json({ success: true, attempt: data, persisted: true, resolved: Boolean(resolved), resolution });
   } catch (err: unknown) {
     console.error("Attempt API error:", err);
     return NextResponse.json({ error: errorMessage(err, "Internal Server Error") }, { status: 500 });

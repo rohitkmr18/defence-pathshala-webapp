@@ -15,6 +15,8 @@ import {
 import type { LearnerIntelligence } from "@/lib/learner-intelligence";
 import MockPerformanceHub from "./MockPerformanceHub";
 import SectionHeader from "@/components/ui/SectionHeader";
+import { recommendationContext, recommendationDestination } from "@/lib/analytics/context";
+import { trackProductEvent } from "@/lib/analytics/track";
 
 interface Props {
   firstName: string;
@@ -65,6 +67,23 @@ export default function LearnerDashboardOverview({
       window.removeEventListener("dp_practice_session_updated", refresh);
     };
   }, []);
+
+  useEffect(() => {
+    if (!data) return;
+    trackProductEvent(
+      "dashboard_viewed",
+      { auth_state: "authenticated" },
+      "authenticated_dashboard"
+    );
+    trackProductEvent(
+      "next_best_action_viewed",
+      {
+        source_surface: "dashboard_next_best_move",
+        recommendation_type: data.nextBestMove.type,
+      },
+      `${data.nextBestMove.type}:${data.nextBestMove.href}`
+    );
+  }, [data]);
 
   if (!data && !error) {
     return (
@@ -141,7 +160,10 @@ export default function LearnerDashboardOverview({
 
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <Link
-              href={data.nextBestMove.href}
+              href={recommendationDestination(data.nextBestMove.href)}
+              onClick={() =>
+                trackProductEvent("next_best_action_clicked", recommendationContext(data.nextBestMove))
+              }
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-blue-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-blue-950/30 transition hover:bg-blue-400"
             >
               {data.nextBestMove.type === "resume_session"
@@ -256,6 +278,14 @@ export default function LearnerDashboardOverview({
                 </p>
                 <Link
                   href={area.href}
+                  onClick={() =>
+                    trackProductEvent("needs_attention_clicked", {
+                      source_surface: "dashboard_needs_attention",
+                      exam: area.exam,
+                      subject: area.subject,
+                      topic: area.topic,
+                    })
+                  }
                   className="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-blue-700 hover:underline"
                 >
                   Practice 10 PYQs
@@ -334,6 +364,12 @@ export default function LearnerDashboardOverview({
                     ) : (
                       <Link
                         href={`/dashboard/practice/session?resume=true&session_id=${encodeURIComponent(session.id)}&returnTo=%2Fdashboard&origin=dashboard`}
+                        onClick={() =>
+                          trackProductEvent("recent_activity_clicked", {
+                            source_surface: "dashboard_recent_activity",
+                            practice_session_id: session.id,
+                          })
+                        }
                         className="text-xs font-bold text-blue-700 hover:underline"
                       >
                         Resume

@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import { requestEmailCode, verifyEmailCode } from "@/lib/email-otp";
 
 import { authUrl } from "@/lib/auth-redirect";
+import { trackProductEvent } from "@/lib/analytics/track";
 
 export default function EmailOtpForm({ mode = "login" }: { mode?: "login" | "signup" }) {
   const searchParams = useSearchParams();
@@ -31,7 +32,15 @@ export default function EmailOtpForm({ mode = "login" }: { mode?: "login" | "sig
     setBusy(true);
     setError(null);
     try {
+      trackProductEvent("auth_started", {
+        source_surface: mode === "signup" ? "signup" : "login",
+        auth_method: "email_otp",
+      });
       const normalized = await requestEmailCode(createClient().auth, sentEmail || email);
+      trackProductEvent("otp_requested", {
+        source_surface: mode === "signup" ? "signup" : "login",
+        auth_method: "email_otp",
+      });
       setSentEmail(normalized);
       setCode("");
       setCooldown(60);
@@ -84,6 +93,15 @@ export default function EmailOtpForm({ mode = "login" }: { mode?: "login" | "sig
     setError(null);
     try {
       await verifyEmailCode(createClient().auth, sentEmail, code);
+      trackProductEvent("otp_verified", {
+        source_surface: mode === "signup" ? "signup" : "login",
+        auth_method: "email_otp",
+      });
+      try {
+        sessionStorage.setItem("dp_auth_return_pending", mode);
+      } catch {
+        // Auth still succeeds if storage is unavailable.
+      }
       // Authentication establishes the session; the canonical resolver owns routing.
       window.location.replace(authUrl("/auth/continue", searchParams.get("next")));
     } catch (failure) {

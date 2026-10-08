@@ -3,6 +3,7 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "katex/dist/katex.min.css";
+import AnalyticsIdentity from "@/components/analytics/AnalyticsIdentity";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -164,6 +165,7 @@ export default function RootLayout({
             }),
           }}
         />
+        <AnalyticsIdentity />
         {children}
         <GoogleAnalytics gaId="G-22KSG5GLDT" />
       </body>

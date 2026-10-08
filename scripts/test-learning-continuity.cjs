@@ -284,13 +284,13 @@ test('Dashboard resume restores checked separately from selected; Check and Next
   assert.equal(elements(tree, n => n.type === 'question')[0].props.revealed, false);
   const check = elements(tree, n => n.type === 'button' && elements(n, s => s.type === 'span' && s.props.children === 'Check Answer').length)[0];
   check.props.onClick(); check.props.onClick(); tree = render();
-  assert.equal(attempts.length, 1); assert.equal(events.filter(e => e[0] === 'practice_check').length, 1);
+  assert.equal(attempts.length, 1); assert.equal(events.filter(e => e[0] === 'answer_checked').length, 1);
   assert.deepEqual(Array.from(writes.at(-1).checked_ids), ['q2']);
   const next = elements(tree, n => n.type === 'button' && elements(n, s => s.type === 'span' && s.props.children === 'Next Question').length)[0];
   next.props.onClick(); next.props.onClick(); tree = render();
   assert.equal(elements(tree, n => n.type === 'question')[0].props.question.id, 'q1');
   assert.equal(writes.at(-1).current_index, 1);
-  assert.equal(events.filter(e => e[0] === 'practice_next').length, 1);
+  assert.equal(events.filter(e => e[0] === 'next_question_clicked').length, 1);
 });
 
 function apiFixture() {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -26,6 +26,7 @@ import TopicHeatmap from "@/components/charts/TopicHeatmap";
 import DifficultyVisualizer from "@/components/charts/DifficultyVisualizer";
 import QuestionPatternMatrix from "@/components/charts/QuestionPatternMatrix";
 import { buildExploreUrl, buildPracticeUrl, parseFiltersFromSearchParams, type QuestionSetFilters } from "@/lib/question-filters";
+import { learningContext } from "@/lib/analytics/context";
 import { trackLearningEvent } from "@/lib/learning-events";
 
 interface Props {
@@ -52,6 +53,10 @@ export default function QuestionBankExplorer({ meta }: Props) {
   function setSelectedExams(value: string[] | ((current: string[]) => string[])) {
     const nextExams = typeof value === "function" ? value(selectedExams) : value;
     const keepsCds = nextExams.some((exam) => exam.toUpperCase().includes("CDS"));
+    trackLearningEvent("exam_selected", {
+      ...learningContext({ ...context, exams: nextExams, origin: "explore" }),
+      selection_count: nextExams.length,
+    });
     changeContext({ exams: nextExams, ...(keepsCds ? {} : { cycles: [] }) });
   }
   function setSelectedYears(value: number[] | ((current: number[]) => number[])) {
@@ -61,6 +66,11 @@ export default function QuestionBankExplorer({ meta }: Props) {
     changeContext({ cycles: typeof value === "function" ? value(selectedCycles) : value });
   }
   function setSelectedSubject(value: string | null) {
+    if (value) {
+      trackLearningEvent("subject_selected", {
+        ...learningContext({ ...context, subjects: [value], topics: [], subtopics: [], origin: "explore" }),
+      });
+    }
     changeContext({ subjects: value ? [value] : [], topics: [], subtopics: [] });
   }
 
@@ -135,9 +145,11 @@ export default function QuestionBankExplorer({ meta }: Props) {
     return data?.summary.questions ?? 0;
   }, [activeSubjectData, data?.summary.questions]);
 
+  const exposureRef = useRef<string | undefined>(undefined);
   useEffect(() => {
-    trackLearningEvent("explore_view", { origin: "explore" }, `explore:${searchParams.toString()}`);
-  }, [searchParams]);
+    exposureRef.current ||= crypto.randomUUID();
+    trackLearningEvent("explore_viewed", { source_surface: "explore" }, `explore:${exposureRef.current}`);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -572,7 +584,9 @@ export default function QuestionBankExplorer({ meta }: Props) {
               </p>
             </div>
             <Link
-              onClick={() => trackLearningEvent("explore_practice", { origin: "explore" })}
+              onClick={() => trackLearningEvent("practice_cta_clicked", learningContext({
+                ...context, exams: selectedExams, years: activeYears, cycles: activeCycles, origin: "explore",
+              }))}
               href={buildPracticeUrl(
                 {
                   ...context,

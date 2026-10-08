@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 
 import { buildExploreUrl, buildPracticeUrl, parseFiltersFromSearchParams } from "@/lib/question-filters";
+import { learningContext } from "@/lib/analytics/context";
 import { trackLearningEvent } from "@/lib/learning-events";
 
 interface SubjectItem {
@@ -219,6 +220,12 @@ export default function TopicHeatmap({
   };
 
   const handleSelectSubject = (subjectName: string) => {
+    if (!onSelectSubject) {
+      trackLearningEvent("subject_selected", {
+        ...learningContext({ exams: selectedExams, years: selectedYears, cycles: selectedCycles,
+          subjects: [subjectName], origin: "explore" }),
+      });
+    }
     if (onSelectSubject) {
       onSelectSubject(subjectName);
     } else {
@@ -647,7 +654,12 @@ export default function TopicHeatmap({
                         </span>
 
                         <Link
-                          onClick={() => trackLearningEvent("explore_practice", { subject: selectedSubject || undefined, topic: topic.name, origin: "explore" })}
+                          onClick={() => {
+                            const filters = { exams: selectedExams, years: selectedYears, cycles: selectedCycles,
+                              subjects: selectedSubject ? [selectedSubject] : [], topics: [topic.name], origin: "explore" };
+                            trackLearningEvent("topic_selected", learningContext(filters));
+                            trackLearningEvent("practice_cta_clicked", learningContext(filters));
+                          }}
                           href={buildPracticeUrl(
                             {
                               ...parseFiltersFromSearchParams(new URLSearchParams(returnTo?.split("?")[1] || "")),
