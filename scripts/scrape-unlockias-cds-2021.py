@@ -120,6 +120,15 @@ def extract_page(html, page_url):
     else:
         key = None
 
+    topic_hints = []
+    for a in soup.find_all("a", href=True):
+        label = clean_space(a.get_text(" ", strip=True))
+        m = re.match(r"^More\s+(?:CDS|CAPF)\s+(.+?)\s+questions$", label, flags=re.I)
+        if m:
+            hint = clean_space(m.group(1))
+            if hint and hint not in topic_hints:
+                topic_hints.append(hint)
+
     return {
         "question": question,
         "opt_a": options.get("A"),
@@ -129,6 +138,7 @@ def extract_page(html, page_url):
         "source_key_opt": key,
         "source_answer_raw": answer_raw,
         "source_url": page_url,
+        "source_topic_hints": topic_hints,
     }
 
 def canonical_hash(row):
@@ -196,13 +206,15 @@ def write_outputs(batch_code, rows, anomalies):
         "batch_code","question_id","exam","year","cycle","paper","q_num",
         "question","opt_a","opt_b","opt_c","opt_d",
         "source_key_opt","key_authority","key_source_url",
-        "source_url","source_answer_raw","source_version","content_hash"
+        "source_url","source_answer_raw","source_version","source_topic_hints","content_hash"
     ]
     with cp.open("w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fields)
         w.writeheader()
         for row in rows:
-            w.writerow({k: row.get(k) for k in fields})
+            out = {k: row.get(k) for k in fields}
+            out["source_topic_hints"] = json.dumps(out.get("source_topic_hints") or [], ensure_ascii=False)
+            w.writerow(out)
 
 def main():
     manifest = []
