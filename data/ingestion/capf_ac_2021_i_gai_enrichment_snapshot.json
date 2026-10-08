@@ -1,8 +1,10 @@
 {
-  "schema_version": "DP_PYQ_2021_ENRICHMENT_SNAPSHOT_V2",
+  "schema_version": "DP_PYQ_2021_ENRICHMENT_SNAPSHOT_V3",
   "generated_from": "dp_ingest",
   "batch_code": "CAPF_AC_2021_I_GAI",
-  "row_count": 125,
+  "source_row_count": 125,
+  "included_count": 123,
+  "dropped_count": 2,
   "rows": [
     {
       "question_id": "CAPF_2021_P1_001",
@@ -37,8 +39,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_002",
@@ -73,8 +78,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_003",
@@ -109,8 +117,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_004",
@@ -145,8 +156,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_005",
@@ -181,8 +195,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_006",
@@ -217,8 +234,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_007",
@@ -253,8 +273,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_008",
@@ -289,8 +312,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_009",
@@ -325,8 +351,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_010",
@@ -361,8 +390,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_011",
@@ -397,8 +429,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_012",
@@ -433,8 +468,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_013",
@@ -469,8 +507,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_014",
@@ -505,8 +546,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_015",
@@ -541,8 +585,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_016",
@@ -577,8 +624,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_017",
@@ -613,8 +663,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_018",
@@ -649,8 +702,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_019",
@@ -685,8 +741,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_020",
@@ -721,8 +780,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_021",
@@ -757,8 +819,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_022",
@@ -793,8 +858,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_023",
@@ -829,8 +897,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_024",
@@ -865,8 +936,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_025",
@@ -901,8 +975,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_026",
@@ -937,8 +1014,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_027",
@@ -973,8 +1053,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_028",
@@ -1009,8 +1092,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_029",
@@ -1045,8 +1131,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_030",
@@ -1081,8 +1170,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_031",
@@ -1117,8 +1209,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_032",
@@ -1153,8 +1248,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_033",
@@ -1189,8 +1287,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_034",
@@ -1225,8 +1326,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_035",
@@ -1261,8 +1365,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_036",
@@ -1297,8 +1404,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_037",
@@ -1333,8 +1443,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_038",
@@ -1369,8 +1482,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_039",
@@ -1405,8 +1521,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_040",
@@ -1441,8 +1560,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_041",
@@ -1477,8 +1599,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_042",
@@ -1513,8 +1638,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_043",
@@ -1549,8 +1677,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_044",
@@ -1585,8 +1716,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_045",
@@ -1621,8 +1755,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_046",
@@ -1657,8 +1794,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_047",
@@ -1693,8 +1833,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_048",
@@ -1729,8 +1872,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_049",
@@ -1765,8 +1911,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_050",
@@ -1801,8 +1950,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_051",
@@ -1837,8 +1989,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_052",
@@ -1873,8 +2028,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_053",
@@ -1909,8 +2067,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_054",
@@ -1945,8 +2106,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_055",
@@ -1981,8 +2145,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_056",
@@ -2017,10 +2184,13 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "DROP",
+      "drop_reason": "Dropped by product decision: serious external answer-key conflict/ambiguity.",
       "validation_issues": [
         "EXTERNAL_KEY_CONFLICT_SERIOUS"
       ],
-      "review_required": true
+      "review_required": false,
+      "row_status": "BLOCKED"
     },
     {
       "question_id": "CAPF_2021_P1_057",
@@ -2055,8 +2225,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_058",
@@ -2091,8 +2264,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_059",
@@ -2127,8 +2303,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_060",
@@ -2163,8 +2342,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_061",
@@ -2199,8 +2381,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_062",
@@ -2235,8 +2420,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_063",
@@ -2271,8 +2459,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_064",
@@ -2307,8 +2498,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_065",
@@ -2343,8 +2537,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_066",
@@ -2379,8 +2576,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_067",
@@ -2415,8 +2615,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_068",
@@ -2451,8 +2654,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_069",
@@ -2487,8 +2693,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_070",
@@ -2523,8 +2732,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_071",
@@ -2559,8 +2771,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_072",
@@ -2595,8 +2810,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_073",
@@ -2631,8 +2849,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_074",
@@ -2667,8 +2888,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_075",
@@ -2703,8 +2927,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_076",
@@ -2739,8 +2966,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_077",
@@ -2775,8 +3005,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_078",
@@ -2811,8 +3044,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_079",
@@ -2847,8 +3083,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_080",
@@ -2883,8 +3122,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_081",
@@ -2919,8 +3161,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_082",
@@ -2955,8 +3200,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_083",
@@ -2991,8 +3239,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_084",
@@ -3027,8 +3278,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_085",
@@ -3063,8 +3317,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_086",
@@ -3099,8 +3356,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_087",
@@ -3135,8 +3395,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_088",
@@ -3171,8 +3434,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_089",
@@ -3207,8 +3473,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_090",
@@ -3243,8 +3512,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_091",
@@ -3279,8 +3551,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_092",
@@ -3315,8 +3590,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_093",
@@ -3351,8 +3629,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_094",
@@ -3387,10 +3668,13 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "DROP",
+      "drop_reason": "Dropped by product decision: serious external answer-key conflict/ambiguity.",
       "validation_issues": [
         "EXTERNAL_KEY_CONFLICT_SERIOUS"
       ],
-      "review_required": true
+      "review_required": false,
+      "row_status": "BLOCKED"
     },
     {
       "question_id": "CAPF_2021_P1_095",
@@ -3425,8 +3709,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_096",
@@ -3461,8 +3748,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_097",
@@ -3497,8 +3787,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_098",
@@ -3533,8 +3826,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_099",
@@ -3569,8 +3865,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_100",
@@ -3605,8 +3904,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_101",
@@ -3641,8 +3943,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_102",
@@ -3677,8 +3982,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_103",
@@ -3713,8 +4021,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_104",
@@ -3749,8 +4060,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_105",
@@ -3785,8 +4099,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_106",
@@ -3821,8 +4138,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_107",
@@ -3857,8 +4177,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_108",
@@ -3893,8 +4216,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_109",
@@ -3929,8 +4255,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_110",
@@ -3965,8 +4294,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_111",
@@ -4001,8 +4333,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_112",
@@ -4037,8 +4372,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_113",
@@ -4073,8 +4411,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_114",
@@ -4109,8 +4450,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_115",
@@ -4145,8 +4489,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_116",
@@ -4181,8 +4528,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_117",
@@ -4217,8 +4567,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_118",
@@ -4253,8 +4606,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_119",
@@ -4289,8 +4645,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_120",
@@ -4325,8 +4684,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_121",
@@ -4361,8 +4723,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_122",
@@ -4397,8 +4762,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_123",
@@ -4433,8 +4801,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_124",
@@ -4469,8 +4840,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CAPF_2021_P1_125",
@@ -4505,8 +4879,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     }
   ]
 }
