@@ -60,12 +60,24 @@ export function slugToSubject(slug: string, availableSubjects: string[]): string
   return availableSubjects.find((s) => subjectToSlug(s) === target) || null;
 }
 
+export const MIN_INDEXABLE_TOPIC_QUESTIONS = 10;
+
+export function topicToSlug(topic: string): string {
+  return subjectToSlug(topic);
+}
+
+export function slugToTopic(slug: string, availableTopics: string[]): string | null {
+  const target = slug.toLowerCase().trim();
+  return availableTopics.find((topic) => topicToSlug(topic) === target) || null;
+}
+
 // ─── Cached Raw Metadata Access ───────────────────────────────────────────────
 
 interface QuestionMetaRow {
   exam: string;
   year: number;
   subject: string;
+  topic: string | null;
 }
 
 /**
@@ -88,7 +100,7 @@ export const getCachedQuestionsMeta = unstable_cache(
     while (true) {
       const { data, error } = await client
         .from("v_dp_question_intelligence_v2")
-        .select("exam,year,subject").eq("content_eligible", true)
+        .select("exam,year,subject,topic").eq("content_eligible", true)
         .range(start, start + pageSize - 1);
 
       if (error) {
@@ -103,6 +115,7 @@ export const getCachedQuestionsMeta = unstable_cache(
             exam: String(row.exam).trim(),
             year: Number(row.year),
             subject: String(row.subject).trim(),
+            topic: row.topic ? String(row.topic).trim() : null,
           });
         }
       }
@@ -360,6 +373,18 @@ export interface TopicStat {
   count: number;
 }
 
+export interface TopicArchive {
+  exam: string;
+  examSlug: string;
+  subject: string;
+  subjectSlug: string;
+  topic: string;
+  topicSlug: string;
+  totalQuestions: number;
+  years: YearStat[];
+  questions: PublicQuestion[];
+}
+
 export interface SubjectArchive {
   exam: string;
   examSlug: string;
@@ -504,6 +529,39 @@ export async function getSubjectArchive(
   return fetchArchive(examDb, subjectName);
 }
 
+export async function getTopicArchive(
+  examDb: string,
+  subjectName: string,
+  topicName: string
+): Promise<TopicArchive | null> {
+  const subjectArchive = await getSubjectArchive(examDb, subjectName);
+  if (!subjectArchive) return null;
+
+  const questions = subjectArchive.questions.filter(
+    (q) => q.topic?.trim().toLowerCase() === topicName.trim().toLowerCase()
+  );
+  if (questions.length === 0) return null;
+
+  const yearMap = new Map<number, number>();
+  for (const q of questions) {
+    yearMap.set(q.year, (yearMap.get(q.year) || 0) + 1);
+  }
+
+  return {
+    exam: examDb,
+    examSlug: examToSlug(examDb),
+    subject: subjectArchive.subject,
+    subjectSlug: subjectArchive.subjectSlug,
+    topic: topicName,
+    topicSlug: topicToSlug(topicName),
+    totalQuestions: questions.length,
+    years: Array.from(yearMap.entries())
+      .map(([year, count]) => ({ year, count }))
+      .sort((a, b) => b.year - a.year),
+    questions,
+  };
+}
+
 // ─── Sitemap Generator Helper ─────────────────────────────────────────────────
 
 export interface EligibleRoute {
@@ -554,6 +612,29 @@ export async function getAllEligibleSeoRoutes(): Promise<EligibleRoute[]> {
         routes.push({
           path: `/pyqs/${examSlug}/${subSlug}`,
           priority: 0.85,
+        });
+      }
+    }
+
+    // Index topic pages only when the exam+subject+topic combination has enough
+    // real questions to be independently useful. Compute this from the cached
+    // lightweight metadata scan rather than loading full question archives.
+    const topicCounts = new Map<string, { subject: string; topic: string; count: number }>();
+    for (const r of eRows) {
+      if (!r.topic) continue;
+      const key = `${r.subject}::${r.topic}`;
+      const current = topicCounts.get(key);
+      topicCounts.set(key, {
+        subject: r.subject,
+        topic: r.topic,
+        count: (current?.count || 0) + 1,
+      });
+    }
+    for (const { subject, topic, count } of topicCounts.values()) {
+      if (count >= MIN_INDEXABLE_TOPIC_QUESTIONS) {
+        routes.push({
+          path: `/pyqs/${examSlug}/${subjectToSlug(subject)}/${topicToSlug(topic)}`,
+          priority: 0.75,
         });
       }
     }
