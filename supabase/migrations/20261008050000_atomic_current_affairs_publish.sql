@@ -73,12 +73,12 @@ begin
       total_mcqs := total_mcqs + 1;
       opts := q->'options';
       status := q->>'contentStatus';
-      if status <> 'VERIFIED' or nullif(btrim(q->>'sourceUrl'),'') is null
+      if status is distinct from 'VERIFIED' or nullif(btrim(q->>'sourceUrl'),'') is null
          or nullif(btrim(q->>'question'),'') is null
-         or (q->>'correctOption') not in ('A','B','C','D')
+         or (q->>'correctOption') is null or (q->>'correctOption') not in ('A','B','C','D')
          or nullif(btrim(q->>'explanation'),'') is null
          or nullif(btrim(q->>'examEdge'),'') is null
-         or jsonb_typeof(opts) <> 'object'
+         or jsonb_typeof(opts) is distinct from 'object'
          or exists (select 1 from (values ('A'),('B'),('C'),('D')) as letters(k)
                     where nullif(btrim(opts->>letters.k),'') is null)
          or (select count(distinct lower(btrim(value))) from jsonb_each_text(opts)
