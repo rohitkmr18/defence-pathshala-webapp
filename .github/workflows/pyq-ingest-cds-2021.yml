@@ -6,6 +6,7 @@ on:
       - data/pyq-ingestion-v1-2021-pilot
     paths:
       - 'scripts/scrape-unlockias-cds-2021.py'
+      - 'scripts/scrape-unlockias-taxonomy-hints.py'
       - '.github/workflows/pyq-ingest-cds-2021.yml'
   workflow_dispatch:
 
