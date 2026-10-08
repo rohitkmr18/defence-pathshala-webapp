@@ -112,6 +112,26 @@ def extract_page(html, page_url):
             break
         node = node.find_next()
 
+    explanation_raw = ""
+    explanation_heading = None
+    for h in soup.find_all(["h2","h3","h4"]):
+        label = clean_space(h.get_text(" ", strip=True)).lower()
+        if "explanation" in label or "solution" in label:
+            explanation_heading = h
+            break
+    if explanation_heading:
+        parts = []
+        for node in explanation_heading.find_all_next():
+            if node is explanation_heading:
+                continue
+            if getattr(node, "name", None) in {"h2","h3","h4"}:
+                break
+            if getattr(node, "name", None) in {"p","li"}:
+                txt = clean_space(node.get_text(" ", strip=True))
+                if txt and txt not in parts:
+                    parts.append(txt)
+        explanation_raw = clean_space(" ".join(parts))
+
     ans_match = re.search(r"\b([A-D])\b", answer_raw.upper())
     if "CANCEL" in answer_raw.upper():
         key = "X"
@@ -144,6 +164,7 @@ def extract_page(html, page_url):
         "opt_d": options.get("D"),
         "source_key_opt": key,
         "source_answer_raw": answer_raw,
+        "source_explanation_raw": explanation_raw,
         "source_url": page_url,
         "source_topic_hints": topic_hints,
         "source_difficulty": source_difficulty,
@@ -214,7 +235,7 @@ def write_outputs(batch_code, rows, anomalies):
         "batch_code","question_id","exam","year","cycle","paper","q_num",
         "question","opt_a","opt_b","opt_c","opt_d",
         "source_key_opt","key_authority","key_source_url",
-        "source_url","source_answer_raw","source_version","source_topic_hints","source_difficulty","content_hash"
+        "source_url","source_answer_raw","source_explanation_raw","source_version","source_topic_hints","source_difficulty","content_hash"
     ]
     with cp.open("w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fields)
@@ -236,6 +257,7 @@ def main():
             "rows": len(rows),
             "cancelled": sum(r["source_key_opt"] == "X" for r in rows),
             "anomalies": len(anomalies),
+            "explanations": sum(1 for r in rows if r.get("source_explanation_raw")),
             "difficulty_labels": sum(1 for r in rows if r.get("source_difficulty")),
             "difficulty_breakdown": {
                 k: sum(1 for r in rows if r.get("source_difficulty") == k)
