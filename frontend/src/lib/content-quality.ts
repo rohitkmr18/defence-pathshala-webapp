@@ -28,6 +28,33 @@ export interface PaperContentManifest {
 
 export const PAPER_CONTENT_MANIFESTS: PaperContentManifest[] = [
   {
+    exam: "CAPF-AC",
+    year: 2021,
+    cycle: "I",
+    paper: "Paper I",
+    expectedQuestions: 125,
+    excludedQuestionNumbers: [56, 94],
+    note: "2 source-disputed questions were dropped from the release corpus.",
+  },
+  {
+    exam: "CDS",
+    year: 2021,
+    cycle: "I",
+    paper: "General Knowledge",
+    expectedQuestions: 120,
+    excludedQuestionNumbers: [76],
+    note: "1 source-cancelled question was dropped from the release corpus.",
+  },
+  {
+    exam: "CDS",
+    year: 2021,
+    cycle: "II",
+    paper: "General Knowledge",
+    expectedQuestions: 120,
+    excludedQuestionNumbers: [74],
+    note: "1 source-cancelled question was dropped from the release corpus.",
+  },
+  {
     exam: "CDS",
     year: 2026,
     cycle: "II",
