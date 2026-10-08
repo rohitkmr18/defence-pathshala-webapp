@@ -19,8 +19,7 @@ declare
   hash_value text;
 begin
   if jsonb_typeof(payload) <> 'object'
-     or coalesce(payload->>'date','') !~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}
-     or jsonb_typeof(payload->'stories') <> 'array'
+     or coalesce(payload->>'date','') !~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}     or jsonb_typeof(payload->'stories') <> 'array'
      or jsonb_array_length(payload->'stories') < 1
      or jsonb_array_length(payload->'stories') > 8 then
     raise exception 'Invalid edition payload';
