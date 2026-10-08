@@ -116,7 +116,7 @@ def extract_page(html, page_url):
     explanation_heading = None
     for h in soup.find_all(["h2","h3","h4"]):
         label = clean_space(h.get_text(" ", strip=True)).lower()
-        if "explanation" in label or "solution" in label:
+        if label in {"why","explanation","solution"} or "explanation" in label or "solution" in label:
             explanation_heading = h
             break
     if explanation_heading:
