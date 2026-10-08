@@ -7,7 +7,7 @@
     "opt_d": "About 1000 m",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, About 3300 m. The gap between the flash and the bang is almost entirely the time sound needs to cover the distance. Light crosses a few kilometres in roughly a hundred-thousandth of a second, so the eye sees the flash effectively at the instant it happens. That leaves the whole 10 s to the sound wave: 330 m/s × 10 s = 3300 m. Put the light leg in and nothing changes: 3300 ÷ (3 × 10⁸) is about 1.1 × 10⁻⁵ s, which would shave a hundredth of a millimetre off the answer.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q1-time-elapsed-between-viewing-lightning-flash-hearing",
     "source_topic_hints": [
       "Science & Technology"
@@ -33,7 +33,7 @@
     "opt_d": "0·4 µm",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, 0·4 µm. Visible light runs from about 400 nm at the violet end to about 700 nm at the red end. One micrometre is 1000 nm, so 400 nm written in micrometres is 0·4 µm. Violet has the shortest wavelength of the seven colours, and 0·4 µm is the only option at that end of the band.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q2-approximate-wavelength-violet-light-air",
     "source_topic_hints": [
       "Science & Technology"
@@ -59,7 +59,7 @@
     "opt_d": "All electromagnetic radiations",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, Infrared and microwave radiations. A microwave oven runs at about 2·45 GHz and heats food by driving water molecules to rotate, which spreads as heat through the item: this is why a wet potato heats while a dry paper plate beside it stays cool. Infrared is the older route: a grill element, a toaster coil, a tandoor wall and an open fire all deliver their heat as infrared radiation. Both bands therefore cook, and neither alone covers ordinary kitchen practice.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q3-electromagnetic-radiation-cook-food",
     "source_topic_hints": [
       "Science & Technology"
@@ -85,7 +85,7 @@
     "opt_d": "20 cm, diverging",
     "source_key_opt": "A",
     "source_answer_raw": "A",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: A, 5 cm, converging. A real inverted image the same size as the object is the signature of an object sitting at twice the focal length. Its image then forms at 2f on the far side with magnification exactly −1. Since the object is at 10 cm, 2f = 10 cm and f = 5 cm. The lens formula agrees: with u = −10 cm and m = −1 the image distance is v = +10 cm, so 1/f = 1/v − 1/u = 1/10 + 1/10 = 1/5, giving f = 5 cm. Only a converging (convex) lens can produce a real image of a real object at all.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q4-object-placed-front-lens-image-formed-real",
     "source_topic_hints": [
       "Science & Technology"
@@ -111,7 +111,7 @@
     "opt_d": "A short-sighted person sees the near objects clearly but distant objects blurred and a convex lens is used to correct this defect.",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, A short-sighted person sees the near objects clearly but distant objects blurred and a concave lens is used to correct this defect. Short sight, or myopia, means the eye converges light too strongly (either the eyeball is too long or the lens too curved) so parallel rays from a distant object meet in front of the retina and the far image blurs. Near objects still focus correctly, which is why reading is comfortable while a road sign is not. A concave lens diverges the incoming rays slightly before they reach the eye, pushing the focus back onto the retina.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q5-one-statements-regard-short-sighted-person-correct",
     "source_topic_hints": [
       "Science & Technology"
@@ -137,7 +137,7 @@
     "opt_d": "Lysosome",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, Cell wall. Animal cells are bounded only by the plasma membrane, a flexible lipid bilayer, which is why animal tissue can take on so many shapes and why animals developed skeletons and muscles for support. A rigid cellulose wall outside the membrane is found in plants, and walls of other materials in fungi (chitin) and bacteria (peptidoglycan): never in an animal cell.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q6-one-organelles-found-animal-cells",
     "source_topic_hints": [
       "Science & Technology"
@@ -163,7 +163,7 @@
     "opt_d": "Aerenchyma",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, Aerenchyma. Aerenchyma is a form of parenchyma whose cells are separated by unusually large interconnected air spaces, and the name says so: 'aer' for air. Aquatic and marshy plants such as water hyacinth, lotus and rice depend on it twice over: the trapped air gives buoyancy so leaves float, and the continuous air channels carry oxygen down to roots sitting in waterlogged soil where diffusion through water would be far too slow.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q7-one-plant-tissues-large-air-spaces",
     "source_topic_hints": [
       "Science & Technology"
@@ -189,7 +189,7 @@
     "opt_d": "Cartilage",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, Smooth muscle. Animal tissue falls into four classes: epithelial, connective, muscular and nervous. Smooth muscle belongs to the third: it is made of spindle-shaped contractile fibres in the walls of the stomach, intestine, blood vessels and iris, and it works without conscious control. Connective tissue is defined by the opposite arrangement (few cells scattered in a large amount of matrix) and ligament, tendon and cartilage are each built that way.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q8-one-connective-tissue",
     "source_topic_hints": [
       "Science & Technology"
@@ -215,7 +215,7 @@
     "opt_d": "Ulothrix",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, Anabaena. Anabaena is a filamentous cyanobacterium, and cyanobacteria are prokaryotes: no nucleus bounded by a membrane, no mitochondria, no plastids. Whittaker's five-kingdom scheme places every prokaryote in Monera, so Anabaena belongs there. It is also the nitrogen-fixing partner inside the leaf cavities of the water fern Azolla, which is why it turns up in paddy fields as a biofertiliser.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q9-one-organisms-belongs-kingdom-monera",
     "source_topic_hints": [
       "Science & Technology"
@@ -241,7 +241,7 @@
     "opt_d": "Tuberculosis",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, HIV-AIDS. HIV is a blood-borne and sexually transmitted virus. It moves through unprotected sexual contact, transfusion of infected blood or shared needles, and from an infected mother to her child during pregnancy, delivery or breastfeeding. It is not carried in the fine droplets expelled by coughing, sneezing or talking, and it does not survive outside the body long enough for that route to work. The other three diseases are all classic droplet infections.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q10-one-diseases-transmit-through-fine-droplets-coming",
     "source_topic_hints": [
       "Science & Technology"
@@ -267,7 +267,7 @@
     "opt_d": "Methanol",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, Methanol. Respiration begins with glycolysis in the cytoplasm, which splits the six-carbon glucose into two three-carbon pyruvate molecules. Pyruvate then takes one of three routes. Without oxygen in yeast it becomes ethanol and carbon dioxide, which is fermentation. Without enough oxygen in our muscle it becomes lactic acid, which is what cramps a sprinter. With oxygen it enters the mitochondrion and is oxidised completely to carbon dioxide and water. Methanol appears on none of these paths; it is an industrial alcohol, and in the body it is a poison rather than a product.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q11-one-breakdown-product-glucose-during-respiration",
     "source_topic_hints": [
       "Science & Technology"
@@ -293,7 +293,7 @@
     "opt_d": "CH4(g) + 2O2(g) → CO2(g) + 2H2O(l)",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, CaCO3(s) → CaO(s) + CO2(g). This is the calcination of limestone, and it happens only because heat is being supplied: a lime kiln has to be held above about 900 °C for the carbonate to break apart into quicklime and carbon dioxide. Energy is absorbed to break the bonds, so the reaction is endothermic. The giveaway in the equation itself is that a single reactant becomes two products, which is a decomposition, and thermal decompositions absorb heat almost by definition.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q12-one-example-endothermic-reaction",
     "source_topic_hints": [
       "Environment & Ecology"
@@ -319,7 +319,7 @@
     "opt_d": "Oxygen",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, Nitrogen. Rancidity is the oxidation of the fats and oils in a food, and it is oxygen from the air that starts it. Flushing a packet with nitrogen sweeps the oxygen out and replaces it with a gas that will not react with the food at ordinary temperatures. Nitrogen makes up 78 per cent of the atmosphere, so it is cheap to obtain, and it doubles as a cushion: the puffed-up packet is what keeps brittle crisps from being crushed in transport.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q13-packets-potato-chips-usually-flushed-one-gases",
     "source_topic_hints": [
       "Environment & Ecology"
@@ -345,7 +345,7 @@
     "opt_d": "Air, Earth, Fire, Land and Water",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, Air, Earth, Fire, Sky and Water. Early Indian thought describes matter as built from five gross elements, the pancha mahabhuta: prithvi (earth), ap or jal (water), tejas or agni (fire), vayu (air) and akasha (sky, space or ether). The set appears across the Upanishads, the Samkhya and Vaisheshika systems, Buddhist and Jain thought and Ayurveda. Option (b) is the only one that carries all five names and nothing else.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q14-according-early-indian-philosophers-basic-elements-described",
     "source_topic_hints": [
       "Art & Culture"
@@ -371,7 +371,7 @@
     "opt_d": "weakly acidic",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, weakly alkaline. Fresh milk is slightly acidic, at about pH 6. Baking soda, sodium hydrogencarbonate, is a weak base, and the milkman adds only a small amount of it. Two mild quantities cannot produce an extreme result: the pH is nudged from just below 7 to just above it, so the milk becomes weakly alkaline. He does it because milk that is slightly alkaline resists souring, since the lactic acid the bacteria produce has to neutralise the added base before it can start curdling the milk.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q15-milkman-adds-small-amount-baking-soda-milk",
     "source_topic_hints": [
       "Science & Technology"
@@ -397,7 +397,7 @@
     "opt_d": "Calcium oxide",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, Calcium oxide. Sodium hydroxide attacks amphoteric oxides, the ones that behave as an acid towards a base and as a base towards an acid. Aluminium oxide is the standard example: Al2O3 + 2NaOH → 2NaAlO2 + H2O, giving soluble sodium aluminate. Calcium oxide has no such character. It is the oxide of an alkaline-earth metal and is purely basic, so it has nothing to offer a base: indeed lime is used in industry to make caustic soda from soda ash, not to consume it.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q16-one-metal-oxides-usually-react-sodium-hydroxide",
     "source_topic_hints": [
       "Science & Technology"
@@ -423,7 +423,7 @@
     "opt_d": "Formed calcium sulphate is unstable",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, Formed calcium sulphate is insoluble in water and covers the calcium metal, preventing it from reacting any further. Calcium is high in the reactivity series, so it attacks dilute sulphuric acid at once and hydrogen bubbles off. The salt produced, calcium sulphate, is only sparingly soluble (around two grams in a litre of water) so instead of dissolving away it deposits as a crust on the metal surface. That crust is a physical barrier between the acid and the calcium underneath, and once it is continuous the reaction stops even though plenty of acid and plenty of calcium remain.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q17-calcium-metal-reacts-sulphuric-acid-reaction-stops",
     "source_topic_hints": [
       "Science & Technology"
@@ -449,7 +449,7 @@
     "opt_d": "All suffer by equal amount of deviation",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, Violet. A prism separates white light because the refractive index of the medium is not the same for every colour: it is largest for the shortest wavelength. Violet has the shortest wavelength of the seven, so it travels slowest inside the water, is refracted most strongly at both faces, and emerges with the largest angle of deviation. Red is deviated least. That is why the spectrum from a prism always runs red at the top and violet at the bottom. A hollow prism filled with water behaves as a water prism and disperses for exactly the same reason, though less strongly than glass.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q18-white-light-beam-made-fall-hollow-prism",
     "source_topic_hints": [
       "Science & Technology"
@@ -475,7 +475,7 @@
     "opt_d": "9:25",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, 9:25. A plane mirror reverses left and right, so a clock and its reflection are related by subtracting the shown time from 11:60, that is, from 12 o'clock. The reflection printed here reads 2:35: its short hand sits between the two and the three, and its long hand points at the seven. Subtracting gives 11:60 − 2:35 = 9:25, which is the real time on the clock. You can check it the other way round: at 9:25 the hour hand lies between nine and ten on the left of the dial and the minute hand points at the five on the lower right, and reflecting that left-to-right puts the hour hand between two and three and the minute hand at the seven: exactly the figure printed.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q19-figure-shows-image-clock-plane-mirror-one",
     "source_topic_hints": [
       "Logical Reasoning & Mental Ability"
@@ -501,7 +501,7 @@
     "opt_d": "Alpha Centauri",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, Jupiter. A luminous object emits light of its own. Stars do, because thermonuclear fusion in their cores releases energy that eventually leaves the surface as radiation. Jupiter is a planet (the largest in the solar system, but far too small for fusion to ignite) and the light by which we see it in the night sky is sunlight reflected from its cloud tops. It is therefore an illuminated, non-luminous body.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q20-one-among-luminous-object",
     "source_topic_hints": [
       "Science & Technology"
@@ -527,7 +527,7 @@
     "opt_d": "15 C",
     "source_key_opt": "A",
     "source_answer_raw": "A",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: A, 0.015 C. Current is charge per unit time, so the charge that passes in a given interval is Q = I × t. The only care needed is with the unit of time: 10 milliseconds is 10 × 10⁻³ s, that is 0.010 s. Then Q = 1.5 × 0.010 = 0.015 C. Reading the four options shows they are the same digits shifted by powers of ten, which is the examiner announcing that the whole item is about the millisecond.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q21-let-electric-current-flow-through-incandescent-lamp",
     "source_topic_hints": [
       "Science & Technology"
@@ -553,7 +553,7 @@
     "opt_d": "Hydroelectric",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, Nuclear. A renewable source is one that is replenished on a human timescale and is not used up by being used. Nuclear power fails that test: it runs on uranium, an ore that has to be mined from a finite crustal stock, and every kilogram fissioned is gone. That is why India keeps nuclear power under the Department of Atomic Energy while solar, wind, biomass and small hydro sit with the Ministry of New and Renewable Energy. Nuclear power is low-carbon, which is a separate virtue, and confusing low-carbon with renewable is the mistake this question is built around.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q22-one-among-renewable-energy-source",
     "source_topic_hints": [
       "Science & Technology"
@@ -579,7 +579,7 @@
     "opt_d": "Conversion of light energy into chemical energy",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, Oxidation of carbohydrate. Chlorophyll is the pigment of photosynthesis, and photosynthesis builds carbohydrate rather than breaking it down. Oxidising carbohydrate to release energy is respiration, which runs in the mitochondria of every living cell, plants included, and needs no pigment at all. The two processes are opposites: one stores energy in a sugar, the other spends it.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q23-one-function-chlorophyll",
     "source_topic_hints": [
       "Science & Technology"
@@ -605,7 +605,7 @@
     "opt_d": "They remain in contact with external environment.",
     "source_key_opt": "A",
     "source_answer_raw": "A",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: A, They require separate organ for food uptake. In a single-celled organism the whole body is one cell in contact with the surrounding water, so food, gases and wastes cross the cell surface directly. Amoeba engulfs a food particle by extending pseudopodia around it; Paramecium sweeps particles into an oral groove lined with cilia. Neither uses an organ in the sense a multicellular animal does, and the ratio of surface to volume is large enough that simple diffusion is enough. Multicellular bodies developed digestive, respiratory and excretory organs precisely because their inner cells are no longer at the surface.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q24-one-statements-about-life-processes-single-celled",
     "source_topic_hints": [
       "Science & Technology"
@@ -631,7 +631,7 @@
     "opt_d": "Salamander",
     "source_key_opt": "A",
     "source_answer_raw": "A",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: A, Holothuria. Holothuria is the sea cucumber, a member of phylum Echinodermata: spiny-skinned marine animals with radial symmetry as adults, a calcareous endoskeleton and a water vascular system with tube feet. Echinoderms are not chordates and no stage of their life cycle carries a notochord. The other three all do, though one of them only briefly.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q25-one-organisms-possess-notochord-any-stage-life",
     "source_topic_hints": [
       "Science & Technology"
@@ -657,7 +657,7 @@
     "opt_d": "Hydrotropic : Flower",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, Hydrotropic : Flower. Hydrotropism is growth towards water, and it is a root response: a root growing in soil turns towards the moister side, which is why roots find their way to a leaking pipe. Flowers show nothing of the kind. What flowers do show is photoperiodism in their timing and, in some species, movements that follow the sun, but neither of those is hydrotropism. Every other pair in the list is a textbook match.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q26-one-pairs-correctly-matched",
     "source_topic_hints": [
       "General Science"
@@ -683,7 +683,7 @@
     "opt_d": "Au",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, Au. Gold is at the very bottom of the reactivity series, and it shows. It does not tarnish in air even on heating, it is unaffected by water at any temperature, and single mineral acids leave it alone: only aqua regia, the three-to-one mixture of concentrated hydrochloric and nitric acids, will dissolve it. That inertness is why gold is found in nature as the free metal, why ancient gold ornaments come out of the ground bright, and why it has served as a store of value for millennia.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q27-one-metals-react-oxygen-water-acids",
     "source_topic_hints": [
       "General Science"
@@ -709,7 +709,7 @@
     "opt_d": "Iron",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, Sodium. Sodium is high in the reactivity series and reacts with cold water at once: 2Na + 2H2O → 2NaOH + H2. The reaction is vigorous and exothermic, the metal melts into a ball from its own heat and skates across the surface, and the hydrogen released often ignites. Because it also reacts with the oxygen and moisture of the air, sodium is kept under kerosene or oil in the laboratory. Potassium and calcium behave the same way with cold water; magnesium needs hot water, and iron needs steam.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q28-one-metals-produces-hydrogen-cold-water",
     "source_topic_hints": [
       "Geography"
@@ -735,7 +735,7 @@
     "opt_d": "Manganese is more reactive than aluminium.",
     "source_key_opt": "A",
     "source_answer_raw": "A",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: A, The reaction is exothermic. Heating manganese dioxide with aluminium powder is an aluminothermic reduction: 3MnO2 + 4Al → 3Mn + 2Al2O3 + heat. Aluminium sits above manganese in the reactivity series, so it strips the oxygen away, and the aluminium-oxygen bond is so much stronger than the manganese-oxygen bond that a large surplus of energy is released. The same chemistry with iron oxide is the thermite reaction used to weld railway tracks, and the heat given out there is enough to melt iron on the spot.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q29-manganese-extracted-heating-manganese-dioxide-aluminium-powder",
     "source_topic_hints": [
       "Geography"
@@ -761,7 +761,7 @@
     "opt_d": "Atomic radius",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, Atomic radius. Move left to right along a period and electrons enter the same shell while protons keep being added, so the growing nuclear charge pulls the whole electron cloud inward and the atoms get smaller. Move down a group and each element has one more occupied shell than the one above, and the inner shells screen the outer electrons from the nucleus, so the atoms get larger. Atomic radius is therefore the property that decreases across and increases down. The other three all run the opposite way.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q30-one-properties-decreases-across-periodic-table-left",
     "source_topic_hints": [
       "Science & Technology"
@@ -787,7 +787,7 @@
     "opt_d": "On the production possibility frontier, the output of one commodity can be increased without changing the output of another commodity.",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, On the production possibility frontier, the output of one commodity can be increased without changing the output of another commodity. This is the one statement that contradicts the whole idea. A point on the frontier is a point where every available resource is already employed with the best technology to hand, so there is nothing spare to draw on. Producing another unit of one good means pulling labour and capital away from the other, and its output must fall. The free lunch this statement describes is available only when the economy is at a point inside the frontier, with resources lying idle.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q31-one-statements-about-production-possibility-frontier-correct",
     "source_topic_hints": [
       "Indian Economy"
@@ -813,7 +813,7 @@
     "opt_d": "3 and 4",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, 1, 2 and 4. Price elasticity measures how strongly the quantity demanded of a good responds to a change in its own price, and three of the four listed factors bear on that directly. Whether a good is a necessity or a luxury matters, because a household cuts back on luxuries first and keeps buying salt whatever it costs. The availability of substitutes matters most of all, because a buyer who can switch will switch. And the share of the household budget the good takes up matters, since a price rise in a large item is felt and one in a trivial item is not. Statement 3 is about the growth of income in the economy, which shifts the demand curve and belongs to income elasticity, not to the responsiveness of demand to the good's own price.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q32-magnitude-price-elasticity-individual-good-determined-degree",
     "source_topic_hints": [
       "Indian Economy"
@@ -839,7 +839,7 @@
     "opt_d": "Bond price",
     "source_key_opt": "A",
     "source_answer_raw": "A",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: A, Personal income tax. An automatic stabiliser is a feature of the budget that damps the business cycle by itself, with no fresh decision by government or central bank. A progressive personal income tax does this in both directions. When incomes rise in a boom, tax collections rise more than proportionately and take spending power out of the economy; when incomes fall in a downturn, liabilities drop and households retain more of what they earn. Unemployment benefits and other transfers work the same way, rising automatically when the economy weakens. Nothing has to be announced for either to operate.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q33-one-functions-automatic-stabilizer-context-fiscal-monetary",
     "source_topic_hints": [
       "Indian Economy"
@@ -865,7 +865,7 @@
     "opt_d": "Low stationary stage",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, Low stationary stage. The demographic transition model traces a population through four stages as an economy develops. The last of them, the low stationary stage, has a low birth rate and a low death rate together, so natural increase is small and the population size is roughly steady, which is what 'stationary' records and 'low' qualifies. Contraception, late marriage, urban living, education and the cost of raising children have by then pulled fertility down to meet the low mortality that better food, water and medicine achieved a stage or two earlier.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q34-broadly-both-birth-death-rates-low-one",
     "source_topic_hints": [
       "Geography"
@@ -891,7 +891,7 @@
     "opt_d": "Low income",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, High wage. Migration is analysed through two sets of forces. Push factors operate at the place of origin and make staying unattractive: drought, flood, unemployment, poor pay, insecurity, lack of land. Pull factors operate at the destination and make going attractive: better paid work, education, healthcare, security, urban amenities. The prospect of a higher wage is the textbook pull factor and the largest single driver of rural-to-urban movement in India, and it is the only option here that describes something the migrant is moving towards.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q35-one-pull-factor-migration",
     "source_topic_hints": [
       "Geography"
@@ -917,7 +917,7 @@
     "opt_d": "Crater",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, Crater. A crater is the funnel-shaped depression at the top of a volcanic cone, surrounding the opening through which lava, ash and gas were expelled. It forms because material is blown out from the summit and because the top of the cone subsides once the eruption ends and the pressure beneath drops. Where the collapse is on a much larger scale, after a very violent eruption empties the magma chamber, the resulting depression is called a caldera, which is the same idea at a size of a kilometre or more across.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q36-depression-top-volcano-volcanic-eruption-called",
     "source_topic_hints": [
       "Geography"
@@ -943,7 +943,7 @@
     "opt_d": "Neither latitude nor longitude of the place",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, Both latitude and longitude of the place. Absolute location means the one position on the globe a place occupies, stated without reference to anything else. Latitude on its own places a point somewhere on a parallel (a complete circle running right round the Earth) and longitude on its own places it somewhere on a meridian, a half-circle from pole to pole. Each line is an infinite set of points. It is only where a particular parallel crosses a particular meridian that a single position is fixed, which is why every coordinate on a map is quoted as a pair.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q37-order-find-out-absolute-location-place-map",
     "source_topic_hints": [
       "Geography"
@@ -969,7 +969,7 @@
     "opt_d": "anemometer",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, anemometer. An anemometer measures the speed of the wind. The common design is the cup anemometer, three or four hemispherical cups on horizontal arms that spin about a vertical shaft; the rate of rotation is proportional to the wind speed and is read off electrically. Every weather station carries one, usually mounted with a wind vane on the same mast, since speed and direction are recorded together.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q38-speed-wind-measured",
     "source_topic_hints": [
       "General Science"
@@ -995,7 +995,7 @@
     "opt_d": "Flood plain",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, Oxbow lake. In its middle and lower course a river swings in loops called meanders, eroding the outer bank of each bend and depositing on the inner one. Over time the loop grows until the neck between the two ends of the bend is very narrow, and in a flood the river cuts straight across it. The abandoned loop is then sealed off at both ends by deposition, and the crescent of still water left behind is an oxbow lake: called a mortlake or cut-off lake in some texts, and a bayou along the lower Mississippi.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q39-course-river-time-one-features-formed-old",
     "source_topic_hints": [
       "Geography"
@@ -1021,7 +1021,7 @@
     "opt_d": "C. 1700 BCE",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, C. 1800 BCE. Cholistan is the desert tract along the dried bed of the Ghaggar-Hakra in present-day Pakistani Punjab, and it held one of the densest concentrations of Mature Harappan settlement anywhere. The standard textbook account is explicit about the date: by about 1800 BCE most of the Mature Harappan sites in regions such as Cholistan had been abandoned. The same period saw population expand instead into Gujarat, Haryana and western Uttar Pradesh, where the Late Harappan cultures develop.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q40-most-mature-harappan-sites-region-cholistan-abandoned",
     "source_topic_hints": [
       "Ancient History"
@@ -1047,7 +1047,7 @@
     "opt_d": "Dharmakirti",
     "source_key_opt": "A",
     "source_answer_raw": "A",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: A, Nagarjuna. Nagarjuna, who worked in the second century CE, is the founder of the Madhyamika or Middle Way school of Mahayana Buddhism, and the Madhyamika Karika is its foundational text. Its argument is the doctrine of shunyata, that all phenomena are empty of independent self-existence because everything arises in dependence on something else. He is associated with the Satavahana country in the Deccan, and Nagarjunakonda in Andhra Pradesh, a major Buddhist centre excavated in the twentieth century, carries his name.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q41-madhyamika-karika-basic-text-madhyamika-school-composed",
     "source_topic_hints": [
       "Ancient History"
@@ -1073,7 +1073,7 @@
     "opt_d": "Kalidasa : Vasavadatta",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, Kalidasa : Vasavadatta. Vasavadatta is a Sanskrit prose romance written by Subandhu, a writer of about the sixth or seventh century CE known for elaborate wordplay. Kalidasa did not write it. His works are the plays Abhijnanashakuntalam, Malavikagnimitram and Vikramorvashiyam, the epic poems Raghuvamsha and Kumarasambhava, and the lyrics Meghaduta and Ritusamhara. The name causes trouble because a princess called Vasavadatta is also the heroine of Bhasa's play Svapnavasavadattam, so three different associations attach to one name and none of them is Kalidasa.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q42-one-pairs-authors-sanskrit-literary-works-correctly",
     "source_topic_hints": [
       "Art & Culture"
@@ -1099,7 +1099,7 @@
     "opt_d": "Varada Mudra",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, Abhaya Mudra. The Mathura workshops of the Kushana period carved the Buddha as a broad-shouldered, energetic figure seated in padmasana on a lion throne, with the right hand raised to shoulder height, palm outward and fingers up. That gesture is abhaya mudra, the sign of protection and freedom from fear, and it is repeated on Mathura image after Mathura image: the Katra mound Buddha, the Bodhisattva that Friar Bala dedicated at Sarnath, the standing Bodhisattvas of Ahichchhatra. The left hand rests on the thigh or grips the hem of the robe. Everything else about the type is equally standardised: mottled red sandstone from the Sikri quarries, a shaven head with a coiled ushnisha, a thin robe drawn over the left shoulder leaving the right bare, and a large plain halo with a scalloped rim.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q43-mathura-school-art-buddha-images-largely-carved",
     "source_topic_hints": [
       "Ancient History"
@@ -1125,7 +1125,7 @@
     "opt_d": "Kumrahar and Jalalgarh",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, Kumrahar and Bulandibagh. Both are localities in modern Patna, and both were dug in the excavations D. B. Spooner ran for the Archaeological Survey between 1912 and 1915 on money given by Ratan Tata. Kumrahar produced the famous pillared hall: the stumps and sockets of eighty polished sandstone columns set in rows on a wooden platform, the Mauryan assembly hall or palace that Ashoka's court would have used. Bulandibagh produced the other half of the picture: a double row of massive sal-wood uprights with cross-beams, the timber city wall, along with a wooden drain and terracotta figurines. That timber palisade is the find that matches Megasthenes, who described Palibothra as girdled by a wooden wall with sixty-four gates and five hundred and seventy towers.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q44-mauryan-capital-pataliputra-associated-archaeological-remains",
     "source_topic_hints": [
       "History"
@@ -1151,7 +1151,7 @@
     "opt_d": "Sungas",
     "source_key_opt": "A",
     "source_answer_raw": "A",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: A, Andhras. The Puranas do not use the dynastic name Satavahana at all. Their king-lists, which run the Magadhan succession from the Sisunagas through the Nandas and Mauryas to the Sungas and Kanvas, call the next power the Andhras or the Andhra-bhrityas, literally the Andhra servants: a memory of the family having once served the Mauryas. The Satavahanas' own inscriptions and coin legends, by contrast, always give the family name Satavahana, from Simuka the founder down to Gautamiputra Satakarni and Vasishthiputra Pulumavi. Puranic Andhras and epigraphic Satavahanas are therefore the same house under two naming systems, and matching them is the whole point of the question.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q45-satavahanas-identified-puranas-one-epithets",
     "source_topic_hints": [
       "Ancient History"
@@ -1177,7 +1177,7 @@
     "opt_d": "Power to allow/refuse Special Leave Petitions",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, Power of court of record. Article 129 makes the Supreme Court a court of record with all the powers of such a court, including the power to punish for its contempt; Article 215 says the same thing for every High Court in almost identical words. Being a court of record has two limbs: the court's proceedings are recorded for perpetual memory and are admitted as evidence without further proof, and the court can commit for contempt of itself. That second limb is why the two Articles are drafted as a pair, and it is the only one of the four powers listed here that the Constitution gives to both levels.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q46-one-powers-supreme-court-also-conferred-high",
     "source_topic_hints": [
       "Indian Polity"
@@ -1203,7 +1203,7 @@
     "opt_d": "Right to carry on trade and business",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, Right to property. Property was a fundamental right when the Constitution came into force, sitting in Part III as Article 19(1)(f), the freedom to acquire, hold and dispose of property, and Article 31, the guarantee against deprivation without authority of law. Three decades of litigation over land reform and bank nationalisation followed, and the Forty-fourth Amendment of 1978 closed it by repealing both provisions and inserting Article 300A in a new Part XII chapter: no person shall be deprived of his property save by authority of law. That leaves property a constitutional legal right, enforceable in a High Court under Article 226 but not through Article 32, and no longer part of the fundamental-rights guarantee.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q47-constitution-india-guarantee-one-fundamental-right",
     "source_topic_hints": [
       "Indian Polity"
@@ -1229,7 +1229,7 @@
     "opt_d": "Law declared by the Supreme Court is binding on all courts within the territory of India.",
     "source_key_opt": "A",
     "source_answer_raw": "A",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: A, the statement pairing Articles 129 and 144 as the source of the contempt power. Article 129 is right: it makes the Supreme Court a court of record with power to punish for contempt of itself. Article 144 says something else entirely: all authorities, civil and judicial, in the territory of India shall act in aid of the Supreme Court. The contempt power's second constitutional home is Article 142(2), which lets the Court investigate and punish contempt of itself subject to any law made by Parliament. So the statement is not correct as printed, and the other three are accurate.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q48-one-statements-about-supreme-court-correct",
     "source_topic_hints": [
       "Indian Polity"
@@ -1255,7 +1255,7 @@
     "opt_d": "The term of the office of the members of the Committee from the Rajya Sabha is extended even when they retire from the Rajya Sabha.",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, a member of the Committee is given a term for one year. Every member of the Public Accounts Committee holds office for one year and is then re-elected or replaced, which is why the Committee is reconstituted annually. The other three statements each break on a checkable number or rule. The Committee has twenty-two members: fifteen elected by the Lok Sabha and seven by the Rajya Sabha, all by proportional representation through the single transferable vote. A minister is barred from being elected to it, so the Finance Minister cannot sit on it in any capacity. And a Rajya Sabha member who retires from the House ceases to be a member of the Committee; nothing extends the term past that.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q49-one-statements-about-public-accounts-committee-correct",
     "source_topic_hints": [
       "Indian Polity"
@@ -1281,7 +1281,7 @@
     "opt_d": "A person who has held a judicial office for at least fifteen years",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, a distinguished jurist in the opinion of the President of India. Article 124(3) lays down three alternative routes to the Supreme Court Bench, and a candidate must be a citizen of India and satisfy at least one of them: five years as a judge of a High Court or of two or more such courts in succession; ten years as an advocate of a High Court or of two or more such courts in succession; or, in the President's opinion, a distinguished jurist. The third route is the one reproduced accurately here. It has never been used (every judge appointed so far has come through the judge or advocate route) but it remains on the books, and the question is testing the text rather than the practice.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q50-appointed-judge-supreme-court",
     "source_topic_hints": [
       "Indian Polity"
@@ -1307,7 +1307,7 @@
     "opt_d": "1 cm",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, 4 cm. Melting conserves volume, so the volume of the new ball equals the volume of the eight old ones added together. Each small ball has volume (4/3)π(1)³, so the eight together give 8 × (4/3)π = (32/3)π. Setting that equal to (4/3)πR³ leaves R³ = 8 and R = 2 cm. The question asks for the diameter, which is twice the radius, so the answer is 4 cm. The shortcut worth carrying is that volume scales as the cube of a length: eight times the volume is exactly two times every linear dimension, so both the radius and the diameter simply double.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q51-eight-metallic-balls-one-centimetre-radius-each",
     "source_topic_hints": [
       "General Science"
@@ -1333,7 +1333,7 @@
     "opt_d": "₹12,000",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, ₹10,000. Write the incomes as 7x and 10x and the expenditures as 2y and 3y, since a ratio fixes only the proportion and not the amount. Savings are income minus expenditure, so 7x − 2y = 1000 and 10x − 3y = 1000. Multiply the first by 3 and the second by 2 to match the y terms: 21x − 6y = 3000 and 20x − 6y = 2000. Subtracting gives x = 1000, and substituting back gives 2y = 7000 − 1000 = 6000, so y = 3000. B's monthly income is 10x = ₹10,000. The figures check out: A earns 7,000 and spends 6,000, B earns 10,000 and spends 9,000, and each is left with 1,000.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q52-ratio-monthly-incomes-ratio-expenditures-each-saves",
     "source_topic_hints": [
       "Quantitative Aptitude & Data Interpretation"
@@ -1359,7 +1359,7 @@
     "opt_d": "33 2/7 days",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, 34 2/7 days. Work with rates rather than days. If A, B and C do 1/A, 1/B and 1/C of the job per day, the three statements read 1/A + 1/B = 1/20, 1/B + 1/C = 1/30 and 1/A + 1/C = 1/24. Add all three: the left side becomes twice the combined rate, and the right side is 6/120 + 4/120 + 5/120 = 15/120 = 1/8. So 1/A + 1/B + 1/C = 1/16: all three together would finish in 16 days. A's own rate is the combined rate minus the pair that excludes him, that is 1/16 − 1/30 = (15 − 8)/240 = 7/240. Inverting, A alone needs 240/7 days, which is 34 and 2/7 days.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q53-together-finish-job-days-together-finish-same",
     "source_topic_hints": [
       "Quantitative Aptitude & Data Interpretation"
@@ -1385,7 +1385,7 @@
     "opt_d": "13·10 feet",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, 12·34 feet. Growing by one-ninth of its own height each year means the height is multiplied by 1 + 1/9 = 10/9 every year, exactly as compound interest multiplies a principal by 1 + r. After three years the height is 9 × (10/9)³. The 9 in front cancels one factor of 9 in the denominator, leaving 1000/81. Dividing, 81 × 12 = 972, so 1000/81 = 12·345…, which the paper prints as 12·34 feet. The trap is to compute one year's growth, 9 × 1/9 = 1 foot, and then add a foot three times to reach 12, that treats the growth as a fixed quantity when the stem ties it to the current height, which rises each year.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q54-tree-present-feet-tall-every-year-grows",
     "source_topic_hints": [
       "Quantitative Aptitude & Data Interpretation"
@@ -1411,7 +1411,7 @@
     "opt_d": "Monday",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, Monday. Count the days from 1 March of the given year to 1 February of the next: March 31, April 30, May 31, June 30, July 31, August 31, September 30, October 31, November 30, December 31 and January 31, which total 337. Divide by seven (7 × 48 = 336) and one day is left over. One odd day past Sunday is Monday. The leap-year question never arises: February of the starting year is already behind us, and the 29th of the following February would fall after the date asked about, so neither can add a day to the count.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q55-first-march-year-sunday-day-first-february",
     "source_topic_hints": [
       "Logical Reasoning & Mental Ability"
@@ -1437,7 +1437,7 @@
     "opt_d": "At full employment, the measured unemployment rate is negative.",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, the claim that at full employment the measured unemployment rate is negative. An unemployment rate is the number of unemployed divided by the labour force, so it cannot fall below zero under any conditions. Full employment does not even mean a rate of zero: it is the level of activity at which the only unemployment left is frictional, people between jobs, plus structural, people whose skills or location do not match the vacancies on offer. Economists call that residue the natural rate of unemployment, and it is a positive number: the sense in which an economy is 'fully employed' is that cyclical unemployment has gone, not that everybody is working. The other three statements are all sound descriptions of standard macroeconomics.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q56-one-among-statements-correct",
     "source_topic_hints": [
       "Indian Economy"
@@ -1463,7 +1463,7 @@
     "opt_d": "automatic stabilizer",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, inflationary gap. Full employment sets a ceiling on what an economy can produce with the labour and capital it has. When aggregate demand pushes the equilibrium level of real output above that full-employment level, the extra demand cannot be met with extra goods, so it spends itself on prices instead: hence the name. The measure of the excess is the inflationary gap. Keynes introduced the term in How to Pay for the War in 1940 to describe wartime demand outrunning capacity, and the policy response is contractionary: raise taxes, cut public spending, tighten money.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q57-amount-equilibrium-level-real-gdp-exceeds-full",
     "source_topic_hints": [
       "Indian Economy"
@@ -1489,7 +1489,7 @@
     "opt_d": "1, 3 and 4",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, 1, 2 and 3. Acting as an intermediate in exchange is the medium-of-exchange function, the one that frees trade from the double coincidence of wants. Serving as a standard unit for quoting prices is the unit-of-account function, which lets every good be priced against one yardstick. Easy divisibility is one of the physical properties good money must have, so that a note or coin can settle a small transaction as readily as a large one. Statement 4 inverts a real requirement: money should have little or no value in alternative uses, because if the material were worth more melted down or consumed it would leave circulation, exactly as silver coins vanished from circulation when the metal price rose above the face value.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q58-anything-recognized-money-needs-characteristics-act-intermediate",
     "source_topic_hints": [
       "Indian Economy"
@@ -1515,7 +1515,7 @@
     "opt_d": "Financial, real estate and professional services",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, Financial, real estate and professional services. The Economic Survey 2019-20 sets out the sectoral shares of gross value added for precisely the span the question names, and this sub-sector is the one that moves furthest: from 19.2 per cent of GVA averaged over 2009-10 to 2013-14, to 20.9 per cent averaged over 2014-15 to 2018-19, and to 21.3 per cent in 2018-19 itself. Public administration, defence and other services is the runner-up, rising from 12.7 to 14.7 per cent. Trade, hotel, transport, communication and broadcasting barely moves, from 17.5 to 18.3 per cent and then flat. Services as a whole climb from 49.4 to 54.3 per cent of GVA over the same span, and the financial and professional block accounts for the largest single slice of that climb.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q59-sectoral-shares-gross-value-added-gva-year",
     "source_topic_hints": [
       "Indian Economy"
@@ -1541,7 +1541,7 @@
     "opt_d": "primary, secondary and tertiary sectors",
     "source_key_opt": "A",
     "source_answer_raw": "A",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: A, organized and unorganized sectors. Economists slice the same economy three different ways depending on the question being asked. By the nature of the activity it splits into primary, secondary and tertiary. By who owns the enterprise it splits into private and public. By the conditions of employment (whether the job is registered, whether terms are regular, whether the worker gets paid leave, provident fund, gratuity and a written contract) it splits into organized and unorganized. The stem names employment conditions, so the third classification is the one being asked for. The organized sector is where enterprises are registered and the terms of work are governed by statute; the unorganized sector is small, scattered and largely outside that reach, and it employs the great majority of Indian workers.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q60-basis-employment-conditions-economy-divided",
     "source_topic_hints": [
       "Indian Economy"
@@ -1567,7 +1567,7 @@
     "opt_d": "Oxidation",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, Salt crystal growth. Chemical weathering changes the mineral itself, leaving a substance different from the one the rock started with. Salt crystallisation does nothing of the kind: salty water seeps into pores and joints, evaporates, and the growing crystals push outward with enough force to prise grains apart. The rock is broken but not altered, so this belongs with frost shattering, exfoliation and thermal expansion under physical weathering: haloclasty is the technical name. The other three change chemistry. Carbonation dissolves limestone as rainwater charged with carbon dioxide turns calcium carbonate into soluble calcium bicarbonate. Hydrolysis breaks feldspar down into clay minerals. Oxidation attacks iron-bearing minerals and leaves the reddish-brown stain of iron oxide.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q61-one-type-chemical-weathering",
     "source_topic_hints": [
       "Geography"
@@ -1593,7 +1593,7 @@
     "opt_d": "A-1 B-2 C-4 D-3",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, A-3 B-4 C-2 D-1. The Urals run north to south across Russia and form the conventional boundary between Europe and Asia, so A goes to 3. The Appalachians run down the eastern side of the United States and Canada, giving B to 4, North America. The Drakensberg is the great escarpment along the eastern rim of southern Africa, rising highest in Lesotho and KwaZulu-Natal, so C goes to 2, South Africa. The Andes run the length of the western edge of the continent from Venezuela to Tierra del Fuego, so D goes to 1, South America. Only one option assigns Russia to the Urals and North America to the Appalachians together, and once those two are fixed the rest follows.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q62-match-list-list-select-correct-answer-using",
     "source_topic_hints": [
       "Geography"
@@ -1619,7 +1619,7 @@
     "opt_d": "1 and 3",
     "source_key_opt": "A",
     "source_answer_raw": "A",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: A, 1 and 2 only. Four iron ores are named in mineralogy (haematite, magnetite, limonite and siderite) but India's reserves and its entire iron and steel industry rest on the first two. Haematite, the red ore, is the workhorse: it carries roughly 60 to 70 per cent iron and supplies the bulk of production from the Odisha-Jharkhand belt, Chhattisgarh, Karnataka and Goa. Magnetite, the black ore, is richer still at up to about 70 per cent iron and is magnetic, and its main Indian occurrences are in Karnataka, Andhra Pradesh, Tamil Nadu and the Kudremukh field. Limonite and siderite are low-grade ores, carrying much less iron, and although traces occur in India they are neither reserves of consequence nor sources the industry works, so they are not counted among the main types.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q63-main-types-iron-ores-found-india-haematite",
     "source_topic_hints": [
       "Geography"
@@ -1645,7 +1645,7 @@
     "opt_d": "Arunachal Pradesh",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, Uttarakhand. The Asan Conservation Reserve lies in Dehradun district of Uttarakhand, along the last stretch of the Asan river where it meets the Yamuna, and the wetland itself was created when the Asan barrage was built in the 1960s to feed a hydel channel. Uttarakhand notified it as a conservation reserve in 2005, the first area in the State to be given that category, and in July 2020 it was designated a Ramsar site of international importance: again the first in Uttarakhand. Its value is as a stopover: the reservoir sits on the migratory route into the Doon valley and draws large numbers of wintering waterbirds, including the ruddy shelduck and the red-crested pochard.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q64-asan-conservation-reserve-located",
     "source_topic_hints": [
       "Environment & Ecology"
@@ -1671,7 +1671,7 @@
     "opt_d": "Neither 1 nor 2",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, Both 1 and 2. The first statement matches the standard account of how the Sikh community's relations with the Mughal state changed. Nanak and his four successors preached and organised without entering politics, but Guru Arjan, the fifth Guru, blessed Khusrau when the prince rebelled against his father Jahangir in 1606: a gesture Jahangir treated as treason, and for which the Guru was fined, refused to pay, and died in Mughal custody at Lahore. The second statement describes the other half of Arjan's work. He put the community's finances on a regular footing by turning voluntary offerings into a more or less compulsory spiritual tribute, gathered by agents called masands who were appointed for each district and remitted what they collected to the Guru. Both propositions stand, so the code is 'Both 1 and 2'.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q65-consider-statements-early-sikh-gurus-religious-preachers",
     "source_topic_hints": [
       "Medieval History"
@@ -1697,7 +1697,7 @@
     "opt_d": "Firoz Shah Tughlaq",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, Firoz Shah Tughlaq. Qutbuddin Aibak began the minar in about 1199 and Iltutmish carried it up to four storeys. In 1369 lightning struck the top and damaged the uppermost storey, and Firoz Shah Tughlaq rebuilt it: replacing the damaged fourth storey and adding a fifth above it in white marble and red sandstone, which is why the two upper storeys look different from the three fluted red-sandstone ones below. His own inscription on the tower records the repair. The result is the 72.5-metre, five-storey minaret standing today, and Firoz Shah's habit of restoring older monuments, recorded in his Futuhat-i-Firoz Shahi, makes the attribution consistent with everything else known about him.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q66-qutb-minar-originally-four-storied-among-delhi",
     "source_topic_hints": [
       "Medieval History"
@@ -1723,7 +1723,7 @@
     "opt_d": "Imad Shahis : Berar",
     "source_key_opt": "A",
     "source_answer_raw": "A",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: A, the pairing of the Nizam Shahis with Bijapur. The Nizam Shahis ruled from Ahmadnagar, not Bijapur; Bijapur belonged to the Adil Shahis, founded by Yusuf Adil Khan. Five sultanates emerged as the Bahmani kingdom broke up between 1490 and 1518, and each has its own seat: Adil Shahi at Bijapur, Nizam Shahi at Ahmadnagar, Qutb Shahi at Golconda, Imad Shahi at Berar and Barid Shahi at Bidar. The other three pairings in the question reproduce that list correctly, which leaves the first as the mismatch the stem asks for.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q67-one-pairs-deccan-sultanates-respective-regions-correctly",
     "source_topic_hints": [
       "History"
@@ -1749,7 +1749,7 @@
     "opt_d": "Neither 1 nor 2",
     "source_key_opt": "A",
     "source_answer_raw": "A",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: A, 1 only. The first statement is sound: zabt, the measurement-based assessment worked out under Akbar with Todar Mal, was applied across the northern provinces from Lahore through Delhi and Agra to Allahabad, taking in Punjab and Awadh, and was extended to Malwa and Gujarat. Land was measured, a ten-year average of yields and prices produced a cash demand for each crop in each locality, and the schedule was fixed in advance. The second statement fails on its named system. Kankut is an older estimating method (kan for grain and kut for estimate, a rough eye assessment of the standing crop) and it belongs to the repertoire that zabt improved upon, not to anything that displaced it. The method that spread across seventeenth-century north India was nasaq, an assessment made from past revenue records without fresh measurement.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q68-consider-statements-under-akbar-system-zabt-established",
     "source_topic_hints": [
       "Science & Technology"
@@ -1775,7 +1775,7 @@
     "opt_d": "B. N. Rau",
     "source_key_opt": "A",
     "source_answer_raw": "A",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: A, Somnath Lahiri. Lahiri was the sole Communist Party member in the Constituent Assembly, elected from Bengal, and he made the remark in the debates of December 1946 while the Assembly was still working under the Cabinet Mission scheme with the British still in power. His charge was that the Assembly was operating within limits the British had set (that it was a British creation working the British plan as the British would like it worked) and he told members they would do well to remember that they sat, as he put it, under the shadow of British guns. He wanted the Assembly to break out of that frame; the objection lost, and independence in August 1947 removed the ground for it.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q69-among-warned-colleagues-constituent-assembly-british-made",
     "source_topic_hints": [
       "Indian Polity"
@@ -1801,7 +1801,7 @@
     "opt_d": "The Deputy Speaker of the Lok Sabha",
     "source_key_opt": "A",
     "source_answer_raw": "A",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: A, the President of India. The Lok Sabha elects its own Speaker from among its members, but the date on which that election is held is fixed by the President. Rule 7 of the Rules of Procedure and Conduct of Business in Lok Sabha says the election of the Speaker shall be held on such date as the President may appoint, and the Secretary-General then notifies members. The arrangement exists because at the start of a new House there is nobody in the chair to fix anything: the Speaker's office is vacant and members have only just been sworn in by a pro tem Speaker whom the President appoints for that purpose. Once a Speaker is in place the pattern changes: the date for electing the Deputy Speaker is fixed by the Speaker, under Rule 8.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q70-among-fixes-date-election-speaker-lok-sabha",
     "source_topic_hints": [
       "Indian Polity"
@@ -1827,7 +1827,7 @@
     "opt_d": "The majority view of the Supreme Court in A. K. Gopalan vs. State of Madras case invented 'due process of law'.",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, the claim that the majority in A. K. Gopalan invented due process of law. The Supreme Court did the opposite in that 1950 case. Gopalan, held under a preventive detention law, argued that Article 21 required a fair procedure; the majority rejected the argument, held that 'procedure established by law' means only a procedure laid down by a validly enacted statute, and treated Articles 19, 21 and 22 as separate compartments that need not be read together. The Constituent Assembly had deliberately chosen that phrase over the American 'due process' on B. N. Rau's advice, and the majority gave effect to that choice. Due process entered Indian law only in 1978, when Maneka Gandhi overruled Gopalan on this point and held that a procedure under Article 21 must be right, just and fair, and not arbitrary or oppressive.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q71-one-statements-about-personal-liberty-correct",
     "source_topic_hints": [
       "Indian Polity"
@@ -1853,7 +1853,7 @@
     "opt_d": "They can be related to giving free legal aid.",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, the claim that the Directive Principles can override all the fundamental rights. They cannot. Article 37 makes the Directive Principles fundamental in the governance of the country and a duty on the State to apply in making laws, while expressly providing that they shall not be enforceable by any court. Where a Directive Principle collides with a fundamental right, the right prevails: the position taken in Champakam Dorairajan in 1951 and never reversed as a general rule. The one carve-out is Article 31C, which protects a law giving effect to the policies in Article 39(b) and (c) from challenge under Articles 14 and 19; the Forty-second Amendment tried to widen that shelter to all the Directive Principles, and the Supreme Court struck the extension down in Minerva Mills in 1980. A limited and contested exception is a long way from overriding all the fundamental rights.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q72-one-statements-regard-directive-principles-state-policy",
     "source_topic_hints": [
       "Indian Polity"
@@ -1879,7 +1879,7 @@
     "opt_d": "The Supreme Court has held that the Preamble cannot be considered as an aid to the legal interpretation of the Constitution, where the language is ambiguous.",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, the claim that the Preamble cannot be used to interpret an ambiguous provision. Courts have consistently held the opposite. In Berubari Union, 1960, the Supreme Court called the Preamble a key to open the minds of the makers and said it may be resorted to where the language of an Article is ambiguous, even while holding that the Preamble is not itself a source of power. Kesavananda Bharati, 1973, went further, treated the Preamble as part of the Constitution, and drew on its objectives in shaping the basic structure doctrine. LIC of India, 1995, restated that the Preamble is an integral part of the Constitution. What is true is the narrower proposition in option (c): the Preamble is not enforceable on its own, and the statement in option (d) confuses that limit with a bar on using it as an interpretive aid.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q73-one-statements-regard-preamble-constitution-india-correct",
     "source_topic_hints": [
       "Indian Polity"
@@ -1905,7 +1905,7 @@
     "opt_d": "2 only",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, 3 only. Article 54 builds the electoral college for the President from the elected members of both Houses of Parliament and the elected members of the Legislative Assemblies of the States, with the elected members of the Assemblies of Delhi and Puducherry added by the Seventieth Amendment in 1992. Statement 1 is therefore inside the college: elected members of the Rajya Sabha vote, though its twelve nominated members do not. Statement 2 is inside it too. Statement 3 is the one left out: members of a State Legislative Council take no part at all, whether they were elected by graduates, teachers or legislators, or nominated by the Governor. That exclusion follows from the design of the college, which is meant to weigh the people of each State through the House that directly represents them.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q74-electoral-college-electing-president-india-include-all",
     "source_topic_hints": [
       "Indian Polity"
@@ -1931,7 +1931,7 @@
     "opt_d": "₹10,800",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, ₹10,800. All three invested for the same length of time, so profit divides in the ratio of the capitals: 7,000 : 8,000 : 12,000, which reduces to 7 : 8 : 12. The parts add to 27, and B holds 8 of them, so B's share is 8/27 of the total profit. Setting 8/27 of the profit equal to ₹3,200 gives a profit of 3,200 × 27 ÷ 8 = 400 × 27 = ₹10,800. The other two shares follow at once: A takes 7 × 400 = ₹2,800 and C takes 12 × 400 = ₹4,800, and 2,800 + 3,200 + 4,800 returns 10,800.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q75-start-business-investing-000-000-000-respectively",
     "source_topic_hints": [
       "Quantitative Aptitude & Data Interpretation"
@@ -1957,7 +1957,7 @@
     "opt_d": "₹1,400",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, ₹1,600. Work forward from the marked price. Forty per cent off ₹2,000 leaves a selling price of 0·6 × 2,000 = ₹1,200. That sale is said to involve a loss of 25 per cent, and a loss is always reckoned on the cost price, so the selling price is 75 per cent of cost: 1,200 = 0·75 × CP. Dividing, the cost price is 1,200 ÷ 0·75 = ₹1,600. Check it the other way: a quarter of 1,600 is 400, and 1,600 − 400 is 1,200, exactly the discounted price.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q76-stock-clearance-sale-shopkeeper-gives-off-all",
     "source_topic_hints": [
       "Quantitative Aptitude & Data Interpretation"
@@ -1983,7 +1983,7 @@
     "opt_d": "84 years",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, 90 years. An average of 45 across two people means their ages add to 90, so Raj plus his father is 90. The father is twice Raj's age, which turns the sum into Raj plus 2 × Raj, or 3 × Raj, equal to 90. Raj is therefore 30 and his father 60, and the check holds since their average is indeed 45. The grandfather is three times Raj's age, that is 3 × 30 = 90 years. Notice that the grandfather's age never enters the average: it is attached to Raj alone, so the whole question is solved the moment Raj's age is known.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q77-average-age-raj-father-years-ages-father",
     "source_topic_hints": [
       "Quantitative Aptitude & Data Interpretation"
@@ -2009,7 +2009,7 @@
     "opt_d": "83",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, 80. A number divisible by 20, 24 and 30 must be a multiple of their least common multiple. Factorising, 20 = 2² × 5, 24 = 2³ × 3 and 30 = 2 × 3 × 5, so the highest power of each prime gives 2³ × 3 × 5 = 120. The question is therefore how far 10,000 sits below the next multiple of 120. Dividing, 120 × 83 = 9,960, which is 40 short of 10,000, so the next multiple up is 120 × 84 = 10,080. Adding 80 to 10,000 reaches it, and no smaller addition can, since the multiples of 120 are 120 apart.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q78-smallest-number-added-10000-becomes-divisible",
     "source_topic_hints": [
       "Mathematics"
@@ -2035,7 +2035,7 @@
     "opt_d": "1560",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, 1560. Break the sum into three pieces, because a sum of terms is the sum of the pieces. The constant 1 appears in every one of the twenty terms and contributes 20. The n/2 piece contributes half the sum of the first twenty natural numbers, which is (20 × 21 ÷ 2) ÷ 2 = 210 ÷ 2 = 105. The n²/2 piece contributes half the sum of the first twenty squares, and the sum of the first n squares is n(n+1)(2n+1)/6, giving (20 × 21 × 41) ÷ 6 = 2,870, of which half is 1,435. Adding, 20 + 105 + 1,435 = 1,560.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q79-suppose-nth-term-series-there-terms-series",
     "source_topic_hints": [
       "Mathematics"
@@ -2061,7 +2061,7 @@
     "opt_d": "120",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, 120. COVID has five letters (C, O, V, I and D) and every one of them is different. Arranging five distinct objects in a row can be done in 5! ways, that is 5 × 4 × 3 × 2 × 1 = 120. The phrase 'with or without meaning' is the examiner's way of saying that every arrangement counts, so no dictionary check is required. Had a letter repeated, the count would have to be divided by the factorial of each repetition: the word LEVEL, for instance, gives 5! ÷ (2! × 2!) = 30, but no such division applies here.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q80-many-different-words-without-meaning-formed-using",
     "source_topic_hints": [
       "Science & Technology"
@@ -2087,7 +2087,7 @@
     "opt_d": "malnutrition",
     "source_key_opt": "A",
     "source_answer_raw": "A",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: A, famine. A famine is a catastrophic failure of access to food across a region, sharp enough that people die of starvation and of the diseases that follow malnutrition: cholera, dysentery, typhus and measles have historically killed more famine victims than hunger itself. Its defining features are exactly the two the stem names: widespread deaths and accompanying epidemics, concentrated in time and place. The other three options describe conditions that can be severe without producing that outcome. Modern practice defines a famine formally, and the international classification declares one only when starvation deaths, extreme food gaps and acute malnutrition all cross fixed thresholds together.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q81-widespread-deaths-due-starvation-epidemics-characteristics",
     "source_topic_hints": [
       "Indian Economy"
@@ -2113,7 +2113,7 @@
     "opt_d": "fair sustenance price",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, minimum support price. The minimum support price is announced before the sowing season precisely so that it can influence what farmers decide to plant: a price floor known in advance, at which government agencies will buy if the market falls below it. The Commission for Agricultural Costs and Prices recommends the level after weighing cost of production, demand and supply, price trends and terms of trade, and the Cabinet Committee on Economic Affairs approves it. Support prices are announced for 22 mandated crops of the kharif and rabi seasons, with a fair and remunerative price set separately for sugarcane, and since the 2018-19 budget the declared benchmark has been at least one and a half times the A2 plus family labour cost.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q82-price-declared-government-every-year-before-sowing",
     "source_topic_hints": [
       "Indian Economy"
@@ -2139,7 +2139,7 @@
     "opt_d": "Wind",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, Wave. Caves, arches, stacks and stumps are the classic sequence of erosional landforms cut by waves along a rocky coast, and they belong together because each is a stage of the same process. Waves attack the base of a cliff and open a notch, which deepens into a sea cave. Where caves are cut into both flanks of a headland and meet through it, the opening becomes an arch. When the roof of the arch collapses, an isolated pillar is left standing offshore: a stack. Continued undercutting reduces the stack to a low remnant washed over at high tide, a stump. The set is the standard illustration of coastal erosion in every physical geography syllabus.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q83-caves-arches-stacks-stumps-landscape-features-one",
     "source_topic_hints": [
       "Geography"
@@ -2165,7 +2165,7 @@
     "opt_d": "1, 2, 3 and 4",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, 1, 2, 3 and 4. Each statement holds. The soils are indeed poor: constant warmth and heavy rain leach the profile, so the nutrient stock sits in the living biomass and is recycled through a shallow root mat and rapid decay rather than stored in the ground, which is why cleared rain forest gives only two or three seasons of cropping before fertility collapses. The vegetation is evergreen because there is no cold or dry season to force leaf fall, so photosynthesis continues through the year. That combination of rich forest on poor ground is what earned the description 'deserts covered by trees': a desert in the soil, hidden under the canopy. And the forests are the most productive land-based ecosystem there is, with net primary productivity above that of any other terrestrial biome, precisely because warmth, water and light never run short.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q84-statements-about-tropical-rain-forests-correct-soils",
     "source_topic_hints": [
       "Geography"
@@ -2191,7 +2191,7 @@
     "opt_d": "Arid soil",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, Arid soil. Arid soils cover western Rajasthan and the adjoining tracts of Gujarat and Haryana, where evaporation runs well ahead of rainfall. Salts dissolved in groundwater are pulled upward by capillary action and left behind as the water leaves, instead of being flushed downward as they are in a wet climate. In the Rann of Kutch and the salt tracts nearby the saline water is led into shallow beds and allowed to evaporate, and what stays behind is common salt. The rest of the profile fits the same story: sandy texture, very little humus, low moisture, and a kankar horizon of calcium carbonate lower down that stops water percolating.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q85-one-soils-salt-content-high-common-salt",
     "source_topic_hints": [
       "Geography"
@@ -2217,7 +2217,7 @@
     "opt_d": "3 and 4 only",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, 1, 2 and 3. Akbar had the fort at Agra built in the 1560s from red sandstone quarried in Rajasthan; he began a new capital at Sikri in the 1570s; and a white marble tomb was raised there for Shaikh Salim Chishti beside the great Friday mosque. Statement 4 is the one that fails. The move of 1585 was to Lahore, not back to Agra, and it was made to keep the north-west frontier under watch while Abdullah Khan Uzbek pressed on Kabul and Qandahar. The court stayed at Lahore for thirteen years and reached Agra again only in 1598.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q86-statements-about-akbar-correct-1560s-akbar-fort",
     "source_topic_hints": [
       "Medieval History"
@@ -2243,7 +2243,7 @@
     "opt_d": "1, 2, 3 and 4",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, 1, 3 and 4 only. The amara-nayakas were military commanders to whom the raya assigned territory, and everything else follows from how they were paid. They were not given cash. They collected taxes and dues from the peasants, craftspersons and traders of the area assigned to them, kept part for their own use and for maintaining a stipulated contingent of horses and elephants, and passed the rest on. Statement 2 makes them salaried officers and is the only false one. Statements 3 and 4 name the obligations attached to the grant: the contingent, the annual tribute, and the personal appearance at the royal court with gifts.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q87-statements-about-amaranayakas-vijayanagara-correct-amaranayakas-military",
     "source_topic_hints": [
       "Medieval History"
@@ -2269,7 +2269,7 @@
     "opt_d": "1, 2 and 3",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, 1, 2 and 3. Every pairing here is the standard one. Cornwallis carried the Permanent Settlement through in Bengal, Bihar and Orissa in 1793, fixing the state's demand on the zamindars for ever. Thomas Munro, first as an administrator in the ceded districts and later as Governor of Madras, built the ryotwari settlement, under which the state dealt directly with the cultivating ryot and took the revenue from him without an intermediary. Holt Mackenzie's minute of 1819, given effect by Regulation VII of 1822, produced the mahalwari settlement of the North-Western Provinces, where the mahal or village estate was assessed as a unit and its proprietary body held jointly liable.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q88-pairs-correctly-matched-permanent-settlement-lord-cornwallis",
     "source_topic_hints": [
       "Modern History"
@@ -2295,7 +2295,7 @@
     "opt_d": "Chin Qilich Khan",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, Chin Qilich Khan. Chin Qilich Khan served as the Mughal wazir under Muhammad Shah before leaving Delhi for the Deccan, where the emperor's writ was already thin. He defeated Mubariz Khan at Shakar Kheda in 1724, took the six Deccan subas in hand, and governed them without reference to Delhi (appointing his own officials, granting his own jagirs, and settling revenue on his own terms) while never formally renouncing the emperor's authority. His line, the Asaf Jahi Nizams, ruled Hyderabad down to 1948.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q89-among-assumed-title-nizam-mulk-asaf-jah",
     "source_topic_hints": [
       "Medieval History"
@@ -2321,7 +2321,7 @@
     "opt_d": "Right not to be convicted of any offence except for violation of a law in force at the time of commission of the act charged as an offence",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, To refuse to give his/her sample of handwriting as evidence to support a prosecution against him/her. Article 20(3) protects an accused only against being compelled to be a witness against himself, and in State of Bombay v. Kathi Kalu Oghad (1961) an eleven-judge bench read 'to be a witness' as giving testimony: a communication resting on the accused's personal knowledge. Specimen handwriting, signatures, thumb impressions and the exhibition of the body are identification material of a kind that carries no personal knowledge, so a court may require them and no right of refusal arises. The other three options each restate a protection the Constitution does confer.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q90-one-fundamental-rights-provided-person",
     "source_topic_hints": [
       "Indian Polity"
@@ -2347,7 +2347,7 @@
     "opt_d": "an Urban Panchayat",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, an Urban Panchayat. Article 243Q, inserted by the Seventy-fourth Amendment in 1992, requires every State to constitute three kinds of urban local body and names each of them: a Nagar Panchayat for a transitional area, that is an area moving from rural to urban; a Municipal Council for a smaller urban area; and a Municipal Corporation for a larger urban area. No fourth category exists in Part IXA, and the term 'Urban Panchayat' does not appear in the Constitution at all. The word panchayat enters the urban list only in the name of the transitional-area body.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q91-constitution-india-contains-provision-constitution-municipalities-every",
     "source_topic_hints": [
       "Indian Polity"
@@ -2373,7 +2373,7 @@
     "opt_d": "Somnath Lahiri",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, B. R. Ambedkar. The lines come from Ambedkar's closing speech to the Constituent Assembly on 25 November 1949, the day before the Constitution was adopted. He told the House that on 26 January 1950 India would enter a life of contradictions (equality in politics, inequality in social and economic life) because one man one vote and one vote one value would sit alongside a social order that denied equal worth. He added the warning that gives the passage its force: those who suffer the inequality will blow up the structure of political democracy the Assembly had so laboriously built, unless the contradiction is removed quickly.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q92-consider-quote-26th-january-1950-going-enter",
     "source_topic_hints": [
       "Indian Polity"
@@ -2399,7 +2399,7 @@
     "opt_d": "To remove a Judge of the High Court",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, To decide at his/her discretion any question regarding disqualification of a Member of the Parliament. Article 103 does put the question of an MP's disqualification before the President, but the same article requires him to obtain the opinion of the Election Commission and to act according to that opinion. The decision is his in form and the Commission's in substance, so the words 'at his/her discretion' are what make the option wrong. Each of the other three is a power the Constitution genuinely confers: Article 75(1) for appointing the Prime Minister, Article 72(1)(a) for pardoning a person punished by court-martial, and Article 217(1)(b) read with Article 124(4) for removing a High Court judge.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q93-one-powers-conferred-president-india",
     "source_topic_hints": [
       "Indian Polity"
@@ -2425,7 +2425,7 @@
     "opt_d": "The right to life under Article 21 does not include the right to die.",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, It was held that a law coming under Article 21 may not satisfy the requirements of Article 19. That proposition is the pre-Maneka position taken in A. K. Gopalan (1950), where the Court treated the fundamental rights as separate compartments and held that a law valid under Article 21 need not answer to Article 19. Maneka Gandhi overturned exactly that. The Court held that a law depriving a person of personal liberty must prescribe a procedure that is fair, just and reasonable, and must also survive Articles 14 and 19, which is why option (a), stating that Articles 19 and 21 are not watertight compartments, is a correct description of the same judgment. Statements (a) and (b) cannot both stand, and it is (b) that the judgment rejected.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q94-one-statements-regard-maneka-gandhi-union-india",
     "source_topic_hints": [
       "Indian Polity"
@@ -2451,7 +2451,7 @@
     "opt_d": "5.2% more",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, 2.6% more. Work in multipliers and the item takes one line. A 10 per cent discount multiplies by 0.90, a further 5 per cent discount multiplies by 0.95, and 20 per cent GST on the discounted figure multiplies by 1.20. Together 0.90 × 0.95 × 1.20 = 1.026, so a marked price of ₹2,000 becomes ₹2,052. Step by step it is the same: 2,000 less 10 per cent is 1,800; 1,800 less 5 per cent is 1,710; 1,710 plus 20 per cent is 2,052. The customer pays ₹52 more than the marked price, and 52 out of 2,000 is 2.6 per cent.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q95-shopkeeper-gives-two-consecutive-discounts-respectively-items",
     "source_topic_hints": [
       "Indian Economy"
@@ -2477,7 +2477,7 @@
     "opt_d": "₹1,20,000",
     "source_key_opt": "A",
     "source_answer_raw": "A",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: A, ₹1,00,000. Over two years the gap between compound interest and simple interest is the interest earned in the second year on the first year's interest, and nothing else. That comes to P(r/100)², so 250 = P × (5/100)² = P × 0.0025, which gives P = ₹1,00,000. Checking directly: simple interest is 2 × 5 per cent of 1,00,000 = ₹10,000, while compound interest is 1,00,000 × (1.05² − 1) = 1,00,000 × 0.1025 = ₹10,250. The difference is ₹250, as stated.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q96-difference-compound-interest-simple-interest-sum-money",
     "source_topic_hints": [
       "Quantitative Aptitude & Data Interpretation"
@@ -2503,7 +2503,7 @@
     "opt_d": "125 ml",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, 225 ml. Adding water changes the total but not the alcohol, so fix on the quantity that stays constant. The alcohol is 75 ml before and after, and it has to end up as 25 per cent of the mixture. If the final mixture is M, then 75 = 0.25M, so M = 300 ml. The water added is 300 − 75 = 225 ml. The same result follows from the ratio: at 25 per cent alcohol the mixture is one part alcohol to three parts water, and three times 75 is 225.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q97-much-water-added-alcohol-mixture-contains-alcohol",
     "source_topic_hints": [
       "General Science"
@@ -2529,7 +2529,7 @@
     "opt_d": "3328",
     "source_key_opt": "A",
     "source_answer_raw": "A",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: A, 5200. Both percentages are taken of the same number, so they can be subtracted directly. 35 per cent less 27 per cent is 8 per cent, and that 8 per cent is the stated excess of 416. One per cent is therefore 416 ÷ 8 = 52, and the whole number is 52 × 100 = 5,200. Verifying: 35 per cent of 5,200 is 1,820, 27 per cent is 1,404, and 1,820 − 1,404 = 416.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q98-number-416-more-than-same-number-then",
     "source_topic_hints": [
       "Quantitative Aptitude & Data Interpretation"
@@ -2555,7 +2555,7 @@
     "opt_d": "Western Ghats",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, Western Ghats. The Cardamom Hills, called the Yela Mala locally, form the southern end of the Western Ghats, running across the Kerala-Tamil Nadu border south and east of the Anaimalai. Anaimudi, at about 2,695 metres the highest peak in peninsular India, stands at the knot where the Anaimalai, the Palani and the Cardamom hills meet, and the range continues southward to the Shencottah gap and the Agasthyamalai beyond it. The name comes from the spice the slopes have grown for centuries under the shade of the evergreen forest.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q99-india-cardamom-hills-regarded-continuation",
     "source_topic_hints": [
       "Geography"
@@ -2581,7 +2581,7 @@
     "opt_d": "A B C D : 4 2 3 1",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, A B C D : 4 3 2 1. The Sutlej is one of the five rivers of the Punjab and joins the Indus system, so A goes to 4. The Kosi drains eastern Nepal and north Bihar and empties into the Ganga near Kursela, so B goes to 3. The Teesta rises in north Sikkim and flows into the Brahmaputra in Bangladesh, so C goes to 2. The Chambal rises in the Vindhyan scarp near Mhow and joins the Yamuna in Etawah district, so D goes to 1. Only one option carries all four.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q100-match-list-list-select-correct-answer-using",
     "source_topic_hints": [
       "Geography"
@@ -2607,7 +2607,7 @@
     "opt_d": "Paradip",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, Kolkata. Kolkata is the only riverine major port in India. It sits roughly 200 kilometres up the Hooghly from the Bay of Bengal, which is what gives it its reach into the eastern hinterland and also its permanent problem: the channel silts, so the approach has to be dredged continuously and the Farakka barrage was built in part to push more Ganga water down the Hooghly and keep it navigable. Because large modern vessels cannot come that far upstream, the port works as a twin system, with the Haldia Dock Complex nearer the sea handling the deeper-draught traffic.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q101-one-only-riverine-major-port-india",
     "source_topic_hints": [
       "Indian Economy"
@@ -2633,7 +2633,7 @@
     "opt_d": "Machchhu",
     "source_key_opt": "A",
     "source_answer_raw": "A",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: A, Barak. The Barak rises in the Manipur hills, flows west through Assam's Barak valley past Silchar, and crosses into Bangladesh, where it splits into the Surma and the Kushiyara and eventually feeds the Meghna. That is one of the wettest corners of India: the opposite of a desert regime in every respect. The other three are western Indian streams of the arid and semi-arid belt. The Rupen and the Machchhu drain into the Little Rann of Kachchh, and the Banas of north Gujarat ends in the Rann as well, all of them running dry for much of the year and dissipating inland instead of reaching the sea.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q102-one-desert-river",
     "source_topic_hints": [
       "Geography"
@@ -2659,7 +2659,7 @@
     "opt_d": "Traction load",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, Traction load. A river carries its load in four ways, and the division is by particle size and by how much energy the flow must spend on each. The heaviest fragments (cobbles and boulders) are never lifted clear of the bed at all; they are pushed, rolled and dragged along it, and that dragging is traction. Together with saltation it makes up what geologists call the bed load, as against the suspended and dissolved fractions that travel within the water itself.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q103-heaviest-rocks-rolled-along-river-bed-river",
     "source_topic_hints": [
       "Geography"
@@ -2685,7 +2685,7 @@
     "opt_d": "1, 2, 3 and 4",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, 2, 3 and 4 only. Reef-building corals live with single-celled algae called zooxanthellae inside their tissues, and almost every growth requirement follows from that partnership. The algae photosynthesise, so the water must be shallow and clear enough for light to reach them: statements 2 and 3. The polyps build calcium carbonate skeletons fastest in warm water, which is statement 4. Fresh water is the one condition on the list that corals cannot tolerate: it dilutes the salinity they depend on and usually arrives loaded with silt that smothers the polyps. That is why reefs are absent at the mouths of large rivers and why statement 1 has to go, and only one option leaves it out.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q104-factors-needed-growth-corals-freshwater-clear-shallow",
     "source_topic_hints": [
       "Science & Technology"
@@ -2711,7 +2711,7 @@
     "opt_d": "Inner core",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, Mantle. Plate motion is driven by convection in the mantle. Heat from the decay of radioactive isotopes within the mantle, together with heat leaking out of the core, sets up slow cells in which hotter, less dense rock rises and cooler, denser rock sinks. The mantle is solid, but over geological time it deforms plastically, and the weak ductile layer just below the lithosphere (the asthenosphere) is where that flow is easiest. The plates ride on it and are dragged and pushed by it, helped by ridge push and by the pull of a cold slab sinking at a trench.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q105-convection-currents-move-tectonic-plates-found-layer",
     "source_topic_hints": [
       "Geology & Geophysics"
@@ -2737,7 +2737,7 @@
     "opt_d": "Neither 1 nor 2",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, Both 1 and 2. The Congress Socialist Party was formed in 1934 by a younger group within the Congress (Acharya Narendra Deva as its president and Jayaprakash Narayan as general secretary, with Minoo Masani, Achyut Patwardhan, Asoka Mehta and Yusuf Meherally around them) after the Civil Disobedience Movement was suspended and many of them met in jail. That is statement 1. Statement 2 is equally well attested: at the Lucknow session of 1936, presiding over the Congress, Jawaharlal Nehru argued that the party should accept socialism as its goal and should build its links with the peasantry and the working class, and it was around that time that the Congress opened its doors formally to members of the peasant and labour organisations.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q106-consider-statements-growth-socialist-tendency-national-movement",
     "source_topic_hints": [
       "Modern History"
@@ -2763,7 +2763,7 @@
     "opt_d": "To set up sanatoria",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, To serve the needs of the British army. Hill stations were founded in the first instance as military posts. Simla grew out of the Anglo-Gurkha war of 1815-16, and the stations along the Himalayan foothills and in the Nilgiris were established to garrison troops in a climate the army believed suited European constitutions, at a safe altitude above the plains and near the frontiers that mattered. The other uses came later. They became sanatoria for sick and convalescent soldiers, then the seasonal seats of government (Simla was made the summer capital only in 1864) and finally resorts for planters, traders and officials on leave.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q107-initially-purpose-setting-hill-stations-during-colonial",
     "source_topic_hints": [
       "Modern History"
@@ -2789,7 +2789,7 @@
     "opt_d": "Akshay Kumar Datta",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, Radhakanta Deb. The Dharma Sabha was set up in Calcutta in January 1830 by Radhakanta Deb, at the head of a group of orthodox Hindu gentry alarmed by the pace of reform. Its immediate business was to oppose Regulation XVII of 1829, by which Bentinck had made sati a punishable offence, and it carried an appeal against the ban all the way to the Privy Council in London, which rejected it in 1832. Its newspaper, the Samachar Chandrika, argued the conservative case against Rammohan Roy's Brahmo Sabha. Deb himself was not a simple obstructionist (he supported the spread of English education and the schooling of girls) but on questions touching custom and caste he stood with tradition.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q108-among-founded-dharma-sabha",
     "source_topic_hints": [
       "Geography"
@@ -2815,7 +2815,7 @@
     "opt_d": "2-3-1-4",
     "source_key_opt": "A",
     "source_answer_raw": "A",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: A, 3-2-4-1. The four leaders follow one another in an unbroken line of Jat resistance around Mathura and Agra. Gokula, a headman of Tilpat, led the rising of 1669 against Aurangzeb's revenue exactions and was executed at Agra the following year. Raja Ram took up the revolt from 1685 and was killed in 1688; the plundering of Akbar's tomb at Sikandra belongs to his years. Churaman, his nephew, built the resistance into something like a state, holding out from the fortress of Thun until his death in 1721. Badan Singh, who followed, consolidated that territory and founded the ruling house of Bharatpur, later raised to its height by his successor Suraj Mal. So the order runs Gokula, Raja Ram, Churaman, Badan Singh, which is 3-2-4-1.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q109-consider-jat-peasant-leaders-17th-early-18th",
     "source_topic_hints": [
       "Medieval History"
@@ -2841,7 +2841,7 @@
     "opt_d": "Chaitanya",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, Chaitanya. The Nirguna stream worships a divine without form or attributes, rejects images and temple ritual, and is generally indifferent to caste distinctions in worship; Kabir, Guru Nanak and Dadu Dayal all belong to it. Chaitanya does not. His devotion was to Krishna as a personal deity with a name, a form and a history, expressed through congregational singing, dance and the ecstatic kirtan processions of Nabadwip and Puri, and the Gaudiya Vaishnava tradition he founded made image worship central. Saguna bhakti is the label for that stream, and Chaitanya is one of its clearest examples.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q110-among-bhakti-saints-belong-nirguna-school-bhakti",
     "source_topic_hints": [
       "Medieval History"
@@ -2867,7 +2867,7 @@
     "opt_d": "Maldives",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, Indonesia. Mount Merapi stands on the boundary of Central Java and Yogyakarta, about 2,930 metres high and some 30 kilometres north of the city of Yogyakarta. It is among the most continuously active volcanoes anywhere, and it produced fresh lava avalanches and hot cloud emissions in January 2021, which is what puts it in this paper. Its position is not accidental: Indonesia sits where the Indo-Australian plate is being pushed under the Eurasian plate, a subduction zone along the Pacific Ring of Fire that has given the country more active volcanoes than any other.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q111-volcano-mount-merapi-erupted-january-2021-situated",
     "source_topic_hints": [
       "Geography"
@@ -2893,7 +2893,7 @@
     "opt_d": "ethane",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, ethanol. The E-100 pilot project was launched at Pune on 5 June 2021, World Environment Day, as a demonstration of a full chain for producing, storing and distributing ethanol as a motor fuel. It was announced alongside the report of the expert committee on the roadmap for ethanol blending, and alongside the decision to advance the target of 20 per cent ethanol in petrol from 2030 to 2025-26. The name is the giveaway once the convention is known: E followed by a number denotes the percentage of ethanol in the blend, so E-10 is a tenth ethanol and E-100 is the fuel in undiluted form.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q112-100-pilot-project-launched-pune-june-2021",
     "source_topic_hints": [
       "Science & Technology"
@@ -2919,7 +2919,7 @@
     "opt_d": "Nameri",
     "source_key_opt": "A",
     "source_answer_raw": "A",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: A, Raimona. Raimona was declared a national park on 5 June 2021, World Environment Day, becoming the sixth in Assam. It covers the northern part of the Ripu Reserve Forest in Kokrajhar district, within the Bodoland Territorial Region, and its value lies in what it connects: Phipsoo Wildlife Sanctuary across the Bhutan border to the north and Buxa Tiger Reserve in West Bengal to the west, which together make one of the few surviving continuous forest corridors of the region. It is best known as golden langur habitat. The three other parks in the option set were all notified in the 1990s, well before the year in question.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q113-occasion-world-environment-day-2021-one-declared",
     "source_topic_hints": [
       "Environment & Ecology"
@@ -2945,7 +2945,7 @@
     "opt_d": "Naomi Osaka",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, Naomi Osaka. Before the 2021 French Open began, Osaka said she would not take part in post-match press conferences, arguing that the format could damage a player's mental health. She won her opening match, was fined by the tournament and warned of further sanction by the four Grand Slam bodies, and then withdrew rather than continue the dispute, disclosing at the same time that she had lived with depression since 2018. Her withdrawal came ahead of her second-round match, which is how the paper's phrasing should be read.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q114-among-withdrawn-french-open-tennis-tournament-2021",
     "source_topic_hints": [
       "Current Affairs"
@@ -2971,7 +2971,7 @@
     "opt_d": "Japan",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, Israel. The Heron is a medium-altitude, long-endurance unmanned aircraft built by Israel Aerospace Industries, and India has flown it since the early 2000s alongside the smaller Searcher from the same maker. Its value to the Indian forces is endurance: it can stay airborne for a day or more, well above small-arms range, carrying electro-optical and radar sensors and relaying a live picture to a ground station. In the years around this paper the fleet was reinforced by the leased Heron TP variant for surveillance along the northern borders, and by an upgrade programme to extend the reach of the existing aircraft.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q115-heron-drones-inducted-indian-forces-enhancing-surveillance",
     "source_topic_hints": [
       "Defence & Security"
@@ -2997,7 +2997,7 @@
     "opt_d": "Iran",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, Myanmar. Tauktae was the contribution of Myanmar to the list of cyclone names for the north Indian Ocean, the word referring to a highly vocal lizard. The storm formed in the Arabian Sea in May 2021 and crossed the Gujarat coast as an extremely severe cyclonic storm. Names in this basin are not invented at the time of the storm; they are taken in turn from a list assembled in advance, to which every member country of the regional panel contributes an equal number.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q116-cyclone-tauktae-named",
     "source_topic_hints": [
       "Geography"
@@ -3023,7 +3023,7 @@
     "opt_d": "A-3, B-2, C-4, D-1",
     "source_key_opt": "A",
     "source_answer_raw": "A",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: A, A-3, B-4, C-2, D-1. The World Health Organization began labelling variants with Greek letters in May 2021, taking them in the order the variants were designated. Alpha was first identified in Britain, in Kent in late 2020, so A goes to 3. Beta was first reported from South Africa, which puts B at 4. Gamma came from Brazil, detected in travellers from the Amazonas region, so C is 2. Delta was first identified in India and drove the second wave there in the spring of 2021, so D is 1. Only one code carries all four.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q117-match-list-list-select-correct-answer-using",
     "source_topic_hints": [
       "Geography"
@@ -3049,7 +3049,7 @@
     "opt_d": "M/s Goa Shipyard Limited",
     "source_key_opt": "D",
     "source_answer_raw": "D",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: D, M/s Goa Shipyard Limited. Sajag belongs to a series of offshore patrol vessels designed and built by Goa Shipyard Limited for the Indian Coast Guard, and it was commissioned in May 2021. Goa Shipyard is the defence public sector yard that specialises in exactly this class: patrol vessels of a few thousand tonnes with a helicopter deck, built for long endurance rather than for heavy weapons, and used for exclusive economic zone surveillance, anti-smuggling work, pollution response and search and rescue. The names in the series follow a pattern of their own, Shaunak, Sujeet, Sarthak, Sajag and Sujay among them.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q118-indian-coast-guard-offshore-patrol-vessel-sajag",
     "source_topic_hints": [
       "Defence & Security"
@@ -3075,7 +3075,7 @@
     "opt_d": "Bobby Parikh",
     "source_key_opt": "A",
     "source_answer_raw": "A",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: A, K. P. Krishnan. The International Financial Services Centres Authority set up an expert committee to examine whether the Variable Capital Company could be brought into Indian law for the international financial services centre at GIFT City, and the committee was headed by K. P. Krishnan, a former civil servant long associated with financial sector reform. Its report recommended enabling the structure so that funds set up in the centre could operate with the flexibility their competitors abroad already had.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q119-among-head-expert-committee-variable-capital-company",
     "source_topic_hints": [
       "Science & Technology"
@@ -3101,7 +3101,7 @@
     "opt_d": "Goa",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, Kerala. Kerala took first place among the States in the SDG India Index 2020-21, the third edition, released by NITI Aayog in June 2021. It had also topped the two earlier editions, and its lead comes from the goals on health, education, water and sanitation, where its long record on social indicators shows up directly in the scoring. Himachal Pradesh and Tamil Nadu came next, closely behind, and Bihar was at the bottom of the State list.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q120-one-states-ranked-first-sustainable-development-goal",
     "source_topic_hints": [
       "Indian Polity"
@@ -3127,7 +3127,7 @@
     "opt_d": "Clean Our Oceans",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, The Ocean : Life and Livelihoods. That was the United Nations theme for World Oceans Day on 8 June 2021, chosen to mark the start of the UN Decade of Ocean Science for Sustainable Development, which runs from 2021 to 2030. The wording points at the two things the observance is meant to hold together: the ocean as a living system and the hundreds of millions of people whose work depends on it. What makes this item unusually fair is that the other three options are not invented; each was the theme of another year.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q121-one-theme-world-ocean-day-2021",
     "source_topic_hints": [
       "International Relations"
@@ -3153,7 +3153,7 @@
     "opt_d": "79th",
     "source_key_opt": "A",
     "source_answer_raw": "A",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: A, 49th. India stood 49th among the 104 countries covered by the Chandler Good Government Index, published by the Chandler Institute of Governance in Singapore. The index is unusual in what it measures, not the quality of democracy or the level of corruption alone, but the capability of a government to do its job, scored across seven pillars covering leadership and foresight, laws and policies, institutions, financial stewardship, the marketplace it creates, its global influence and reputation, and whether it helps people rise. Finland headed the first edition, with the Nordic countries and Singapore near the top.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q122-latest-chandler-good-government-index-cggi-classifies",
     "source_topic_hints": [
       "Indian Economy"
@@ -3179,7 +3179,7 @@
     "opt_d": "Fluoride Nilogon",
     "source_key_opt": "B",
     "source_answer_raw": "B",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: B, SWASTIIK. SWASTIIK is the hybrid water-disinfection technology developed at the National Chemical Laboratory in Pune under the Department of Science and Technology's water technology initiative. What makes it hybrid is the pairing of two effects: hydrodynamic cavitation, in which collapsing bubbles in a flowing stream generate the shock and heat that kill microorganisms, together with natural additives from plant oils that improve the kill rate at lower energy. The aim was a chemical-free method that could be run at community scale without leaving disinfection by-products in the water.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q123-scientists-csir-ncl-pune-support-water-technology",
     "source_topic_hints": [
       "Art & Culture"
@@ -3205,7 +3205,7 @@
     "opt_d": "Ronuwa—Who Never Surrender",
     "source_key_opt": "C",
     "source_answer_raw": "C",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: C, Water Burial. The 67th National Film Awards, announced in March 2021 for films of 2019, gave the award in the environment conservation and preservation category to Water Burial, made in the Monpa language of Arunachal Pradesh. The category exists to recognise films whose subject is the protection of the natural world, and it sits within the feature-film section of the awards, judged separately from the non-feature categories.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q124-one-films-won-best-film-award-environment",
     "source_topic_hints": [
       "Science & Technology"
@@ -3231,7 +3231,7 @@
     "opt_d": "The War of the Poor",
     "source_key_opt": "A",
     "source_answer_raw": "A",
-    "source_explanation_raw": "",
+    "source_explanation_raw": "Correct: A, At Night All Blood is Black. David Diop's novel won the International Booker Prize for 2021, translated from the French by Anna Moschovakis, and Diop became the first French writer to take the award. The book follows a Senegalese soldier fighting for France in the trenches of the First World War, and the prize money is split equally between author and translator, which is the feature that distinguishes this award from the Booker Prize for fiction. The other three titles in the option set were all on the same shortlist, which makes this a harder item than it looks.",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q125-one-books-declared-winner-2021-international-booker",
     "source_topic_hints": [
       "Art & Culture"
