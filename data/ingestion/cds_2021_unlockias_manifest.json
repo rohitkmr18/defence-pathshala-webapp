@@ -1,5 +1,13 @@
 [
   {
+    "batch_code": "CAPF_AC_2021_I_GAI",
+    "source": "https://www.unlockias.in/capf-2021-general-ability",
+    "rows": 125,
+    "cancelled": 0,
+    "anomalies": 0,
+    "sha256_json": "ca01e446516b2a74726feb690ba1fc91d455077c2baa44ca665d2e1d19d072d0"
+  },
+  {
     "batch_code": "CDS_2021_I_GK",
     "source": "https://www.unlockias.in/cds-2021-i-general-knowledge",
     "rows": 120,
