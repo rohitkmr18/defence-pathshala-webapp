@@ -11,8 +11,9 @@ import requests
 from bs4 import BeautifulSoup
 
 BASES = [
-    ("CDS_2021_I_GK", "https://www.unlockias.in/cds-2021-i-general-knowledge"),
-    ("CDS_2021_II_GK", "https://www.unlockias.in/cds-2021-ii-general-knowledge"),
+    ("CAPF_AC_2021_I_GAI", "https://www.unlockias.in/capf-2021-general-ability", 125),
+    ("CDS_2021_I_GK", "https://www.unlockias.in/cds-2021-i-general-knowledge", 120),
+    ("CDS_2021_II_GK", "https://www.unlockias.in/cds-2021-ii-general-knowledge", 120),
 ]
 
 OUT_DIR = Path("data/ingestion")
@@ -140,25 +141,31 @@ def canonical_hash(row):
     ])
     return hashlib.sha256(blob.encode("utf-8")).hexdigest()
 
-def scrape(batch_code, base_url):
+def scrape(batch_code, base_url, expected):
     summary = fetch(base_url)
     links = extract_question_links(summary, base_url)
-    if sorted(links) != list(range(1,121)):
-        missing = sorted(set(range(1,121)) - set(links))
-        raise RuntimeError(f"{batch_code}: expected Q1-Q120 links; found {len(links)}, missing={missing}")
+    if sorted(links) != list(range(1, expected + 1)):
+        missing = sorted(set(range(1, expected + 1)) - set(links))
+        raise RuntimeError(f"{batch_code}: expected Q1-Q{expected} links; found {len(links)}, missing={missing}")
 
     rows = []
     anomalies = []
-    for qn in range(1,121):
+    for qn in range(1, expected + 1):
         row = extract_page(fetch(links[qn]), links[qn])
+        is_capf = batch_code.startswith("CAPF_AC_")
+        cycle = "I" if batch_code != "CDS_2021_II_GK" else "II"
         row.update({
             "batch_code": batch_code,
             "q_num": qn,
-            "question_id": f"CDS_{'I' if batch_code == 'CDS_2021_I_GK' else 'II'}_2021_GK_{qn:03d}",
-            "exam": "CDS",
+            "question_id": (
+                f"CAPF_2021_P1_{qn:03d}"
+                if is_capf
+                else f"CDS_{cycle}_2021_GK_{qn:03d}"
+            ),
+            "exam": "CAPF-AC" if is_capf else "CDS",
             "year": 2021,
-            "cycle": "I" if batch_code == "CDS_2021_I_GK" else "II",
-            "paper": "General Knowledge",
+            "cycle": cycle,
+            "paper": "Paper I" if is_capf else "General Knowledge",
             "key_authority": "TRUSTED_SECONDARY",
             "key_source_url": base_url,
             "source_version": "UnlockIAS_2026-10-08",
@@ -200,8 +207,8 @@ def write_outputs(batch_code, rows, anomalies):
 def main():
     manifest = []
     total_anomalies = 0
-    for batch_code, base_url in BASES:
-        rows, anomalies = scrape(batch_code, base_url)
+    for batch_code, base_url, expected in BASES:
+        rows, anomalies = scrape(batch_code, base_url, expected)
         write_outputs(batch_code, rows, anomalies)
         manifest.append({
             "batch_code": batch_code,
