@@ -1,0 +1,18 @@
+[
+  {
+    "batch_code": "CDS_2021_I_GK",
+    "source": "https://www.unlockias.in/cds-2021-i-general-knowledge",
+    "rows": 120,
+    "cancelled": 1,
+    "anomalies": 0,
+    "sha256_json": "0d4529cf2c1d791f14906dfeefb314b0c829eef369174fbd720d9f7518dbcbd7"
+  },
+  {
+    "batch_code": "CDS_2021_II_GK",
+    "source": "https://www.unlockias.in/cds-2021-ii-general-knowledge",
+    "rows": 120,
+    "cancelled": 1,
+    "anomalies": 0,
+    "sha256_json": "5759d7204293d365e782f7d4a72363c57c8b68e31862ecdd2177dcab87c9e256"
+  }
+]
