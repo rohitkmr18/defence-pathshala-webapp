@@ -1,6 +1,6 @@
 -- Atomic, insert-only Current Affairs publisher. Never modify an existing edition.
 -- Deployed separately after migration review; execute only through service_role.
-create or replace function public.publish_current_affairs_edition_atomic(payload jsonb)
+create function public.publish_current_affairs_edition_atomic(payload jsonb)
 returns uuid
 language plpgsql
 security invoker
