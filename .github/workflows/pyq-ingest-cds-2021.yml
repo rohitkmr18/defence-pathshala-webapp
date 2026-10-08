@@ -32,6 +32,9 @@ jobs:
       - name: Scrape CAPF + CDS 2021
         run: python scripts/scrape-unlockias-cds-2021.py
 
+      - name: Extract granular taxonomy hints
+        run: python scripts/scrape-unlockias-taxonomy-hints.py
+
       - name: Validate generated row counts
         run: |
           python - <<'PY'
