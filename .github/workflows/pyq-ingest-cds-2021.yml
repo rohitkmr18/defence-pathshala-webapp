@@ -6,7 +6,6 @@ on:
       - data/pyq-ingestion-v1-2021-pilot
     paths:
       - 'scripts/scrape-unlockias-cds-2021.py'
-      - 'scripts/scrape-unlockias-taxonomy-hints.py'
       - '.github/workflows/pyq-ingest-cds-2021.yml'
   workflow_dispatch:
 
@@ -32,9 +31,6 @@ jobs:
 
       - name: Scrape CAPF + CDS 2021
         run: python scripts/scrape-unlockias-cds-2021.py
-
-      - name: Extract granular taxonomy hints
-        run: python scripts/scrape-unlockias-taxonomy-hints.py
 
       - name: Validate generated row counts
         run: |
