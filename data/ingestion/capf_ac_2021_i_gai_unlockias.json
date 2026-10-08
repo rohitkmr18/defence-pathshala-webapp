@@ -8,6 +8,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q1-time-elapsed-between-viewing-lightning-flash-hearing",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 1,
     "question_id": "CAPF_2021_P1_001",
@@ -29,6 +32,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q2-approximate-wavelength-violet-light-air",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 2,
     "question_id": "CAPF_2021_P1_002",
@@ -50,6 +56,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q3-electromagnetic-radiation-cook-food",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 3,
     "question_id": "CAPF_2021_P1_003",
@@ -71,6 +80,9 @@
     "source_key_opt": "A",
     "source_answer_raw": "A",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q4-object-placed-front-lens-image-formed-real",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 4,
     "question_id": "CAPF_2021_P1_004",
@@ -92,6 +104,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q5-one-statements-regard-short-sighted-person-correct",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 5,
     "question_id": "CAPF_2021_P1_005",
@@ -113,6 +128,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q6-one-organelles-found-animal-cells",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 6,
     "question_id": "CAPF_2021_P1_006",
@@ -134,6 +152,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q7-one-plant-tissues-large-air-spaces",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 7,
     "question_id": "CAPF_2021_P1_007",
@@ -155,6 +176,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q8-one-connective-tissue",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 8,
     "question_id": "CAPF_2021_P1_008",
@@ -176,6 +200,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q9-one-organisms-belongs-kingdom-monera",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 9,
     "question_id": "CAPF_2021_P1_009",
@@ -197,6 +224,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q10-one-diseases-transmit-through-fine-droplets-coming",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 10,
     "question_id": "CAPF_2021_P1_010",
@@ -218,6 +248,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q11-one-breakdown-product-glucose-during-respiration",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 11,
     "question_id": "CAPF_2021_P1_011",
@@ -239,6 +272,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q12-one-example-endothermic-reaction",
+    "source_topic_hints": [
+      "Environment & Ecology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 12,
     "question_id": "CAPF_2021_P1_012",
@@ -260,6 +296,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q13-packets-potato-chips-usually-flushed-one-gases",
+    "source_topic_hints": [
+      "Environment & Ecology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 13,
     "question_id": "CAPF_2021_P1_013",
@@ -281,6 +320,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q14-according-early-indian-philosophers-basic-elements-described",
+    "source_topic_hints": [
+      "Art & Culture"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 14,
     "question_id": "CAPF_2021_P1_014",
@@ -302,6 +344,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q15-milkman-adds-small-amount-baking-soda-milk",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 15,
     "question_id": "CAPF_2021_P1_015",
@@ -323,6 +368,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q16-one-metal-oxides-usually-react-sodium-hydroxide",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 16,
     "question_id": "CAPF_2021_P1_016",
@@ -344,6 +392,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q17-calcium-metal-reacts-sulphuric-acid-reaction-stops",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 17,
     "question_id": "CAPF_2021_P1_017",
@@ -365,6 +416,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q18-white-light-beam-made-fall-hollow-prism",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 18,
     "question_id": "CAPF_2021_P1_018",
@@ -386,6 +440,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q19-figure-shows-image-clock-plane-mirror-one",
+    "source_topic_hints": [
+      "Logical Reasoning & Mental Ability"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 19,
     "question_id": "CAPF_2021_P1_019",
@@ -407,6 +464,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q20-one-among-luminous-object",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 20,
     "question_id": "CAPF_2021_P1_020",
@@ -428,6 +488,9 @@
     "source_key_opt": "A",
     "source_answer_raw": "A",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q21-let-electric-current-flow-through-incandescent-lamp",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 21,
     "question_id": "CAPF_2021_P1_021",
@@ -449,6 +512,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q22-one-among-renewable-energy-source",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 22,
     "question_id": "CAPF_2021_P1_022",
@@ -470,6 +536,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q23-one-function-chlorophyll",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 23,
     "question_id": "CAPF_2021_P1_023",
@@ -491,6 +560,9 @@
     "source_key_opt": "A",
     "source_answer_raw": "A",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q24-one-statements-about-life-processes-single-celled",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 24,
     "question_id": "CAPF_2021_P1_024",
@@ -512,6 +584,9 @@
     "source_key_opt": "A",
     "source_answer_raw": "A",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q25-one-organisms-possess-notochord-any-stage-life",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 25,
     "question_id": "CAPF_2021_P1_025",
@@ -533,6 +608,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q26-one-pairs-correctly-matched",
+    "source_topic_hints": [
+      "General Science"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 26,
     "question_id": "CAPF_2021_P1_026",
@@ -554,6 +632,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q27-one-metals-react-oxygen-water-acids",
+    "source_topic_hints": [
+      "General Science"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 27,
     "question_id": "CAPF_2021_P1_027",
@@ -575,6 +656,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q28-one-metals-produces-hydrogen-cold-water",
+    "source_topic_hints": [
+      "Geography"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 28,
     "question_id": "CAPF_2021_P1_028",
@@ -596,6 +680,9 @@
     "source_key_opt": "A",
     "source_answer_raw": "A",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q29-manganese-extracted-heating-manganese-dioxide-aluminium-powder",
+    "source_topic_hints": [
+      "Geography"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 29,
     "question_id": "CAPF_2021_P1_029",
@@ -617,6 +704,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q30-one-properties-decreases-across-periodic-table-left",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 30,
     "question_id": "CAPF_2021_P1_030",
@@ -638,6 +728,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q31-one-statements-about-production-possibility-frontier-correct",
+    "source_topic_hints": [
+      "Indian Economy"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 31,
     "question_id": "CAPF_2021_P1_031",
@@ -659,6 +752,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q32-magnitude-price-elasticity-individual-good-determined-degree",
+    "source_topic_hints": [
+      "Indian Economy"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 32,
     "question_id": "CAPF_2021_P1_032",
@@ -680,6 +776,9 @@
     "source_key_opt": "A",
     "source_answer_raw": "A",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q33-one-functions-automatic-stabilizer-context-fiscal-monetary",
+    "source_topic_hints": [
+      "Indian Economy"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 33,
     "question_id": "CAPF_2021_P1_033",
@@ -701,6 +800,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q34-broadly-both-birth-death-rates-low-one",
+    "source_topic_hints": [
+      "Geography"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 34,
     "question_id": "CAPF_2021_P1_034",
@@ -722,6 +824,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q35-one-pull-factor-migration",
+    "source_topic_hints": [
+      "Geography"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 35,
     "question_id": "CAPF_2021_P1_035",
@@ -743,6 +848,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q36-depression-top-volcano-volcanic-eruption-called",
+    "source_topic_hints": [
+      "Geography"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 36,
     "question_id": "CAPF_2021_P1_036",
@@ -764,6 +872,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q37-order-find-out-absolute-location-place-map",
+    "source_topic_hints": [
+      "Geography"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 37,
     "question_id": "CAPF_2021_P1_037",
@@ -785,6 +896,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q38-speed-wind-measured",
+    "source_topic_hints": [
+      "General Science"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 38,
     "question_id": "CAPF_2021_P1_038",
@@ -806,6 +920,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q39-course-river-time-one-features-formed-old",
+    "source_topic_hints": [
+      "Geography"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 39,
     "question_id": "CAPF_2021_P1_039",
@@ -827,6 +944,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q40-most-mature-harappan-sites-region-cholistan-abandoned",
+    "source_topic_hints": [
+      "Ancient History"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 40,
     "question_id": "CAPF_2021_P1_040",
@@ -848,6 +968,9 @@
     "source_key_opt": "A",
     "source_answer_raw": "A",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q41-madhyamika-karika-basic-text-madhyamika-school-composed",
+    "source_topic_hints": [
+      "Ancient History"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 41,
     "question_id": "CAPF_2021_P1_041",
@@ -869,6 +992,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q42-one-pairs-authors-sanskrit-literary-works-correctly",
+    "source_topic_hints": [
+      "Art & Culture"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 42,
     "question_id": "CAPF_2021_P1_042",
@@ -890,6 +1016,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q43-mathura-school-art-buddha-images-largely-carved",
+    "source_topic_hints": [
+      "Ancient History"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 43,
     "question_id": "CAPF_2021_P1_043",
@@ -911,6 +1040,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q44-mauryan-capital-pataliputra-associated-archaeological-remains",
+    "source_topic_hints": [
+      "History"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 44,
     "question_id": "CAPF_2021_P1_044",
@@ -932,6 +1064,9 @@
     "source_key_opt": "A",
     "source_answer_raw": "A",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q45-satavahanas-identified-puranas-one-epithets",
+    "source_topic_hints": [
+      "Ancient History"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 45,
     "question_id": "CAPF_2021_P1_045",
@@ -953,6 +1088,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q46-one-powers-supreme-court-also-conferred-high",
+    "source_topic_hints": [
+      "Indian Polity"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 46,
     "question_id": "CAPF_2021_P1_046",
@@ -974,6 +1112,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q47-constitution-india-guarantee-one-fundamental-right",
+    "source_topic_hints": [
+      "Indian Polity"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 47,
     "question_id": "CAPF_2021_P1_047",
@@ -995,6 +1136,9 @@
     "source_key_opt": "A",
     "source_answer_raw": "A",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q48-one-statements-about-supreme-court-correct",
+    "source_topic_hints": [
+      "Indian Polity"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 48,
     "question_id": "CAPF_2021_P1_048",
@@ -1016,6 +1160,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q49-one-statements-about-public-accounts-committee-correct",
+    "source_topic_hints": [
+      "Indian Polity"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 49,
     "question_id": "CAPF_2021_P1_049",
@@ -1037,6 +1184,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q50-appointed-judge-supreme-court",
+    "source_topic_hints": [
+      "Indian Polity"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 50,
     "question_id": "CAPF_2021_P1_050",
@@ -1058,6 +1208,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q51-eight-metallic-balls-one-centimetre-radius-each",
+    "source_topic_hints": [
+      "General Science"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 51,
     "question_id": "CAPF_2021_P1_051",
@@ -1079,6 +1232,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q52-ratio-monthly-incomes-ratio-expenditures-each-saves",
+    "source_topic_hints": [
+      "Quantitative Aptitude & Data Interpretation"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 52,
     "question_id": "CAPF_2021_P1_052",
@@ -1100,6 +1256,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q53-together-finish-job-days-together-finish-same",
+    "source_topic_hints": [
+      "Quantitative Aptitude & Data Interpretation"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 53,
     "question_id": "CAPF_2021_P1_053",
@@ -1121,6 +1280,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q54-tree-present-feet-tall-every-year-grows",
+    "source_topic_hints": [
+      "Quantitative Aptitude & Data Interpretation"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 54,
     "question_id": "CAPF_2021_P1_054",
@@ -1142,6 +1304,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q55-first-march-year-sunday-day-first-february",
+    "source_topic_hints": [
+      "Logical Reasoning & Mental Ability"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 55,
     "question_id": "CAPF_2021_P1_055",
@@ -1163,6 +1328,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q56-one-among-statements-correct",
+    "source_topic_hints": [
+      "Indian Economy"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 56,
     "question_id": "CAPF_2021_P1_056",
@@ -1184,6 +1352,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q57-amount-equilibrium-level-real-gdp-exceeds-full",
+    "source_topic_hints": [
+      "Indian Economy"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 57,
     "question_id": "CAPF_2021_P1_057",
@@ -1205,6 +1376,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q58-anything-recognized-money-needs-characteristics-act-intermediate",
+    "source_topic_hints": [
+      "Indian Economy"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 58,
     "question_id": "CAPF_2021_P1_058",
@@ -1226,6 +1400,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q59-sectoral-shares-gross-value-added-gva-year",
+    "source_topic_hints": [
+      "Indian Economy"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 59,
     "question_id": "CAPF_2021_P1_059",
@@ -1247,6 +1424,9 @@
     "source_key_opt": "A",
     "source_answer_raw": "A",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q60-basis-employment-conditions-economy-divided",
+    "source_topic_hints": [
+      "Indian Economy"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 60,
     "question_id": "CAPF_2021_P1_060",
@@ -1268,6 +1448,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q61-one-type-chemical-weathering",
+    "source_topic_hints": [
+      "Geography"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 61,
     "question_id": "CAPF_2021_P1_061",
@@ -1289,6 +1472,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q62-match-list-list-select-correct-answer-using",
+    "source_topic_hints": [
+      "Geography"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 62,
     "question_id": "CAPF_2021_P1_062",
@@ -1310,6 +1496,9 @@
     "source_key_opt": "A",
     "source_answer_raw": "A",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q63-main-types-iron-ores-found-india-haematite",
+    "source_topic_hints": [
+      "Geography"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 63,
     "question_id": "CAPF_2021_P1_063",
@@ -1331,6 +1520,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q64-asan-conservation-reserve-located",
+    "source_topic_hints": [
+      "Environment & Ecology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 64,
     "question_id": "CAPF_2021_P1_064",
@@ -1352,6 +1544,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q65-consider-statements-early-sikh-gurus-religious-preachers",
+    "source_topic_hints": [
+      "Medieval History"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 65,
     "question_id": "CAPF_2021_P1_065",
@@ -1373,6 +1568,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q66-qutb-minar-originally-four-storied-among-delhi",
+    "source_topic_hints": [
+      "Medieval History"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 66,
     "question_id": "CAPF_2021_P1_066",
@@ -1394,6 +1592,9 @@
     "source_key_opt": "A",
     "source_answer_raw": "A",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q67-one-pairs-deccan-sultanates-respective-regions-correctly",
+    "source_topic_hints": [
+      "History"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 67,
     "question_id": "CAPF_2021_P1_067",
@@ -1415,6 +1616,9 @@
     "source_key_opt": "A",
     "source_answer_raw": "A",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q68-consider-statements-under-akbar-system-zabt-established",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 68,
     "question_id": "CAPF_2021_P1_068",
@@ -1436,6 +1640,9 @@
     "source_key_opt": "A",
     "source_answer_raw": "A",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q69-among-warned-colleagues-constituent-assembly-british-made",
+    "source_topic_hints": [
+      "Indian Polity"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 69,
     "question_id": "CAPF_2021_P1_069",
@@ -1457,6 +1664,9 @@
     "source_key_opt": "A",
     "source_answer_raw": "A",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q70-among-fixes-date-election-speaker-lok-sabha",
+    "source_topic_hints": [
+      "Indian Polity"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 70,
     "question_id": "CAPF_2021_P1_070",
@@ -1478,6 +1688,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q71-one-statements-about-personal-liberty-correct",
+    "source_topic_hints": [
+      "Indian Polity"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 71,
     "question_id": "CAPF_2021_P1_071",
@@ -1499,6 +1712,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q72-one-statements-regard-directive-principles-state-policy",
+    "source_topic_hints": [
+      "Indian Polity"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 72,
     "question_id": "CAPF_2021_P1_072",
@@ -1520,6 +1736,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q73-one-statements-regard-preamble-constitution-india-correct",
+    "source_topic_hints": [
+      "Indian Polity"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 73,
     "question_id": "CAPF_2021_P1_073",
@@ -1541,6 +1760,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q74-electoral-college-electing-president-india-include-all",
+    "source_topic_hints": [
+      "Indian Polity"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 74,
     "question_id": "CAPF_2021_P1_074",
@@ -1562,6 +1784,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q75-start-business-investing-000-000-000-respectively",
+    "source_topic_hints": [
+      "Quantitative Aptitude & Data Interpretation"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 75,
     "question_id": "CAPF_2021_P1_075",
@@ -1583,6 +1808,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q76-stock-clearance-sale-shopkeeper-gives-off-all",
+    "source_topic_hints": [
+      "Quantitative Aptitude & Data Interpretation"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 76,
     "question_id": "CAPF_2021_P1_076",
@@ -1604,6 +1832,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q77-average-age-raj-father-years-ages-father",
+    "source_topic_hints": [
+      "Quantitative Aptitude & Data Interpretation"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 77,
     "question_id": "CAPF_2021_P1_077",
@@ -1625,6 +1856,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q78-smallest-number-added-10000-becomes-divisible",
+    "source_topic_hints": [
+      "Mathematics"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 78,
     "question_id": "CAPF_2021_P1_078",
@@ -1646,6 +1880,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q79-suppose-nth-term-series-there-terms-series",
+    "source_topic_hints": [
+      "Mathematics"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 79,
     "question_id": "CAPF_2021_P1_079",
@@ -1667,6 +1904,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q80-many-different-words-without-meaning-formed-using",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 80,
     "question_id": "CAPF_2021_P1_080",
@@ -1688,6 +1928,9 @@
     "source_key_opt": "A",
     "source_answer_raw": "A",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q81-widespread-deaths-due-starvation-epidemics-characteristics",
+    "source_topic_hints": [
+      "Indian Economy"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 81,
     "question_id": "CAPF_2021_P1_081",
@@ -1709,6 +1952,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q82-price-declared-government-every-year-before-sowing",
+    "source_topic_hints": [
+      "Indian Economy"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 82,
     "question_id": "CAPF_2021_P1_082",
@@ -1730,6 +1976,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q83-caves-arches-stacks-stumps-landscape-features-one",
+    "source_topic_hints": [
+      "Geography"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 83,
     "question_id": "CAPF_2021_P1_083",
@@ -1751,6 +2000,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q84-statements-about-tropical-rain-forests-correct-soils",
+    "source_topic_hints": [
+      "Geography"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 84,
     "question_id": "CAPF_2021_P1_084",
@@ -1772,6 +2024,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q85-one-soils-salt-content-high-common-salt",
+    "source_topic_hints": [
+      "Geography"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 85,
     "question_id": "CAPF_2021_P1_085",
@@ -1793,6 +2048,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q86-statements-about-akbar-correct-1560s-akbar-fort",
+    "source_topic_hints": [
+      "Medieval History"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 86,
     "question_id": "CAPF_2021_P1_086",
@@ -1814,6 +2072,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q87-statements-about-amaranayakas-vijayanagara-correct-amaranayakas-military",
+    "source_topic_hints": [
+      "Medieval History"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 87,
     "question_id": "CAPF_2021_P1_087",
@@ -1835,6 +2096,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q88-pairs-correctly-matched-permanent-settlement-lord-cornwallis",
+    "source_topic_hints": [
+      "Modern History"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 88,
     "question_id": "CAPF_2021_P1_088",
@@ -1856,6 +2120,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q89-among-assumed-title-nizam-mulk-asaf-jah",
+    "source_topic_hints": [
+      "Medieval History"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 89,
     "question_id": "CAPF_2021_P1_089",
@@ -1877,6 +2144,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q90-one-fundamental-rights-provided-person",
+    "source_topic_hints": [
+      "Indian Polity"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 90,
     "question_id": "CAPF_2021_P1_090",
@@ -1898,6 +2168,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q91-constitution-india-contains-provision-constitution-municipalities-every",
+    "source_topic_hints": [
+      "Indian Polity"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 91,
     "question_id": "CAPF_2021_P1_091",
@@ -1919,6 +2192,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q92-consider-quote-26th-january-1950-going-enter",
+    "source_topic_hints": [
+      "Indian Polity"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 92,
     "question_id": "CAPF_2021_P1_092",
@@ -1940,6 +2216,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q93-one-powers-conferred-president-india",
+    "source_topic_hints": [
+      "Indian Polity"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 93,
     "question_id": "CAPF_2021_P1_093",
@@ -1961,6 +2240,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q94-one-statements-regard-maneka-gandhi-union-india",
+    "source_topic_hints": [
+      "Indian Polity"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 94,
     "question_id": "CAPF_2021_P1_094",
@@ -1982,6 +2264,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q95-shopkeeper-gives-two-consecutive-discounts-respectively-items",
+    "source_topic_hints": [
+      "Indian Economy"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 95,
     "question_id": "CAPF_2021_P1_095",
@@ -2003,6 +2288,9 @@
     "source_key_opt": "A",
     "source_answer_raw": "A",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q96-difference-compound-interest-simple-interest-sum-money",
+    "source_topic_hints": [
+      "Quantitative Aptitude & Data Interpretation"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 96,
     "question_id": "CAPF_2021_P1_096",
@@ -2024,6 +2312,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q97-much-water-added-alcohol-mixture-contains-alcohol",
+    "source_topic_hints": [
+      "General Science"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 97,
     "question_id": "CAPF_2021_P1_097",
@@ -2045,6 +2336,9 @@
     "source_key_opt": "A",
     "source_answer_raw": "A",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q98-number-416-more-than-same-number-then",
+    "source_topic_hints": [
+      "Quantitative Aptitude & Data Interpretation"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 98,
     "question_id": "CAPF_2021_P1_098",
@@ -2066,6 +2360,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q99-india-cardamom-hills-regarded-continuation",
+    "source_topic_hints": [
+      "Geography"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 99,
     "question_id": "CAPF_2021_P1_099",
@@ -2087,6 +2384,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q100-match-list-list-select-correct-answer-using",
+    "source_topic_hints": [
+      "Geography"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 100,
     "question_id": "CAPF_2021_P1_100",
@@ -2108,6 +2408,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q101-one-only-riverine-major-port-india",
+    "source_topic_hints": [
+      "Indian Economy"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 101,
     "question_id": "CAPF_2021_P1_101",
@@ -2129,6 +2432,9 @@
     "source_key_opt": "A",
     "source_answer_raw": "A",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q102-one-desert-river",
+    "source_topic_hints": [
+      "Geography"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 102,
     "question_id": "CAPF_2021_P1_102",
@@ -2150,6 +2456,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q103-heaviest-rocks-rolled-along-river-bed-river",
+    "source_topic_hints": [
+      "Geography"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 103,
     "question_id": "CAPF_2021_P1_103",
@@ -2171,6 +2480,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q104-factors-needed-growth-corals-freshwater-clear-shallow",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 104,
     "question_id": "CAPF_2021_P1_104",
@@ -2192,6 +2504,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q105-convection-currents-move-tectonic-plates-found-layer",
+    "source_topic_hints": [
+      "Geology & Geophysics"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 105,
     "question_id": "CAPF_2021_P1_105",
@@ -2213,6 +2528,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q106-consider-statements-growth-socialist-tendency-national-movement",
+    "source_topic_hints": [
+      "Modern History"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 106,
     "question_id": "CAPF_2021_P1_106",
@@ -2234,6 +2552,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q107-initially-purpose-setting-hill-stations-during-colonial",
+    "source_topic_hints": [
+      "Modern History"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 107,
     "question_id": "CAPF_2021_P1_107",
@@ -2255,6 +2576,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q108-among-founded-dharma-sabha",
+    "source_topic_hints": [
+      "Geography"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 108,
     "question_id": "CAPF_2021_P1_108",
@@ -2276,6 +2600,9 @@
     "source_key_opt": "A",
     "source_answer_raw": "A",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q109-consider-jat-peasant-leaders-17th-early-18th",
+    "source_topic_hints": [
+      "Medieval History"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 109,
     "question_id": "CAPF_2021_P1_109",
@@ -2297,6 +2624,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q110-among-bhakti-saints-belong-nirguna-school-bhakti",
+    "source_topic_hints": [
+      "Medieval History"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 110,
     "question_id": "CAPF_2021_P1_110",
@@ -2318,6 +2648,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q111-volcano-mount-merapi-erupted-january-2021-situated",
+    "source_topic_hints": [
+      "Geography"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 111,
     "question_id": "CAPF_2021_P1_111",
@@ -2339,6 +2672,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q112-100-pilot-project-launched-pune-june-2021",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 112,
     "question_id": "CAPF_2021_P1_112",
@@ -2360,6 +2696,9 @@
     "source_key_opt": "A",
     "source_answer_raw": "A",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q113-occasion-world-environment-day-2021-one-declared",
+    "source_topic_hints": [
+      "Environment & Ecology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 113,
     "question_id": "CAPF_2021_P1_113",
@@ -2381,6 +2720,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q114-among-withdrawn-french-open-tennis-tournament-2021",
+    "source_topic_hints": [
+      "Current Affairs"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 114,
     "question_id": "CAPF_2021_P1_114",
@@ -2402,6 +2744,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q115-heron-drones-inducted-indian-forces-enhancing-surveillance",
+    "source_topic_hints": [
+      "Defence & Security"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 115,
     "question_id": "CAPF_2021_P1_115",
@@ -2423,6 +2768,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q116-cyclone-tauktae-named",
+    "source_topic_hints": [
+      "Geography"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 116,
     "question_id": "CAPF_2021_P1_116",
@@ -2444,6 +2792,9 @@
     "source_key_opt": "A",
     "source_answer_raw": "A",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q117-match-list-list-select-correct-answer-using",
+    "source_topic_hints": [
+      "Geography"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 117,
     "question_id": "CAPF_2021_P1_117",
@@ -2465,6 +2816,9 @@
     "source_key_opt": "D",
     "source_answer_raw": "D",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q118-indian-coast-guard-offshore-patrol-vessel-sajag",
+    "source_topic_hints": [
+      "Defence & Security"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 118,
     "question_id": "CAPF_2021_P1_118",
@@ -2486,6 +2840,9 @@
     "source_key_opt": "A",
     "source_answer_raw": "A",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q119-among-head-expert-committee-variable-capital-company",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 119,
     "question_id": "CAPF_2021_P1_119",
@@ -2507,6 +2864,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q120-one-states-ranked-first-sustainable-development-goal",
+    "source_topic_hints": [
+      "Indian Polity"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 120,
     "question_id": "CAPF_2021_P1_120",
@@ -2528,6 +2888,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q121-one-theme-world-ocean-day-2021",
+    "source_topic_hints": [
+      "International Relations"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 121,
     "question_id": "CAPF_2021_P1_121",
@@ -2549,6 +2912,9 @@
     "source_key_opt": "A",
     "source_answer_raw": "A",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q122-latest-chandler-good-government-index-cggi-classifies",
+    "source_topic_hints": [
+      "Indian Economy"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 122,
     "question_id": "CAPF_2021_P1_122",
@@ -2570,6 +2936,9 @@
     "source_key_opt": "B",
     "source_answer_raw": "B",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q123-scientists-csir-ncl-pune-support-water-technology",
+    "source_topic_hints": [
+      "Art & Culture"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 123,
     "question_id": "CAPF_2021_P1_123",
@@ -2591,6 +2960,9 @@
     "source_key_opt": "C",
     "source_answer_raw": "C",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q124-one-films-won-best-film-award-environment",
+    "source_topic_hints": [
+      "Science & Technology"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 124,
     "question_id": "CAPF_2021_P1_124",
@@ -2612,6 +2984,9 @@
     "source_key_opt": "A",
     "source_answer_raw": "A",
     "source_url": "https://www.unlockias.in/capf-2021-general-ability/q125-one-books-declared-winner-2021-international-booker",
+    "source_topic_hints": [
+      "Art & Culture"
+    ],
     "batch_code": "CAPF_AC_2021_I_GAI",
     "q_num": 125,
     "question_id": "CAPF_2021_P1_125",

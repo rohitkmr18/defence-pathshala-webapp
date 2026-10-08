@@ -5,7 +5,7 @@
     "rows": 125,
     "cancelled": 0,
     "anomalies": 0,
-    "sha256_json": "ca01e446516b2a74726feb690ba1fc91d455077c2baa44ca665d2e1d19d072d0"
+    "sha256_json": "1fdf6a9e6babb0f7d8398d7da147cfde99e8381bc6fcba790926fbb222cdd9dc"
   },
   {
     "batch_code": "CDS_2021_I_GK",
@@ -13,7 +13,7 @@
     "rows": 120,
     "cancelled": 1,
     "anomalies": 0,
-    "sha256_json": "b071d16bb0131348b1bd2691f668b9996b95565dabac1dc4e0c5db771a398c18"
+    "sha256_json": "72455534ec29c9c404755e6b785df75a094856f3fdfaeef2a95900d28ba53c81"
   },
   {
     "batch_code": "CDS_2021_II_GK",
@@ -21,6 +21,6 @@
     "rows": 120,
     "cancelled": 1,
     "anomalies": 0,
-    "sha256_json": "3dd1523035724aed76fd8b381fee3038513b61b5d480b832882125794d2ee0d9"
+    "sha256_json": "467ff31ed2bb5c12518873b5af94c5b781589d714139968eb713dd4ace7d2f49"
   }
 ]
