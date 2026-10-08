@@ -47,7 +47,11 @@ Do not propagate known legacy aliases. In particular, canonical ingestion should
 
 ## Answer rule
 
-`official_opt` is source authority when a valid UPSC key is available.
+`source_key_opt` is the accepted answer from the declared key source. `key_authority` records whether that source is `OFFICIAL` or `TRUSTED_SECONDARY`.
+
+For CDS I/II 2021, the product decision is to treat UnlockIAS as `TRUSTED_SECONDARY` source-of-truth because an official UPSC key is unavailable. This does **not** relabel the key as official; provenance remains explicit.
+
+`official_opt` is populated only when an actual official key exists.
 
 `llm_opt` is an independent diagnostic solve.
 
