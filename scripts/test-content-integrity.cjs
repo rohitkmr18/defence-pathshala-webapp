@@ -49,3 +49,21 @@ test('full-paper validation detects missing questions, duplicates, mixed papers 
  assert.equal(isCompletePaper(paper.slice(1)),false);
  for (const change of [{q_num:2},{year:2024},{opt_d:''},{content_status:'WITHHELD'}]) assert.equal(isCompletePaper([{...paper[0],...change},...paper.slice(1)]),false);
 });
+
+
+test('2021 release manifests permit only the approved dropped-question gaps', () => {
+ const { isCompletePaper } = load()('frontend/src/lib/content-quality.ts');
+ const make=(exam,year,cycle,paper,total,excluded)=>Array.from({length:total},(_,i)=>i+1)
+   .filter(n=>!excluded.includes(n))
+   .map(q_num=>({exam,year,cycle,paper,q_num,question:'Which?',opt_a:'a',opt_b:'b',opt_c:'c',opt_d:'d',final_opt:'B'}));
+
+ const capf=make('CAPF-AC',2021,'I','Paper I',125,[56,94]);
+ const cdsI=make('CDS',2021,'I','General Knowledge',120,[76]);
+ const cdsII=make('CDS',2021,'II','General Knowledge',120,[74]);
+
+ assert.equal(isCompletePaper(capf),true);
+ assert.equal(isCompletePaper(cdsI),true);
+ assert.equal(isCompletePaper(cdsII),true);
+ assert.equal(isCompletePaper(capf.filter(row=>row.q_num!==55)),false);
+ assert.equal(isCompletePaper([...cdsI,{...cdsI[0],q_num:76}]),false);
+});
