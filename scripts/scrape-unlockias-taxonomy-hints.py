@@ -33,36 +33,31 @@ def smallest_question_container(node):
         cur=cur.parent
     return chosen or node.parent
 
-def parse(url, expected):
+def parse(url, expected, batch):
     html=requests.get(url,headers=HEADERS,timeout=30).text
     soup=BeautifulSoup(html,"html.parser")
+    flat=clean(soup.get_text(" ",strip=True))
     result={}
-    # Q markers are rendered as Q1, Q2... in the year page cards.
-    for text_node in soup.find_all(string=re.compile(r"^\s*Q\s*\d+\s*$",re.I)):
-        m=re.search(r"(\d+)",str(text_node))
-        if not m: continue
-        q=int(m.group(1))
-        if not 1<=q<=expected: continue
-        box=smallest_question_container(text_node)
-        labels=[]
-        for a in box.find_all("a"):
-            t=clean(a.get_text(" ",strip=True))
-            if not t or t.upper()==f"Q{q}" or any(t.startswith(x) for x in STOP_PREFIXES):
-                continue
-            if t.lower() in DIFF: continue
-            if len(t)>100: continue
-            labels.append(t)
-        txt=clean(box.get_text(" ",strip=True)).lower()
-        difficulty=next((d for d in DIFF if re.search(rf"\b{d}\b",txt)),None)
-        # Prefer the shortest non-navigation label; these cards normally contain one taxonomy link.
-        labels=list(dict.fromkeys(labels))
-        result[q]={"labels":labels,"difficulty":difficulty}
+    if batch.startswith("CDS_2021_I_"):
+        prefix=r"CDS\s+2021\s+Session\s+I"
+    elif batch.startswith("CDS_2021_II_"):
+        prefix=r"CDS\s+2021\s+Session\s+II"
+    else:
+        prefix=r"CAPF\s+2021"
+    pat=re.compile(prefix+r"\s+(.{1,100}?)\s+(easy|moderate|difficult|hard)\s+Q\s*(\d+)\b",re.I)
+    for m in pat.finditer(flat):
+        q=int(m.group(3))
+        if 1<=q<=expected:
+            label=clean(m.group(1))
+            # prevent a previous card tail from leaking into the label
+            label=re.sub(r".*(?:Report Issue|View full question|Answer with full explanation)\s+","",label,flags=re.I)
+            result[q]={"labels":[label],"difficulty":m.group(2).lower()}
     return result
 
 def main():
     all_out={}
     for batch,url,expected in SOURCES:
-        meta=parse(url,expected)
+        meta=parse(url,expected,batch)
         all_out[batch]={"source_url":url,"expected":expected,"found":len(meta),"questions":meta}
     OUT.parent.mkdir(parents=True,exist_ok=True)
     OUT.write_text(json.dumps(all_out,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
