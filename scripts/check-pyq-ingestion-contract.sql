@@ -33,11 +33,42 @@ begin
     where release_ready
       and (
         extracted_rows <> expected_question_count
-        or release_eligible_rows <> expected_question_count
+        or included_rows + dropped_rows <> expected_question_count
+        or release_eligible_rows <> included_rows
         or blocked_rows <> 0
       )
   ) then
     raise exception 'invalid batch marked release-ready';
+  end if;
+
+  if exists (
+    select 1
+    from dp_ingest.v_row_validation
+    where release_disposition='INCLUDE'
+      and release_eligible
+      and (
+        coalesce(trim(explanation),'')=''
+        or coalesce(trim(source),'')=''
+        or coalesce(trim(taxonomy_concept),'')=''
+        or coalesce(trim(competency_id),'')=''
+        or coalesce(trim(source_id),'')=''
+        or coalesce(trim(temporal_context_id),'')=''
+        or esac_score is null
+        or abs(esac_score + difficulty_score - 100) > 0.02
+        or relation_degree is null
+        or relation_degree <> same_concept_degree + cross_exam_variant_degree + conceptual_variant_degree
+      )
+  ) then
+    raise exception 'release-eligible row missing complete intelligence';
+  end if;
+
+  if exists (
+    select 1
+    from dp_ingest.rows
+    where release_disposition='DROP'
+      and coalesce(trim(drop_reason),'')=''
+  ) then
+    raise exception 'dropped row missing auditable reason';
   end if;
 
   if exists (
