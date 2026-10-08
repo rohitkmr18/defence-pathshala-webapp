@@ -27,10 +27,10 @@ values
   'I',
   'General Knowledge',
   120,
-  'https://www.upsc.gov.in/sites/default/files/CDS-I-21-Gen_Knowledge.pdf',
+  'https://www.unlockias.in/cds-2021-i-general-knowledge',
+  'https://www.unlockias.in/cds-2021-i-general-knowledge',
   null,
-  null,
-  'UPSC_OFFICIAL_QP_2021',
+  'UNLOCKIAS_TRUSTED_SECONDARY_2026-10-08',
   'CREATED'
 ),
 (
@@ -40,10 +40,10 @@ values
   'II',
   'General Knowledge',
   120,
-  'https://www.upsc.gov.in/sites/default/files/QP-GK-CDS-EXAM-II-2021-161121.pdf',
+  'https://www.unlockias.in/cds-2021-ii-general-knowledge',
+  'https://www.unlockias.in/cds-2021-ii-general-knowledge',
   null,
-  null,
-  'UPSC_OFFICIAL_QP_2021',
+  'UNLOCKIAS_TRUSTED_SECONDARY_2026-10-08',
   'CREATED'
 )
 on conflict (batch_code) do nothing;
