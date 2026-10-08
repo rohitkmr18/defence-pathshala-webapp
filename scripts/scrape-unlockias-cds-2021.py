@@ -120,6 +120,13 @@ def extract_page(html, page_url):
     else:
         key = None
 
+    source_difficulty = None
+    for node in soup.find_all(string=True):
+        t = clean_space(str(node)).lower()
+        if t in {"easy","moderate","difficult","hard"}:
+            source_difficulty = "Hard" if t in {"difficult","hard"} else t.title()
+            break
+
     topic_hints = []
     for a in soup.find_all("a", href=True):
         label = clean_space(a.get_text(" ", strip=True))
@@ -139,6 +146,7 @@ def extract_page(html, page_url):
         "source_answer_raw": answer_raw,
         "source_url": page_url,
         "source_topic_hints": topic_hints,
+        "source_difficulty": source_difficulty,
     }
 
 def canonical_hash(row):
@@ -206,7 +214,7 @@ def write_outputs(batch_code, rows, anomalies):
         "batch_code","question_id","exam","year","cycle","paper","q_num",
         "question","opt_a","opt_b","opt_c","opt_d",
         "source_key_opt","key_authority","key_source_url",
-        "source_url","source_answer_raw","source_version","source_topic_hints","content_hash"
+        "source_url","source_answer_raw","source_version","source_topic_hints","source_difficulty","content_hash"
     ]
     with cp.open("w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fields)
@@ -228,6 +236,11 @@ def main():
             "rows": len(rows),
             "cancelled": sum(r["source_key_opt"] == "X" for r in rows),
             "anomalies": len(anomalies),
+            "difficulty_labels": sum(1 for r in rows if r.get("source_difficulty")),
+            "difficulty_breakdown": {
+                k: sum(1 for r in rows if r.get("source_difficulty") == k)
+                for k in ("Easy","Moderate","Hard")
+            },
             "sha256_json": hashlib.sha256(
                 (OUT_DIR / f"{batch_code.lower()}_unlockias.json").read_bytes()
             ).hexdigest(),
