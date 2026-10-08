@@ -47,7 +47,7 @@ begin
        or nullif(btrim(s->>'sourceUrl'),'') is null then
       raise exception 'Invalid story %', idx;
     end if;
-    hash_value := encode(extensions.digest(lower(btrim(s->>'headline')) || '|' || btrim(s->>'sourceUrl'),'sha256'),'hex');
+    hash_value := md5(lower(btrim(s->>'headline')) || '|' || btrim(s->>'sourceUrl'));
     insert into public.current_affairs_stories
       (post_id,story_number,headline,summary,category,subject,topic,subtopic,theme,
        exam_relevance,future_angle,keywords,what_happened,why_it_matters,key_facts,
