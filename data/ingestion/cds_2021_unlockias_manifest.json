@@ -5,7 +5,13 @@
     "rows": 125,
     "cancelled": 0,
     "anomalies": 0,
-    "sha256_json": "1fdf6a9e6babb0f7d8398d7da147cfde99e8381bc6fcba790926fbb222cdd9dc"
+    "difficulty_labels": 0,
+    "difficulty_breakdown": {
+      "Easy": 0,
+      "Moderate": 0,
+      "Hard": 0
+    },
+    "sha256_json": "1cc7e3b1c46756fa0a4de827c2bfb2b393b8786f44d6f5b9a284631d882b7a3f"
   },
   {
     "batch_code": "CDS_2021_I_GK",
@@ -13,7 +19,13 @@
     "rows": 120,
     "cancelled": 1,
     "anomalies": 0,
-    "sha256_json": "72455534ec29c9c404755e6b785df75a094856f3fdfaeef2a95900d28ba53c81"
+    "difficulty_labels": 0,
+    "difficulty_breakdown": {
+      "Easy": 0,
+      "Moderate": 0,
+      "Hard": 0
+    },
+    "sha256_json": "110da9985fca4ca8b15401674d2e5d07c84c6a2d2bfda17d18292fe4d12a30b2"
   },
   {
     "batch_code": "CDS_2021_II_GK",
@@ -21,6 +33,12 @@
     "rows": 120,
     "cancelled": 1,
     "anomalies": 0,
-    "sha256_json": "467ff31ed2bb5c12518873b5af94c5b781589d714139968eb713dd4ace7d2f49"
+    "difficulty_labels": 0,
+    "difficulty_breakdown": {
+      "Easy": 0,
+      "Moderate": 0,
+      "Hard": 0
+    },
+    "sha256_json": "830a55465428173195323874263e19443b266af4661dde1e07e21eb278a5d2a4"
   }
 ]
