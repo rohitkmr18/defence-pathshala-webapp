@@ -51,6 +51,8 @@ jobs:
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add data/ingestion
             git commit -m "Generate CDS 2021 UnlockIAS ingestion artifacts"
+            git fetch origin data/pyq-ingestion-v1-2021-pilot
+            git rebase origin/data/pyq-ingestion-v1-2021-pilot
             git push origin HEAD:data/pyq-ingestion-v1-2021-pilot
           else
             echo "No generated changes."
