@@ -1,8 +1,10 @@
 {
-  "schema_version": "DP_PYQ_2021_ENRICHMENT_SNAPSHOT_V2",
+  "schema_version": "DP_PYQ_2021_ENRICHMENT_SNAPSHOT_V3",
   "generated_from": "dp_ingest",
   "batch_code": "CDS_2021_II_GK",
-  "row_count": 120,
+  "source_row_count": 120,
+  "included_count": 119,
+  "dropped_count": 1,
   "rows": [
     {
       "question_id": "CDS_II_2021_GK_001",
@@ -37,8 +39,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_002",
@@ -73,8 +78,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_003",
@@ -109,8 +117,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_004",
@@ -145,8 +156,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_005",
@@ -181,8 +195,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_006",
@@ -217,8 +234,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_007",
@@ -253,8 +273,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_008",
@@ -289,8 +312,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_009",
@@ -325,8 +351,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_010",
@@ -361,8 +390,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_011",
@@ -397,8 +429,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_012",
@@ -433,8 +468,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_013",
@@ -469,8 +507,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_014",
@@ -505,8 +546,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_015",
@@ -541,8 +585,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_016",
@@ -577,8 +624,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_017",
@@ -613,8 +663,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_018",
@@ -649,8 +702,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_019",
@@ -685,8 +741,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_020",
@@ -721,8 +780,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_021",
@@ -757,8 +819,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_022",
@@ -793,8 +858,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_023",
@@ -829,8 +897,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_024",
@@ -865,8 +936,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_025",
@@ -901,8 +975,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_026",
@@ -937,8 +1014,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_027",
@@ -973,8 +1053,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_028",
@@ -1009,8 +1092,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_029",
@@ -1045,8 +1131,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_030",
@@ -1081,8 +1170,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_031",
@@ -1117,8 +1209,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_032",
@@ -1153,8 +1248,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_033",
@@ -1189,8 +1287,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_034",
@@ -1225,8 +1326,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_035",
@@ -1261,8 +1365,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_036",
@@ -1297,8 +1404,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_037",
@@ -1333,8 +1443,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_038",
@@ -1369,8 +1482,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_039",
@@ -1405,8 +1521,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_040",
@@ -1441,8 +1560,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_041",
@@ -1477,8 +1599,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_042",
@@ -1513,8 +1638,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_043",
@@ -1549,8 +1677,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_044",
@@ -1585,8 +1716,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_045",
@@ -1621,8 +1755,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_046",
@@ -1657,8 +1794,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_047",
@@ -1693,8 +1833,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_048",
@@ -1729,8 +1872,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_049",
@@ -1765,8 +1911,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_050",
@@ -1801,8 +1950,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_051",
@@ -1837,8 +1989,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_052",
@@ -1873,8 +2028,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_053",
@@ -1909,8 +2067,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_054",
@@ -1945,8 +2106,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_055",
@@ -1981,8 +2145,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_056",
@@ -2017,8 +2184,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_057",
@@ -2053,8 +2223,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_058",
@@ -2089,8 +2262,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_059",
@@ -2125,8 +2301,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_060",
@@ -2161,8 +2340,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_061",
@@ -2197,8 +2379,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_062",
@@ -2233,8 +2418,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_063",
@@ -2269,8 +2457,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_064",
@@ -2305,8 +2496,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_065",
@@ -2341,8 +2535,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_066",
@@ -2377,8 +2574,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_067",
@@ -2413,8 +2613,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_068",
@@ -2449,8 +2652,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_069",
@@ -2485,8 +2691,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_070",
@@ -2521,8 +2730,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_071",
@@ -2557,8 +2769,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_072",
@@ -2593,8 +2808,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_073",
@@ -2629,8 +2847,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_074",
@@ -2665,8 +2886,11 @@
       },
       "source_key_opt": "X",
       "final_opt": null,
+      "release_disposition": "DROP",
+      "drop_reason": "Dropped by product decision: source marks question cancelled.",
       "validation_issues": [],
-      "review_required": true
+      "review_required": false,
+      "row_status": "BLOCKED"
     },
     {
       "question_id": "CDS_II_2021_GK_075",
@@ -2701,8 +2925,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_076",
@@ -2737,8 +2964,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_077",
@@ -2773,8 +3003,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_078",
@@ -2809,8 +3042,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_079",
@@ -2845,8 +3081,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_080",
@@ -2881,8 +3120,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_081",
@@ -2917,8 +3159,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_082",
@@ -2953,8 +3198,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_083",
@@ -2989,8 +3237,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_084",
@@ -3025,8 +3276,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_085",
@@ -3061,8 +3315,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_086",
@@ -3097,8 +3354,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_087",
@@ -3133,8 +3393,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_088",
@@ -3169,8 +3432,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_089",
@@ -3205,8 +3471,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_090",
@@ -3241,8 +3510,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_091",
@@ -3277,8 +3549,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_092",
@@ -3313,8 +3588,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_093",
@@ -3349,8 +3627,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_094",
@@ -3385,8 +3666,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_095",
@@ -3421,8 +3705,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_096",
@@ -3457,8 +3744,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_097",
@@ -3493,8 +3783,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_098",
@@ -3529,8 +3822,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_099",
@@ -3565,8 +3861,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_100",
@@ -3601,8 +3900,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_101",
@@ -3637,8 +3939,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_102",
@@ -3673,8 +3978,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_103",
@@ -3709,8 +4017,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_104",
@@ -3745,8 +4056,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_105",
@@ -3781,8 +4095,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_106",
@@ -3817,8 +4134,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_107",
@@ -3853,8 +4173,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_108",
@@ -3889,8 +4212,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_109",
@@ -3925,8 +4251,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_110",
@@ -3961,8 +4290,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_111",
@@ -3997,8 +4329,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_112",
@@ -4033,8 +4368,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_113",
@@ -4069,8 +4407,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_114",
@@ -4105,8 +4446,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_115",
@@ -4141,8 +4485,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_116",
@@ -4177,8 +4524,11 @@
       },
       "source_key_opt": "D",
       "final_opt": "D",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_117",
@@ -4213,8 +4563,11 @@
       },
       "source_key_opt": "C",
       "final_opt": "C",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_118",
@@ -4249,8 +4602,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_119",
@@ -4285,8 +4641,11 @@
       },
       "source_key_opt": "A",
       "final_opt": "A",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     },
     {
       "question_id": "CDS_II_2021_GK_120",
@@ -4321,8 +4680,11 @@
       },
       "source_key_opt": "B",
       "final_opt": "B",
+      "release_disposition": "INCLUDE",
+      "drop_reason": null,
       "validation_issues": [],
-      "review_required": true
+      "review_required": true,
+      "row_status": "TAXONOMIZED"
     }
   ]
 }
