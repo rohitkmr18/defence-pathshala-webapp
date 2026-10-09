@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import { createHash } from 'node:crypto';
 import { pathToFileURL } from 'node:url';
 
-export const endpoint = 'https://defencepathshala.in/api/current-affairs/automation';
+export const endpoint = 'https://www.defencepathshala.in/api/current-affairs/automation';
 export function buildPublishingRequest(event, runId) {
   if (event.action !== 'opened' || event.repository?.full_name !== 'rohitkmr18/defence-pathshala-webapp'
       || event.repository?.id !== 1387974858 || event.sender?.id !== 321342611

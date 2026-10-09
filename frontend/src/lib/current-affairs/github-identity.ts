@@ -1,6 +1,6 @@
 import { createRemoteJWKSet, jwtVerify, type JWTVerifyGetKey } from "jose";
 
-export const PUBLISH_AUDIENCE = "https://defencepathshala.in/api/current-affairs/automation";
+export const PUBLISH_AUDIENCE = "https://www.defencepathshala.in/api/current-affairs/automation";
 export const PUBLISH_REPOSITORY = "rohitkmr18/defence-pathshala-webapp";
 export const PUBLISH_WORKFLOW = `${PUBLISH_REPOSITORY}/.github/workflows/current-affairs-publish.yml@refs/heads/main`;
 const issuer = "https://token.actions.githubusercontent.com";
