@@ -1,3 +1,4 @@
+
 drop policy if exists "current affairs candidates admin access" on public.current_affairs_candidates;
 
 create policy "current affairs candidates admin access"

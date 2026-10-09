@@ -1,3 +1,4 @@
+
 create index if not exists current_affairs_candidates_published_story_idx
   on public.current_affairs_candidates (published_story_id);
 

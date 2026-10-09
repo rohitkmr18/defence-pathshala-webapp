@@ -1,0 +1,47 @@
+[
+  {
+    "batch_code": "CAPF_AC_2021_I_GAI",
+    "source": "https://www.unlockias.in/capf-2021-general-ability",
+    "rows": 125,
+    "cancelled": 0,
+    "anomalies": 0,
+    "explanations": 125,
+    "difficulty_labels": 0,
+    "difficulty_breakdown": {
+      "Easy": 0,
+      "Moderate": 0,
+      "Hard": 0
+    },
+    "sha256_json": "48eda32a6b84c5c8939d852133978caae632f98ca0c5e89773186d593eceaa8f"
+  },
+  {
+    "batch_code": "CDS_2021_I_GK",
+    "source": "https://www.unlockias.in/cds-2021-i-general-knowledge",
+    "rows": 120,
+    "cancelled": 1,
+    "anomalies": 0,
+    "explanations": 120,
+    "difficulty_labels": 0,
+    "difficulty_breakdown": {
+      "Easy": 0,
+      "Moderate": 0,
+      "Hard": 0
+    },
+    "sha256_json": "f7937f8b99c51932f1938e938927ad91b768ae5f70b946b9fe39c1de9fe7c35d"
+  },
+  {
+    "batch_code": "CDS_2021_II_GK",
+    "source": "https://www.unlockias.in/cds-2021-ii-general-knowledge",
+    "rows": 120,
+    "cancelled": 1,
+    "anomalies": 0,
+    "explanations": 120,
+    "difficulty_labels": 0,
+    "difficulty_breakdown": {
+      "Easy": 0,
+      "Moderate": 0,
+      "Hard": 0
+    },
+    "sha256_json": "cc1136dc726b917fd5f8eee4e5be98eba0061c62d4d9bbd6e29722a6f9591a3d"
+  }
+]

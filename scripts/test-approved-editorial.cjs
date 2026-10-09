@@ -70,8 +70,8 @@ test('new atomic RPC preserves source bytes and every section, rejects invalid c
       insert into public.questions values ('11111111-1111-4111-a111-111111111111','CDS_II_2026_GK_011',true,true);
       insert into public.current_affairs_posts(date,title,published) values ('2026-10-07','Untouched legacy edition',true);`);
     const before = (await db.query("select * from current_affairs_posts where date='2026-10-07'")).rows[0];
-    await db.exec(fs.readFileSync('supabase/migrations/20261008050000_atomic_current_affairs_publish.sql', 'utf8'));
-    await db.exec(fs.readFileSync('supabase/migrations/20261009052951_approved_editorial_source.sql', 'utf8'));
+    await db.exec(fs.readFileSync('supabase/migrations/20261008060157_atomic_current_affairs_publish.sql', 'utf8'));
+    await db.exec(fs.readFileSync('supabase/migrations/20261009170716_approved_editorial_source.sql', 'utf8'));
     const call = p => db.query('select public.publish_current_affairs_edition_atomic($1::jsonb) id', [JSON.stringify(p)]);
     await assert.rejects(call(edition()), /Only service_role/);
     await db.exec('set role service_role');

@@ -1,3 +1,4 @@
+
 create table if not exists public.current_affairs_candidates (
   id uuid primary key default gen_random_uuid(),
   edition_date date not null,
@@ -68,12 +69,15 @@ create table if not exists public.current_affairs_candidates (
 
 create index if not exists current_affairs_candidates_edition_decision_idx
   on public.current_affairs_candidates (edition_date desc, decision, final_score desc);
+
 create index if not exists current_affairs_candidates_taxonomy_idx
   on public.current_affairs_candidates (subject, topic, subtopic);
+
 create index if not exists current_affairs_candidates_score_idx
   on public.current_affairs_candidates (final_score desc, edition_date desc);
 
 alter table public.current_affairs_candidates enable row level security;
+
 grant select, insert, update, delete on public.current_affairs_candidates to authenticated;
 
 drop policy if exists "current affairs candidates admin access" on public.current_affairs_candidates;

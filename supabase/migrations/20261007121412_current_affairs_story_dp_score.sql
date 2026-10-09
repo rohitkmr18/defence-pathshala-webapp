@@ -1,3 +1,4 @@
+
 alter table public.current_affairs_stories
   add column if not exists dp_score smallint;
 
