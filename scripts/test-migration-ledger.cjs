@@ -29,7 +29,12 @@ test('fresh schema reconstruction includes Phase 0, actual Phase 2 history and a
       'supabase/reconstruction/observed-grants.sql'];
     for (const path of paths) {
       // PGlite has built-in gen_random_uuid but not pgcrypto. No other SQL is altered.
-      await db.exec(fs.readFileSync(path, 'utf8').replace('create extension if not exists pgcrypto;', ''));
+      try {
+        await db.exec(fs.readFileSync(path, 'utf8').replace('create extension if not exists pgcrypto;', ''));
+      } catch (error) {
+        error.message = `${path}: ${error.message}`;
+        throw error;
+      }
     }
     const id = '11111111-1111-4111-8111-111111111111';
     await db.exec(`insert into auth.users(id) values ('${id}');
