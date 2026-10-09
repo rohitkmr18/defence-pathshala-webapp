@@ -5,7 +5,7 @@ export function safeLearningReturn(value: string | null | undefined, fallback = 
   const safe = safeAuthNext(value);
   if (safe === "/dashboard" && value !== "/dashboard") return fallback;
   const path = safe.split(/[?#]/)[0];
-  return path === "/dashboard" || path === "/dashboard/question-bank" || path === "/dashboard/practice" || path === "/dashboard/mistakes"
+  return (path === "/current-affairs" || /^\/current-affairs\/\d{4}-\d{2}-\d{2}$/.test(path)) || path === "/dashboard" || path === "/dashboard/question-bank" || path === "/dashboard/practice" || path === "/dashboard/mistakes"
     ? safe : fallback;
 }
 
@@ -25,7 +25,7 @@ export function isMobileLearningNavActive(href: string, pathname: string): boole
  */
 export function showGlobalMobileNav(pathname: string): boolean {
   const path = pathname.split(/[?#]/)[0];
-  return !["/dashboard/practice/session", "/dashboard/practice/full-paper"].some(
+  return !["/dashboard/practice/session", "/dashboard/practice/full-paper", "/pyq"].some(
     attempt => path === attempt || path.startsWith(`${attempt}/`)
   );
 }

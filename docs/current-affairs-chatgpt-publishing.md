@@ -1,5 +1,9 @@
 # ChatGPT-first Current Affairs publishing
 
+For the Issue 47 source/hash contract, complete Markdown and exact PYQ workflow,
+see [approved source and acceptance](current-affairs-issue-47.md). New publications
+require this complete approval package; the earlier subset-only payload is rejected.
+
 ## Findings, 9 October 2026
 
 PR #39 replaced the destructive REST ingestion sequence with one insert-only

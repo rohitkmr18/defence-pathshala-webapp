@@ -17,6 +17,9 @@ export type CurrentAffairsMcq = {
   subject: string | null;
   topic: string | null;
   examTags: string[];
+  approved?: boolean;
+  sourceUrl?: string;
+  taxonomy?: string[];
 };
 
 export type CurrentAffairsStory = {
@@ -35,6 +38,11 @@ export type CurrentAffairsStory = {
   subtopic: string | null;
   theme: string | null;
   examTags: string[];
+  editorialMarkdown: string | null;
+  linkedPyqIds: string[];
+  futureAngle: string | null;
+  keywords: string[];
+  category: string | null;
   dpScore: number | null;
   sourceName: string | null;
   sourceUrl: string | null;
@@ -54,6 +62,8 @@ export type CurrentAffairsPost = {
   readingTimeMinutes: number;
   slides: CurrentAffairsSlide[];
   stories: CurrentAffairsStory[];
+  editorialMarkdown: string | null;
+  approvedSourceHash: string | null;
   isLatest?: boolean;
 };
 
@@ -103,6 +113,8 @@ type RawPost = {
   title: string;
   summary: string | null;
   total_stories: number | null;
+  approved_editorial_source: string | null;
+  approved_editorial_sha256: string | null;
   current_affairs_stories: RawStory[] | null;
 };
 
@@ -139,50 +151,79 @@ function normalizeMcq(row: RawMcq, fallbackNumber: number): CurrentAffairsMcq {
 }
 
 function normalizePost(row: RawPost): CurrentAffairsPost {
+  // Never manufacture approved text from legacy rows. New documents retain exact source strings.
+  const approved = row.approved_editorial_source ? JSON.parse(row.approved_editorial_source) as {
+    title: string; summary: string; editorialMarkdown?: string;
+    stories: (Omit<CurrentAffairsStory, "id" | "storyNumber" | "mcqs"> & {
+      mcqs: { question: string; options: Record<"A" | "B" | "C" | "D", string>;
+        correctOption: "A" | "B" | "C" | "D"; explanation: string; examEdge: string;
+        difficulty: string; sourceUrl: string; subject?: string; topic?: string;
+        subtopic?: string; concept?: string; questionType?: string; examTags?: string[] }[];
+    })[];
+  } : null;
   const stories = (row.current_affairs_stories ?? [])
     .sort((a, b) => a.story_number - b.story_number)
     .map((story) => ({
       id: story.id,
       storyNumber: story.story_number,
-      headline: story.headline,
-      summary: story.summary,
-      whatHappened: story.what_happened,
-      whyItMatters: story.why_it_matters,
-      keyFacts: stringArray(story.key_facts),
-      conceptualLinkage: story.conceptual_linkage,
-      staticLink: story.static_link,
-      examRelevance: story.exam_relevance,
-      subject: story.subject,
-      topic: story.topic,
-      subtopic: story.subtopic,
-      theme: story.theme,
-      examTags: story.exam_tags ?? [],
-      dpScore: story.dp_score,
-      sourceName: story.source_name,
-      sourceUrl: story.source_url,
-      sourceDate: story.source_date,
+      headline: approved?.stories[story.story_number - 1]?.headline ?? story.headline,
+      summary: approved ? approved.stories[story.story_number - 1]?.summary ?? null : story.summary,
+      whatHappened: approved?.stories[story.story_number - 1]?.whatHappened ?? story.what_happened,
+      whyItMatters: approved?.stories[story.story_number - 1]?.whyItMatters ?? story.why_it_matters,
+      keyFacts: approved?.stories[story.story_number - 1]?.keyFacts ?? stringArray(story.key_facts),
+      conceptualLinkage: approved ? approved.stories[story.story_number - 1]?.conceptualLinkage ?? null : story.conceptual_linkage,
+      staticLink: approved ? approved.stories[story.story_number - 1]?.staticLink ?? null : story.static_link,
+      examRelevance: approved ? approved.stories[story.story_number - 1]?.examRelevance ?? null : story.exam_relevance,
+      subject: approved?.stories[story.story_number - 1]?.subject ?? story.subject,
+      topic: approved?.stories[story.story_number - 1]?.topic ?? story.topic,
+      subtopic: approved ? approved.stories[story.story_number - 1]?.subtopic ?? null : story.subtopic,
+      theme: approved ? approved.stories[story.story_number - 1]?.theme ?? null : story.theme,
+      examTags: approved?.stories[story.story_number - 1]?.examTags ?? story.exam_tags ?? [],
+      editorialMarkdown: approved?.stories[story.story_number - 1]?.editorialMarkdown ?? null,
+      linkedPyqIds: approved?.stories[story.story_number - 1]?.linkedPyqIds ?? [],
+      futureAngle: approved?.stories[story.story_number - 1]?.futureAngle ?? null,
+      keywords: approved?.stories[story.story_number - 1]?.keywords ?? [],
+      category: approved?.stories[story.story_number - 1]?.category ?? null,
+      dpScore: approved?.stories[story.story_number - 1]?.dpScore ?? story.dp_score,
+      sourceName: approved?.stories[story.story_number - 1]?.sourceName ?? story.source_name,
+      sourceUrl: approved?.stories[story.story_number - 1]?.sourceUrl ?? story.source_url,
+      sourceDate: approved?.stories[story.story_number - 1]?.sourceDate ?? story.source_date,
       mcqs: (story.current_affairs_mcqs ?? [])
         .sort((a, b) => (a.question_number ?? 999) - (b.question_number ?? 999))
-        .map((mcq, index) => normalizeMcq(mcq, index + 1)),
+        .map((mcq, index) => {
+          const normalized = normalizeMcq(mcq, index + 1);
+          const canonical = approved?.stories[story.story_number - 1];
+          const q = canonical?.mcqs[index];
+          return q ? { ...normalized, approved: true, question: q.question,
+            options: (["A", "B", "C", "D"] as const).map(key => ({ key, text: q.options[key] })),
+            correctOption: q.correctOption, explanation: q.explanation, examEdge: q.examEdge,
+            sourceUrl: q.sourceUrl, difficulty: q.difficulty,
+            subject: q.subject ?? canonical.subject, topic: q.topic ?? canonical.topic,
+            examTags: q.examTags ?? canonical.examTags,
+            taxonomy: [q.subject ?? canonical.subject, q.topic ?? canonical.topic, q.subtopic, q.concept, q.questionType].filter((v): v is string => typeof v === "string"),
+          } : normalized;
+        }),
     }));
 
   return {
     id: row.id,
     date: row.date,
     formattedDate: formatDisplayDate(row.date),
-    title: row.title,
-    summary: row.summary,
+    title: approved?.title ?? row.title,
+    summary: approved?.summary ?? row.summary,
     storyCount: row.total_stories ?? stories.length,
     quizCount: stories.reduce((sum, story) => sum + story.mcqs.length, 0),
     slideCount: 0,
     readingTimeMinutes: Math.max(2, Math.ceil(stories.length * 1.5)),
     slides: [],
     stories,
+    editorialMarkdown: approved?.editorialMarkdown ?? null,
+    approvedSourceHash: row.approved_editorial_sha256 ?? null,
   };
 }
 
 const nestedSelect = `
-  id,date,title,summary,total_stories,
+  *,
   current_affairs_stories (
     id,story_number,headline,summary,what_happened,why_it_matters,key_facts,
     conceptual_linkage,static_link,exam_relevance,subject,topic,subtopic,theme,

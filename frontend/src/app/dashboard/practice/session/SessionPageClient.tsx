@@ -10,6 +10,7 @@ import PracticePersistenceStatus from "@/components/practice/PracticePersistence
 import QuestionPlayer from "@/components/practice/player/QuestionPlayer";
 import FilteredAttemptDebrief from "@/components/practice/analysis/FilteredAttemptDebrief";
 import {
+  recordQuestionAttempt,
   initializeSession,
   completePracticeSession,
   updateSessionProgress,
@@ -33,6 +34,7 @@ import { trackLearningEvent } from "@/lib/learning-events";
 // ─── Props ───────────────────────────────────────────────────────────────────
 
 interface SessionPageClientProps {
+  exactQuestionId?: string;
   mode: PlayerMode;
   exam?: string;
   year?: string;
@@ -109,6 +111,7 @@ function EmptyState({ returnUrl }: { returnUrl: string }) {
 
 export default function SessionPageClient({
   mode,
+  exactQuestionId,
   exam,
   year,
   cycle,
@@ -145,12 +148,12 @@ export default function SessionPageClient({
   const [guestSaveHref, setGuestSaveHref] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!sessionId) return;
+    if (!sessionId || exactQuestionId) return;
     const url = new URL(window.location.href);
     if (url.searchParams.get("session_id") === sessionId && url.searchParams.get("resume") === "true") return;
     url.searchParams.set("resume", "true"); url.searchParams.set("session_id", sessionId);
     router.replace(`${url.pathname}${url.search}`, { scroll: false });
-  }, [sessionId, router]);
+  }, [sessionId, router, exactQuestionId]);
 
   useEffect(() => {
     const refreshGuestSaveHref = () => {
@@ -187,7 +190,7 @@ export default function SessionPageClient({
     buildPracticeUrl(restoredSession?.filters || parsedFilters));
   const backLabel = backHref === "/dashboard/mistakes" ? "Back to Mistakes" : backHref === "/dashboard" ? "Back to Dashboard" : backHref.includes("question-bank")
     ? "Back to Explore"
-    : "Back to Practice";
+    : backHref.startsWith("/current-affairs") ? "Back to Current Affairs" : "Back to Practice";
 
   useEffect(() => {
     let cancelled = false;
@@ -208,7 +211,7 @@ export default function SessionPageClient({
             localCandidate.server_id === requestedSessionId)
             ? localCandidate
             : null;
-        let saved = claimCompletedLocal || (analysis || resume || url.searchParams.get("resume") === "true"
+        let saved = exactQuestionId ? null : claimCompletedLocal || (analysis || resume || url.searchParams.get("resume") === "true"
           ? await loadResumeSession(requestedSessionId, { allowCompleted: analysis }) : null);
         if (cancelled) return;
         if (saved?.mode === "full_paper") {
@@ -229,6 +232,7 @@ export default function SessionPageClient({
           params.set("ids", specificIds);
         }
 
+        if (exactQuestionId) params.set("question_id", exactQuestionId);
         const res = await fetch(
           `/api/practice/questions?${params.toString()}`,
           { cache: "no-store" }
@@ -242,6 +246,9 @@ export default function SessionPageClient({
           const fetchedQuestions = saved
             ? restoreQuestionOrder(saved.question_ids, data.questions || [])
             : data.questions || [];
+          if (exactQuestionId && (fetchedQuestions.length !== 1 || fetchedQuestions[0].question_id !== exactQuestionId)) {
+            throw new Error("This linked PYQ is unavailable. No other question has been substituted.");
+          }
           if (saved) saved = latestSessionSnapshot(saved);
           setQuestions(fetchedQuestions);
 
@@ -294,7 +301,7 @@ export default function SessionPageClient({
             }
           }
         } else if (!cancelled) {
-          throw new Error("Could not load session questions. Please try again.");
+          throw new Error(exactQuestionId ? "This linked PYQ is unavailable or under review. Return to the edition or try again later." : "Could not load session questions. Please try again.");
         }
       } catch (err) {
         if (!cancelled) {
@@ -312,6 +319,9 @@ export default function SessionPageClient({
       window.clearTimeout(start);
     };
   }, [
+    exactQuestionId,
+    returnTo,
+    router,
     exam,
     year,
     cycle,
@@ -394,6 +404,16 @@ export default function SessionPageClient({
           initialMarkedIds={restoredSession?.marked_for_review_ids || []}
           elapsedSeconds={elapsedSeconds}
           disabled={savingCompletion}
+          resolveAnswer={exactQuestionId ? async (question, selectedOption, seconds) => {
+            let checked: PracticeQuestion | undefined;
+            await recordQuestionAttempt({ question, selectedOption, isCorrect: false,
+              sessionId, mode: "instant", timeTakenSeconds: seconds, reveal: true,
+              onReveal: value => { checked = value; } });
+            if (!checked) throw new Error("Exact answer unavailable");
+            const answer = checked;
+            setQuestions(previous => previous?.map(q => q.id === answer.id ? answer : q) ?? null);
+            return answer;
+          } : undefined}
           onComplete={async (completedAnswers) => {
             if (completionRef.current) return;
             completionRef.current = true;

@@ -9,7 +9,7 @@ test('every observed applied production migration has its exact recorded version
   const files = fs.readdirSync(directory).filter(name => name.endsWith('.sql')).sort();
   const applied = history.migrations.map(row => `${row.version}_${row.name}.sql`);
   assert.deepEqual(files.slice(0, applied.length), applied.sort());
-  assert.ok(files.slice(applied.length).every(name => name.startsWith('20261008') && name.endsWith('.sql') && name.includes('_')), 'Only pending 8 October migrations may follow the recorded production ledger');
+  assert.deepEqual(files.slice(applied.length), ['20261008050000_atomic_current_affairs_publish.sql', '20261009052951_approved_editorial_source.sql'], 'Only reviewed pending Current Affairs migrations may follow the recorded production ledger');
   for (const row of history.migrations) {
     assert.equal(fs.readFileSync(`${directory}/${row.version}_${row.name}.sql`, 'utf8').trim(), row.statements.join('\n').replace(/[ \t]+$/gm, '').trim());
   }
@@ -27,7 +27,9 @@ test('fresh schema reconstruction includes Phase 0, actual Phase 2 history and a
       ...fs.readdirSync('supabase/reconstruction/bootstrap').sort().map(name => `supabase/reconstruction/bootstrap/${name}`),
       'supabase/reconstruction/legacy-prerequisites.sql',
       ...history.migrations.map(row => `${directory}/${row.version}_${row.name}.sql`),
-      'supabase/reconstruction/observed-grants.sql'];
+      'supabase/reconstruction/observed-grants.sql',
+      `${directory}/20261008050000_atomic_current_affairs_publish.sql`,
+      `${directory}/20261009052951_approved_editorial_source.sql`];
     for (const path of paths) {
       // PGlite has built-in gen_random_uuid but not pgcrypto. No other SQL is altered.
       await db.exec(fs.readFileSync(path, 'utf8').replace('create extension if not exists pgcrypto;', ''));
