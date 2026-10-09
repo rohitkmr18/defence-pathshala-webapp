@@ -1,7 +1,7 @@
 const { test } = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
-const sql = fs.readFileSync("supabase/migrations/20261008050000_atomic_current_affairs_publish.sql", "utf8");
+const sql = fs.readFileSync("supabase/migrations/20261008060157_atomic_current_affairs_publish.sql", "utf8");
 const route = fs.readFileSync("frontend/src/app/api/current-affairs/ingest/route.ts", "utf8");
 
 test("publication is one atomic RPC, never a destructive REST sequence", () => {
