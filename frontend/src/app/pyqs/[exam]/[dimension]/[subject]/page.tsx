@@ -7,6 +7,10 @@ import {
   getYearCoverage,
   getSubjectCoverage,
   getExamCoverage,
+  getSubjectArchive,
+  getTopicArchive,
+  slugToTopic,
+  MIN_INDEXABLE_TOPIC_QUESTIONS,
 } from "@/lib/seo-data";
 import Breadcrumbs from "@/components/public/Breadcrumbs";
 import { BookOpen, Calendar, ArrowRight, Layers } from "lucide-react";
@@ -22,10 +26,58 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { exam, dimension, subject } = await params;
   const yearNum = parseInt(dimension, 10);
-  if (isNaN(yearNum)) return {};
-
   const examDb = slugToExam(exam);
   if (!examDb) return {};
+
+  if (isNaN(yearNum)) {
+    const examCoverage = await getExamCoverage(examDb);
+    if (!examCoverage) return {};
+
+    const matchedSubject = slugToSubject(
+      dimension,
+      examCoverage.subjects.map((s) => s.subject)
+    );
+    if (!matchedSubject) return {};
+
+    const subjectArchive = await getSubjectArchive(examDb, matchedSubject);
+    if (!subjectArchive) return {};
+
+    const matchedTopic = slugToTopic(
+      subject,
+      subjectArchive.topics.map((t) => t.topic)
+    );
+    if (!matchedTopic) return {};
+
+    const topicArchive = await getTopicArchive(examDb, matchedSubject, matchedTopic);
+    if (!topicArchive || topicArchive.totalQuestions < MIN_INDEXABLE_TOPIC_QUESTIONS) {
+      return {
+        robots: { index: false, follow: true },
+      };
+    }
+
+    const years = topicArchive.years.map((y) => y.year);
+    const minYear = Math.min(...years);
+    const maxYear = Math.max(...years);
+    const yearText = minYear === maxYear ? String(minYear) : `${minYear}–${maxYear}`;
+    const canonicalUrl = `https://www.defencepathshala.in/pyqs/${topicArchive.examSlug}/${topicArchive.subjectSlug}/${topicArchive.topicSlug}`;
+    const title = `${examCoverage.label} ${topicArchive.topic} PYQs - ${topicArchive.totalQuestions} Previous Year Questions`;
+    const description = `Practice ${topicArchive.totalQuestions} ${examCoverage.label} ${topicArchive.topic} previous year questions from ${yearText}, with official-paper context, answers and topic-focused practice.`;
+
+    return {
+      title,
+      description,
+      alternates: { canonical: canonicalUrl },
+      robots: { index: true, follow: true },
+      openGraph: {
+        title,
+        description,
+        url: canonicalUrl,
+        siteName: "Defence Pathshala",
+        images: ["/og-image.png"],
+        type: "website",
+      },
+    };
+  }
 
   const yearCoverage = await getYearCoverage(examDb, yearNum);
   if (!yearCoverage) return {};
@@ -67,13 +119,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function ExamYearSubjectPyqPage({ params }: PageProps) {
   const { exam, dimension, subject } = await params;
   const yearNum = parseInt(dimension, 10);
-  if (isNaN(yearNum)) {
-    notFound();
-  }
 
   const examDb = slugToExam(exam);
   if (!examDb) {
     notFound();
+  }
+
+  if (isNaN(yearNum)) {
+    return <ExamSubjectTopicPyqPage examDb={examDb} subjectSlug={dimension} topicSlug={subject} />;
   }
 
   const examCoverage = await getExamCoverage(examDb);
@@ -241,3 +294,167 @@ export default async function ExamYearSubjectPyqPage({ params }: PageProps) {
   );
 }
 
+
+
+async function ExamSubjectTopicPyqPage({
+  examDb,
+  subjectSlug,
+  topicSlug,
+}: {
+  examDb: string;
+  subjectSlug: string;
+  topicSlug: string;
+}) {
+  const examCoverage = await getExamCoverage(examDb);
+  if (!examCoverage) notFound();
+
+  const matchedSubject = slugToSubject(
+    subjectSlug,
+    examCoverage.subjects.map((s) => s.subject)
+  );
+  if (!matchedSubject) notFound();
+
+  const subjectArchive = await getSubjectArchive(examDb, matchedSubject);
+  if (!subjectArchive) notFound();
+
+  const matchedTopic = slugToTopic(
+    topicSlug,
+    subjectArchive.topics.map((t) => t.topic)
+  );
+  if (!matchedTopic) notFound();
+
+  const archive = await getTopicArchive(examDb, matchedSubject, matchedTopic);
+  if (!archive || archive.totalQuestions < MIN_INDEXABLE_TOPIC_QUESTIONS) notFound();
+
+  const minYear = Math.min(...archive.years.map((y) => y.year));
+  const maxYear = Math.max(...archive.years.map((y) => y.year));
+  const yearText = minYear === maxYear ? String(minYear) : `${minYear}–${maxYear}`;
+  const subjectTotal = subjectArchive.totalQuestions;
+  const share = subjectTotal > 0 ? ((archive.totalQuestions / subjectTotal) * 100).toFixed(1) : "0.0";
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.defencepathshala.in" },
+      { "@type": "ListItem", position: 2, name: "PYQs", item: `https://www.defencepathshala.in/pyqs/${archive.examSlug}` },
+      { "@type": "ListItem", position: 3, name: archive.subject, item: `https://www.defencepathshala.in/pyqs/${archive.examSlug}/${archive.subjectSlug}` },
+      { "@type": "ListItem", position: 4, name: archive.topic, item: `https://www.defencepathshala.in/pyqs/${archive.examSlug}/${archive.subjectSlug}/${archive.topicSlug}` },
+    ],
+  };
+
+  return (
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <Breadcrumbs
+        items={[
+          { label: "PYQs", href: `/pyqs/${archive.examSlug}` },
+          { label: archive.subject, href: `/pyqs/${archive.examSlug}/${archive.subjectSlug}` },
+          { label: archive.topic },
+        ]}
+      />
+
+      <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-10 mb-8">
+        <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 ring-1 ring-inset ring-blue-700/10 mb-3">
+          <BookOpen className="h-3.5 w-3.5" />
+          {examCoverage.label} • {archive.subject} • Topic PYQ Intelligence
+        </div>
+        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+          {examCoverage.label} {archive.topic} Previous Year Questions
+        </h1>
+        <p className="mt-3 max-w-3xl text-base leading-relaxed text-slate-600 sm:text-lg">
+          Practice {archive.totalQuestions} verified {examCoverage.label} questions tagged to {archive.topic} within {archive.subject}, covering {yearText}. The statistics and question set below are generated from Defence Pathshala&apos;s canonical PYQ intelligence corpus.
+        </p>
+
+        <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <div className="rounded-xl border border-slate-100 bg-slate-50 p-4">
+            <span className="text-xs font-medium uppercase tracking-wider text-slate-500">Topic Questions</span>
+            <div className="mt-1 text-2xl font-bold text-slate-900">{archive.totalQuestions}</div>
+          </div>
+          <div className="rounded-xl border border-slate-100 bg-slate-50 p-4">
+            <span className="text-xs font-medium uppercase tracking-wider text-slate-500">Years Covered</span>
+            <div className="mt-1 text-2xl font-bold text-blue-600">{archive.years.length}</div>
+          </div>
+          <div className="rounded-xl border border-slate-100 bg-slate-50 p-4">
+            <span className="text-xs font-medium uppercase tracking-wider text-slate-500">Subject Share</span>
+            <div className="mt-1 text-2xl font-bold text-slate-900">{share}%</div>
+          </div>
+          <div className="rounded-xl border border-slate-100 bg-slate-50 p-4">
+            <span className="text-xs font-medium uppercase tracking-wider text-slate-500">Coverage</span>
+            <div className="mt-1 text-lg font-bold text-slate-900">{yearText}</div>
+          </div>
+        </div>
+
+        <div className="mt-8 flex flex-wrap gap-4">
+          <Link
+            href={`/dashboard/practice?exam=${encodeURIComponent(examDb)}&subject=${encodeURIComponent(archive.subject)}&topic=${encodeURIComponent(archive.topic)}`}
+            className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-md shadow-blue-600/20 transition hover:bg-blue-500 active:scale-95"
+          >
+            Practice {archive.topic} PYQs
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+          <Link
+            href={`/pyqs/${archive.examSlug}/${archive.subjectSlug}`}
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+          >
+            All {archive.subject} PYQs
+          </Link>
+        </div>
+      </div>
+
+      <section className="mb-10 rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
+        <h2 className="text-xl font-bold text-slate-900">Year-wise {archive.topic} frequency</h2>
+        <p className="mt-1 text-sm text-slate-500">Observed question counts in the currently verified corpus; this is historical evidence, not a future-paper prediction.</p>
+        <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
+          {archive.years.map((y) => (
+            <div key={y.year} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <div className="text-lg font-bold text-slate-900">{y.year}</div>
+              <div className="mt-1 text-xs font-semibold text-slate-500">{y.count} questions</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="mb-12">
+        <div className="mb-5">
+          <h2 className="text-2xl font-bold text-slate-900">
+            {archive.totalQuestions} {examCoverage.label} {archive.topic} PYQs
+          </h2>
+          <p className="mt-1 text-sm text-slate-600">
+            Server-rendered question text from the eligible PYQ corpus. Use Practice mode for answer tracking and personalised analytics.
+          </p>
+        </div>
+
+        <div className="space-y-5">
+          {archive.questions.map((q, idx) => (
+            <article key={q.id} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+              <div className="flex flex-wrap items-center gap-2 border-b border-slate-100 pb-3 text-xs">
+                <span className="rounded-md bg-blue-600 px-2 py-0.5 font-bold text-white">#{idx + 1}</span>
+                <span className="rounded-md bg-slate-100 px-2.5 py-0.5 font-semibold text-slate-700">
+                  {q.exam} {q.year}{q.cycle ? ` • Cycle ${q.cycle}` : ""}{q.qNum ? ` • Q.${q.qNum}` : ""}
+                </span>
+                {q.difficultyCategory && (
+                  <span className="rounded-md bg-slate-50 px-2 py-0.5 font-semibold text-slate-600">
+                    {q.difficultyCategory}
+                  </span>
+                )}
+              </div>
+              <p className="mt-4 whitespace-pre-line text-base font-medium leading-relaxed text-slate-900 sm:text-lg">
+                {q.question}
+              </p>
+              <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                {q.optA && <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm"><strong>(A)</strong> {q.optA}</div>}
+                {q.optB && <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm"><strong>(B)</strong> {q.optB}</div>}
+                {q.optC && <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm"><strong>(C)</strong> {q.optC}</div>}
+                {q.optD && <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm"><strong>(D)</strong> {q.optD}</div>}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}

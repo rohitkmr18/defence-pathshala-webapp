@@ -27,7 +27,7 @@ export default function StructuredCurrentAffairsImporter() {
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || "Publishing failed.");
-      setStatus(`Published: ${result.stories} stories and ${result.mcqs} MCQs.`);
+      setStatus(`Published edition successfully. Post ID: ${result.postId}.`);
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Publishing failed.");
     } finally {

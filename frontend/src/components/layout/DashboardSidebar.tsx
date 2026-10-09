@@ -8,6 +8,7 @@ import {
   LayoutDashboard,
   Database,
   Pencil,
+  Newspaper,
   Shield,
   ChevronLeft,
   ChevronRight,
@@ -31,6 +32,11 @@ const baseItems = [
     name: "Explore PYQs",
     href: "/dashboard/question-bank",
     icon: Database,
+  },
+  {
+    name: "Daily Current Affairs",
+    href: "/current-affairs",
+    icon: Newspaper,
   },
   {
     name: "Practice",

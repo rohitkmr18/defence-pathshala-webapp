@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
-import { Shield, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  BarChart3,
+  Newspaper,
+  Shield,
+  Sparkles,
+  Target,
+} from "lucide-react";
 
 export default function HeroSection() {
   const shouldReduceMotion = useReducedMotion();
@@ -63,23 +70,73 @@ export default function HeroSection() {
           Analyse real CDS and CAPF Previous Year Questions from GS and instantly discover recurring topics, practice smarter, and identify exactly where you&apos;re losing marks.
         </p>
 
-        {/* ── CTA Buttons ──────────────────────────────────────────────── */}
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto">
-          {/* Primary CTA (Blue) */}
+        {/* ── CTA Hierarchy ────────────────────────────────────────────── */}
+        <div className="mx-auto mt-8 w-full max-w-2xl">
           <Link
             href="/dashboard/practice"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-8 py-4 text-base font-bold text-white shadow-lg shadow-blue-600/30 transition-all duration-200 hover:bg-blue-500 hover:shadow-blue-600/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 active:scale-[0.98]"
+            className="group flex w-full items-center justify-between rounded-2xl bg-blue-600 px-5 py-4 text-left shadow-lg shadow-blue-600/30 transition-all duration-200 hover:bg-blue-500 hover:shadow-blue-600/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 active:scale-[0.99] sm:px-6 sm:py-5"
           >
-            <span>Smart Practice</span>
+            <span className="flex min-w-0 items-center gap-3">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/12">
+                <Target className="h-5 w-5 text-white" />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-base font-extrabold text-white sm:text-lg">
+                  Start Smart Practice
+                </span>
+                <span className="mt-0.5 block text-xs font-medium text-blue-100/85 sm:text-sm">
+                  Authentic PYQs. Personalised practice.
+                </span>
+              </span>
+            </span>
+            <ArrowRight className="h-5 w-5 shrink-0 text-white/85 transition-transform duration-200 group-hover:translate-x-0.5" />
           </Link>
 
-          {/* Secondary CTA (Outline) */}
-          <Link
-            href="/dashboard/question-bank"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-8 py-4 text-base font-bold text-white shadow-lg shadow-blue-600/30 transition-all duration-200 hover:bg-blue-500 hover:shadow-blue-600/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 active:scale-[0.98]"
-          >
-            <span>Decode Patterns</span>
-          </Link>
+          <div className="mt-3 grid grid-cols-2 gap-3">
+            <Link
+              href="/dashboard/question-bank"
+              className="group flex min-h-[112px] flex-col justify-between rounded-2xl border border-blue-400/20 bg-white/[0.045] p-4 text-left backdrop-blur-sm transition-all duration-200 hover:border-blue-400/40 hover:bg-blue-500/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 active:scale-[0.99] sm:min-h-[118px] sm:p-5"
+            >
+              <span className="flex items-center justify-between">
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500/10 ring-1 ring-inset ring-blue-400/20">
+                  <BarChart3 className="h-4.5 w-4.5 text-blue-300" />
+                </span>
+                <ArrowRight className="h-4 w-4 text-slate-500 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-blue-300" />
+              </span>
+              <span>
+                <span className="block text-sm font-bold text-white sm:text-base">
+                  Decode PYQs
+                </span>
+                <span className="mt-1 block text-[11px] font-medium leading-snug text-slate-400 sm:text-xs">
+                  Trends &amp; weightage
+                </span>
+              </span>
+            </Link>
+
+            <Link
+              href="/current-affairs"
+              className="group relative flex min-h-[112px] flex-col justify-between overflow-hidden rounded-2xl border border-blue-400/20 bg-white/[0.045] p-4 text-left backdrop-blur-sm transition-all duration-200 hover:border-blue-400/40 hover:bg-blue-500/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 active:scale-[0.99] sm:min-h-[118px] sm:p-5"
+            >
+              <span
+                aria-hidden="true"
+                className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-orange-400 via-white to-emerald-500 opacity-80"
+              />
+              <span className="flex items-center justify-between">
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500/10 ring-1 ring-inset ring-blue-400/20">
+                  <Newspaper className="h-4.5 w-4.5 text-blue-300" />
+                </span>
+                <ArrowRight className="h-4 w-4 text-slate-500 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-blue-300" />
+              </span>
+              <span>
+                <span className="block text-sm font-bold text-white sm:text-base">
+                  Daily Current Affairs
+                </span>
+                <span className="mt-1 block text-[11px] font-medium leading-snug text-slate-400 sm:text-xs">
+                  Today&apos;s exam briefs
+                </span>
+              </span>
+            </Link>
+          </div>
         </div>
 
         {/* ── Free Access Badge over Credentials ───────────────────────── */}
