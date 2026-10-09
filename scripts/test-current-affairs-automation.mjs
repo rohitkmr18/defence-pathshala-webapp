@@ -2,19 +2,20 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { createRequire } from 'node:module';
-import { pathToFileURL } from 'node:url';
 import { buildPublishingRequest } from './publish-approved-current-affairs.mjs';
 import { verifyPublishingIdentity, PUBLISH_AUDIENCE, PUBLISH_WORKFLOW } from '../frontend/src/lib/current-affairs/github-identity.ts';
-import { validateEditorialEdition, officialSourceUrl } from '../frontend/src/lib/current-affairs/editorial-validation.ts';
+import { createHash } from 'node:crypto';
 import { generateKeyPair, SignJWT, exportJWK, createLocalJWKSet } from '../frontend/node_modules/jose/dist/webapi/index.js';
 const require = createRequire(import.meta.url);
-const ts = require('../frontend/node_modules/typescript');
 const { PGlite } = require('../frontend/node_modules/@electric-sql/pglite');
-// Resolve the production helper's extensionless import without altering Next.js source.
-const helper = fs.readFileSync('frontend/src/lib/current-affairs/automation-handler.ts', 'utf8')
-  .replace('"./editorial-validation"', JSON.stringify(pathToFileURL(`${process.cwd()}/frontend/src/lib/current-affairs/editorial-validation.ts`).href));
-const js = ts.transpileModule(helper, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
-const { handlePublishingRequest } = await import(`data:text/javascript;base64,${Buffer.from(js).toString('base64')}`);
+const load = require('./test-support/load-ts.cjs')({}, { Request, Response, Buffer });
+const { validateEditorialEdition, officialSourceUrl } = load('frontend/src/lib/current-affairs/editorial-validation.ts');
+const { handlePublishingRequest } = load('frontend/src/lib/current-affairs/automation-handler.ts');
+function approve(p) {
+  delete p.approvedEditorial;
+  const source = JSON.stringify(p);
+  return { ...p, approvedEditorial: { version: 1, source, sha256: createHash('sha256').update(source).digest('hex') } };
+}
 
 const { publicKey, privateKey } = await generateKeyPair('RS256');
 const jwk = await exportJWK(publicKey);
@@ -52,14 +53,15 @@ test('OIDC rejects forged signature and malformed token', async () => {
   await assert.rejects(verifyPublishingIdentity('not.a.jwt', key));
 });
 function edition(date = '2026-10-09') {
-  return { date, title: 'Isolated QA edition', summary: 'Synthetic test only', stories: Array.from({ length: 3 }, (_, i) => ({
+  return approve({ date, title: 'Isolated QA edition', summary: 'Synthetic test only', stories: Array.from({ length: 3 }, (_, i) => ({
+    editorialMarkdown: '## Full approved section\n\nSynthetic test only.', linkedPyqIds: [],
     headline: `Isolated story ${date} ${i}`, whatHappened: 'Synthetic verified fixture', whyItMatters: 'Exam application',
     keyFacts: ['Fact'], subject: 'Economy', topic: 'Test topic', examTags: ['CAPF'], dpScore: 85,
     sourceName: 'PIB', sourceUrl: `https://pib.gov.in/test/${date}/${i}`, sourceDate: date,
     mcqs: Array.from({ length: i === 0 ? 2 : 1 }, (_, n) => ({ question: `Fixture ${i}/${n}?`, options: { A: 'One', B: 'Two', C: 'Three', D: 'Four' },
       correctOption: 'B', explanation: 'Fixture explanation', examEdge: 'Fixture exam edge', difficulty: 'Moderate',
       contentStatus: 'VERIFIED', sourceUrl: 'https://pib.gov.in/test/source', concept: 'Fixture concept', examTags: ['CDS', 'CAPF'] })),
-  })) };
+  })) });
 }
 test('source URL checks reject lookalike domains, credentials, insecure and arbitrary URLs', () => {
   for (const url of ['http://pib.gov.in/x', 'https://pib.gov.in.evil.com/x', 'https://user:secret@pib.gov.in/x', 'https://127.0.0.1/x', 'https://example.com/x', 'garbage']) assert.equal(officialSourceUrl(url), false);
@@ -74,7 +76,7 @@ for (const [name, mutate] of Object.entries({
   explanation: p => p.stories[0].mcqs[0].explanation = '',
   mcqSource: p => p.stories[0].mcqs[0].sourceUrl = 'http://pib.gov.in',
   futureSource: p => p.stories[0].sourceDate = '2026-10-10',
-})) test(`editorial validation rejects ${name}`, () => { const p = edition(); mutate(p); assert.throws(() => validateEditorialEdition(p)); });
+})) test(`editorial validation rejects ${name}`, () => { const p = edition(); mutate(p); assert.throws(() => validateEditorialEdition(approve(p))); });
 
 const envelope = p => ({ schemaVersion: 1, operation: 'publish', approved: true, edition: p, issueNumber: 99, runId: '1234' });
 function request(body, auth = 'Bearer fixture') { return new Request(PUBLISH_AUDIENCE, { method: 'POST', headers: auth ? { authorization: auth } : {}, body: typeof body === 'string' ? body : JSON.stringify(body) }); }
@@ -131,7 +133,7 @@ test('isolated signed identity → HTTP handler → real PostgreSQL RPC preserve
     const late = edition('2026-10-10');
     late.stories[2].headline = late.stories[0].headline;
     late.stories[2].sourceUrl = late.stories[0].sourceUrl;
-    assert.equal((await handlePublishingRequest(request(envelope(late), auth), d)).status, 409);
+    assert.equal((await handlePublishingRequest(request(envelope(approve(late)), auth), d)).status, 409);
     assert.deepEqual((await db.query('select * from current_affairs_posts order by date')).rows, before);
     assert.equal((await db.query('select count(*)::int n from current_affairs_stories')).rows[0].n, 3);
     assert.equal((await db.query('select count(*)::int n from current_affairs_mcqs')).rows[0].n, 4);

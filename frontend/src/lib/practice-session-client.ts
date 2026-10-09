@@ -161,12 +161,14 @@ export function recordQuestionAttempt(params: {
   timeTakenSeconds?: number;
   sessionId?: string;
   mode?: string;
+  reveal?: boolean;
+  onReveal?: (question: PracticeQuestion) => void;
 }): Promise<void> {
   const key = `${params.sessionId || "standalone"}:${params.question.id}:${params.selectedOption}`;
   const pending = inFlightAttempts.get(key);
   if (pending) return pending;
   const local = getLocalSession();
-  if (local && local.id === params.sessionId && local.saved_attempts?.[params.question.id] === params.selectedOption) return Promise.resolve();
+  if (!params.reveal && local && local.id === params.sessionId && local.saved_attempts?.[params.question.id] === params.selectedOption) return Promise.resolve();
   const write = persistQuestionAttempt(params);
   inFlightAttempts.set(key, write);
   void write.then(() => inFlightAttempts.delete(key), () => inFlightAttempts.delete(key));
@@ -180,7 +182,7 @@ async function persistQuestionAttempt(params: Parameters<typeof recordQuestionAt
       selectedOption: params.selectedOption, timeTakenSeconds: params.timeTakenSeconds,
     } } });
   // Notify local listeners once per logical check, never again for a retry.
-  if (typeof window !== "undefined" && !local?.pending_attempts?.[params.question.id]) {
+  if (!params.reveal && typeof window !== "undefined" && !local?.pending_attempts?.[params.question.id]) {
     window.dispatchEvent(
       new CustomEvent("dp_question_attempted", {
         detail: {
@@ -201,7 +203,7 @@ async function persistQuestionAttempt(params: Parameters<typeof recordQuestionAt
       body: JSON.stringify({ question_id: params.question.id, content_version: params.question.content_version,
         selected_option: params.selectedOption, is_correct: params.isCorrect,
         time_taken: params.timeTakenSeconds || 0, session_id: cloudId || undefined,
-        mode: params.mode || "instant" }),
+        mode: params.mode || "instant", reveal: params.reveal === true }),
     }) : null;
     if (!response) {
       // Device-only/guest progress is not a cloud-saved attempt. Keep it in
@@ -214,6 +216,14 @@ async function persistQuestionAttempt(params: Parameters<typeof recordQuestionAt
     if (cloudId && result.guest) throw new Error("Sign in again to save your attempt.");
     if (!result.guest && result.persisted !== true) throw new Error("Attempt save was not confirmed");
     if (params.sessionId) failedAttempts.get(params.sessionId)?.delete(params.question.id);
+    if (params.reveal) {
+      if (!result.question || result.question.id !== params.question.id) throw new Error("Exact question reveal unavailable");
+      params.onReveal?.(result.question);
+      window.dispatchEvent(new CustomEvent("dp_question_attempted", { detail: {
+        question_id: params.question.id, selected_option: params.selectedOption,
+        is_correct: result.attempt.is_correct, timestamp: Date.now(),
+      } }));
+    }
     acknowledgeAttempt(params);
   } catch (error) {
     if (params.sessionId) {

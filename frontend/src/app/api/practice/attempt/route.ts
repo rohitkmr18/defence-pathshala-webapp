@@ -1,3 +1,4 @@
+import { normalizeQuestion } from "@/lib/question-intelligence";
 
 import { errorMessage } from "@/lib/error-message";
 import { NextRequest, NextResponse } from "next/server";
@@ -22,6 +23,7 @@ export async function POST(request: NextRequest) {
       time_taken,
       session_id,
       mode,
+      reveal,
     } = body;
 
     if (!question_id || !selected_option || typeof is_correct !== "boolean") {
@@ -64,6 +66,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!userId) {
+      if (reveal === true) return NextResponse.json({ error: "Sign in to attempt this PYQ" }, { status: 401 });
       if (session_id) return NextResponse.json({ error: "Sign in again to save your attempt" }, { status: 401 });
       // Return 200 OK for guest users so client-side localStorage fallback records attempt seamlessly
       return NextResponse.json(
@@ -78,7 +81,7 @@ export async function POST(request: NextRequest) {
 
     const { data: question, error: questionError } = await supabase
       .from("v_dp_question_intelligence_v2")
-      .select("id, final_opt, official_opt, question, opt_a, opt_b, opt_c, opt_d, content_status, content_eligible, content_version")
+      .select("*")
       .eq("id", question_id).maybeSingle();
     if (questionError || !question) {
       return NextResponse.json({ error: "Question is not in the canonical release" }, { status: 400 });
@@ -132,7 +135,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ success: true, attempt: data, persisted: true });
+    return NextResponse.json({ success: true, attempt: data, persisted: true, ...(reveal === true ? { question: normalizeQuestion(question) } : {}) }, { headers: { "Cache-Control": "no-store" } });
   } catch (err: unknown) {
     console.error("Attempt API error:", err);
     return NextResponse.json({ error: errorMessage(err, "Internal Server Error") }, { status: 500 });

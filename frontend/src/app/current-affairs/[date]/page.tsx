@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, BookOpen, ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 import { getAdjacentDays, getCurrentAffairsByDate } from "@/lib/current-affairs";
+import EditorialMarkdown from "@/components/current-affairs/EditorialMarkdown";
 import CurrentAffairsQuiz from "@/components/current-affairs/CurrentAffairsQuiz";
 import CurrentAffairsEditionTracker from "@/components/current-affairs/CurrentAffairsEditionTracker";
 
@@ -61,9 +62,10 @@ export default async function CurrentAffairsDayPage({ params }: { params: Promis
           </div>
         </header>
 
+        {post.editorialMarkdown && <section className="mt-8 rounded-3xl border border-slate-200 bg-white p-6"><EditorialMarkdown source={post.editorialMarkdown} /></section>}
         <div className="mt-8 space-y-5">
           {post.stories.map((story) => (
-            <details key={story.id} className="group rounded-3xl border border-slate-200 bg-white p-5 shadow-sm open:shadow-md sm:p-6">
+            <details open={!!story.editorialMarkdown} key={story.id} className="group rounded-3xl border border-slate-200 bg-white p-5 shadow-sm open:shadow-md sm:p-6">
               <summary className="cursor-pointer list-none">
                 <div className="flex items-center justify-between gap-3">
                   {story.subject ? (
@@ -85,13 +87,18 @@ export default async function CurrentAffairsDayPage({ params }: { params: Promis
                 </div>
               </summary>
 
-              <div className="mt-4 space-y-5 border-t border-slate-100 pt-5 text-sm leading-6 text-slate-700">
+              <div className="mt-4 whitespace-pre-wrap space-y-5 border-t border-slate-100 pt-5 text-sm leading-6 text-slate-700">
+                {story.editorialMarkdown && <EditorialMarkdown source={story.editorialMarkdown} />}
                 {story.whatHappened && <section><h3 className="font-black text-slate-950">What happened?</h3><p className="mt-1">{story.whatHappened}</p></section>}
                 {story.keyFacts.length > 0 && <section><h3 className="font-black text-slate-950">Key exam facts</h3><ul className="mt-2 space-y-2">{story.keyFacts.map((fact) => <li key={fact} className="flex gap-2"><span className="text-blue-600">•</span><span>{fact}</span></li>)}</ul></section>}
                 {story.conceptualLinkage && <section className="rounded-2xl bg-blue-50 p-4"><h3 className="font-black text-blue-950">Conceptual linkage</h3><p className="mt-1 text-blue-900">{story.conceptualLinkage}</p></section>}
                 {story.whyItMatters && <section><h3 className="font-black text-slate-950">Why it matters</h3><p className="mt-1">{story.whyItMatters}</p></section>}
                 {story.examRelevance && <section><h3 className="font-black text-slate-950">Exam angle</h3><p className="mt-1">{story.examRelevance}</p></section>}
                 {story.staticLink && <section><h3 className="font-black text-slate-950">Static link</h3><p className="mt-1">{story.staticLink}</p></section>}
+                {story.futureAngle && <section><h3 className="font-black text-slate-950">Future question angles</h3><p>{story.futureAngle}</p></section>}
+                {story.editorialMarkdown && <section className="rounded-2xl bg-slate-50 p-4"><h3 className="font-black text-slate-950">Exam taxonomy</h3><p>{[story.category, story.subject, story.topic, story.subtopic, story.theme].filter(Boolean).join(" · ")}</p><div className="mt-3 flex flex-wrap gap-2">{story.examTags.map(tag => <span key={tag} className="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-900">{tag}</span>)}</div>{story.keywords.length > 0 && <p className="mt-3">Keywords: {story.keywords.join(" · ")}</p>}</section>}
+                {story.linkedPyqIds.length > 0 && <section aria-label="Linked previous year questions" className="border-t border-slate-200 pt-5"><h3 className="font-black text-slate-950">Put this story into practice</h3><p className="mt-1 text-slate-500">Attempt the linked previous year questions.</p><div className="mt-3 grid gap-3 sm:grid-cols-2">{story.linkedPyqIds.map(id => <Link key={id} href={`/pyq/${encodeURIComponent(id)}?edition=${post.date}`} className="flex min-h-16 items-center justify-between gap-3 rounded-2xl border border-blue-100 bg-blue-50 p-4 font-bold text-blue-900 hover:border-blue-300 focus-visible:outline-2 focus-visible:outline-blue-600"><span className="break-all">{id}<span className="mt-1 block text-xs font-medium text-blue-700">Attempt this PYQ</span></span><ArrowRight className="h-5 w-5 shrink-0" /></Link>)}</div></section>}
+                {story.sourceDate && story.editorialMarkdown && <p className="text-xs text-slate-500">Source date: {story.sourceDate}</p>}
                 {story.sourceUrl && <a href={story.sourceUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-bold text-blue-700 hover:underline">{story.sourceName || "Primary source"} <ExternalLink className="h-3.5 w-3.5" /></a>}
               </div>
             </details>

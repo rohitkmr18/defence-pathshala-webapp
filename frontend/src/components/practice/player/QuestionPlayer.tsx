@@ -29,6 +29,7 @@ export interface QuestionPlayerProps {
   initialMarkedIds?: string[];
   elapsedSeconds?: number;
   disabled?: boolean;
+  resolveAnswer?: (question: PracticeQuestion, selected: OptionKey, seconds: number) => Promise<PracticeQuestion>;
   onComplete?: (answers: Record<string, OptionKey>) => void | Promise<void>;
 }
 
@@ -45,7 +46,11 @@ export default function QuestionPlayer({
   elapsedSeconds = 0,
   disabled = false,
   onComplete,
+  resolveAnswer,
 }: QuestionPlayerProps) {
+  const [checking, setChecking] = useState(false);
+  const [checkError, setCheckError] = useState<string | null>(null);
+  const [resolved, setResolved] = useState<Record<string, PracticeQuestion>>({});
   // ── Session state ──────────────────────────────────────────────────────────
   const [currentIndex, setCurrentIndex] = useState(
     Math.min(initialIndex, Math.max(0, questions.length - 1))
@@ -85,7 +90,8 @@ export default function QuestionPlayer({
   }, [currentIndex, questions, sessionId, disabled]);
 
   // ── Derived state ───────────────────────────────────────────────────────────
-  const question = questions[currentIndex];
+  const baseQuestion = questions[currentIndex];
+  const question = resolved[baseQuestion?.id] || baseQuestion;
   const isFirst = currentIndex === 0;
   const isLast = currentIndex === questions.length - 1;
   const selectedOption = question ? answers[question.id] ?? null : null;
@@ -96,7 +102,7 @@ export default function QuestionPlayer({
 
   const handleSelect = useCallback(
     (key: OptionKey) => {
-      if (disabled || !question || (mode === "instant" && isRevealed)) return;
+      if (disabled || checking || !question || (mode === "instant" && isRevealed)) return;
       const nextAnswers = { ...answers, [question.id]: key };
       setAnswers(nextAnswers);
 
@@ -107,26 +113,38 @@ export default function QuestionPlayer({
         });
       }
     },
-    [disabled, question, mode, isRevealed, answers, sessionId, currentIndex]
+    [disabled, checking, question, mode, isRevealed, answers, sessionId, currentIndex]
   );
 
-  const handleCheckAnswer = useCallback(() => {
-    if (disabled || !question || !selectedOption || checkedRef.current.has(question.id)) return;
+  const handleCheckAnswer = useCallback(async () => {
+    if (disabled || checking || !question || !selectedOption || checkedRef.current.has(question.id)) return;
     checkedRef.current.add(question.id);
     trackLearningEvent("practice_check", { mode, question_id: question.id }, `${sessionId}:${question.id}`);
 
-    const correctKey = getCorrectKey(question);
-    const isCorrect = selectedOption === correctKey;
     const timeSpent = Math.max(
       1,
       questionBaseTimeRef.current + Math.round((Date.now() - (questionStartTimeRef.current || Date.now())) / 1000)
     );
 
+    if (resolveAnswer) {
+      setChecking(true);
+      setCheckError(null);
+      try {
+        const checked = await resolveAnswer(question, selectedOption, timeSpent);
+        if (checked.id !== question.id) throw new Error("Question mismatch");
+        setResolved(prev => ({ ...prev, [question.id]: checked }));
+      } catch {
+        checkedRef.current.delete(question.id);
+        setCheckError("Your answer could not be saved. Please check it again.");
+        return;
+      } finally { setChecking(false); }
+    }
+    const isCorrect = selectedOption === getCorrectKey(question);
     setCheckedTimes((prev) => ({ ...prev, [question.id]: timeSpent }));
     setRevealed((prev) => new Set(prev).add(question.id));
 
     // Record question-level attempt immediately into user_attempts
-    void recordQuestionAttempt({
+    if (!resolveAnswer) void recordQuestionAttempt({
       question,
       selectedOption,
       isCorrect,
@@ -142,7 +160,7 @@ export default function QuestionPlayer({
         checked_ids: [...checkedRef.current],
       });
     }
-  }, [disabled, question, selectedOption, sessionId, mode, currentIndex, answers]);
+  }, [disabled, checking, question, selectedOption, sessionId, mode, currentIndex, answers, resolveAnswer]);
 
   const handlePrev = useCallback(() => {
     if (disabled) return;
@@ -167,7 +185,7 @@ export default function QuestionPlayer({
   }, [disabled, mode, isLast, onComplete, answers, currentIndex, sessionId]);
 
   const handleSkip = useCallback(() => {
-    if (disabled || !question || navigationRef.current) return;
+    if (disabled || checking || !question || navigationRef.current) return;
     navigationRef.current = true;
 
     const nextAnswers = { ...answers };
@@ -184,7 +202,7 @@ export default function QuestionPlayer({
         updateSessionProgress(sessionId, { current_index: nextIdx });
       }
     }
-  }, [disabled, answers, isLast, onComplete, question, currentIndex, sessionId]);
+  }, [disabled, checking, answers, isLast, onComplete, question, currentIndex, sessionId]);
 
   const handleJumpToQuestion = useCallback((index: number) => {
     if (!disabled && index >= 0 && index < questions.length) {
@@ -195,7 +213,7 @@ export default function QuestionPlayer({
   }, [disabled, questions.length, sessionId]);
 
   const toggleReview = () => {
-    if (disabled || !question) return;
+    if (disabled || checking || !question) return;
     const next = markedIds.includes(question.id)
       ? markedIds.filter(id => id !== question.id) : [...markedIds, question.id];
     setMarkedIds(next);
@@ -324,6 +342,7 @@ export default function QuestionPlayer({
         </div>
       )}
 
+      {checkError && <p role="alert" className="mb-4 rounded-xl bg-amber-50 p-4 text-sm text-amber-900">{checkError}</p>}
       {/* Question Card + Options */}
       <QuestionCard
         question={question}
@@ -331,6 +350,7 @@ export default function QuestionPlayer({
         selectedOption={selectedOption}
         revealed={isRevealed}
         onSelect={handleSelect}
+        disabled={disabled || checking}
       />
 
       {/* Answer Reveal (Instant / Learning Mode) */}
@@ -350,7 +370,7 @@ export default function QuestionPlayer({
         <button
           type="button"
           onClick={handlePrev}
-          disabled={isFirst || disabled}
+          disabled={isFirst || disabled || checking}
           className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs sm:text-sm font-bold text-slate-700 shadow-2xs transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-30 cursor-pointer"
         >
           <ChevronLeft className="h-4 w-4" />
@@ -364,10 +384,11 @@ export default function QuestionPlayer({
             <button
               type="button"
               onClick={handleCheckAnswer}
+              disabled={checking}
               className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 sm:px-6 py-2.5 text-xs sm:text-sm font-black text-white shadow-md shadow-blue-600/25 transition hover:bg-blue-500 active:scale-95 cursor-pointer"
             >
               <CheckCircle2 className="h-4 w-4" />
-              <span>Check Answer</span>
+              <span>{checking ? "Saving answer…" : "Check Answer"}</span>
             </button>
           )}
 
@@ -376,6 +397,7 @@ export default function QuestionPlayer({
             <button
               type="button"
               onClick={handleSkip}
+              disabled={checking || disabled}
               className="rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs sm:text-sm font-semibold text-slate-600 shadow-2xs transition hover:bg-slate-100 active:scale-95 cursor-pointer"
             >
               {skipLabel}
@@ -387,6 +409,7 @@ export default function QuestionPlayer({
             <button
               type="button"
               onClick={handleNext}
+              disabled={checking || disabled}
               className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 sm:px-6 py-2.5 text-xs sm:text-sm font-black text-white shadow-md transition hover:bg-slate-800 active:scale-95 cursor-pointer"
             >
               <span>{nextLabel}</span>

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CheckCircle2, ChevronRight, CircleHelp, FastForward, Lightbulb, RotateCcw, XCircle } from "lucide-react";
 import type { CurrentAffairsMcq } from "@/lib/current-affairs";
+import EditorialMarkdown from "./EditorialMarkdown";
 import { trackLearningEvent } from "@/lib/learning-events";
 
 type RevisionTakeaway = {
@@ -252,6 +253,7 @@ export default function CurrentAffairsQuiz({ questions, editionDate, revisionTak
       </div>
 
       <div className="mt-5">
+        {question.approved ? <EditorialMarkdown source={question.question} /> : <>
         {parsed.intro && (
           <p className="text-[15px] font-black leading-6 text-slate-950 sm:text-base">{parsed.intro}</p>
         )}
@@ -271,6 +273,7 @@ export default function CurrentAffairsQuiz({ questions, editionDate, revisionTak
         ) : (
           <h3 className="text-[17px] font-black leading-7 text-slate-950 sm:text-lg">{parsed.prompt}</h3>
         )}
+        </>}
       </div>
 
       <div className="mt-5 space-y-2.5">
@@ -307,7 +310,7 @@ export default function CurrentAffairsQuiz({ questions, editionDate, revisionTak
               <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-black text-slate-700">
                 {option.key}
               </span>
-              <span className="font-semibold leading-5 text-slate-800">{option.text}</span>
+              <span className="font-semibold leading-5 text-slate-800 whitespace-pre-wrap">{option.text}</span>
             </button>
           );
         })}
@@ -355,7 +358,7 @@ export default function CurrentAffairsQuiz({ questions, editionDate, revisionTak
             {question.explanation && (
               <div className="px-4 py-4">
                 <p className="text-xs font-black uppercase tracking-[0.14em] text-slate-500">Why?</p>
-                <p className="mt-1.5 text-sm font-semibold leading-6 text-slate-700">{question.explanation}</p>
+                {question.approved ? <EditorialMarkdown source={question.explanation} /> : <p className="mt-1.5 text-sm font-semibold leading-6 text-slate-700">{question.explanation}</p>}
               </div>
             )}
           </div>
@@ -366,12 +369,13 @@ export default function CurrentAffairsQuiz({ questions, editionDate, revisionTak
                 <CircleHelp className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" />
                 <div>
                   <p className="text-xs font-black uppercase tracking-[0.14em] text-blue-700">Exam Edge</p>
-                  <p className="mt-1 text-sm font-semibold leading-5 text-blue-950">{question.examEdge}</p>
+                  {question.approved ? <EditorialMarkdown source={question.examEdge} /> : <p className="mt-1 text-sm font-semibold leading-5 text-blue-950">{question.examEdge}</p>}
                 </div>
               </div>
             </div>
           )}
 
+          {question.approved && <div className="text-sm text-slate-600"><p>{question.taxonomy?.join(" · ")}</p><p>{question.examTags.join(" · ")}</p>{question.sourceUrl && <a href={question.sourceUrl} target="_blank" rel="noopener noreferrer" className="font-semibold text-blue-700 underline">Question source</a>}</div>}
           <button
             type="button"
             onClick={goNext}

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { createClient as createUserClient } from "@/lib/supabase/server";
+import { EXACT_PYQ_ID, questionBeforeAttempt } from "@/lib/exact-pyq";
 import { expandExamQuery } from "@/lib/exams";
 import { normalizeQuestion } from "@/lib/question-intelligence";
 import { parseFiltersFromSearchParams, parseListParam } from "@/lib/question-filters";
@@ -10,6 +12,7 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://afhwegrxnvg
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 export async function GET(request: NextRequest) {
+  const externalId = request.nextUrl.searchParams.get("question_id");
   const specificIds = parseListParam(request.nextUrl.searchParams.get("ids") || request.nextUrl.searchParams.get("id"));
   const fullPaper = request.nextUrl.searchParams.get("mode") === "full_paper";
   // Read canonical content directly so an older backend cannot bypass holds or omit versions.
@@ -18,6 +21,12 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Service role key missing" }, { status: 500 });
     }
 
+    if (externalId !== null) {
+      if (!EXACT_PYQ_ID.test(externalId)) return NextResponse.json({ error: "Invalid PYQ ID" }, { status: 400 });
+      const userClient = await createUserClient();
+      const { data: { user }, error } = await userClient.auth.getUser();
+      if (error || !user) return NextResponse.json({ error: "Sign in to attempt this PYQ" }, { status: 401 });
+    }
     const supabase = createClient(supabaseUrl, serviceRoleKey);
     const searchParams = request.nextUrl.searchParams;
     const filters = parseFiltersFromSearchParams(searchParams);
@@ -28,7 +37,9 @@ export async function GET(request: NextRequest) {
       .select("*")
       .eq("content_eligible", true);
 
-    if (specificIds.length > 0) {
+    if (externalId !== null) {
+      query = query.eq("question_id", externalId);
+    } else if (specificIds.length > 0) {
       query = query.in("id", specificIds);
     } else {
       if (filters.exams.length > 0) {
@@ -84,6 +95,9 @@ export async function GET(request: NextRequest) {
 
     const rawRows = data || [];
     const eligibleRows = rawRows.filter(isContentEligible);
+    if (externalId !== null && (eligibleRows.length !== 1 || eligibleRows[0].question_id !== externalId)) {
+      return NextResponse.json({ error: CONTENT_UNAVAILABLE_MESSAGE, code: "CONTENT_WITHHELD" }, { status: 409, headers: { "Cache-Control": "no-store" } });
+    }
     if (specificIds.length > 0 && eligibleRows.length !== new Set(specificIds).size) {
       return NextResponse.json({ error: CONTENT_UNAVAILABLE_MESSAGE, code: "CONTENT_WITHHELD" }, { status: 409 });
     }
@@ -95,8 +109,8 @@ export async function GET(request: NextRequest) {
     const normalizedQuestions = eligibleRows.map(normalizeQuestion);
 
     return NextResponse.json(
-      { questions: normalizedQuestions, total: normalizedQuestions.length },
-      { status: 200 }
+      { questions: externalId !== null ? normalizedQuestions.map(questionBeforeAttempt) : normalizedQuestions, total: normalizedQuestions.length },
+      { status: 200, headers: { "Cache-Control": "no-store" } }
     );
   } catch (err: unknown) {
     console.error("Failed to fetch questions:", err);

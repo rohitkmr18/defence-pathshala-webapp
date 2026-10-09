@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createClient as createServiceClient } from "@supabase/supabase-js";
+import { validateEditorialEdition } from "@/lib/current-affairs/editorial-validation";
 
 export async function POST(req: Request) {
   const supabase = await createClient();
@@ -13,6 +14,8 @@ export async function POST(req: Request) {
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
     return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
   }
+  try { validateEditorialEdition(payload); }
+  catch (error) { return NextResponse.json({ error: error instanceof Error ? error.message : "Invalid editorial" }, { status: 422 }); }
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   if (!serviceKey || !url) {
