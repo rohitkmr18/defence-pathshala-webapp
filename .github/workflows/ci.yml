@@ -81,3 +81,19 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: placeholder-service-role-key
           SUPABASE_JWT_SECRET: placeholder-jwt-secret-placeholder-32-chars
         run: python -m pytest -q backend/tests/test_profile_compatibility.py backend/tests/test_jwt_issuer.py
+
+      - name: Verify verbatim approved editorial and corpus rollback
+        run: node --test scripts/test-approved-editorial.cjs
+
+      - name: Verify editorial and exact PYQ browser flow
+        env:
+          DP_CHROMIUM_PATH: /usr/bin/google-chrome
+        run: npm exec --prefix frontend -- playwright test --config frontend/playwright.config.ts
+
+      - name: Retain Issue 47 browser screenshots and traces
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: issue-47-browser-evidence
+          path: test-results/issue-47
+          if-no-files-found: ignore

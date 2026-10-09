@@ -10,6 +10,7 @@ interface QuestionCardProps {
   questionNumber: number;
   selectedOption: OptionKey | null;
   revealed: boolean;
+  disabled?: boolean;
   onSelect: (key: OptionKey) => void;
 }
 
@@ -18,6 +19,7 @@ export default function QuestionCard({
   questionNumber,
   selectedOption,
   revealed,
+  disabled = false,
   onSelect,
 }: QuestionCardProps) {
   const options = getOptions(question);
@@ -58,7 +60,7 @@ export default function QuestionCard({
         selected={selectedOption}
         correct={revealed ? correctKey : null}
         revealed={revealed}
-        disabled={revealed}
+        disabled={revealed || disabled}
         onSelect={onSelect}
       />
     </div>
