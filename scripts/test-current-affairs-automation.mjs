@@ -101,7 +101,7 @@ test('isolated signed identity → HTTP handler → real PostgreSQL RPC preserve
   const schema = oldTest.match(/const schema = `([\s\S]*?)`;/)[1];
   try {
     await db.exec(schema);
-    await db.exec(fs.readFileSync('supabase/migrations/20261008050000_atomic_current_affairs_publish.sql', 'utf8'));
+    await db.exec(fs.readFileSync('supabase/migrations/20261008060157_atomic_current_affairs_publish.sql', 'utf8'));
     await db.exec('set role service_role'); // Isolated fixture only; never applied to production.
     const publish = async p => {
       try { return { id: (await db.query('select public.publish_current_affairs_edition_atomic($1::jsonb) id', [JSON.stringify(p)])).rows[0].id }; }
