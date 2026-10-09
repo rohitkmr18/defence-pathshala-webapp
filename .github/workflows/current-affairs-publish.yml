@@ -1,0 +1,45 @@
+name: Approved Current Affairs publication
+
+on:
+  issues:
+    types: [opened]
+
+permissions: {}
+
+concurrency:
+  group: current-affairs-publication
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: >-
+      github.repository == 'rohitkmr18/defence-pathshala-webapp' &&
+      github.event.sender.id == 321342611 &&
+      github.event.issue.user.id == 321342611 &&
+      startsWith(github.event.issue.title, 'DP Current Affairs: ')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Invoke approved atomic publisher
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/publish-approved-current-affairs.mjs
+      - name: Retain publication audit and exact request snapshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: current-affairs-request-${{ github.run_id }}-${{ github.run_attempt }}
+          path: current-affairs-publication-audit.json
+          if-no-files-found: error
+          retention-days: 90
