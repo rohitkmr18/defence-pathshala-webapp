@@ -67,6 +67,9 @@ jobs:
       - name: Verify Current Affairs atomic publisher safety contracts
         run: node --test scripts/test-current-affairs-atomic-publisher.cjs scripts/test-current-affairs-db-rollback.cjs
 
+      - name: Verify authorised ChatGPT publishing bridge
+        run: node --experimental-strip-types --test scripts/test-current-affairs-automation.mjs
+
       - name: Verify question content integrity
         run: |
           node --test scripts/test-content-integrity.cjs
