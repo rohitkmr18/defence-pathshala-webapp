@@ -47,7 +47,7 @@ test('atomic publisher: successful publish, duplicate rejection, invalid MCQ and
  const db=new PGlite();
  try {
   try { await db.exec(schema); } catch (e) { e.message = 'Test fixture schema: ' + e.message; throw e; }
-  try { await db.exec(fs.readFileSync('supabase/migrations/20261008050000_atomic_current_affairs_publish.sql','utf8')); } catch (e) { e.message = 'Publisher migration SQL: ' + e.message; throw e; }
+  try { await db.exec(fs.readFileSync('supabase/migrations/20261008060157_atomic_current_affairs_publish.sql','utf8')); } catch (e) { e.message = 'Publisher migration SQL: ' + e.message; throw e; }
   const call=async p=>db.query('select public.publish_current_affairs_edition_atomic($1::jsonb) as id',[JSON.stringify(p)]);
   await assert.rejects(call(edition('2026-10-07')),/Only service_role may publish/);
   await db.exec('set role service_role');
