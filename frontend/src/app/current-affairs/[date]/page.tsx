@@ -76,7 +76,7 @@ export default async function CurrentAffairsDayPage({ params }: { params: Promis
                   </span>
                 </div>
                 <h2 className="mt-4 text-xl font-black leading-snug text-slate-950">{story.storyNumber}. {story.headline}</h2>
-                {story.summary && <p className="mt-2 text-sm leading-6 text-slate-600">{story.summary}</p>}
+                {!story.editorialMarkdown && story.summary && <p className="mt-2 text-sm leading-6 text-slate-600">{story.summary}</p>}
                 <div className="mt-4 flex justify-end border-t border-slate-100 pt-3">
                   <span className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-500 group-open:hidden">
                     Read more <ChevronDown className="h-3.5 w-3.5" />
@@ -87,16 +87,16 @@ export default async function CurrentAffairsDayPage({ params }: { params: Promis
                 </div>
               </summary>
 
-              <div className="mt-4 whitespace-pre-wrap space-y-5 border-t border-slate-100 pt-5 text-sm leading-6 text-slate-700">
+              <div className="mt-4 space-y-5 border-t border-slate-100 pt-5 text-sm leading-6 text-slate-700">
                 {story.editorialMarkdown && <EditorialMarkdown source={story.editorialMarkdown} />}
-                {story.whatHappened && <section><h3 className="font-black text-slate-950">What happened?</h3><p className="mt-1">{story.whatHappened}</p></section>}
-                {story.keyFacts.length > 0 && <section><h3 className="font-black text-slate-950">Key exam facts</h3><ul className="mt-2 space-y-2">{story.keyFacts.map((fact) => <li key={fact} className="flex gap-2"><span className="text-blue-600">•</span><span>{fact}</span></li>)}</ul></section>}
-                {story.conceptualLinkage && <section className="rounded-2xl bg-blue-50 p-4"><h3 className="font-black text-blue-950">Conceptual linkage</h3><p className="mt-1 text-blue-900">{story.conceptualLinkage}</p></section>}
-                {story.whyItMatters && <section><h3 className="font-black text-slate-950">Why it matters</h3><p className="mt-1">{story.whyItMatters}</p></section>}
-                {story.examRelevance && <section><h3 className="font-black text-slate-950">Exam angle</h3><p className="mt-1">{story.examRelevance}</p></section>}
-                {story.staticLink && <section><h3 className="font-black text-slate-950">Static link</h3><p className="mt-1">{story.staticLink}</p></section>}
-                {story.futureAngle && <section><h3 className="font-black text-slate-950">Future question angles</h3><p>{story.futureAngle}</p></section>}
-                {story.editorialMarkdown && <section className="rounded-2xl bg-slate-50 p-4"><h3 className="font-black text-slate-950">Exam taxonomy</h3><p>{[story.category, story.subject, story.topic, story.subtopic, story.theme].filter(Boolean).join(" · ")}</p><div className="mt-3 flex flex-wrap gap-2">{story.examTags.map(tag => <span key={tag} className="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-900">{tag}</span>)}</div>{story.keywords.length > 0 && <p className="mt-3">Keywords: {story.keywords.join(" · ")}</p>}</section>}
+                {!story.editorialMarkdown && story.whatHappened && <section><h3 className="font-black text-slate-950">What happened?</h3><p className="mt-1">{story.whatHappened}</p></section>}
+                {!story.editorialMarkdown && story.keyFacts.length > 0 && <section><h3 className="font-black text-slate-950">Key exam facts</h3><ul className="mt-2 space-y-2">{story.keyFacts.map((fact) => <li key={fact} className="flex gap-2"><span className="text-blue-600">•</span><span>{fact}</span></li>)}</ul></section>}
+                {!story.editorialMarkdown && story.conceptualLinkage && <section className="rounded-2xl bg-blue-50 p-4"><h3 className="font-black text-blue-950">Conceptual linkage</h3><p className="mt-1 text-blue-900">{story.conceptualLinkage}</p></section>}
+                {!story.editorialMarkdown && story.whyItMatters && <section><h3 className="font-black text-slate-950">Why it matters</h3><p className="mt-1">{story.whyItMatters}</p></section>}
+                {!story.editorialMarkdown && story.examRelevance && <section><h3 className="font-black text-slate-950">Exam angle</h3><p className="mt-1">{story.examRelevance}</p></section>}
+                {!story.editorialMarkdown && story.staticLink && <section><h3 className="font-black text-slate-950">Static link</h3><p className="mt-1">{story.staticLink}</p></section>}
+                {!story.editorialMarkdown && story.futureAngle && <section><h3 className="font-black text-slate-950">Future question angles</h3><p>{story.futureAngle}</p></section>}
+                
                 {story.linkedPyqIds.length > 0 && <section aria-label="Linked previous year questions" className="border-t border-slate-200 pt-5"><h3 className="font-black text-slate-950">Put this story into practice</h3><p className="mt-1 text-slate-500">Attempt the linked previous year questions.</p><div className="mt-3 grid gap-3 sm:grid-cols-2">{story.linkedPyqIds.map(id => <Link key={id} href={`/pyq/${encodeURIComponent(id)}?edition=${post.date}`} className="flex min-h-16 items-center justify-between gap-3 rounded-2xl border border-blue-100 bg-blue-50 p-4 font-bold text-blue-900 hover:border-blue-300 focus-visible:outline-2 focus-visible:outline-blue-600"><span className="break-all">{id}<span className="mt-1 block text-xs font-medium text-blue-700">Attempt this PYQ</span></span><ArrowRight className="h-5 w-5 shrink-0" /></Link>)}</div></section>}
                 {story.sourceDate && story.editorialMarkdown && <p className="text-xs text-slate-500">Source date: {story.sourceDate}</p>}
                 {story.sourceUrl && <a href={story.sourceUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-bold text-blue-700 hover:underline">{story.sourceName || "Primary source"} <ExternalLink className="h-3.5 w-3.5" /></a>}
