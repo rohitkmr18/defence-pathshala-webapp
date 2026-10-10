@@ -1,0 +1,47 @@
+[
+  {
+    "batch_code": "CAPF_AC_2020_I_GAI",
+    "source": "https://www.unlockias.in/capf-2020-general-ability",
+    "rows": 125,
+    "cancelled": 0,
+    "anomalies": 0,
+    "explanations": 125,
+    "difficulty_labels": 0,
+    "difficulty_breakdown": {
+      "Easy": 0,
+      "Moderate": 0,
+      "Hard": 0
+    },
+    "sha256_json": "561996252cc3b00ad1d0b24d03f8957c8602a2aff908fe4d115e878bc5d72550"
+  },
+  {
+    "batch_code": "CDS_2020_I_GK",
+    "source": "https://www.unlockias.in/cds-2020-i-general-knowledge",
+    "rows": 120,
+    "cancelled": 0,
+    "anomalies": 0,
+    "explanations": 120,
+    "difficulty_labels": 0,
+    "difficulty_breakdown": {
+      "Easy": 0,
+      "Moderate": 0,
+      "Hard": 0
+    },
+    "sha256_json": "75126cc8264f1399128496dd53e93f3e60b582d2092668f5ad72bdd31c8922e0"
+  },
+  {
+    "batch_code": "CDS_2020_II_GK",
+    "source": "https://www.unlockias.in/cds-2020-ii-general-knowledge",
+    "rows": 120,
+    "cancelled": 0,
+    "anomalies": 0,
+    "explanations": 120,
+    "difficulty_labels": 0,
+    "difficulty_breakdown": {
+      "Easy": 0,
+      "Moderate": 0,
+      "Hard": 0
+    },
+    "sha256_json": "6c79c896df9d743c4ac55dbfe7ded814342dad96c7efd406d4d30a25ee0a84f7"
+  }
+]
