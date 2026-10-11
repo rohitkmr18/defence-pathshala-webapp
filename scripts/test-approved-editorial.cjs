@@ -7,6 +7,27 @@ const load = require('./test-support/load-ts.cjs')();
 const { validateEditorialEdition } = load('frontend/src/lib/current-affairs/editorial-validation.ts');
 const { resolveAuthDestination } = load('frontend/src/lib/auth-redirect.ts');
 const { questionBeforeAttempt, EXACT_PYQ_ID } = load('frontend/src/lib/exact-pyq.ts');
+const { storyDisplayMarkdown } = load('frontend/src/lib/current-affairs/story-display.ts');
+
+test('story display removes only duplicated metadata and linked ID lists, keeping exam content', () => {
+  const id = 'CDS_I_2026_GK_109';
+  for (const heading of [text => text, text => `## ${text}`, text => `**${text}**`]) {
+    const lead = 'STORY 1 — Agriculture\n\nSubject: Economy\nTopic: Agriculture\nDP Relevance Score: 89/100\nRelevant Exams: CDS | CAPF-AC\n\n';
+    const body = `${heading('What Happened?')}\n\nComplete news.\n\n${heading('Key Facts')}\n\n- Retained fact.\n\n`;
+    const refs = `${heading('PYQ Connection')}\n\nRelevant production question IDs:\n\n* ${id}\n\n`;
+    const tail = `${heading('Exam Edge')}\n\nKeep this distinction.\n\nFuture Question Angle\n\nKeep this angle.\n\nhttps://pib.gov.in/test`;
+    const source = lead + body + refs + tail;
+    assert.equal(storyDisplayMarkdown(source, [id]), body + tail);
+    assert.equal(storyDisplayMarkdown(source, []), body + refs + tail);
+    assert.equal(storyDisplayMarkdown(source, ['OTHER_ID']), body + refs + tail);
+    const analysis = refs.replace(`* ${id}`, 'This explains the conceptual connection.');
+    assert.equal(storyDisplayMarkdown(lead + body + analysis + tail, [id]), body + analysis + tail);
+    assert.equal(source, lead + body + refs + tail);
+  }
+  const unfamiliar = 'Important editorial introduction.\n\nWhat Happened?\n\nFull story.';
+  assert.equal(storyDisplayMarkdown(unfamiliar, []), unfamiliar);
+  assert.equal(storyDisplayMarkdown('## Approved section\n\nComplete paragraph.', []), '## Approved section\n\nComplete paragraph.');
+});
 
 test('approved source rejects truncation, drift, changed hash, duplicate JSON keys and omitted references', () => {
   validateEditorialEdition(edition());

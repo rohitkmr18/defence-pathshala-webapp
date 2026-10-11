@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, BookOpen, ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 import { getAdjacentDays, getCurrentAffairsByDate } from "@/lib/current-affairs";
 import EditorialMarkdown from "@/components/current-affairs/EditorialMarkdown";
+import { storyDisplayMarkdown } from "@/lib/current-affairs/story-display";
 import CurrentAffairsQuiz from "@/components/current-affairs/CurrentAffairsQuiz";
 import CurrentAffairsEditionTracker from "@/components/current-affairs/CurrentAffairsEditionTracker";
 
@@ -88,7 +89,7 @@ export default async function CurrentAffairsDayPage({ params }: { params: Promis
               </summary>
 
               <div className="mt-4 space-y-5 border-t border-slate-100 pt-5 text-sm leading-6 text-slate-700">
-                {story.editorialMarkdown && <EditorialMarkdown source={story.editorialMarkdown} />}
+                {story.editorialMarkdown && <EditorialMarkdown source={storyDisplayMarkdown(story.editorialMarkdown, story.linkedPyqIds)} />}
                 {!story.editorialMarkdown && story.whatHappened && <section><h3 className="font-black text-slate-950">What happened?</h3><p className="mt-1">{story.whatHappened}</p></section>}
                 {!story.editorialMarkdown && story.keyFacts.length > 0 && <section><h3 className="font-black text-slate-950">Key exam facts</h3><ul className="mt-2 space-y-2">{story.keyFacts.map((fact) => <li key={fact} className="flex gap-2"><span className="text-blue-600">•</span><span>{fact}</span></li>)}</ul></section>}
                 {!story.editorialMarkdown && story.conceptualLinkage && <section className="rounded-2xl bg-blue-50 p-4"><h3 className="font-black text-blue-950">Conceptual linkage</h3><p className="mt-1 text-blue-900">{story.conceptualLinkage}</p></section>}
