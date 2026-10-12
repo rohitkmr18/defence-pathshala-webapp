@@ -87,7 +87,7 @@ export default function CurrentAffairsQuiz({ questions, editionDate, revisionTak
 
   function scrollQuizTop() {
     requestAnimationFrame(() => {
-      quizTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      quizTopRef.current?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "start" });
     });
   }
 
@@ -238,7 +238,7 @@ export default function CurrentAffairsQuiz({ questions, editionDate, revisionTak
   }
 
   return (
-    <div ref={quizTopRef} className="scroll-mt-24 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+    <div ref={quizTopRef} className="min-w-0 [overflow-wrap:anywhere] scroll-mt-24 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
       <div className="flex items-center justify-between gap-3 text-xs font-bold text-slate-500">
         <span>Question {index + 1} of {questions.length}</span>
         {question.difficulty && (
@@ -249,11 +249,11 @@ export default function CurrentAffairsQuiz({ questions, editionDate, revisionTak
       </div>
 
       <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-100">
-        <div className="h-full rounded-full bg-blue-600 transition-all" style={{ width: `${((index + 1) / questions.length) * 100}%` }} />
+        <div className="h-full rounded-full bg-blue-600 transition-all motion-reduce:transition-none" style={{ width: `${((index + 1) / questions.length) * 100}%` }} />
       </div>
 
       <div className="mt-5">
-        {question.approved ? <EditorialMarkdown source={question.question} /> : <>
+        {question.approved ? <EditorialMarkdown source={question.question} anchorPrefix={`quiz-${question.id}-question-`} /> : <>
         {parsed.intro && (
           <p className="text-[15px] font-black leading-6 text-slate-950 sm:text-base">{parsed.intro}</p>
         )}
@@ -287,6 +287,7 @@ export default function CurrentAffairsQuiz({ questions, editionDate, revisionTak
               key={option.key}
               type="button"
               disabled={hasChecked}
+              aria-pressed={!!isSelected}
               onClick={() => {
                 trackLearningEvent(
                   "current_affairs_quiz_start",
@@ -310,7 +311,7 @@ export default function CurrentAffairsQuiz({ questions, editionDate, revisionTak
               <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-black text-slate-700">
                 {option.key}
               </span>
-              <span className="font-semibold leading-5 text-slate-800 whitespace-pre-wrap">{option.text}</span>
+              <span className="min-w-0 font-semibold leading-6 text-slate-800 whitespace-pre-wrap">{option.text}</span>
             </button>
           );
         })}
@@ -336,7 +337,7 @@ export default function CurrentAffairsQuiz({ questions, editionDate, revisionTak
         </div>
       ) : (
         <div className="mt-5 space-y-3">
-          <div className={[
+          <div role="status" className={[
             "overflow-hidden rounded-2xl border",
             chosen === question.correctOption
               ? "border-emerald-200 bg-emerald-50/70"
@@ -358,7 +359,7 @@ export default function CurrentAffairsQuiz({ questions, editionDate, revisionTak
             {question.explanation && (
               <div className="px-4 py-4">
                 <p className="text-xs font-black uppercase tracking-[0.14em] text-slate-500">Why?</p>
-                {question.approved ? <EditorialMarkdown source={question.explanation} /> : <p className="mt-1.5 text-sm font-semibold leading-6 text-slate-700">{question.explanation}</p>}
+                {question.approved ? <EditorialMarkdown source={question.explanation} anchorPrefix={`quiz-${question.id}-explanation-`} /> : <p className="mt-1.5 text-sm font-semibold leading-6 text-slate-700">{question.explanation}</p>}
               </div>
             )}
           </div>
@@ -369,7 +370,7 @@ export default function CurrentAffairsQuiz({ questions, editionDate, revisionTak
                 <CircleHelp className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" />
                 <div>
                   <p className="text-xs font-black uppercase tracking-[0.14em] text-blue-700">Exam Edge</p>
-                  {question.approved ? <EditorialMarkdown source={question.examEdge} /> : <p className="mt-1 text-sm font-semibold leading-5 text-blue-950">{question.examEdge}</p>}
+                  {question.approved ? <EditorialMarkdown source={question.examEdge} anchorPrefix={`quiz-${question.id}-examEdge-`} /> : <p className="mt-1 text-sm font-semibold leading-5 text-blue-950">{question.examEdge}</p>}
                 </div>
               </div>
             </div>

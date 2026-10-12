@@ -1,3 +1,5 @@
+import { readApprovedSource } from "./current-affairs/read-approved-source";
+import { readingMinutes, storyReadingText } from "./current-affairs/reading";
 import { createClient } from "@/lib/supabase/server";
 
 export type CurrentAffairsSlide = {
@@ -65,6 +67,7 @@ export type CurrentAffairsPost = {
   editorialMarkdown: string | null;
   approvedSourceHash: string | null;
   isLatest?: boolean;
+  sourceWarning?: boolean;
 };
 
 type RawMcq = {
@@ -152,16 +155,9 @@ function normalizeMcq(row: RawMcq, fallbackNumber: number): CurrentAffairsMcq {
 
 function normalizePost(row: RawPost): CurrentAffairsPost {
   // Never manufacture approved text from legacy rows. New documents retain exact source strings.
-  const approved = row.approved_editorial_source ? JSON.parse(row.approved_editorial_source) as {
-    title: string; summary: string; editorialMarkdown?: string;
-    stories: (Omit<CurrentAffairsStory, "id" | "storyNumber" | "mcqs"> & {
-      mcqs: { question: string; options: Record<"A" | "B" | "C" | "D", string>;
-        correctOption: "A" | "B" | "C" | "D"; explanation: string; examEdge: string;
-        difficulty: string; sourceUrl: string; subject?: string; topic?: string;
-        subtopic?: string; concept?: string; questionType?: string; examTags?: string[] }[];
-    })[];
-  } : null;
+  const { value: approved, warning: sourceWarning } = readApprovedSource(row.approved_editorial_source);
   const stories = (row.current_affairs_stories ?? [])
+    .slice()
     .sort((a, b) => a.story_number - b.story_number)
     .map((story) => ({
       id: story.id,
@@ -189,6 +185,7 @@ function normalizePost(row: RawPost): CurrentAffairsPost {
       sourceUrl: approved?.stories[story.story_number - 1]?.sourceUrl ?? story.source_url,
       sourceDate: approved?.stories[story.story_number - 1]?.sourceDate ?? story.source_date,
       mcqs: (story.current_affairs_mcqs ?? [])
+        .slice()
         .sort((a, b) => (a.question_number ?? 999) - (b.question_number ?? 999))
         .map((mcq, index) => {
           const normalized = normalizeMcq(mcq, index + 1);
@@ -196,11 +193,11 @@ function normalizePost(row: RawPost): CurrentAffairsPost {
           const q = canonical?.mcqs[index];
           return q ? { ...normalized, approved: true, question: q.question,
             options: (["A", "B", "C", "D"] as const).map(key => ({ key, text: q.options[key] })),
-            correctOption: q.correctOption, explanation: q.explanation, examEdge: q.examEdge,
-            sourceUrl: q.sourceUrl, difficulty: q.difficulty,
-            subject: q.subject ?? canonical.subject, topic: q.topic ?? canonical.topic,
-            examTags: q.examTags ?? canonical.examTags,
-            taxonomy: [q.subject ?? canonical.subject, q.topic ?? canonical.topic, q.subtopic, q.concept, q.questionType].filter((v): v is string => typeof v === "string"),
+            correctOption: q.correctOption, explanation: q.explanation ?? normalized.explanation, examEdge: q.examEdge ?? normalized.examEdge,
+            sourceUrl: q.sourceUrl, difficulty: q.difficulty ?? normalized.difficulty,
+            subject: q.subject ?? canonical?.subject ?? normalized.subject, topic: q.topic ?? canonical?.topic ?? normalized.topic,
+            examTags: q.examTags ?? canonical?.examTags ?? normalized.examTags,
+            taxonomy: [q.subject ?? canonical?.subject, q.topic ?? canonical?.topic, q.subtopic, q.concept, q.questionType].filter((v): v is string => typeof v === "string"),
           } : normalized;
         }),
     }));
@@ -211,14 +208,15 @@ function normalizePost(row: RawPost): CurrentAffairsPost {
     formattedDate: formatDisplayDate(row.date),
     title: approved?.title ?? row.title,
     summary: approved?.summary ?? row.summary,
-    storyCount: row.total_stories ?? stories.length,
+    storyCount: stories.length,
     quizCount: stories.reduce((sum, story) => sum + story.mcqs.length, 0),
     slideCount: 0,
-    readingTimeMinutes: Math.max(2, Math.ceil(stories.length * 1.5)),
+    readingTimeMinutes: readingMinutes([approved?.editorialMarkdown, ...stories.map(storyReadingText)].filter(Boolean).join(" ")),
     slides: [],
     stories,
     editorialMarkdown: approved?.editorialMarkdown ?? null,
     approvedSourceHash: row.approved_editorial_sha256 ?? null,
+    sourceWarning,
   };
 }
 
@@ -244,8 +242,7 @@ export async function getDailyCurrentAffairsList(): Promise<CurrentAffairsPost[]
     .order("date", { ascending: false });
 
   if (error) {
-    console.error("Error retrieving current affairs:", error);
-    return [];
+    throw new Error("Current Affairs is temporarily unavailable");
   }
 
   const posts = ((data ?? []) as unknown as RawPost[]).map(normalizePost);
@@ -262,10 +259,8 @@ export async function getCurrentAffairsByDate(date: string): Promise<CurrentAffa
     .eq("date", date)
     .maybeSingle();
 
-  if (error || !data) {
-    if (error) console.error("Error retrieving current affairs day:", error);
-    return null;
-  }
+  if (error) throw new Error("This edition is temporarily unavailable");
+  if (!data) return null;
 
   return normalizePost(data as unknown as RawPost);
 }
