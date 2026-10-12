@@ -83,3 +83,13 @@ read the database before retrying. Never delete or overwrite an earlier edition.
 The full approved 9 October 3-story/4-MCQ package was not found in available
 attachments or file search; conversation search returned an error. Publication
 must wait for that exact content and primary-source reverification.
+
+## Daily section-heading presentation
+
+Render standalone story section labels as bold, high-contrast headings every day:
+What Happened?, Why It Matters, Key Exam Facts, Static–Current Affairs Linkage,
+Exam Edge, and Future Question Angles. The EditorialMarkdown renderer also
+recognises these labels in approved plain-text manuscripts, so already published
+editions gain the same presentation without changing stored source or SHA-256.
+Preserve the founder-approved wording; never rewrite immutable editions merely
+for typography. Check heading emphasis on the live story during publication QA.
