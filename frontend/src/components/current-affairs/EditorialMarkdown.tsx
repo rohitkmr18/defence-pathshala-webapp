@@ -2,7 +2,7 @@ import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Image from "next/image";
 
-const sectionHeading = /^(?:What Happened|Why It Matters|Key (?:Exam )?Facts|Static\\s*[–—-]\\s*Current Affairs Linkage|Exam Edge|Future Question Angles?|Explanation)[?:]?$/i;
+const sectionHeading = /^(?:What Happened|Why It Matters|Key (?:Exam )?Facts|Static\s*[–—-]\s*Current Affairs Linkage|Exam Edge|Future Question Angles?|Explanation)[?:]?$/i;
 
 /** HTML is displayed as text; no raw-HTML plugin, scripts or unsafe protocols. */
 export default function EditorialMarkdown({ source }: { source: string }) {
