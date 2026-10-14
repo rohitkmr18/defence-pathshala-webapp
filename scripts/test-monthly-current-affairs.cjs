@@ -73,3 +73,11 @@ test('analytics context contains environment and authentication state, no learne
     assert.equal(JSON.stringify(context).includes('private'), false);
   }
 });
+
+test('monthly PYQ return allowlist preserves only the released sample destination', () => {
+  const { safeLearningReturn } = loader()('frontend/src/lib/learning-navigation.ts');
+  assert.equal(safeLearningReturn('/current-affairs/monthly/2026-10/sample'), '/current-affairs/monthly/2026-10/sample');
+  for (const destination of ['/current-affairs/monthly/2026-11/sample', '//evil.invalid', 'https://evil.invalid', '/current-affairs/monthly/2026-10/private']) {
+    assert.equal(safeLearningReturn(destination), '/dashboard/practice');
+  }
+});

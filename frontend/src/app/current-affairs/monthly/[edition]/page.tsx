@@ -20,10 +20,11 @@ export default async function MonthlyProduct({ params }: { params: Promise<{ edi
       <Link href="/current-affairs/monthly" className="text-sm font-semibold text-blue-700">← Monthly editions</Link>
       <header className="mt-6 rounded-2xl bg-slate-950 p-6 text-white sm:p-8">
         <p className="text-xs font-bold uppercase tracking-widest text-yellow-300">October 2026 · Monthly Intelligence</p>
-        <h1 className="mt-4 text-3xl font-black leading-tight tracking-tight sm:text-4xl">Understand the news.<br />Recognise the exam question.</h1>
+        <h1 className="mt-4 text-[28px] font-black leading-tight tracking-tight sm:text-4xl">Understand the news.<br />Recognise the exam question.</h1>
         <p className="mt-4 max-w-xl leading-7 text-slate-300">A focused monthly companion for CDS, CAPF-AC, NDA and AFCAT. Build concepts, test your understanding and connect developments to historical PYQs.</p>
         <Link href="/current-affairs/monthly/2026-10/sample" className="mt-6 inline-flex min-h-12 items-center gap-3 rounded-xl bg-blue-600 px-5 py-3 font-bold text-white hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">Try the free lesson <ArrowRight size={18} aria-hidden /></Link>
         <p className="mt-3 text-xs text-slate-300">No login needed for the lesson and sample MCQ.</p>
+        <p className="mt-4 border-t border-slate-700 pt-3 text-sm font-semibold text-slate-200">₹79 / full edition · Coming soon</p>
       </header>
       <div className="mt-8 grid gap-8 md:grid-cols-[1fr_280px]">
         <div>

@@ -8,7 +8,9 @@ Routes follow existing App Router conventions:
 - /current-affairs/monthly/2026-10 — product detail
 - /current-affairs/monthly/2026-10/sample — public interactive sample
 
-Only October is allowlisted; malformed and other edition parameters return 404.
+Only October is allowlisted; malformed and other edition parameters render Next's
+not-found page with noindex. The existing parent Suspense shell can stream HTTP 200
+before notFound resolves; this is standard Next behavior, with no lesson rendered.
 Daily Current Affairs remains free. ₹79 is the planned full-edition price.
 There are no payments, orders, entitlements, commerce tables or migrations in this change.
 The release-availability action reports an unavailable purchase state without collecting payment.
@@ -61,6 +63,9 @@ Linked PYQs use the existing /pyq/[questionId] player. The strictly allowlisted
 monthly=2026-10 query parameter retains the sample return destination. The complete
 question destination remains in next through login and onboarding. Existing daily return
 paths are preserved. Sample preview itself never requires login or onboarding.
+The shared shell keeps its closed mobile drawer inert for keyboard/screen-reader users.
+Monthly pages use a scoped overflow guard so reading progress remains sticky during
+document scrolling. The quiz moves keyboard focus to its answer feedback after checking.
 
 Use trackLearningEvent exclusively for monthly events; no PostHog or second GA integration.
 Dimensions include edition, surface, auth state, environment and story/question identity.

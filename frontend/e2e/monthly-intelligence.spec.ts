@@ -24,6 +24,7 @@ test("discovery, catalogue, price and honest release availability", async ({ pag
   await page.getByRole("link", { name: /Explore Monthly Intelligence/ }).click();
   await expect(page).toHaveURL("/current-affairs/monthly");
   await page.getByRole("link", { name: "Explore October edition" }).click();
+  await expect(page).toHaveURL(productPath);
   await expect(page.getByText("₹79", { exact: true })).toBeVisible();
   await expect(page.getByText("Coming soon · Not yet available")).toBeVisible();
   await page.getByRole("button", { name: "View release availability" }).click();
@@ -39,6 +40,14 @@ test("discovery, catalogue, price and honest release availability", async ({ pag
 
 test("real approved lesson fidelity, guest keyboard MCQ, explanation and analytics", async ({ page, request }, testInfo) => {
   await page.goto(samplePath);
+  for (let step = 0; step < 8; step++) {
+    await page.keyboard.press("Tab");
+    expect(await page.evaluate(() => {
+      const active = document.activeElement as HTMLElement;
+      const rect = active.getBoundingClientRect();
+      return rect.left >= 0 && rect.right <= window.innerWidth && !active.closest("[inert]");
+    })).toBe(true);
+  }
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(approved.headline);
   const lesson = page.getByRole("article", { name: "Approved BIMSTEC lesson" });
   await expect(lesson).toHaveAttribute("data-source-story", fixture.current_affairs_stories[0].id);
@@ -66,6 +75,7 @@ test("real approved lesson fidelity, guest keyboard MCQ, explanation and analyti
   await expect(option).toHaveAttribute("aria-pressed", "true");
   await page.getByRole("button", { name: "Check Answer" }).focus();
   await page.keyboard.press("Enter");
+  await expect(page.getByRole("region", { name: "Answer feedback" })).toBeFocused();
   await expect(page.getByText(approved.mcqs[0].explanation, { exact: true })).toBeVisible();
   await expect(page.getByRole("status")).toContainText("Guest practice");
   const state = await (await request.get("http://127.0.0.1:4547/__qa")).json();
@@ -130,7 +140,11 @@ test("both exact PYQs retain destination through login and onboarding and return
 
 test("invalid editions, unpublished source and missing approval never leak a lesson", async ({ page, request }) => {
   for (const route of ["/current-affairs/monthly/2026-13", "/current-affairs/monthly/2026-09/sample", "/current-affairs/monthly/bad"]) {
-    expect((await page.goto(route))?.status()).toBe(404);
+    // Next's parent shell streams through Suspense, so notFound can have HTTP 200.
+    await page.goto(route);
+    await expect(page.getByRole("heading", { name: "404", exact: true })).toBeVisible();
+    await expect(page.locator('meta[name="robots"][content="noindex"]').first()).toBeAttached();
+    expect(await page.content()).not.toContain(approved.headline);
   }
   for (const data of [{ monthlyPublished: false }, { monthlyApproved: false }]) {
     await request.post("http://127.0.0.1:4547/__qa", { data });
@@ -155,6 +169,7 @@ test("mobile and desktop layouts, reading progress and navigation", async ({ pag
     }
     await page.getByRole("link", { name: "Try the MCQ", exact: true }).click();
     await expect(page.getByRole("heading", { name: "Sample practice MCQ" })).toBeInViewport();
+    await expect(page.getByRole("progressbar", { name: "Lesson reading progress" })).toBeInViewport();
     expect(await page.getByRole("progressbar", { name: "Lesson reading progress" }).getAttribute("value")).not.toBe("0");
   }
 });

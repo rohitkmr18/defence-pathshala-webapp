@@ -58,9 +58,14 @@ export default function CurrentAffairsQuiz({ questions, editionDate, revisionTak
   const [startedAt, setStartedAt] = useState(() => Date.now());
   const quizTopRef = useRef<HTMLDivElement>(null);
   const [saveMessage, setSaveMessage] = useState("");
+  const feedbackRef = useRef<HTMLDivElement>(null);
 
   const question = questions[index];
   const complete = index >= questions.length;
+  const answerChecked = Boolean(question && checked[question.id]);
+  useEffect(() => {
+    if (answerChecked) feedbackRef.current?.focus({ preventScroll: true });
+  }, [answerChecked]);
 
   const score = useMemo(
     () => questions.reduce((sum, item) => sum + (selected[item.id] === item.correctOption ? 1 : 0), 0),
@@ -348,7 +353,7 @@ export default function CurrentAffairsQuiz({ questions, editionDate, revisionTak
           </button>
         </div>
       ) : (
-        <div className="mt-5 space-y-3" aria-live="polite">
+        <div ref={feedbackRef} tabIndex={-1} role="region" aria-label="Answer feedback" className="mt-5 space-y-3 focus-visible:outline-2 focus-visible:outline-blue-600" aria-live="polite">
           {saveMessage && <p role="status" className="text-sm leading-6 text-slate-600">{saveMessage}</p>}
           <div className={[
             "overflow-hidden rounded-2xl border",

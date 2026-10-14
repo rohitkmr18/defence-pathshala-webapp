@@ -54,6 +54,15 @@ section,
 
 /* ── Scroll-safe tables ───────────────────────────────────────────────────── */
 
+/* Keep monthly reading progress attached to document scrolling. The global
+   horizontal guard otherwise creates an unintended vertical scroll container. */
+body:has(.dp-monthly-page),
+.dp-monthly-page,
+.dp-monthly-page main {
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
 /* Mobile attempts scroll with the document. overflow-x:hidden would make
    these ancestors vertical scroll containers and trap the sticky action row. */
 @media (width < 64rem) {
