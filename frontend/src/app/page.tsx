@@ -54,7 +54,19 @@ export default function HomePage() {
             </span>
             <span>&bull; India&apos;s First PYQ Intelligence Platform</span>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+            <Link href="/pyqs/cds" className="hover:text-blue-600 transition">
+              CDS PYQs
+            </Link>
+            <Link href="/pyqs/capf" className="hover:text-blue-600 transition">
+              CAPF PYQs
+            </Link>
+            <Link href="/exams/cds" className="hover:text-blue-600 transition">
+              CDS Exam
+            </Link>
+            <Link href="/exams/capf" className="hover:text-blue-600 transition">
+              CAPF Exam
+            </Link>
             <Link href="/about" className="hover:text-blue-600 transition">
               About
             </Link>
