@@ -20,6 +20,14 @@ test("complete mobile editorial, safe citations/table, exact link and unchanged 
   await expect(first.getByRole("link", { name: "Primary citation" })).toHaveAttribute("href", "https://pib.gov.in/test");
   await expect(first.getByRole("link", { name: /CDS_II_2026_GK_011/ })).toHaveAttribute("href", target);
   await expect(page.getByRole("heading", { name: "Test today’s Current Affairs" })).toBeVisible();
+  await expect(page.getByText("Synthetic MCQ 0?", { exact: true })).toBeVisible();
+  await expect(page.getByRole("list", { name: "Question statements" })).toHaveCount(0);
+  await page.getByRole("button", { name: "B Two", exact: true }).click();
+  await page.getByRole("button", { name: "Check Answer" }).click();
+  await expect(page.getByText("Full explanation", { exact: true })).toBeVisible();
+  await expect(page.getByText("Second explanation paragraph.", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Next Question", exact: true }).click();
+  await expect(page.getByText("Synthetic MCQ 1?", { exact: true })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   expect(dialogs).toEqual([]);
   expect(await first.locator('a[href^="javascript:"]').count()).toBe(0);

@@ -1,5 +1,9 @@
 # Monthly Intelligence — acceptance evidence
 
+This records the initial Phase 1 local acceptance. CI #814 later exposed a root-cwd
+fixture failure before browser execution. See the [PR #61 remediation report](monthly-intelligence-remediation.md)
+for the corrected CI invocation, four-width production verification and current evidence.
+
 ## Candidate and boundaries
 
 Repository: rohitkmr18/defence-pathshala-webapp.

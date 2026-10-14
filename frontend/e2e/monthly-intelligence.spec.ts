@@ -1,9 +1,10 @@
 import { test, expect, type BrowserContext } from "@playwright/test";
 import fs from "node:fs";
+import path from "node:path";
 
 const samplePath = "/current-affairs/monthly/2026-10/sample";
 const productPath = "/current-affairs/monthly/2026-10";
-const fixture = JSON.parse(fs.readFileSync("../scripts/test-support/monthly-public-fixture.json", "utf8"));
+const fixture = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../../scripts/test-support/monthly-public-fixture.json"), "utf8"));
 const approved = JSON.parse(fixture.approved_editorial_source).stories[0];
 
 async function signIn(context: BrowserContext) {
@@ -28,11 +29,23 @@ test("discovery, catalogue, price and honest release availability", async ({ pag
   await expect(page.getByText("₹79", { exact: true })).toBeVisible();
   await expect(page.getByText("Coming soon · Not yet available")).toBeVisible();
   await page.getByRole("button", { name: "View release availability" }).click();
+  await page.getByRole("button", { name: "View release availability" }).click();
   await expect(page.getByRole("status")).toContainText("No payment is collected");
   await expect(page.getByRole("link", { name: /PDF|Buy|Pay|Checkout/i })).toHaveCount(0);
   await expect(page.getByText("A validated sample PDF is not yet available.", { exact: false })).toBeVisible();
   const events = await page.evaluate(() => (window as unknown as { dataLayer: unknown[][] }).dataLayer);
-  expect(events.filter(e => e[1] === "monthly_ca_purchase_intent_clicked")).toHaveLength(1);
+  expect(events.filter(e => e[1] === "monthly_ca_release_availability_viewed")).toHaveLength(1);
+  expect(events.filter(e => e[1] === "monthly_ca_purchase_intent_clicked")).toHaveLength(0);
+  expect(events.filter(e => e[1] === "monthly_ca_sample_pdf_clicked")).toHaveLength(0);
+  const workspace = page.getByRole("region", { name: "Illustrative monthly workspace" });
+  await expect(workspace).toContainText("Working free sample");
+  await expect(workspace.getByRole("button")).toHaveCount(0);
+  await expect(workspace.getByRole("link")).toHaveCount(1);
+  await expect(workspace).toContainText(approved.headline);
+  for (const feature of ["Subject-wise monthly chapters", "Consolidated MCQ practice", "Linked PYQ connections", "Revision & progress workspace", "Monthly eBook companion"]) {
+    await expect(workspace).toContainText(feature);
+  }
+  await expect(page.getByRole("region", { name: "Daily and monthly comparison" })).toContainText("Individual daily stories and quizzes");
   await page.getByRole("link", { name: "Try the free lesson" }).click();
   await expect(page).toHaveURL(samplePath);
   await expect.poll(async () => page.evaluate(() => (window as unknown as { dataLayer: unknown[][] }).dataLayer.filter(e => e[1] === "monthly_ca_sample_opened").length)).toBe(1);
@@ -69,6 +82,11 @@ test("real approved lesson fidelity, guest keyboard MCQ, explanation and analyti
     expect(await page.content()).not.toContain(story.headline);
   }
   await expect(page.getByRole("button", { name: "Check Answer" })).toBeDisabled();
+  const statements = page.getByRole("list", { name: "Question statements" });
+  await expect(statements.getByRole("listitem")).toHaveCount(3);
+  await expect(statements.getByRole("listitem").nth(0)).toHaveText("1. The meeting took place in New Delhi.");
+  await expect(statements.getByRole("listitem").nth(1)).toContainText("entered into force in March 2021.");
+  await expect(statements.getByRole("listitem").nth(2)).toContainText("already entered into force.");
   const option = page.getByRole("button", { name: "A 1 and 2 only", exact: true });
   await option.focus();
   await page.keyboard.press("Enter");
@@ -114,6 +132,7 @@ test("both exact PYQs retain destination through login and onboarding and return
   for (const id of ["CDS_I_2026_GK_099", "CAPF_2022_P1_125"]) {
     await context.clearCookies();
     await page.goto(samplePath);
+    await expect(page.getByText("Login is required to attempt and save linked PYQs. Your selected question will be preserved.")).toBeVisible();
     const link = page.getByRole("link").filter({ hasText: id });
     const target = `/pyq/${id}?edition=2026-10-14&monthly=2026-10`;
     await expect(link).toHaveAttribute("href", target);
@@ -159,17 +178,20 @@ test("invalid editions, unpublished source and missing approval never leak a les
 });
 
 test("mobile and desktop layouts, reading progress and navigation", async ({ page }, testInfo) => {
-  for (const width of [360, 390, 430, 1440]) {
-    await page.setViewportSize({ width, height: width > 500 ? 1000 : 844 });
-    for (const route of ["/current-affairs/monthly", productPath, samplePath]) {
-      await page.goto(route);
-      await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-      expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
-      await page.screenshot({ path: testInfo.outputPath(`monthly-${route.split("/").pop()}-${width}.png`), fullPage: true });
+  const width = page.viewportSize()!.width;
+  for (const route of ["/current-affairs/monthly", productPath, samplePath]) {
+    await page.goto(route);
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    if (route === productPath) {
+      await expect(page.getByRole("link", { name: "Try the free lesson", exact: true })).toBeInViewport();
+      await expect(page.locator("header").filter({ hasText: "Connected exam preparation" })).toContainText("consolidated revision");
     }
-    await page.getByRole("link", { name: "Try the MCQ", exact: true }).click();
-    await expect(page.getByRole("heading", { name: "Sample practice MCQ" })).toBeInViewport();
-    await expect(page.getByRole("progressbar", { name: "Lesson reading progress" })).toBeInViewport();
-    expect(await page.getByRole("progressbar", { name: "Lesson reading progress" }).getAttribute("value")).not.toBe("0");
+    await page.screenshot({ path: testInfo.outputPath(`monthly-${route.split("/").pop()}-${width}.png`), fullPage: true });
+    await page.screenshot({ path: testInfo.outputPath(`first-viewport-${route.split("/").pop()}-${width}.png`) });
   }
+  await page.getByRole("link", { name: "Try the MCQ", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Sample practice MCQ" })).toBeInViewport();
+  await expect(page.getByRole("progressbar", { name: "Lesson reading progress" })).toBeInViewport();
+  expect(await page.getByRole("progressbar", { name: "Lesson reading progress" }).getAttribute("value")).not.toBe("0");
 });

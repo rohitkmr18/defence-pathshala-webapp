@@ -74,6 +74,13 @@ GA loads only when VERCEL_ENV=production; preview/development retains a local da
 for assertions without submitting acceptance events to production GA.
 View events are deduplicated by session; MCQ completion means a checked answer, including
 an incorrect answer. Skips use a distinct event. No PDF event is emitted without an asset.
+Release information uses monthly_ca_release_availability_viewed, deduplicated by edition.
+It does not emit purchase intent. A purchase-intent event is reserved for a future genuine
+purchase journey. Product/price details use monthly_ca_product_viewed; opening the working
+sample uses monthly_ca_sample_opened. Illustrative planned workspace rows are static, with
+only the approved sample chapter linked, and no invented metrics, coverage or PDF artifacts.
+Statement questions use an explicit conservative grammar and lossless source slices;
+ordinary, Markdown and ambiguous structures keep their original renderer.
 
 ## Phase 2 — canonical snapshot and PDF
 

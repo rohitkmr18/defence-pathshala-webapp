@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { CheckCircle2, ChevronRight, CircleHelp, FastForward, Lightbulb, RotateCcw, XCircle } from "lucide-react";
 import type { CurrentAffairsMcq } from "@/lib/current-affairs";
 import EditorialMarkdown from "./EditorialMarkdown";
+import CurrentAffairsQuestion from "./CurrentAffairsQuestion";
 import { trackLearningEvent } from "@/lib/learning-events";
 import type { MonthlyContext } from "./MonthlyInteractions";
 
@@ -19,36 +20,6 @@ type Props = {
   revisionTakeaways: RevisionTakeaway[];
   monthlyContext?: MonthlyContext;
 };
-
-type ParsedQuestion = {
-  intro: string | null;
-  statements: string[];
-  prompt: string;
-};
-
-function parseQuestion(text: string): ParsedQuestion {
-  const statementStart = text.match(/^([\s\S]*?):\s*1\.\s*/);
-  if (!statementStart) {
-    return { intro: null, statements: [], prompt: text };
-  }
-
-  const intro = statementStart[1]?.trim() || null;
-  const remainder = text.slice(statementStart[0].length);
-  const promptMatch = remainder.match(/\s+(Which|Select|How|What)\b[\s\S]*$/);
-  const statementBlock = promptMatch ? remainder.slice(0, promptMatch.index).trim() : remainder;
-  const prompt = promptMatch ? promptMatch[0].trim() : "";
-
-  const statements = statementBlock
-    .split(/\s+(?=\d+\.\s)/)
-    .map((item, idx) => item.replace(new RegExp(`^${idx + 1}\\.\\s*`), "").trim())
-    .filter(Boolean);
-
-  return {
-    intro,
-    statements,
-    prompt: prompt || "Which of the statements given above is/are correct?",
-  };
-}
 
 export default function CurrentAffairsQuiz({ questions, editionDate, revisionTakeaways, monthlyContext }: Props) {
   const [index, setIndex] = useState(0);
@@ -198,7 +169,6 @@ export default function CurrentAffairsQuiz({ questions, editionDate, revisionTak
 
   const chosen = selected[question.id];
   const hasChecked = checked[question.id];
-  const parsed = parseQuestion(question.question);
 
   async function checkAnswer() {
     if (!chosen || hasChecked) return;
@@ -268,27 +238,7 @@ export default function CurrentAffairsQuiz({ questions, editionDate, revisionTak
       </div>
 
       <div className="mt-5">
-        {question.approved ? <EditorialMarkdown source={question.question} /> : <>
-        {parsed.intro && (
-          <p className="text-[15px] font-black leading-6 text-slate-950 sm:text-base">{parsed.intro}</p>
-        )}
-
-        {parsed.statements.length > 0 ? (
-          <div className="mt-3 space-y-2.5">
-            {parsed.statements.map((statement, idx) => (
-              <div key={statement} className="flex gap-3 rounded-2xl bg-slate-50 px-3.5 py-3">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-xs font-black text-blue-700 shadow-sm">
-                  {idx + 1}
-                </span>
-                <p className="text-sm font-semibold leading-5 text-slate-700">{statement}</p>
-              </div>
-            ))}
-            <p className="pt-1 text-[15px] font-black leading-6 text-slate-950">{parsed.prompt}</p>
-          </div>
-        ) : (
-          <h3 className="text-[17px] font-black leading-7 text-slate-950 sm:text-lg">{parsed.prompt}</h3>
-        )}
-        </>}
+        <CurrentAffairsQuestion source={question.question} approved={question.approved} />
       </div>
 
       <div className="mt-5 space-y-2.5">

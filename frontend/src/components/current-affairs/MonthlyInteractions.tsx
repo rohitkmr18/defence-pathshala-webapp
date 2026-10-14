@@ -24,7 +24,7 @@ export function MonthlyAvailability({ context }: { context: MonthlyContext }) {
   return <div>
     <button type="button" aria-expanded={open} aria-controls="edition-availability"
       className="mt-4 min-h-12 w-full rounded-xl border border-slate-300 px-4 py-3 font-bold text-slate-800 hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-blue-600"
-      onClick={() => { setOpen(true); trackLearningEvent("monthly_ca_purchase_intent_clicked", { ...context, availability: "unavailable" }); }}>
+      onClick={() => { setOpen(true); trackLearningEvent("monthly_ca_release_availability_viewed", { ...context, availability: "unavailable" }, String(context.edition_id)); }}>
       View release availability
     </button>
     {open && <p id="edition-availability" role="status" className="mt-3 text-sm leading-6 text-slate-600">The full October edition is still in preparation. Purchasing will open after editorial approval. No payment is collected here.</p>}

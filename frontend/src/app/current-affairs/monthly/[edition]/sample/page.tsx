@@ -45,7 +45,7 @@ export default async function MonthlySample({ params }: { params: Promise<{ edit
       </section>
       <section id="linked-pyqs" className="scroll-mt-32 mt-8 border-t border-slate-200 pt-7">
         <h2 className="text-xl font-bold text-slate-950">Practise the linked historical PYQs</h2>
-        <p className="mt-2 text-sm leading-6 text-slate-600">Login is required to save a PYQ attempt. Your chosen question is retained through login and onboarding.</p>
+        <p className="mt-2 text-sm leading-6 text-slate-600">Login is required to attempt and save linked PYQs. Your selected question will be preserved.</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           {pyqs.map(pyq => <MonthlyLink key={pyq.id} href={`/pyq/${pyq.id}?edition=2026-10-14&monthly=2026-10`} event="monthly_ca_linked_pyq_clicked" context={{ ...context, question_id: pyq.id, exam: pyq.exam }} className="rounded-xl border border-slate-200 p-4 font-bold text-blue-700 hover:border-blue-500 focus-visible:outline-2 focus-visible:outline-blue-600"><span className="block">{pyq.exam} · {pyq.year} · Q{pyq.number} →</span><span className="mt-2 block break-all text-xs font-medium text-slate-500">{pyq.id}</span></MonthlyLink>)}
         </div>
