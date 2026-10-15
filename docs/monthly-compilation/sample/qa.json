@@ -1,0 +1,13 @@
+{
+  "pdf_file": "sample.pdf",
+  "status": "PASSED",
+  "content_hash": "7cb1c2c344a5406af1f352d11e65f25736afadfa788a20525159a3acc5ef4377",
+  "sha256": "4c7d4a13171bda8d3c4b92ce2c3a33f4050bca3fe18eaac1b4f44634616158e4",
+  "pages": 8,
+  "links": 12,
+  "bookmarks": 22,
+  "minimum_font_pt": 9,
+  "checked_passages": 14,
+  "errors": [],
+  "reproducible": true
+}

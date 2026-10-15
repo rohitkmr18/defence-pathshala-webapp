@@ -65,3 +65,5 @@ node_modules
 # Browser acceptance artifacts
 /test-results/
 /frontend/playwright-report/
+/.monthly-build/
+/.monthly-venv/

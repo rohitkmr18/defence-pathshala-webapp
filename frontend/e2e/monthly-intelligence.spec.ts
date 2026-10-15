@@ -31,8 +31,8 @@ test("discovery, catalogue, price and honest release availability", async ({ pag
   await page.getByRole("button", { name: "View release availability" }).click();
   await page.getByRole("button", { name: "View release availability" }).click();
   await expect(page.getByRole("status")).toContainText("No payment is collected");
-  await expect(page.getByRole("link", { name: /PDF|Buy|Pay|Checkout/i })).toHaveCount(0);
-  await expect(page.getByText("A validated sample PDF is not yet available.", { exact: false })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Buy|Pay|Checkout/i })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "Download the free sample PDF" })).toBeVisible();
   const events = await page.evaluate(() => (window as unknown as { dataLayer: unknown[][] }).dataLayer);
   expect(events.filter(e => e[1] === "monthly_ca_release_availability_viewed")).toHaveLength(1);
   expect(events.filter(e => e[1] === "monthly_ca_purchase_intent_clicked")).toHaveLength(0);
@@ -194,4 +194,23 @@ test("mobile and desktop layouts, reading progress and navigation", async ({ pag
   await expect(page.getByRole("heading", { name: "Sample practice MCQ" })).toBeInViewport();
   await expect(page.getByRole("progressbar", { name: "Lesson reading progress" })).toBeInViewport();
   expect(await page.getByRole("progressbar", { name: "Lesson reading progress" }).getAttribute("value")).not.toBe("0");
+});
+
+test("sample PDF download is safe, genuine and instrumented without purchase intent", async ({ page, request }) => {
+  await page.goto(productPath);
+  const [download] = await Promise.all([
+    page.waitForEvent("download"),
+    page.getByRole("link", { name: "Download the free sample PDF" }).click(),
+  ]);
+  expect(download.suggestedFilename()).toBe("2026-10-free-sample.pdf");
+  const response = await request.get("/monthly/2026-10-free-sample.pdf");
+  expect(response.status()).toBe(200);
+  expect(response.headers()["content-type"]).toContain("application/pdf");
+  expect((await response.body()).subarray(0, 5).toString()).toBe("%PDF-");
+  const events = await page.evaluate(() => (window as unknown as { dataLayer: unknown[][] }).dataLayer);
+  expect(events.filter(e => e[1] === "monthly_ca_sample_pdf_clicked")).toHaveLength(1);
+  expect(events.filter(e => e[1] === "monthly_ca_purchase_intent_clicked")).toHaveLength(0);
+  await page.goto(samplePath);
+  await expect(page.getByRole("article", { name: "Approved BIMSTEC lesson" })).toHaveAttribute("data-content-hash", "7cb1c2c344a5406af1f352d11e65f25736afadfa788a20525159a3acc5ef4377");
+  for (const route of ["/monthly/2026-10-full.pdf", "/monthly/2026-10-snapshot.json"]) expect((await request.get(route)).status()).toBe(404);
 });

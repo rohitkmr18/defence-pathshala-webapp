@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { getMonthlySample, isMonthlyEdition, monthlyEventContext } from "@/lib/monthly-current-affairs";
 import { MonthlyAvailability, MonthlyView } from "@/components/current-affairs/MonthlyInteractions";
+import MonthlySampleDownload from "@/components/current-affairs/MonthlySampleDownload";
 import MonthlyWorkspacePreview from "@/components/current-affairs/MonthlyWorkspacePreview";
 
 export async function generateMetadata({ params }: { params: Promise<{ edition: string }> }): Promise<Metadata> {
@@ -35,7 +36,7 @@ export default async function MonthlyProduct({ params }: { params: Promise<{ edi
             <div><h2 className="font-bold text-slate-950">₹79 Monthly Intelligence · Planned</h2><p className="mt-2 text-sm leading-6 text-slate-600">Subject-wise organisation, consolidated revision, monthly practice, progress tracking and an included downloadable eBook.</p></div>
           </section>
           <MonthlyWorkspacePreview story={sample?.story} />
-          <section className="mt-8 border-t border-slate-200 pt-6"><h2 className="font-bold text-slate-950">Sample PDF</h2><p className="mt-2 text-sm leading-6 text-slate-600">A validated sample PDF is not yet available. You can explore the interactive lesson now.</p></section>
+          <section className="mt-8 border-t border-slate-200 pt-6"><h2 className="font-bold text-slate-950">Sample PDF</h2><p className="mt-2 text-sm leading-6 text-slate-600">An eight-page free sample of the approved BIMSTEC lesson, original MCQ and explanation. This is not the complete October edition.</p><MonthlySampleDownload context={context} /></section>
         </div>
         <aside className="self-start rounded-2xl border border-slate-200 p-6">
           <p className="text-xs font-bold uppercase tracking-widest text-slate-500">Full October edition</p>

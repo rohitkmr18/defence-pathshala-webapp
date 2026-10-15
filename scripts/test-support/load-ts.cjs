@@ -9,6 +9,7 @@ module.exports = function createLoader(mocks = {}, globals = {}) {
   function load(filename) {
     const absolute = path.resolve(filename);
     if (cache.has(absolute)) return cache.get(absolute);
+    if (absolute.endsWith(".json")) return JSON.parse(fs.readFileSync(absolute,"utf8"));
     const exports = {};
     cache.set(absolute, exports);
     const source = ts.transpileModule(fs.readFileSync(absolute, 'utf8'), {
@@ -19,7 +20,7 @@ module.exports = function createLoader(mocks = {}, globals = {}) {
       require(name) {
         if (name.startsWith('node:')) return require(name);
         if (Object.hasOwn(mocks, name)) return mocks[name];
-        if (name.startsWith('@/')) return load(`frontend/src/${name.slice(2)}.ts`);
+        if (name.startsWith('@/')) return load(`frontend/src/${name.slice(2)}${name.endsWith(".json") ? "" : ".ts"}`);
         if (name.startsWith('.')) return load(path.resolve(path.dirname(absolute), `${name}.ts`));
         return require(path.resolve('frontend/node_modules', name));
       },
