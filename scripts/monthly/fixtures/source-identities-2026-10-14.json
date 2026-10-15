@@ -1,0 +1,66 @@
+[
+  {
+    "id": "bcadb490-b39a-4f11-befd-fa8e15bf480b",
+    "mcqs": [
+      {
+        "id": "a7dbadbe-e1c1-4329-b582-cb4d6be4a7ee",
+        "question_number": 1
+      }
+    ],
+    "topic": "Regional Organisations",
+    "subject": "International Relations",
+    "headline": "First BIMSTEC Home Ministers’ Meeting Adopts Delhi Declaration",
+    "subtopic": "BIMSTEC Security Cooperation",
+    "source_url": "https://www.pib.gov.in/PressReleseDetailm.aspx?PRID=2322964&lang=1&reg=3",
+    "source_date": "2026-10-13",
+    "story_number": 1
+  },
+  {
+    "id": "0f69aa20-2a64-42dd-b43e-dd58acb38d72",
+    "mcqs": [
+      {
+        "id": "1edd5c9e-8b87-412d-9b8f-c43a799d65ba",
+        "question_number": 2
+      }
+    ],
+    "topic": "Disaster Management",
+    "subject": "Environment",
+    "headline": "UNDRR Finds Housing Accounts for 43% of Reported Direct Disaster Losses",
+    "subtopic": "Sendai Framework and Resilient Housing",
+    "source_url": "https://www.un.org/en/disasters-cost-228-billion-housing-losses-every-year",
+    "source_date": "2026-10-13",
+    "story_number": 2
+  },
+  {
+    "id": "54b8a224-7dbb-43c8-8441-7e9d21712cb5",
+    "mcqs": [
+      {
+        "id": "7fa1a115-037b-48cb-a286-a08ba8b9cf85",
+        "question_number": 3
+      }
+    ],
+    "topic": "Industry & Infrastructure",
+    "subject": "Economy",
+    "headline": "PM GatiShakti Five-Year Assessment Highlights 1,800 Geospatial Layers and 421 Projects",
+    "subtopic": "Multimodal Connectivity and Geospatial Planning",
+    "source_url": "https://www.pib.gov.in/PressReleseDetailm.aspx?PRID=2322825&lang=1&reg=3",
+    "source_date": "2026-10-13",
+    "story_number": 3
+  },
+  {
+    "id": "1a39acda-7e0c-497c-8703-0967d41f94f6",
+    "mcqs": [
+      {
+        "id": "7f8c3061-4b01-4af4-bbb9-5023774516fe",
+        "question_number": 4
+      }
+    ],
+    "topic": "Pollution & Environmental Management",
+    "subject": "Environment",
+    "headline": "Centre and States Review Paddy-Stubble Management as Rabi Sowing Approaches",
+    "subtopic": "Crop Residue, Air Pollution and Bioenergy",
+    "source_url": "https://www.pib.gov.in/PressReleseDetailm.aspx?PRID=2322991&lang=1&reg=3",
+    "source_date": "2026-10-13",
+    "story_number": 4
+  }
+]

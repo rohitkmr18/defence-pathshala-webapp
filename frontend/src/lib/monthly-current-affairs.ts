@@ -1,4 +1,5 @@
 import "server-only";
+import { getPublicMonthlySnapshot } from "@/lib/monthly-snapshot";
 import { createClient as createCanonicalClient } from "@supabase/supabase-js";
 import { getCurrentAffairsByDate } from "@/lib/current-affairs";
 import { createClient } from "@/lib/supabase/server";
@@ -22,10 +23,19 @@ export function isMonthlyEdition(id: string) {
 export async function getMonthlySample() {
   const post = await getCurrentAffairsByDate(MONTHLY_EDITION.date);
   if (!post || post.id !== MONTHLY_EDITION.postId || post.approvedSourceHash !== MONTHLY_EDITION.approvedSourceHash) return null;
-  const story = post.stories.find(item => item.id === MONTHLY_EDITION.storyId);
-  if (!story || story.headline !== MONTHLY_EDITION.headline || story.subject !== "International Relations" || !story.editorialMarkdown) return null;
+  const liveStory = post.stories.find(item => item.id === MONTHLY_EDITION.storyId);
+  const canonicalStory = getPublicMonthlySnapshot().stories[0];
+  const story = liveStory ? { ...liveStory, ...canonicalStory.content, id: canonicalStory.source_id, mcqs: liveStory.mcqs } : null;
+  if (!liveStory || liveStory.headline !== MONTHLY_EDITION.headline || liveStory.subject !== "International Relations" || liveStory.editorialMarkdown !== canonicalStory.content.editorialMarkdown || !story || story.headline !== MONTHLY_EDITION.headline || story.subject !== "International Relations" || !story.editorialMarkdown) return null;
   // The read model marks MCQs backed by the preserved approved source.
-  const questions = story.mcqs.filter(question => question.approved);
+  const questions = canonicalStory.mcqs.flatMap(source => {
+    const live = story.mcqs.find(q => q.id === source.source_id && q.approved);
+    if (!live) return [];
+    return [{ ...live, question: source.content.question,
+      options: (["A", "B", "C", "D"] as const).map(key => ({ key, text: source.content.options[key] })),
+      correctOption: source.content.correctOption as "A" | "B" | "C" | "D",
+      explanation: source.content.explanation, examEdge: source.content.examEdge }];
+  });
   const allowed = MONTHLY_EDITION.pyqIds.filter(id => story.linkedPyqIds.includes(id));
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!key) return { story, questions, pyqs: [], approvedSourceHash: post.approvedSourceHash };

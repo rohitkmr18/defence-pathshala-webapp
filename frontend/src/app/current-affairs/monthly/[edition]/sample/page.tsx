@@ -1,3 +1,5 @@
+import { SAMPLE_CONTENT_HASH } from "@/lib/monthly-snapshot";
+import MonthlySampleDownload from "@/components/current-affairs/MonthlySampleDownload";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -34,7 +36,7 @@ export default async function MonthlySample({ params }: { params: Promise<{ edit
           <a href="#linked-pyqs" className="rounded-lg border border-slate-200 px-3 py-3">Linked PYQs</a>
         </nav>
       </header>
-      <article id="lesson" aria-label="Approved BIMSTEC lesson" className="scroll-mt-32 py-4" data-source-story={story.id}>
+      <article id="lesson" aria-label="Approved BIMSTEC lesson" className="scroll-mt-32 py-4" data-source-story={story.id} data-content-hash={SAMPLE_CONTENT_HASH} data-edition-version="1">
         <EditorialMarkdown source={storyDisplayMarkdown(story.editorialMarkdown!, pyqs.map(q => q.id))} />
       </article>
       <section id="practice" className="scroll-mt-32 border-t border-slate-200 pt-7">
@@ -51,6 +53,7 @@ export default async function MonthlySample({ params }: { params: Promise<{ edit
         </div>
         {pyqs.length < MONTHLY_EDITION.pyqIds.length && <p className="mt-3 text-sm text-slate-500">Some linked questions are currently unavailable for practice.</p>}
       </section>
+      <MonthlySampleDownload context={context} />
       <footer className="mt-9 border-t border-slate-200 py-7">
         <p className="text-xs font-bold uppercase tracking-widest text-blue-700">Your next learning action</p>
         <Link href="/current-affairs/2026-10-14" className="mt-3 block font-bold text-blue-700">Read the full free 14 October edition →</Link>

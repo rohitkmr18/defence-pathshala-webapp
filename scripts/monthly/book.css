@@ -1,0 +1,44 @@
+* { box-sizing: border-box; }
+html { color: #172238; background: white; font-family: DP, DPDevanagari, DPSymbols, sans-serif; font-size: 12pt; line-height: 1.55; }
+body { margin: 0; }
+h1,h2,h3 { color: #08162d; line-height: 1.25; break-after: avoid; }
+h1 { font-size: 25pt; margin: 0 0 9mm; }
+h2 { font-size: 17pt; margin: 9mm 0 4mm; }
+h3 { font-size: 13pt; margin: 6mm 0 3mm; }
+p { margin: 3mm 0; orphans: 3; widows: 3; }
+a { color: #1657d8; text-decoration: underline; overflow-wrap: anywhere; }
+strong { font-weight: 700; color: #08162d; }
+li { margin: 2.4mm 0; }
+ul,ol { padding-left: 6mm; }
+.page-section { break-before: page; }
+.cover { min-height: 238mm; background: #08162d; padding: 14mm 11mm; color: white; display: flex; flex-direction: column; justify-content: center; print-color-adjust: exact; }
+.cover h1 { color: white; font-size: 35pt; line-height: 1.12; margin: 15mm 0 8mm; }
+.brand { font-weight: 700; font-size: 10pt; letter-spacing: 1pt; }
+.eyebrow { color: #ffe378; font-size: 10pt; font-weight: bold; margin-top: 10mm; }
+.cover-month { color: #85b6ff; font-size: 19pt; font-weight: 700; }
+.cover-rule { border-top: 1pt solid #527197; margin: 9mm 0 3mm; }
+.cover-note { font-size: 12pt; color: #e4edfa; }
+.cover-meta { font-size: 10pt; margin-top: 10mm; color: #c9d9ef; }
+.story-title { border-bottom: 2pt solid #1657d8; padding-bottom: 5mm; margin-top: 0; }
+.exam-links { border-left: 3pt solid #1657d8; padding: 2mm 5mm; margin-top: 6mm; background: #f0f6ff; print-color-adjust: exact; }
+.exam-links p, .exam-links li { font-size: 10pt; }
+.exam-edge { background: #fff9dd; border-left: 3pt solid #e3c13e; padding: 2mm 5mm; margin: 6mm 0; print-color-adjust: exact; }
+.exam-edge h3 { margin-top: 2mm; }
+.question { margin: 7mm 0; }
+.options { list-style: none; padding-left: 0; }
+.options li { padding: 2mm 4mm; border: 0.6pt solid #ccd7e6; border-radius: 2mm; break-inside: avoid; }
+.options p { margin: 1mm 0; }
+.answer { margin: 7mm 0; }
+.metadata { font-size: 9pt; color: #4a5b72; overflow-wrap: anywhere; }
+.source-entry { font-size: 10pt; margin-bottom: 5mm; }
+table { border-collapse: collapse; width: 100%; font-size: 10.5pt; margin: 5mm 0; table-layout: fixed; }
+th, td { border: 0.6pt solid #cbd5e1; padding: 2.5mm; overflow-wrap: anywhere; }
+th { background: #edf3fc; print-color-adjust: exact; }
+thead { display: table-header-group; }
+tr { break-inside: avoid; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+blockquote { border-left: 2pt solid #1657d8; padding-left: 5mm; }
+@media screen { body { max-width: 760px; margin: 24px auto; padding: 24px; } .page-section { padding-top: 28px; border-top: 1px solid #cbd5e1; margin-top: 28px; } }
+
+.statements { list-style: none; padding: 0; }
+.statements li { margin: 4mm 0; }
