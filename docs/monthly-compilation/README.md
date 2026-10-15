@@ -23,6 +23,8 @@ python -m venv .monthly-venv
 node --test scripts/monthly/core.test.mjs
 node scripts/monthly/cli.mjs sample
 node scripts/monthly/build-sample.mjs
+# Generic snapshot build (private review or separately approved edition):
+node scripts/monthly/build-book.mjs PRIVATE_VALIDATED_SNAPSHOT.json PRIVATE_OUTPUT_DIR
 node scripts/monthly/layout-test.mjs
 node scripts/monthly/verify-package.mjs
 ```
@@ -39,6 +41,8 @@ node scripts/monthly/cli.mjs compile --input .monthly-build/source-export.json -
 node scripts/monthly/cli.mjs validate --input .monthly-build/snapshots/2026-10/v1/DRAFT.json
 # Validation intentionally fails while editorial decisions remain unresolved.
 ```
+
+The generic builder emits `edition.pdf` for MONTHLY and `sample.pdf` for SAMPLE, runs both builds and QA, and never publishes. Unreleased monthly PDFs are labelled private editorial review copies.
 
 The source export must include explicit relational story/MCQ identities; omitted identity rows fail closed. The preserved source string is hashed before parsing, and the existing production editorial validator checks original text, options, answer keys and official sources. Inputs are operator-controlled provenance, not an authorization mechanism. Reproduce historical artifacts with the frozen audit `as_of`, not a fresh timestamp.
 

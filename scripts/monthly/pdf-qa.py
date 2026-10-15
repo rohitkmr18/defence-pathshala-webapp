@@ -6,15 +6,18 @@ import fitz
 from pypdf import PdfReader
 out = Path(sys.argv[1])
 parity = json.loads((out/'parity.json').read_text())
+edition = parity['edition']
+pdf_file = 'sample.pdf' if edition['kind'] == 'SAMPLE' else 'edition.pdf'
+pdf_date = 'D:'+edition['source_as_of'].replace('-','')+'000000Z'
 source = fitz.open(out/'raw.pdf')
-source.set_metadata({'title':'Defence Pathshala Monthly Intelligence — Free Sample','author':'Defence Pathshala','creator':parity['generator_version'],'producer':'DP reproducible PDF pipeline','creationDate':'D:20261015000000Z','modDate':'D:20261015000000Z'})
+source.set_metadata({'title':'Defence Pathshala Monthly Intelligence — Free Sample' if edition['kind']=='SAMPLE' else edition['title'],'author':'Defence Pathshala','creator':parity['generator_version'],'producer':'DP reproducible PDF pipeline','creationDate':pdf_date,'modDate':pdf_date})
 identity = parity['content_hash'][:32]
 source.xref_set_key(-1, 'ID', f'[<{identity}><{identity}>]')
-source.save(out/'sample.pdf', no_new_id=True, garbage=0, deflate=True)
+source.save(out/pdf_file, no_new_id=True, garbage=0, deflate=True)
 source.close()
-doc = fitz.open(out/'sample.pdf')
+doc = fitz.open(out/pdf_file)
 errors = []
-reader = PdfReader(out/'sample.pdf')
+reader = PdfReader(out/pdf_file)
 if len(reader.pages) != len(doc): errors.append('Independent parser page mismatch')
 original = fitz.open(out/'raw.pdf')
 for i,page in enumerate(doc):
@@ -55,7 +58,7 @@ for level,title,page in doc.get_toc():
 (out/'pages').mkdir(exist_ok=True)
 for i,page in enumerate(doc): page.get_pixmap(matrix=fitz.Matrix(1.2,1.2),alpha=False).save(out/'pages'/f'page-{i+1:02}.png')
 (out/'extracted.txt').write_text(text)
-report={'status':'FAILED' if errors else 'PASSED','content_hash':parity['content_hash'],'sha256':hashlib.sha256((out/'sample.pdf').read_bytes()).hexdigest(),'pages':len(doc),'links':links,'bookmarks':len(doc.get_toc()),'minimum_font_pt':round(min_font,2),'checked_passages':len(parity['blocks']),'errors':errors}
+report={'pdf_file':pdf_file,'status':'FAILED' if errors else 'PASSED','content_hash':parity['content_hash'],'sha256':hashlib.sha256((out/pdf_file).read_bytes()).hexdigest(),'pages':len(doc),'links':links,'bookmarks':len(doc.get_toc()),'minimum_font_pt':round(min_font,2),'checked_passages':len(parity['blocks']),'errors':errors}
 (out/'qa.json').write_text(json.dumps(report,indent=2)+'\n')
 print(json.dumps(report,indent=2))
 if errors: sys.exit(1)

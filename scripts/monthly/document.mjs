@@ -90,7 +90,7 @@ export function documentModel(snapshot) {
       h("p", { key: "approval" }, sample ? "The lesson is from an approved public daily source. This validated sample does not approve or release the complete October monthly edition." : "Founder approval and release metadata remain separate from compilation."),
       h("p", { className: "metadata", key: "hash" }, "Content digest: " + snapshot.content_hash),
       h("p", { className: "metadata", key: "generator" }, "Generator: " + GENERATOR_VERSION),
-      h("p", { key: "correction" }, snapshot.correction_lineage ? "Correction lineage: " + snapshot.correction_lineage.reason : "Initial sample version. Corrections require a new immutable snapshot version."),
+      h("p", { key: "correction" }, snapshot.correction_lineage ? "Correction lineage: " + snapshot.correction_lineage.reason : sample ? "Initial sample version. Corrections require a new immutable snapshot version." : "Initial edition version. Corrections require a new immutable snapshot version."),
       h("p", { className: "metadata", key: "source-hash" }, snapshot.source_hashes.map(s => "Approved source hash: " + s.source_hash).join(" · ")),
     ]),
   ];
