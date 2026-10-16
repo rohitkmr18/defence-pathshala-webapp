@@ -22,9 +22,7 @@ The application route is protected and is not exposed as a public analytics endp
 ## Required Google setup
 
 1. In Google Cloud, create or reuse a project.
-2. Enable:
-   - Google Search Console API
-   - Search Console URL Inspection API
+2. Enable the Google Search Console API.
 3. Create a service account.
 4. Create a JSON key for that service account.
 5. In Google Search Console, open the property:
