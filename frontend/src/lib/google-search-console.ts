@@ -1,7 +1,8 @@
 import { importPKCS8, SignJWT } from "jose";
 
 const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
-const SEARCH_CONSOLE_BASE = "https://searchconsole.googleapis.com";
+const WEBMASTERS_BASE = "https://www.googleapis.com";
+const URL_INSPECTION_BASE = "https://searchconsole.googleapis.com";
 const SEARCH_CONSOLE_SCOPE = "https://www.googleapis.com/auth/webmasters";
 
 export const DEFAULT_SEARCH_CONSOLE_SITE =
@@ -154,7 +155,7 @@ export async function listSearchConsoleSites() {
       siteUrl?: string;
       permissionLevel?: string;
     }>;
-  }>(`${SEARCH_CONSOLE_BASE}/webmasters/v3/sites`);
+  }>(`${WEBMASTERS_BASE}/webmasters/v3/sites`);
 }
 
 export async function listSearchConsoleSitemaps(
@@ -177,7 +178,7 @@ export async function listSearchConsoleSitemaps(
         indexed?: string;
       }>;
     }>;
-  }>(`${SEARCH_CONSOLE_BASE}/webmasters/v3/sites/${encodedSite}/sitemaps`);
+  }>(`${WEBMASTERS_BASE}/webmasters/v3/sites/${encodedSite}/sitemaps`);
 }
 
 export async function submitSearchConsoleSitemap(
@@ -187,7 +188,7 @@ export async function submitSearchConsoleSitemap(
   const encodedSite = encodeURIComponent(siteUrl);
   const encodedSitemap = encodeURIComponent(sitemapUrl);
   return googleFetch<unknown>(
-    `${SEARCH_CONSOLE_BASE}/webmasters/v3/sites/${encodedSite}/sitemaps/${encodedSitemap}`,
+    `${WEBMASTERS_BASE}/webmasters/v3/sites/${encodedSite}/sitemaps/${encodedSitemap}`,
     { method: "PUT" },
   );
 }
@@ -197,7 +198,7 @@ export async function inspectSearchConsoleUrl(
   siteUrl = DEFAULT_SEARCH_CONSOLE_SITE,
 ) {
   return googleFetch<UrlInspectionResult>(
-    `${SEARCH_CONSOLE_BASE}/v1/urlInspection/index:inspect`,
+    `${URL_INSPECTION_BASE}/v1/urlInspection/index:inspect`,
     {
       method: "POST",
       body: JSON.stringify({
@@ -257,7 +258,7 @@ export async function querySearchConsolePerformance(args?: {
     rows?: SearchAnalyticsRow[];
     responseAggregationType?: string;
   }>(
-    `${SEARCH_CONSOLE_BASE}/webmasters/v3/sites/${encodedSite}/searchAnalytics/query`,
+    `${WEBMASTERS_BASE}/webmasters/v3/sites/${encodedSite}/searchAnalytics/query`,
     {
       method: "POST",
       body: JSON.stringify(body),
