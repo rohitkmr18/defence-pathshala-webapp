@@ -10,6 +10,7 @@ import {
   Compass,
 } from "lucide-react";
 import { getExamLabel } from "@/lib/exams";
+import { parseFiltersFromSearchParams } from "@/lib/question-filters";
 import type { ActiveFilters } from "./PracticePageClient";
 import { useSearchParams } from "next/navigation";
 
@@ -67,12 +68,15 @@ export default function PracticeFilters({
   const applyInitialSelection = (data: PracticeFiltersResponse) => {
     if (typeof window !== "undefined") {
       const sp = new URLSearchParams(window.location.search);
-      const urlExam = sp.get("exam")?.split(",").map((s) => s.trim()).filter(Boolean) ?? [];
-      const urlYear = sp.get("year")?.split(",").map((s) => parseInt(s.trim(), 10)).filter((n) => !isNaN(n)) ?? [];
-      const urlCycle = sp.get("cycle")?.split(",").map((s) => s.trim()).filter(Boolean) ?? [];
-      const urlSubject = sp.get("subject")?.split(",").map((s) => s.trim()).filter(Boolean) ?? [];
-      const urlTopic = sp.get("topic")?.split(",").map((s) => s.trim()).filter(Boolean) ?? [];
-      const urlSubtopic = sp.get("subtopic")?.split(",").map((s) => s.trim()).filter(Boolean) ?? [];
+      // Keep repeated v2 parameters intact (exam=CAPF-AC&exam=CDS).
+      // Use the same canonical contract as the count and questions APIs.
+      const parsed = parseFiltersFromSearchParams(sp);
+      const urlExam = parsed.exams;
+      const urlYear = parsed.years;
+      const urlCycle = parsed.cycles;
+      const urlSubject = parsed.subjects;
+      const urlTopic = parsed.topics;
+      const urlSubtopic = parsed.subtopics;
 
       if (
         urlExam.length > 0 ||
