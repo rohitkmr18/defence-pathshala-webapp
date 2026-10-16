@@ -45,6 +45,21 @@ test("parseFiltersFromSearchParams parses all filter dimensions", () => {
   assert.equal(filters.returnTo, "/dashboard/question-bank");
 });
 
+test("practice launcher preserves both CAPF-AC and CDS from a repeated v2 exam URL", () => {
+  const params = new URLSearchParams(
+    "filter_format=v2&exam=CAPF-AC&exam=CDS&subject=Polity&topic=Rights+%26+Liberties&subtopic=Fundamental+Rights&mode=instant&origin=practice"
+  );
+  const filters = parseFiltersFromSearchParams(params);
+  assert.deepEqual(filters.exams, ["CAPF-AC", "CDS"]);
+  assert.deepEqual(filters.subjects, ["Polity"]);
+  assert.deepEqual(filters.topics, ["Rights & Liberties"]);
+  assert.deepEqual(filters.subtopics, ["Fundamental Rights"]);
+
+  const launched = new URL(buildPracticeSessionUrl(filters), "https://example.test");
+  assert.deepEqual(launched.searchParams.getAll("exam"), ["CAPF-AC", "CDS"]);
+  assert.deepEqual(parseFiltersFromSearchParams(launched.searchParams).exams, ["CAPF-AC", "CDS"]);
+});
+
 test("serializeFiltersToSearchParams preserves all active dimensions", () => {
   const params = serializeFiltersToSearchParams({
     exams: ["CDS"],
