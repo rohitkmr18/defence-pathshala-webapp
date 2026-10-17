@@ -2,6 +2,7 @@
 const http = require('node:http');
 const { edition } = require('./editorial-fixture.cjs');
 const p = edition();
+const monthlyPost = require('./monthly-public-fixture.json');
 const userId = '22222222-2222-4222-a222-222222222222';
 const question = { id: '11111111-1111-4111-a111-111111111111', question_id: 'CDS_II_2026_GK_011',
   question: 'Synthetic exact linked question: which option is two?', exam: 'CDS', year: 2026, cycle: 'II',
@@ -9,7 +10,12 @@ const question = { id: '11111111-1111-4111-a111-111111111111', question_id: 'CDS
   final_opt: 'B', official_opt: 'B', llm_opt: 'B', explanation: 'Synthetic answer explanation: two is B.',
   content_version: 1, content_status: 'VERIFIED', content_eligible: true };
 const sessions = new Map(); const attempts = new Map();
-let complete = true; let eligible = true;
+let complete = true; let eligible = true; let monthlyPublished = true; let monthlyApproved = true;
+const monthlyQuestions = ['CDS_I_2026_GK_099', 'CAPF_2022_P1_125'].map((id, i) => ({
+  ...question, id: `11111111-1111-4111-a111-11111111111${i + 2}`, question_id: id,
+  exam: i ? 'CAPF-AC' : 'CDS', year: i ? 2022 : 2026, cycle: 'I', q_num: i ? 125 : 99,
+}));
+const caAttempts = [];
 const post = { id: '33333333-3333-4333-a333-333333333333', date: p.date, title: p.title, summary: p.summary,
   total_stories: 3, published: true, approved_editorial_source: p.approvedEditorial.source,
   approved_editorial_sha256: p.approvedEditorial.sha256,
@@ -33,17 +39,22 @@ http.createServer(async (req, res) => {
   if (req.method === 'OPTIONS') return res.end();
   const send = data => res.end(JSON.stringify(data));
   if (url.pathname === '/__qa') {
-    if (req.method === 'POST') { complete = body.complete ?? true; eligible = body.eligible ?? true; sessions.clear(); attempts.clear(); }
-    return send({ complete, eligible, attempts: [...attempts.values()], sessions: [...sessions.values()] });
+    if (req.method === 'POST') { complete = body.complete ?? true; eligible = body.eligible ?? true;
+      monthlyPublished = body.monthlyPublished ?? true; monthlyApproved = body.monthlyApproved ?? true;
+      sessions.clear(); attempts.clear(); caAttempts.length = 0; }
+    return send({ complete, eligible, attempts: [...attempts.values()], sessions: [...sessions.values()], caAttempts });
   }
   if (url.pathname === '/auth/v1/user') return send({ id: userId, aud: 'authenticated', role: 'authenticated',
     email: 'synthetic@example.invalid', app_metadata: {}, user_metadata: { full_name: 'Synthetic Learner' } });
   const table = url.pathname.split('/').pop();
   let rows = [];
-  if (table === 'current_affairs_posts') rows = [post];
+  if (table === 'current_affairs_posts') rows = [post, { ...monthlyPost, published: monthlyPublished,
+    approved_editorial_sha256: monthlyApproved ? monthlyPost.approved_editorial_sha256 : null }];
+  if (table === 'current_affairs_mcqs') rows = monthlyPost.current_affairs_stories.flatMap(s => s.current_affairs_mcqs);
+  if (table === 'current_affairs_quiz_attempts') { if (req.method === 'POST') caAttempts.push(body); rows = caAttempts; }
   if (table === 'profiles') rows = [{ id: userId, full_name: 'Synthetic Learner', target_year: 2030, onboarding_completed: complete }];
   if (table === 'user_exam_preferences') rows = [{ user_id: userId, exam: 'CDS' }];
-  if (table === 'v_dp_question_intelligence_v2') rows = eligible ? [question] : [];
+  if (table === 'v_dp_question_intelligence_v2') rows = eligible ? [question, ...monthlyQuestions] : [];
   const store = table === 'practice_sessions' ? sessions : table === 'user_attempts' ? attempts : null;
   if (store) {
     if (req.method === 'POST') {

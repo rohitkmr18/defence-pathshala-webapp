@@ -142,7 +142,7 @@ function DashboardShellContent({
   }, [pathname]);
 
   return (
-    <div className={`flex min-h-screen max-w-full overflow-x-hidden bg-gray-50 ${showMobileNav ? "" : "dp-active-attempt"}`}>
+    <div className={`flex min-h-screen max-w-full overflow-x-hidden bg-gray-50 ${pathname.startsWith("/current-affairs/monthly") ? "dp-monthly-page" : ""} ${showMobileNav ? "" : "dp-active-attempt"}`}>
       {/* ── Desktop sidebar ─────────────────────────────────────────────── */}
       <DashboardSidebar
         collapsed={collapsed}
@@ -160,6 +160,8 @@ function DashboardShellContent({
 
       {/* ── Mobile sidebar drawer ────────────────────────────────────────── */}
       <div
+        id="mobile-sidebar"
+        inert={!mobileOpen}
         className={`fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-out lg:hidden ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
@@ -182,6 +184,8 @@ function DashboardShellContent({
               onClick={() => setMobileOpen(true)}
               className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 text-slate-600 shadow-sm transition hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
               aria-label="Open navigation"
+              aria-expanded={mobileOpen}
+              aria-controls="mobile-sidebar"
             >
               <Menu className="h-5 w-5" />
             </button>

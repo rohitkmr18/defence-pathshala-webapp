@@ -83,11 +83,23 @@ jobs:
         run: python -m pytest -q backend/tests/test_profile_compatibility.py backend/tests/test_jwt_issuer.py
 
       - name: Verify verbatim approved editorial and corpus rollback
-        run: node --test scripts/test-approved-editorial.cjs
+        run: node --test scripts/test-approved-editorial.cjs scripts/test-monthly-current-affairs.cjs scripts/test-current-affairs-question-display.mjs
+
+      - name: Build isolated browser acceptance app
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:4547
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: synthetic-anon
+          SUPABASE_URL: http://127.0.0.1:4547
+          SUPABASE_SERVICE_ROLE_KEY: synthetic-service
+          SUPABASE_JWT_SECRET: synthetic-jwt-secret-for-local-tests-only
+          VERCEL_ENV: development
+          NEXT_TELEMETRY_DISABLED: "1"
+        run: npm run build --prefix frontend
 
       - name: Verify editorial and exact PYQ browser flow
         env:
           DP_CHROMIUM_PATH: /usr/bin/google-chrome
+          DP_E2E_PRODUCTION: "1"
         run: npm exec --prefix frontend -- playwright test --config frontend/playwright.config.ts
 
       - name: Retain Issue 47 browser screenshots and traces

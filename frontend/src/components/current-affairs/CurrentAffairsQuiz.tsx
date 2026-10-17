@@ -4,7 +4,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { CheckCircle2, ChevronRight, CircleHelp, FastForward, Lightbulb, RotateCcw, XCircle } from "lucide-react";
 import type { CurrentAffairsMcq } from "@/lib/current-affairs";
 import EditorialMarkdown from "./EditorialMarkdown";
+import CurrentAffairsQuestion from "./CurrentAffairsQuestion";
 import { trackLearningEvent } from "@/lib/learning-events";
+import type { MonthlyContext } from "./MonthlyInteractions";
 
 type RevisionTakeaway = {
   title: string;
@@ -16,48 +18,25 @@ type Props = {
   questions: CurrentAffairsMcq[];
   editionDate: string;
   revisionTakeaways: RevisionTakeaway[];
+  monthlyContext?: MonthlyContext;
 };
 
-type ParsedQuestion = {
-  intro: string | null;
-  statements: string[];
-  prompt: string;
-};
-
-function parseQuestion(text: string): ParsedQuestion {
-  const statementStart = text.match(/^([\s\S]*?):\s*1\.\s*/);
-  if (!statementStart) {
-    return { intro: null, statements: [], prompt: text };
-  }
-
-  const intro = statementStart[1]?.trim() || null;
-  const remainder = text.slice(statementStart[0].length);
-  const promptMatch = remainder.match(/\s+(Which|Select|How|What)\b[\s\S]*$/);
-  const statementBlock = promptMatch ? remainder.slice(0, promptMatch.index).trim() : remainder;
-  const prompt = promptMatch ? promptMatch[0].trim() : "";
-
-  const statements = statementBlock
-    .split(/\s+(?=\d+\.\s)/)
-    .map((item, idx) => item.replace(new RegExp(`^${idx + 1}\\.\\s*`), "").trim())
-    .filter(Boolean);
-
-  return {
-    intro,
-    statements,
-    prompt: prompt || "Which of the statements given above is/are correct?",
-  };
-}
-
-export default function CurrentAffairsQuiz({ questions, editionDate, revisionTakeaways }: Props) {
+export default function CurrentAffairsQuiz({ questions, editionDate, revisionTakeaways, monthlyContext }: Props) {
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState<Record<string, string>>({});
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [skipped, setSkipped] = useState<Record<string, boolean>>({});
   const [startedAt, setStartedAt] = useState(() => Date.now());
   const quizTopRef = useRef<HTMLDivElement>(null);
+  const [saveMessage, setSaveMessage] = useState("");
+  const feedbackRef = useRef<HTMLDivElement>(null);
 
   const question = questions[index];
   const complete = index >= questions.length;
+  const answerChecked = Boolean(question && checked[question.id]);
+  useEffect(() => {
+    if (answerChecked) feedbackRef.current?.focus({ preventScroll: true });
+  }, [answerChecked]);
 
   const score = useMemo(
     () => questions.reduce((sum, item) => sum + (selected[item.id] === item.correctOption ? 1 : 0), 0),
@@ -70,7 +49,7 @@ export default function CurrentAffairsQuiz({ questions, editionDate, revisionTak
   );
 
   useEffect(() => {
-    if (!complete) return;
+    if (!complete || monthlyContext) return;
     trackLearningEvent(
       "current_affairs_quiz_complete",
       {
@@ -83,7 +62,7 @@ export default function CurrentAffairsQuiz({ questions, editionDate, revisionTak
       },
       editionDate,
     );
-  }, [complete, editionDate, questions.length, score, skippedCount]);
+  }, [complete, editionDate, questions.length, score, skippedCount, monthlyContext]);
 
   function scrollQuizTop() {
     requestAnimationFrame(() => {
@@ -94,6 +73,7 @@ export default function CurrentAffairsQuiz({ questions, editionDate, revisionTak
   function goNext() {
     setIndex((current) => current + 1);
     setStartedAt(Date.now());
+    setSaveMessage("");
     scrollQuizTop();
   }
 
@@ -121,7 +101,7 @@ export default function CurrentAffairsQuiz({ questions, editionDate, revisionTak
         <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.16em] text-blue-600">Daily quiz complete</p>
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-blue-600">{monthlyContext ? "Sample quiz complete" : "Daily quiz complete"}</p>
               <h3 className="mt-2 text-3xl font-black text-slate-950">{score} / {questions.length}</h3>
             </div>
             <div className="rounded-2xl bg-slate-950 px-4 py-3 text-right text-white">
@@ -189,7 +169,6 @@ export default function CurrentAffairsQuiz({ questions, editionDate, revisionTak
 
   const chosen = selected[question.id];
   const hasChecked = checked[question.id];
-  const parsed = parseQuestion(question.question);
 
   async function checkAnswer() {
     if (!chosen || hasChecked) return;
@@ -199,7 +178,7 @@ export default function CurrentAffairsQuiz({ questions, editionDate, revisionTak
     const isCorrect = chosen === question.correctOption;
 
     trackLearningEvent(
-      "current_affairs_quiz_check",
+      monthlyContext ? "monthly_ca_sample_mcq_completed" : "current_affairs_quiz_check",
       {
         source_surface: "current_affairs",
         edition_date: editionDate,
@@ -207,30 +186,36 @@ export default function CurrentAffairsQuiz({ questions, editionDate, revisionTak
         question_number: index + 1,
         is_correct: isCorrect,
         time_taken_seconds: elapsed,
+        ...monthlyContext,
       },
       `${editionDate}:${question.id}`,
     );
 
     try {
-      await fetch("/api/current-affairs/attempt", {
+      const response = await fetch("/api/current-affairs/attempt", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ mcqId: question.id, selectedOption: chosen, timeTaken: elapsed }),
       });
+      const result = await response.json();
+      setSaveMessage(response.ok && result.saved ? "Your answer was saved." : result.reason === "guest"
+        ? "Guest practice: your answer is not saved to a learner account."
+        : "Your answer could not be saved. You can still review the explanation.");
     } catch {
-      // The quiz remains usable for guests or during transient persistence failures.
+      setSaveMessage("Your answer could not be saved. You can still review the explanation.");
     }
   }
 
   function skipQuestion() {
     setSkipped((current) => ({ ...current, [question.id]: true }));
     trackLearningEvent(
-      "current_affairs_quiz_skip",
+      monthlyContext ? "monthly_ca_sample_mcq_skipped" : "current_affairs_quiz_skip",
       {
         source_surface: "current_affairs",
         edition_date: editionDate,
         question_id: question.id,
         question_number: index + 1,
+        ...monthlyContext,
       },
       `${editionDate}:${question.id}:skip`,
     );
@@ -253,27 +238,7 @@ export default function CurrentAffairsQuiz({ questions, editionDate, revisionTak
       </div>
 
       <div className="mt-5">
-        {question.approved ? <EditorialMarkdown source={question.question} /> : <>
-        {parsed.intro && (
-          <p className="text-[15px] font-black leading-6 text-slate-950 sm:text-base">{parsed.intro}</p>
-        )}
-
-        {parsed.statements.length > 0 ? (
-          <div className="mt-3 space-y-2.5">
-            {parsed.statements.map((statement, idx) => (
-              <div key={statement} className="flex gap-3 rounded-2xl bg-slate-50 px-3.5 py-3">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-xs font-black text-blue-700 shadow-sm">
-                  {idx + 1}
-                </span>
-                <p className="text-sm font-semibold leading-5 text-slate-700">{statement}</p>
-              </div>
-            ))}
-            <p className="pt-1 text-[15px] font-black leading-6 text-slate-950">{parsed.prompt}</p>
-          </div>
-        ) : (
-          <h3 className="text-[17px] font-black leading-7 text-slate-950 sm:text-lg">{parsed.prompt}</h3>
-        )}
-        </>}
+        <CurrentAffairsQuestion source={question.question} approved={question.approved} />
       </div>
 
       <div className="mt-5 space-y-2.5">
@@ -286,21 +251,24 @@ export default function CurrentAffairsQuiz({ questions, editionDate, revisionTak
             <button
               key={option.key}
               type="button"
+              aria-pressed={isSelected}
               disabled={hasChecked}
               onClick={() => {
                 trackLearningEvent(
-                  "current_affairs_quiz_start",
+                  monthlyContext ? "monthly_ca_sample_mcq_started" : "current_affairs_quiz_start",
                   {
                     source_surface: "current_affairs",
                     edition_date: editionDate,
                     total_questions: questions.length,
+                    question_id: question.id,
+                    ...monthlyContext,
                   },
                   editionDate,
                 );
                 setSelected((current) => ({ ...current, [question.id]: option.key }));
               }}
               className={[
-                "flex w-full items-center gap-3 rounded-2xl border px-4 py-3.5 text-left text-sm transition",
+                "flex w-full items-center gap-3 rounded-2xl border px-4 py-3.5 text-left text-sm transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600",
                 isCorrect ? "border-emerald-300 bg-emerald-50" : "",
                 isWrongSelected ? "border-rose-300 bg-rose-50" : "",
                 !hasChecked && isSelected ? "border-blue-500 bg-blue-50 ring-1 ring-blue-100" : "",
@@ -335,7 +303,8 @@ export default function CurrentAffairsQuiz({ questions, editionDate, revisionTak
           </button>
         </div>
       ) : (
-        <div className="mt-5 space-y-3">
+        <div ref={feedbackRef} tabIndex={-1} role="region" aria-label="Answer feedback" className="mt-5 space-y-3 focus-visible:outline-2 focus-visible:outline-blue-600" aria-live="polite">
+          {saveMessage && <p role="status" className="text-sm leading-6 text-slate-600">{saveMessage}</p>}
           <div className={[
             "overflow-hidden rounded-2xl border",
             chosen === question.correctOption
