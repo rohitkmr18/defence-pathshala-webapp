@@ -14,12 +14,13 @@ test("complete mobile editorial, safe citations/table, exact link and unchanged 
   const dialogs: string[] = []; page.on("dialog", dialog => { dialogs.push(dialog.message()); void dialog.dismiss(); });
   await page.goto("/current-affairs/2030-01-01");
   const first = page.locator("details").first();
+  await first.locator("summary").click();
   await expect(first.getByRole("heading", { name: "Approved section" })).toBeVisible();
   await expect(first.getByText("Second paragraph — भारत.")).toBeVisible();
   await expect(first.getByRole("table")).toBeVisible();
   await expect(first.getByRole("link", { name: "Primary citation" })).toHaveAttribute("href", "https://pib.gov.in/test");
   await expect(first.getByRole("link", { name: /CDS_II_2026_GK_011/ })).toHaveAttribute("href", target);
-  await expect(page.getByRole("heading", { name: "Test today’s Current Affairs" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Daily Knowledge Check — 3 MCQs" })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   expect(dialogs).toEqual([]);
   expect(await first.locator('a[href^="javascript:"]').count()).toBe(0);

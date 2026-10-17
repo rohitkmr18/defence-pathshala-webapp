@@ -1,3 +1,4 @@
+import "./reader.css";
 import type { Metadata } from "next";
 import DashboardShell from "@/components/layout/DashboardShell";
 

@@ -1,0 +1,5 @@
+@media (prefers-reduced-motion: reduce) {
+  html:has(.ca-edition) {
+    scroll-behavior: auto;
+  }
+}

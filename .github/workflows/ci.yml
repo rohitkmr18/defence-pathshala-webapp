@@ -83,7 +83,7 @@ jobs:
         run: python -m pytest -q backend/tests/test_profile_compatibility.py backend/tests/test_jwt_issuer.py
 
       - name: Verify verbatim approved editorial and corpus rollback
-        run: node --test scripts/test-approved-editorial.cjs
+        run: node --test scripts/test-approved-editorial.cjs scripts/test-current-affairs-reader.cjs
 
       - name: Verify editorial and exact PYQ browser flow
         env:
