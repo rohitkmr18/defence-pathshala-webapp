@@ -19,5 +19,13 @@ export function storyDisplayMarkdown(source: string, linkedPyqIds: readonly stri
       body.splice(connection, edge - connection);
     }
   }
+  // Hide missing-PYQ review notes only in the reader; retain the approved source.
+  if (linkedPyqIds.length === 0) {
+    for (let i = 0; i < body.length; i++) {
+      const marker = /(?:\*\*)?Linked PYQ IDs:\s*\[\](?:\*\*)?/i;
+      const match = marker.exec(body[i]);
+      if (match) body[i] = body[i].slice(0, match.index).trimEnd();
+    }
+  }
   return body.join("\n");
 }

@@ -29,6 +29,15 @@ test('story display removes only duplicated metadata and linked ID lists, keepin
   assert.equal(storyDisplayMarkdown('## Approved section\n\nComplete paragraph.', []), '## Approved section\n\nComplete paragraph.');
 });
 
+test('reader hides empty linked-PYQ notes without changing approved source', () => {
+  const source = '## Exam Edge\n\nKeep the exam insight. **Linked PYQ IDs: []** — no eligible PYQ was established.\n\n## Future Question Angles\n\nRevise the concept.';
+  const rendered = storyDisplayMarkdown(source, []);
+  assert.match(rendered, /Keep the exam insight/);
+  assert.match(rendered, /Future Question Angles/);
+  assert.doesNotMatch(rendered, /Linked PYQ IDs|no eligible PYQ/);
+  assert.equal(storyDisplayMarkdown(source, ['CDS_I_2026_GK_109']), source);
+});
+
 test('approved source rejects truncation, drift, changed hash, duplicate JSON keys and omitted references', () => {
   validateEditorialEdition(edition());
   const p = edition(); p.stories[0].editorialMarkdown = 'Truncated';

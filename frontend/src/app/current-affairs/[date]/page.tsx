@@ -54,7 +54,7 @@ export default async function CurrentAffairsDayPage({ params }: { params: Promis
 
         <header className="mt-6 rounded-3xl bg-slate-950 p-6 text-white sm:p-8">
           <p className="text-sm font-semibold text-blue-300">{post.formattedDate}</p>
-          <h1 className="mt-2 text-3xl font-black tracking-tight">{post.title}</h1>
+          <h1 className="mt-2 text-3xl font-black tracking-tight">{`Daily Current Affairs — ${post.formattedDate}`}</h1>
           {post.summary && <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300">{post.summary}</p>}
           <div className="mt-5 flex gap-3 text-xs font-semibold text-slate-300">
             <span>{post.storyCount} exam-worthy stories</span>
