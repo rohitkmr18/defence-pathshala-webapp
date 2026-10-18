@@ -37,7 +37,7 @@ export default async function CurrentAffairsPage() {
                     {post.isLatest && <span className="rounded-full bg-blue-50 px-2.5 py-1 text-blue-700">Latest</span>}
                     <span className="inline-flex items-center gap-1 text-slate-500"><CalendarDays className="h-3.5 w-3.5" />{post.formattedDate}</span>
                   </div>
-                  <h2 className="mt-2 truncate text-lg font-bold text-slate-950 sm:text-xl">{post.title}</h2>
+                  <h2 className="mt-2 truncate text-lg font-bold text-slate-950 sm:text-xl">{`Daily Current Affairs — ${post.formattedDate}`}</h2>
                   {post.summary && <p className="mt-1 line-clamp-2 text-sm text-slate-600">{post.summary}</p>}
                   <div className="mt-3 flex gap-4 text-xs font-semibold text-slate-500">
                     <span>{post.storyCount} stories</span>
