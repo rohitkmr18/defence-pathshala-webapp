@@ -66,6 +66,10 @@ function edition(date = '2026-10-09') {
 test('source URL checks reject lookalike domains, credentials, insecure and arbitrary URLs', () => {
   for (const url of ['http://pib.gov.in/x', 'https://pib.gov.in.evil.com/x', 'https://user:secret@pib.gov.in/x', 'https://127.0.0.1/x', 'https://example.com/x', 'garbage']) assert.equal(officialSourceUrl(url), false);
   assert.equal(officialSourceUrl('https://pib.gov.in/PressReleasePage.aspx?PRID=1'), true);
+  assert.equal(officialSourceUrl('https://www.beehive.govt.nz/release/india-fta-now-open-business'), true);
+  assert.equal(officialSourceUrl('https://www.customs.govt.nz/information-releases-and-legislation'), true);
+  assert.equal(officialSourceUrl('https://govt.nz.attacker.example/release'), false);
+  assert.equal(officialSourceUrl('https://unofficial-govt.nz/release'), false);
 });
 for (const [name, mutate] of Object.entries({
   date: p => p.date = '2026-02-30', source: p => p.stories[0].sourceUrl = 'https://evil.com',
