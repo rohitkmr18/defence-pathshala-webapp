@@ -177,7 +177,7 @@ begin
  select status into s from public.afcat_tests where id=old.test_id for update;
  if s in ('PUBLISHED','RETIRED') then raise exception 'Published AFCAT assignment is immutable'; end if;
  return old;
-end; $;
+end; $$;
 create trigger afcat_assignment_delete_guard before delete on public.afcat_test_items
 for each row execute function public.afcat_guard_assignment_delete();
 
@@ -197,7 +197,7 @@ begin
    raise exception 'Published AFCAT artwork is immutable';
  end if;
  return case when tg_op='DELETE' then old else new end;
-end; $;
+end; $$;
 create trigger afcat_asset_freeze before insert or update or delete on public.afcat_question_assets
 for each row execute function public.afcat_guard_assets();
 
@@ -213,7 +213,7 @@ begin
  ) into assigned;
  if not assigned then raise exception 'Question not assigned to an active AFCAT session'; end if;
  return new;
-end; $;
+end; $$;
 create trigger afcat_response_gate before insert or update on public.afcat_responses
 for each row execute function public.afcat_validate_response();
 
@@ -237,7 +237,7 @@ begin
    end if;
  end if;
  return new;
-end; $;
+end; $$;
 create trigger afcat_mock_blueprint_gate before insert or update on public.afcat_tests
 for each row execute function public.afcat_validate_full_mock_sections();
 
@@ -260,7 +260,7 @@ begin
    then raise exception 'Completed AFCAT session is immutable'; end if;
  end if;
  return new;
-end; $;
+end; $$;
 create trigger afcat_session_gate before insert or update on public.afcat_sessions
 for each row execute function public.afcat_validate_session();
 
