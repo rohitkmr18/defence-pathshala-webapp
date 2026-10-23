@@ -37,7 +37,7 @@ function AfcatVisual({ asset }: { asset: AfcatAsset }) {
   }
   return (
     <div className="my-3 max-w-full overflow-hidden rounded-xl border border-slate-200 bg-white p-3">
-      <button ref={triggerRef} type="button" onClick={() => setExpanded(true)}
+      <button ref={triggerRef} type="button" onClick={(event) => { event.preventDefault(); event.stopPropagation(); setExpanded(true); }}
         className="block w-full cursor-zoom-in rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
         aria-label={`Enlarge diagram: ${asset.alt}`}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -50,7 +50,7 @@ function AfcatVisual({ asset }: { asset: AfcatAsset }) {
         <div className="fixed inset-0 z-[100] flex flex-col bg-slate-950/95 p-3 sm:p-8"
           role="dialog" aria-modal="true" aria-label={`Enlarged diagram: ${asset.alt}`}>
           <div className="mx-auto flex w-full max-w-6xl justify-end">
-            <button ref={closeRef} type="button" onClick={() => setExpanded(false)}
+            <button ref={closeRef} type="button" onClick={(event) => { event.preventDefault(); event.stopPropagation(); setExpanded(false); }}
               className="mb-3 min-h-11 rounded-xl bg-white px-5 text-sm font-bold text-slate-900 focus-visible:ring-2 focus-visible:ring-blue-400">
               Close enlarged diagram
             </button>
