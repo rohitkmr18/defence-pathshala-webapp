@@ -121,7 +121,7 @@ test('shell reserves the global bar space only on normal pages, leaving attempt 
   const react = { Suspense: 'suspense', useState: initial => [initial, () => {}], useEffect() {} };
   const load = createLoader({ react, 'next/link': 'a',
     'next/navigation': { usePathname: () => path, useSearchParams: () => new URLSearchParams() },
-    './MobileLearningNavigation': 'mobile-nav', './DashboardSidebar': 'sidebar',
+    './MobileLearningNavigation': 'mobile-nav', './DashboardSidebar': 'sidebar', './ExamModeSwitcher': 'exam-switcher',
     '@/components/dashboard/EditTargetModal': 'edit-modal',
   });
   const Shell = load('frontend/src/components/layout/DashboardShell.tsx').default;
