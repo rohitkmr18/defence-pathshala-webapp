@@ -16,6 +16,7 @@ export default async function CurrentAffairsPage() {
           <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">
             Exam-focused developments converted into concise knowledge objects and daily MCQs.
           </p>
+          <Link href="/current-affairs/monthly" className="mt-5 inline-flex min-h-11 items-center rounded-xl border border-blue-200 bg-white px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50">Explore Monthly Intelligence · Free sample →</Link>
         </div>
 
         {posts.length === 0 ? (
