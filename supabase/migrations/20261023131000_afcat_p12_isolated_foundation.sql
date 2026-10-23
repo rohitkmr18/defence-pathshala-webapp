@@ -171,7 +171,7 @@ to authenticated using ((select auth.uid())=user_id);
 
 -- Freeze DELETE operations on assignments, and edits to images after publication.
 create function public.afcat_guard_assignment_delete() returns trigger
-language plpgsql security invoker set search_path = '' as $
+language plpgsql security invoker set search_path = '' as $$
 declare s text;
 begin
  select status into s from public.afcat_tests where id=old.test_id for update;
@@ -182,7 +182,7 @@ create trigger afcat_assignment_delete_guard before delete on public.afcat_test_
 for each row execute function public.afcat_guard_assignment_delete();
 
 create function public.afcat_guard_assets() returns trigger
-language plpgsql security invoker set search_path = '' as $
+language plpgsql security invoker set search_path = '' as $$
 declare qid uuid;
 begin
  qid := case when tg_op='DELETE' then old.question_id else new.question_id end;
@@ -203,7 +203,7 @@ for each row execute function public.afcat_guard_assets();
 
 -- Every saved response must refer to a question in the user's assigned test.
 create function public.afcat_validate_response() returns trigger
-language plpgsql security invoker set search_path = '' as $
+language plpgsql security invoker set search_path = '' as $$
 declare assigned boolean;
 begin
  select exists(
@@ -220,7 +220,7 @@ for each row execute function public.afcat_validate_response();
 -- Prevent tests from changing the scoring blueprint after publication.
 -- The release process separately checks the global product quotas and exact counts.
 create function public.afcat_validate_full_mock_sections() returns trigger
-language plpgsql security invoker set search_path = '' as $
+language plpgsql security invoker set search_path = '' as $$
 declare english_count integer; ga_count integer; numerical_count integer; reasoning_count integer;
 begin
  if new.status='PUBLISHED' and (tg_op='INSERT' or old.status is distinct from 'PUBLISHED')
@@ -245,7 +245,7 @@ for each row execute function public.afcat_validate_full_mock_sections();
 -- Session creation requires a published test and pinned current release.
 -- Terminal sessions cannot be silently reopened or re-scored.
 create function public.afcat_validate_session() returns trigger
-language plpgsql security invoker set search_path = '' as $
+language plpgsql security invoker set search_path = '' as $$
 declare v record;
 begin
  if tg_op='INSERT' then
