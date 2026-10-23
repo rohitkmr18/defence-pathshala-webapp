@@ -89,7 +89,7 @@ language plpgsql security invoker set search_path = '' as $$
 declare
  t record; q record;
 begin
- select kind,section,status into t from public.afcat_tests where id=new.test_id;
+ select kind,section,status into t from public.afcat_tests where id=new.test_id for update;
  select pool_type,section,editorial_status,content_version into q from public.afcat_questions where id=new.question_id;
  if t is null or q is null then raise exception 'AFCAT test or question missing'; end if;
  if t.status not in ('DRAFT','READY') then raise exception 'AFCAT published test is immutable'; end if;
@@ -167,6 +167,82 @@ create policy afcat_own_sessions on public.afcat_sessions for select
 to authenticated using ((select auth.uid())=user_id);
 create policy afcat_own_responses on public.afcat_responses for select
 to authenticated using ((select auth.uid())=user_id);
+
+
+-- Freeze DELETE operations on assignments, and edits to images after publication.
+create function public.afcat_guard_assignment_delete() returns trigger
+language plpgsql security invoker set search_path = '' as $
+declare s text;
+begin
+ select status into s from public.afcat_tests where id=old.test_id for update;
+ if s in ('PUBLISHED','RETIRED') then raise exception 'Published AFCAT assignment is immutable'; end if;
+ return old;
+end; $;
+create trigger afcat_assignment_delete_guard before delete on public.afcat_test_items
+for each row execute function public.afcat_guard_assignment_delete();
+
+create function public.afcat_guard_assets() returns trigger
+language plpgsql security invoker set search_path = '' as $
+declare qid uuid;
+begin
+ qid := case when tg_op='DELETE' then old.question_id else new.question_id end;
+ if tg_op='UPDATE' and new.question_id is distinct from old.question_id then
+   if exists (select 1 from public.afcat_test_items i join public.afcat_tests t on t.id=i.test_id
+              where i.question_id=old.question_id and t.status in ('PUBLISHED','RETIRED')) then
+     raise exception 'Cannot reassign published AFCAT asset';
+   end if;
+ end if;
+ if exists (select 1 from public.afcat_test_items i join public.afcat_tests t on t.id=i.test_id
+            where i.question_id=qid and t.status in ('PUBLISHED','RETIRED')) then
+   raise exception 'Published AFCAT artwork is immutable';
+ end if;
+ return case when tg_op='DELETE' then old else new end;
+end; $;
+create trigger afcat_asset_freeze before insert or update or delete on public.afcat_question_assets
+for each row execute function public.afcat_guard_assets();
+
+-- Every saved response must refer to a question in the user's assigned test.
+create function public.afcat_validate_response() returns trigger
+language plpgsql security invoker set search_path = '' as $
+declare assigned boolean;
+begin
+ select exists(
+   select 1 from public.afcat_sessions s
+   join public.afcat_test_items i on i.test_id=s.test_id and i.question_id=new.question_id
+   where s.id=new.session_id and s.user_id=new.user_id and s.status='IN_PROGRESS'
+ ) into assigned;
+ if not assigned then raise exception 'Question not assigned to an active AFCAT session'; end if;
+ return new;
+end; $;
+create trigger afcat_response_gate before insert or update on public.afcat_responses
+for each row execute function public.afcat_validate_response();
+
+-- Prevent tests from changing the scoring blueprint after publication.
+-- The release process separately checks the global product quotas and exact counts.
+create function public.afcat_validate_full_mock_sections() returns trigger
+language plpgsql security invoker set search_path = '' as $
+declare english_count integer; ga_count integer; numerical_count integer; reasoning_count integer;
+begin
+ if new.status='PUBLISHED' and (tg_op='INSERT' or old.status is distinct from 'PUBLISHED')
+     and new.kind='FULL_MOCK' then
+   select count(*) filter(where q.section='ENGLISH'),
+          count(*) filter(where q.section='GENERAL_AWARENESS'),
+          count(*) filter(where q.section='NUMERICAL_ABILITY'),
+          count(*) filter(where q.section='REASONING_MILITARY_APTITUDE')
+   into english_count,ga_count,numerical_count,reasoning_count
+   from public.afcat_test_items i join public.afcat_questions q on q.id=i.question_id
+   where i.test_id=new.id;
+   if (english_count,ga_count,numerical_count,reasoning_count) is distinct from (30,25,20,25) then
+     raise exception 'Full mock must have exactly 30/25/20/25 questions by section';
+   end if;
+ end if;
+ return new;
+end; $;
+create trigger afcat_mock_blueprint_gate before insert or update on public.afcat_tests
+for each row execute function public.afcat_validate_full_mock_sections();
+
+revoke all on function public.afcat_guard_assignment_delete(), public.afcat_guard_assets(),
+ public.afcat_validate_response(), public.afcat_validate_full_mock_sections() from public,anon,authenticated;
 
 revoke all on function public.afcat_validate_assignment(),
  public.afcat_validate_publication(),public.afcat_guard_published_question() from public,anon,authenticated;
