@@ -14,7 +14,7 @@ export default function ExamModeSwitcher({ compact = false }: ExamModeSwitcherPr
       <div className="flex gap-1 rounded-xl border border-slate-200 bg-slate-100 p-1">
         <Link href="/dashboard" aria-current={!isAfcat ? "page" : undefined}
           className={`flex-1 rounded-lg px-2 py-2 text-center text-xs font-semibold transition-colors ${!isAfcat ? "bg-white text-blue-700 shadow-sm" : "text-slate-600 hover:bg-white/70"}`}>
-          UPSC
+          CDS/CAPF
         </Link>
         <Link href="/afcat" aria-current={isAfcat ? "page" : undefined}
           className={`flex-1 rounded-lg px-2 py-2 text-center text-xs font-semibold transition-colors ${isAfcat ? "bg-white text-blue-700 shadow-sm" : "text-slate-600 hover:bg-white/70"}`}>
