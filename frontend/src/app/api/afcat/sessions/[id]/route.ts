@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { afcatStagingAdmin, afcatStagingUser } from "@/lib/afcat/staging-server";
 import { isAfcatExpired } from "@/lib/afcat/engine";
+import { sanitizeAfcatQuestion } from "@/lib/afcat/serialize";
 
 export const dynamic = "force-dynamic";
 type Context = { params: Promise<{ id: string }> };
@@ -36,7 +37,8 @@ export async function GET(_request: NextRequest, context: Context) {
       const q = byId.get(item.question_id);
       if (!q || q.editorial_status !== "APPROVED" || q.content_version !== item.question_content_version)
         return null;
-      return { id: item.question_id, number: item.position, stem: q.stem, options: q.options };
+      try { return sanitizeAfcatQuestion(item.question_id, item.position, q.stem, q.options); }
+      catch { return null; }
     });
     if (sanitized.some(q => !q)) return NextResponse.json({ error: "Test version mismatch" }, { status: 409 });
     const { data: saved, error: responseError } = await db.from("afcat_responses")
