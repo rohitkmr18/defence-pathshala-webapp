@@ -241,6 +241,30 @@ end; $;
 create trigger afcat_mock_blueprint_gate before insert or update on public.afcat_tests
 for each row execute function public.afcat_validate_full_mock_sections();
 
+
+-- Session creation requires a published test and pinned current release.
+-- Terminal sessions cannot be silently reopened or re-scored.
+create function public.afcat_validate_session() returns trigger
+language plpgsql security invoker set search_path = '' as $
+declare v record;
+begin
+ if tg_op='INSERT' then
+   select status,release_version into v from public.afcat_tests where id=new.test_id;
+   if v is null or v.status <> 'PUBLISHED' or v.release_version<>new.test_release_version
+   then raise exception 'AFCAT session requires current published test'; end if;
+ elsif tg_op='UPDATE' then
+   if (new.user_id,new.test_id,new.test_release_version,new.started_at)
+      is distinct from (old.user_id,old.test_id,old.test_release_version,old.started_at)
+   then raise exception 'AFCAT session identity and release are immutable'; end if;
+   if old.status in ('SUBMITTED','EXPIRED') and row(new.*) is distinct from row(old.*)
+   then raise exception 'Completed AFCAT session is immutable'; end if;
+ end if;
+ return new;
+end; $;
+create trigger afcat_session_gate before insert or update on public.afcat_sessions
+for each row execute function public.afcat_validate_session();
+
+revoke all on function public.afcat_validate_session() from public,anon,authenticated;
 revoke all on function public.afcat_guard_assignment_delete(), public.afcat_guard_assets(),
  public.afcat_validate_response(), public.afcat_validate_full_mock_sections() from public,anon,authenticated;
 
