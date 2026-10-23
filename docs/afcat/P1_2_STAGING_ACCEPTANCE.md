@@ -1,7 +1,7 @@
 # P1.2 AFCAT isolated data foundation — acceptance plan
 
 ## Scope
-- Proposed migration: `supabase/migrations/20261023131000_afcat_p12_isolated_foundation.sql`.
+- Proposed migration: `supabase/prelaunch/afcat/20261023131000_afcat_p12_isolated_foundation.sql`.
 - Six new `public.afcat_*` tables. Existing CDS/CAPF questions, attempts, sessions and read models are unchanged.
 - Shared identity via `auth.users`, distinct AFCAT session and response FKs.
 - Two non-overlapping pools: 500 sectional questions + 500 full-mock questions, 20 sectionals and five full mocks.
@@ -39,9 +39,9 @@
 - Frozen asset changes and immutable item deletion now have database guards; staging tests are pending.
 - Need server-authoritative scoring, idempotent submissions, timed expiry and authoritative test-release lifecycle handling in later API PR. Session creation now checks a published release and response membership has a trigger.
 - There is no published AFCAT content in this migration.
-- **Staging blocked:** The only other Supabase projects visible to the connection are INACTIVE (dp-pyq-intelligence-lab and dp-auth-staging). The active healthy project is defence-pathshala-pyq, which is treated as production. Neither inactive project has been verified as independent or safe for migrations. No SQL was executed.
-- Migration still requires independent SQL compilation and tests; this PR is not migration-accepted.
+- **Staging established:** Isolated `dp-afcat-staging` (`pxfstrzceyxnweeaydvz`) has the P1.2 foundation applied. A 100-question synthetic QA mock is staged (not editorial material). Production remains untouched.
+- SQL executed in staging and passed selected constraints. Full authenticated RLS, concurrency, visual and integration tests remain required. Do not regard this as launch acceptance.
 - Test counts are a business release gate; blindly imposing 1,000 as a DDL check would prevent incremental ingestion.
 
 ## Existing dependency
-- P1.1: PR #78 remains separate. This migration PR should not depend on merging P1.1.
+- The unified integration branch is `feature/afcat-launch`; PRs #78, #79 and #80 remain unmerged by design. Both P1.2 foundation and P2 scoring SQL are stored under `supabase/prelaunch/afcat/` until the single production launch; release tooling must reconcile their approved SQL with the production migration ledger before deployment.
