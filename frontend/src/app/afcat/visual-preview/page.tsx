@@ -42,7 +42,7 @@ export default function AfcatVisualPreviewPage() {
   return (
     <main className="min-h-screen bg-slate-50 p-4 text-slate-900 sm:p-8">
       <div className="mx-auto max-w-3xl">
-        <Link href="/afcat" className="text-sm font-semibold text-blue-700 hover:underline">← AFCAT Home</Link>
+        <Link href="/dashboard" className="text-sm font-semibold text-blue-700 hover:underline">← Dashboard</Link>
         <p className="mt-5 text-xs font-bold uppercase tracking-widest text-blue-700">Internal QA preview</p>
         <h1 className="mb-4 mt-2 text-2xl font-black sm:text-3xl">Visual Question Renderer</h1>
         <p className="mb-6 text-sm text-slate-600">This non-scored sample verifies SVG stem rendering, image options, screen responsiveness and keyboard-accessible answer selection. No attempt is saved.</p>
