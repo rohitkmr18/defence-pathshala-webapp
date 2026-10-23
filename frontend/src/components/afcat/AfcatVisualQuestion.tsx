@@ -9,12 +9,26 @@ function AfcatVisual({ asset }: { asset: AfcatAsset }) {
   const [failed, setFailed] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const previousExpanded = useRef(false);
   useEffect(() => {
-    if (!expanded) return;
+    if (!expanded) {
+      if (previousExpanded.current) triggerRef.current?.focus();
+      previousExpanded.current = false;
+      return;
+    }
+    previousExpanded.current = true;
     closeRef.current?.focus();
-    function handleEscape(event: KeyboardEvent) { if (event.key === "Escape") setExpanded(false); }
-    window.addEventListener("keydown", handleEscape);
-    return () => window.removeEventListener("keydown", handleEscape);
+    function handleKeydown(event: KeyboardEvent) {
+      if (event.key === "Escape") { event.preventDefault(); setExpanded(false); }
+      if (event.key === "Tab") {
+        // Currently the dialog intentionally contains one focusable control.
+        event.preventDefault();
+        closeRef.current?.focus();
+      }
+    }
+    window.addEventListener("keydown", handleKeydown);
+    return () => window.removeEventListener("keydown", handleKeydown);
   }, [expanded]);
   if (!isSafeAfcatAssetUrl(asset.url) || !asset.alt.trim() || failed) {
     return <p role="alert" className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
@@ -23,7 +37,7 @@ function AfcatVisual({ asset }: { asset: AfcatAsset }) {
   }
   return (
     <div className="my-3 max-w-full overflow-hidden rounded-xl border border-slate-200 bg-white p-3">
-      <button type="button" onClick={() => setExpanded(true)}
+      <button ref={triggerRef} type="button" onClick={() => setExpanded(true)}
         className="block w-full cursor-zoom-in rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
         aria-label={`Enlarge diagram: ${asset.alt}`}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
