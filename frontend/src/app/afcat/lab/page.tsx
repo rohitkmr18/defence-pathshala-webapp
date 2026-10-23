@@ -21,6 +21,8 @@ export default function AfcatLab() {
   const [answers, setAnswers] = useState<Record<string, Answer>>({});
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [result, setResult] = useState<{ score: number; max_marks: number; correct_count: number; incorrect_count: number; unanswered_count: number } | null>(null);
   const [now, setNow] = useState(Date.now());
   useEffect(() => {
     api("/api/afcat/tests").then(x => setTests(x.tests)).catch(e => setError(String(e.message)));
@@ -37,6 +39,18 @@ export default function AfcatLab() {
       setAnswers(Object.fromEntries(data.responses.map(r => [r.question_id,
         { selected: r.selected_option, markedForReview: r.marked_for_review }])));
     } catch (e) { setError(e instanceof Error ? e.message : "Unable to start test"); }
+  }
+  async function submit() {
+    if (!paper || busy || submitting) return;
+    setSubmitting(true);
+    try {
+      await api(`/api/afcat/sessions/${paper.session.id}/submit`, { method: "POST" });
+      const completed = await api(`/api/afcat/sessions/${paper.session.id}/result`);
+      setResult(completed.summary);
+      setPaper(old => old ? { ...old, session: { ...old.session, status: completed.status } } : old);
+      setError("");
+    } catch (e) { setError(e instanceof Error ? e.message : "Submission failed"); }
+    finally { setSubmitting(false); }
   }
   const question = paper?.questions[index];
   const left = paper ? Math.max(0, Math.ceil((Date.parse(paper.session.deadline) - now) / 1000)) : 0;
@@ -91,9 +105,16 @@ export default function AfcatLab() {
           <span className="text-sm">{busy ? "Saving…" : "Saved answers remain in staging"}</span>
           <button disabled={index===paper.questions.length-1} onClick={() => setIndex(i => i+1)}>Next</button>
         </div>
-        <button disabled className="w-full rounded-xl bg-slate-300 p-3 font-semibold">
-          Submit & Results — disabled until transactional scoring is implemented
-        </button>
+        {result && <section aria-label="Exam results" className="rounded-xl border border-green-200 bg-green-50 p-5">
+          <h2 className="text-xl font-bold">Result: {result.score}/{result.max_marks}</h2>
+          <p className="text-sm">Correct: {result.correct_count} · Incorrect: {result.incorrect_count} · Unanswered: {result.unanswered_count}</p>
+          <p className="mt-2 text-xs">Synthetic QA mock only; not a real AFCAT performance indicator.</p>
+        </section>}
+        {!result && <button type="button" disabled={busy || submitting || paper.session.status !== "IN_PROGRESS"}
+          onClick={() => { if (window.confirm("Submit this staging test? You cannot edit answers afterwards.")) void submit(); }}
+          className="w-full rounded-xl bg-blue-700 p-3 font-semibold text-white disabled:opacity-50">
+          {submitting ? "Submitting…" : "Submit & View Results"}
+        </button>}
       </div>}
     </div>
   </main>;
