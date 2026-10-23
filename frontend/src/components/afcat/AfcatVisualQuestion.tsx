@@ -1,12 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { AfcatAsset, AfcatChoice, AfcatContent, AfcatDisplayQuestion } from "@/lib/afcat/visual-types";
 import { isSafeAfcatAssetUrl } from "@/lib/afcat/visual-types";
 
 /** External SVGs render as images, never inline executable markup. */
 function AfcatVisual({ asset }: { asset: AfcatAsset }) {
   const [failed, setFailed] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!expanded) return;
+    closeRef.current?.focus();
+    function handleEscape(event: KeyboardEvent) { if (event.key === "Escape") setExpanded(false); }
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [expanded]);
   if (!isSafeAfcatAssetUrl(asset.url) || !asset.alt.trim() || failed) {
     return <p role="alert" className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
       Diagram unavailable. Do not answer until the diagram is restored.
@@ -14,17 +23,32 @@ function AfcatVisual({ asset }: { asset: AfcatAsset }) {
   }
   return (
     <div className="my-3 max-w-full overflow-hidden rounded-xl border border-slate-200 bg-white p-3">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={asset.url}
-        alt={asset.alt}
-        width={asset.width ?? 600}
-        height={asset.height ?? 400}
-        loading="lazy"
-        decoding="async"
-        onError={() => setFailed(true)}
-        className="mx-auto h-auto max-h-[420px] w-auto max-w-full object-contain"
-      />
+      <button type="button" onClick={() => setExpanded(true)}
+        className="block w-full cursor-zoom-in rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+        aria-label={`Enlarge diagram: ${asset.alt}`}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={asset.url} alt={asset.alt} width={asset.width ?? 600} height={asset.height ?? 400}
+          loading="lazy" decoding="async" onError={() => setFailed(true)}
+          className="mx-auto h-auto max-h-[420px] w-auto max-w-full object-contain" />
+      </button>
+      <p className="mt-2 text-center text-xs text-blue-700">Tap or select diagram to enlarge</p>
+      {expanded && (
+        <div className="fixed inset-0 z-[100] flex flex-col bg-slate-950/95 p-3 sm:p-8"
+          role="dialog" aria-modal="true" aria-label={`Enlarged diagram: ${asset.alt}`}>
+          <div className="mx-auto flex w-full max-w-6xl justify-end">
+            <button ref={closeRef} type="button" onClick={() => setExpanded(false)}
+              className="mb-3 min-h-11 rounded-xl bg-white px-5 text-sm font-bold text-slate-900 focus-visible:ring-2 focus-visible:ring-blue-400">
+              Close enlarged diagram
+            </button>
+          </div>
+          <div className="flex min-h-0 flex-1 items-center justify-center overflow-auto rounded-xl bg-white p-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={asset.url} alt={asset.alt} width={asset.width ?? 600} height={asset.height ?? 400}
+              className="max-h-full max-w-full object-contain" onError={() => setFailed(true)} />
+          </div>
+          <p className="mt-3 text-center text-xs text-white">Inspect lines and intersections. Press Escape or Close to return.</p>
+        </div>
+      )}
     </div>
   );
 }
