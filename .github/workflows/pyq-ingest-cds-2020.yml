@@ -1,0 +1,60 @@
+name: PYQ Ingestion — 2020 UnlockIAS
+
+on:
+  push:
+    branches:
+      - data/pyq-ingestion-v1-2020-pilot
+    paths:
+      - 'scripts/scrape-unlockias-cds-2020.py'
+      - '.github/workflows/pyq-ingest-cds-2020.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: data/pyq-ingestion-v1-2020-pilot
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install pinned scraper dependencies
+        run: |
+          python -m pip install --disable-pip-version-check \
+            requests==2.32.3 beautifulsoup4==4.12.3
+
+      - name: Scrape CAPF + CDS 2020
+        run: python scripts/scrape-unlockias-cds-2020.py
+
+      - name: Validate generated row counts
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('data/ingestion/cds_2020_unlockias_manifest.json')
+          rows=json.loads(p.read_text())
+          assert len(rows)==3, rows
+          expected={'CAPF_AC_2020_I_GAI':125,'CDS_2020_I_GK':120,'CDS_2020_II_GK':120}
+          assert {x['batch_code']:x['rows'] for x in rows}==expected, rows
+          print(rows)
+          PY
+
+      - name: Commit generated ingestion artifacts
+        run: |
+          if git status --porcelain data/ingestion | grep .; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add data/ingestion
+            git commit -m "Generate 2020 UnlockIAS ingestion artifacts"
+            git fetch origin data/pyq-ingestion-v1-2020-pilot
+            git rebase origin/data/pyq-ingestion-v1-2020-pilot
+            git push origin HEAD:data/pyq-ingestion-v1-2020-pilot
+          else
+            echo "No generated changes."
+          fi
