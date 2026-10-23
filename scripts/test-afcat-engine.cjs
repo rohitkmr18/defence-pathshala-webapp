@@ -39,7 +39,7 @@ test('AFCAT learner serializer strictly omits answer keys and explanations', () 
   const options = ['One','Two','Three','Four'];
   const result = sanitizeAfcatQuestion('q1',1,stem,options);
   assert.equal(result.stem.text,'Test question');
-  assert.deepEqual(result.options.map(x=>x.key),['A','B','C','D']);
+  assert.equal(Array.from(result.options, x => x.key).join(','),'A,B,C,D');
   assert.equal(JSON.stringify(result).includes('secret'),false);
   assert.equal(JSON.stringify(result).includes('correct_option'),false);
   assert.throws(() => sanitizeAfcatQuestion('q1',1,stem,['One','Two']));
