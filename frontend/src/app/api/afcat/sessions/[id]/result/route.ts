@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { afcatStagingAdmin, afcatStagingUser } from "@/lib/afcat/staging-server";
+import { summarizeAfcatSections, type AfcatReviewItem, type AfcatSection } from "@/lib/afcat/results-analytics";
 export const dynamic = "force-dynamic";
 type Context = { params: Promise<{ id: string }> };
 export async function GET(_req: NextRequest, context: Context) {
@@ -26,7 +27,7 @@ export async function GET(_req: NextRequest, context: Context) {
     if (ie) throw ie;
     const ids = (items ?? []).map(x => x.question_id);
     const { data: keys, error: ke } = await db.from("afcat_questions")
-      .select("id,correct_option,explanation").in("id", ids);
+      .select("id,section,correct_option,explanation").in("id", ids);
     if (ke) throw ke;
     const { data: responses, error: ae } = await db.from("afcat_responses")
       .select("question_id,selected_option,marked_for_review").eq("session_id", id).eq("user_id", user.id);
@@ -37,10 +38,14 @@ export async function GET(_req: NextRequest, context: Context) {
       const key = keyMap.get(item.question_id);
       const response = answerMap.get(item.question_id);
       return { questionId:item.question_id,position:item.position,
+        section: key?.section as AfcatSection,
         selected:response?.selected_option??null,
         correct:key?.correct_option??null, explanation:key?.explanation??null };
     });
-    return NextResponse.json({ status:s.status,summary:result,review },
+    if (review.some(x => !x.correct || !x.section))
+      return NextResponse.json({ error: "Result content incomplete" }, { status: 409 });
+    const sections = summarizeAfcatSections(review as AfcatReviewItem[]);
+    return NextResponse.json({ status:s.status,summary:result,sections,review },
       { headers: { "Cache-Control": "private, no-store" } });
   } catch {
     return NextResponse.json({ error: "AFCAT result unavailable" }, { status: 503 });
