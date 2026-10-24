@@ -23,6 +23,7 @@ export default function AfcatLab() {
   const [busy, setBusy] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<{ score: number; max_marks: number; correct_count: number; incorrect_count: number; unanswered_count: number } | null>(null);
+  const [sections, setSections] = useState<{ section: string; label: string; total: number; attempted: number; correct: number; incorrect: number; unanswered: number; marks: number; accuracyPercent: number }[]>([]);
   const [now, setNow] = useState(Date.now());
   useEffect(() => {
     api("/api/afcat/tests").then(x => setTests(x.tests)).catch(e => setError(String(e.message)));
@@ -47,6 +48,7 @@ export default function AfcatLab() {
       await api(`/api/afcat/sessions/${paper.session.id}/submit`, { method: "POST" });
       const completed = await api(`/api/afcat/sessions/${paper.session.id}/result`);
       setResult(completed.summary);
+      setSections(completed.sections ?? []);
       setPaper(old => old ? { ...old, session: { ...old.session, status: completed.status } } : old);
       setError("");
     } catch (e) { setError(e instanceof Error ? e.message : "Submission failed"); }
@@ -109,6 +111,13 @@ export default function AfcatLab() {
           <h2 className="text-xl font-bold">Result: {result.score}/{result.max_marks}</h2>
           <p className="text-sm">Correct: {result.correct_count} · Incorrect: {result.incorrect_count} · Unanswered: {result.unanswered_count}</p>
           <p className="mt-2 text-xs">Synthetic QA mock only; not a real AFCAT performance indicator.</p>
+          {sections.length > 0 && <div className="mt-4 space-y-3" aria-label="Section breakdown">
+            {sections.map(section => <div key={section.section} className="rounded-lg border border-green-200 bg-white p-3">
+              <div className="flex flex-wrap justify-between gap-2"><strong>{section.label}</strong><span className="font-semibold">{section.marks}/{section.total * 3} marks</span></div>
+              <p className="mt-1 text-sm text-slate-600">{section.correct} correct · {section.incorrect} incorrect · {section.unanswered} unanswered</p>
+              <p className="text-sm text-slate-600">{section.accuracyPercent}% accuracy among attempted questions</p>
+            </div>)}
+          </div>}
         </section>}
         {!result && <button type="button" disabled={busy || submitting || paper.session.status !== "IN_PROGRESS"}
           onClick={() => { if (window.confirm("Submit this staging test? You cannot edit answers afterwards.")) void submit(); }}
