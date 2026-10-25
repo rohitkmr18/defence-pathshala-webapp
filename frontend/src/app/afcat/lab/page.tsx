@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import AfcatVisualQuestion from "@/components/afcat/AfcatVisualQuestion";
 import type { AfcatDisplayQuestion, AfcatChoice } from "@/lib/afcat/visual-types";
 
@@ -72,7 +73,7 @@ export default function AfcatLab() {
     <div className="mx-auto max-w-4xl space-y-5">
       <p className="text-xs font-bold uppercase tracking-widest text-blue-700">Internal staging lab — not a released exam</p>
       <h1 className="text-2xl font-bold">AFCAT Test Player</h1>
-      {error && <p role="alert" className="rounded-xl bg-amber-100 p-4">{error}</p>}
+      {error && <div role="alert" className="rounded-xl bg-amber-100 p-4 space-y-2"><p>{error}</p>{/sign in required/i.test(error) && <p className="text-sm"><Link className="font-semibold text-blue-700 underline" href="/auth/login?next=%2Fafcat%2Flab">Sign in with Defence Pathshala</Link><span className="block text-amber-950">This preview uses isolated staging authentication. Live DP accounts cannot sign in here until final production integration.</span></p>}</div>}
       {!paper ? <section className="space-y-3">
         {tests.length === 0 && <p>No published staging tests available.</p>}
         {tests.map(t => <button key={t.id} onClick={() => start(t.id)}
