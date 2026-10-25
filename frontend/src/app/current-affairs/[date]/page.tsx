@@ -63,7 +63,6 @@ export default async function CurrentAffairsDayPage({ params }: { params: Promis
           </div>
         </header>
 
-        {post.editorialMarkdown && <section className="mt-8 rounded-3xl border border-slate-200 bg-white p-6"><EditorialMarkdown source={post.editorialMarkdown} /></section>}
         <div className="mt-8 space-y-5">
           {post.stories.map((story) => (
             <details open={!!story.editorialMarkdown} key={story.id} className="group rounded-3xl border border-slate-200 bg-white p-5 shadow-sm open:shadow-md sm:p-6">
