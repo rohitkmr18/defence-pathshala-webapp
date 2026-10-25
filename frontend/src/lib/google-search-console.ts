@@ -56,12 +56,36 @@ function requiredEnv(name: string): string {
   return value;
 }
 
+function normalizeEnvString(value: string): string {
+  const trimmed = value.trim();
+
+  if (trimmed.startsWith('"') && trimmed.endsWith('"')) {
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (typeof parsed === "string") return parsed;
+    } catch {
+      // Fall through to conservative quote stripping below.
+    }
+  }
+
+  if (trimmed.startsWith("'") && trimmed.endsWith("'")) {
+    return trimmed.slice(1, -1);
+  }
+
+  return trimmed;
+}
+
 function normalizePrivateKey(value: string): string {
-  return value.replace(/\\n/g, "\n");
+  return normalizeEnvString(value)
+    .replace(/\\n/g, "\n")
+    .replace(/\r\n/g, "\n")
+    .trim();
 }
 
 async function getGoogleAccessToken(): Promise<string> {
-  const clientEmail = requiredEnv("GOOGLE_SEARCH_CONSOLE_CLIENT_EMAIL");
+  const clientEmail = normalizeEnvString(
+    requiredEnv("GOOGLE_SEARCH_CONSOLE_CLIENT_EMAIL"),
+  );
   const privateKey = normalizePrivateKey(
     requiredEnv("GOOGLE_SEARCH_CONSOLE_PRIVATE_KEY"),
   );
