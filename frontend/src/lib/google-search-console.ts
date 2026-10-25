@@ -75,15 +75,38 @@ function normalizeEnvString(value: string): string {
   return trimmed;
 }
 
+function normalizeClientEmail(value: string): string {
+  const normalized = normalizeEnvString(value);
+  const match = normalized.match(
+    /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.gserviceaccount\.com/i,
+  );
+  return match?.[0] || normalized;
+}
+
 function normalizePrivateKey(value: string): string {
-  return normalizeEnvString(value)
+  const normalized = normalizeEnvString(value)
     .replace(/\\n/g, "\n")
+    .replace(/\\r/g, "")
     .replace(/\r\n/g, "\n")
+    .replace(/\\\"/g, '"')
     .trim();
+
+  const begin = "-----BEGIN PRIVATE KEY-----";
+  const end = "-----END PRIVATE KEY-----";
+  const beginIndex = normalized.indexOf(begin);
+  const endIndex = normalized.indexOf(end);
+
+  if (beginIndex === -1 || endIndex === -1 || endIndex < beginIndex) {
+    throw new Error(
+      "GOOGLE_SEARCH_CONSOLE_PRIVATE_KEY does not contain a PKCS#8 PRIVATE KEY PEM block",
+    );
+  }
+
+  return normalized.slice(beginIndex, endIndex + end.length).trim();
 }
 
 async function getGoogleAccessToken(): Promise<string> {
-  const clientEmail = normalizeEnvString(
+  const clientEmail = normalizeClientEmail(
     requiredEnv("GOOGLE_SEARCH_CONSOLE_CLIENT_EMAIL"),
   );
   const privateKey = normalizePrivateKey(
