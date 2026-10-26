@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { AfcatAsset, AfcatChoice, AfcatContent, AfcatDisplayQuestion } from "@/lib/afcat/visual-types";
+import MathText from "@/components/common/MathText";
 import { isSafeAfcatAssetUrl } from "@/lib/afcat/visual-types";
 
 /** External SVGs render as images, never inline executable markup. */
@@ -70,7 +71,7 @@ function AfcatVisual({ asset }: { asset: AfcatAsset }) {
 function AfcatContentBlock({ content }: { content: AfcatContent }) {
   return (
     <div className="min-w-0 space-y-2">
-      {content.text && <p className="whitespace-pre-wrap break-words text-sm leading-7 text-slate-900 sm:text-base">{content.text}</p>}
+      {content.text && <MathText as="div" text={content.text} className="max-w-full overflow-x-auto whitespace-pre-wrap break-words text-base leading-7 text-slate-900" />}
       {content.assets?.map((asset, index) => (
         <AfcatVisual key={asset.url + index} asset={asset} />
       ))}

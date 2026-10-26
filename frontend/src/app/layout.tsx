@@ -165,7 +165,7 @@ export default function RootLayout({
           }}
         />
         {children}
-        <GoogleAnalytics gaId="G-22KSG5GLDT" />
+        {process.env.VERCEL_ENV === "production" && <GoogleAnalytics gaId="G-22KSG5GLDT" />}
       </body>
     </html>
   );

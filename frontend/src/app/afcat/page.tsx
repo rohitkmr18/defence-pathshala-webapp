@@ -36,7 +36,7 @@ export default function AfcatPage() {
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-blue-700">AFCAT Exam Mode</p>
           <h1 className="mt-3 text-3xl font-black tracking-tight sm:text-5xl">AFCAT Test Series</h1>
           <p className="mt-4 text-base leading-7 text-slate-600">
-            A dedicated AFCAT workspace, separate from Defence Pathshala's official UPSC PYQ collection.
+            A dedicated AFCAT workspace, separate from Defence Pathshala&apos;s official UPSC PYQ collection.
             The test series is being prepared and is not available for attempts yet.
           </p>
         </div>
