@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 // Synthetic API fixture tests. These do NOT claim authenticated staging acceptance.
-for (const width of [390, 1280]) {
+for (const width of [320, 390, 1280]) {
   test(`player navigation, persistence, review and submission at ${width}px`, async ({
     page,
   }) => {
@@ -90,7 +90,8 @@ for (const width of [390, 1280]) {
     await expect(
       page.getByRole("heading", { name: "Question 1", exact: true }),
     ).toBeVisible();
-    await page.getByRole("radio").first().check();
+    await page.getByRole("radio").first().press("Space");
+    await expect(page.getByRole("radio").first()).toBeChecked();
     await expect(page.getByRole("radio").first()).toBeEnabled();
     await page
       .getByRole("button", { name: "Mark for Review", exact: true })
@@ -103,7 +104,7 @@ for (const width of [390, 1280]) {
     await expect(
       page.getByRole("button", { name: "Unmark Review" }),
     ).toBeEnabled();
-    await page.getByRole("radio").first().check();
+    await page.getByRole("radio").first().press("Space");
     await expect(
       page.getByRole("button", { name: "Save & Next" }),
     ).toBeEnabled();
@@ -201,7 +202,7 @@ test("failed save blocks navigation and never claims saved", async ({
     });
   });
   await page.goto("/afcat/lab?session=qa");
-  await page.getByRole("radio").first().check();
+  await page.getByRole("radio").first().press("Space");
   await expect(page.getByRole("alert")).toContainText(
     "Synthetic offline failure",
   );
