@@ -309,7 +309,7 @@ export default function AfcatLab() {
     busy || submitting || saveState.startsWith("Save not confirmed");
   const time = `${String(Math.floor(left / 3600)).padStart(2, "0")}:${String(Math.floor((left % 3600) / 60)).padStart(2, "0")}:${String(left % 60).padStart(2, "0")}`;
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900">
+    <main className="min-h-screen bg-slate-50 text-slate-900" style={{ overflowX: "clip", overflowY: "visible" }}>
       <header className="sticky top-0 z-30 bg-[#081b35] text-white shadow-sm">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <div className="min-w-0">
@@ -374,7 +374,7 @@ export default function AfcatLab() {
           </p>
         )}
         {!paper ? (
-          <section className="mx-auto max-w-2xl space-y-4 py-8">
+          <section className="mx-auto max-w-2xl space-y-4 py-8" style={{ maxWidth: "42rem" }}>
             <p className="text-xs font-bold uppercase tracking-widest text-blue-700">
               Your examination workspace
             </p>

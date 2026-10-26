@@ -203,7 +203,7 @@ test("failed save blocks navigation and never claims saved", async ({
   });
   await page.goto("/afcat/lab?session=qa");
   await page.getByRole("radio").first().press("Space");
-  await expect(page.getByRole("alert")).toContainText(
+  await expect(page.getByRole("alert").filter({ hasText: "Synthetic offline failure" })).toContainText(
     "Synthetic offline failure",
   );
   await expect(
