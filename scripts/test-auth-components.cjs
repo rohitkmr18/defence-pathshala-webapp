@@ -48,7 +48,10 @@ test('failed save keeps all visible inputs, supports retry and prevents rapid du
   assert.equal(elements(tree, n => n.props.id === 'full-name')[0].props.value, 'Available Name');
   elements(tree, n => n.props.id === 'full-name')[0].props.onChange({ target: { value: 'Edited Name' } });
   elements(tree, n => n.props.id === 'target-year')[0].props.onChange({ target: { value: '2028' } });
-  elements(tree, n => n.props.name === 'exam' && n.props.value === 'both')[0].props.onChange();
+  for (const exam of ['CDS', 'AFCAT']) {
+    elements(tree, n => n.props.name === 'target_exams' && n.props.value === exam)[0].props.onChange();
+    tree = render();
+  }
   tree = render();
   const submit = elements(tree, n => n.type === 'form')[0].props.onSubmit;
   const first = submit({ preventDefault() {} });
@@ -58,7 +61,7 @@ test('failed save keeps all visible inputs, supports retry and prevents rapid du
   tree = render();
   assert.equal(elements(tree, n => n.props.id === 'full-name')[0].props.value, 'Edited Name');
   assert.equal(elements(tree, n => n.props.id === 'target-year')[0].props.value, '2028');
-  assert.equal(elements(tree, n => n.props.name === 'exam' && n.props.value === 'both')[0].props.checked, true);
+  for (const exam of ['CDS', 'AFCAT']) assert.equal(elements(tree, n => n.props.name === 'target_exams' && n.props.value === exam)[0].props.checked, true);
   assert.equal(elements(tree, n => n.props.role === 'alert').length, 1);
   assert.equal(elements(tree, n => n.props.type === 'submit')[0].props.disabled, false);
   assert.deepEqual(navigations, []);

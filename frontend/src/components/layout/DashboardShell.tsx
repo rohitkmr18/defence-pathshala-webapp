@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { authUrl } from "@/lib/auth-redirect";
 import MobileLearningNavigation from "./MobileLearningNavigation";
+import ExamModeSwitcher from "./ExamModeSwitcher";
 import { showGlobalMobileNav } from "@/lib/learning-navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
@@ -211,6 +212,7 @@ function DashboardShellContent({
               </Link>
             )}
           </div>
+          <div className="border-t border-slate-100 px-4 py-2 sm:hidden"><ExamModeSwitcher compact /></div>
         </header>
 
         {/* Page content */}

@@ -1,0 +1,667 @@
+{
+  "package": "AFCAT_FM01_EDITORIAL_CANDIDATES_V0",
+  "status": "DO_NOT_IMPORT_OR_PUBLISH",
+  "description": "20 candidate questions. Not independently reviewed. Visual reasoning still needs original artwork and editorial sign-off. No distribution to learners.",
+  "questions": [
+    {
+      "external_id": "AFCAT-FM01-CAND-001",
+      "editorial_status": "DRAFT_UNVERIFIED",
+      "source_kind": "ORIGINAL_DP_AUTHORED",
+      "section": "ENGLISH",
+      "topic": "Vocabulary",
+      "stem": {
+        "text": "The word closest in meaning to 'mitigate' is:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Intensify"
+        },
+        {
+          "key": "B",
+          "text": "Alleviate"
+        },
+        {
+          "key": "C",
+          "text": "Postpone"
+        },
+        {
+          "key": "D",
+          "text": "Conceal"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "To mitigate is to make something less severe, serious or painful."
+      },
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-002",
+      "editorial_status": "DRAFT_UNVERIFIED",
+      "source_kind": "ORIGINAL_DP_AUTHORED",
+      "section": "ENGLISH",
+      "topic": "Antonyms",
+      "stem": {
+        "text": "Choose the antonym of 'lucid':"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Clear"
+        },
+        {
+          "key": "B",
+          "text": "Intelligible"
+        },
+        {
+          "key": "C",
+          "text": "Obscure"
+        },
+        {
+          "key": "D",
+          "text": "Coherent"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "Lucid means clear and easily understood; obscure means unclear."
+      },
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-003",
+      "editorial_status": "DRAFT_UNVERIFIED",
+      "source_kind": "ORIGINAL_DP_AUTHORED",
+      "section": "ENGLISH",
+      "topic": "Grammar",
+      "stem": {
+        "text": "Identify the incorrect part: 'Neither of the pilots / were willing / to alter the plan / at short notice.'"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Neither of the pilots"
+        },
+        {
+          "key": "B",
+          "text": "were willing"
+        },
+        {
+          "key": "C",
+          "text": "to alter the plan"
+        },
+        {
+          "key": "D",
+          "text": "at short notice"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "Neither is grammatically singular here, so 'was willing' is required."
+      },
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-004",
+      "editorial_status": "DRAFT_UNVERIFIED",
+      "source_kind": "ORIGINAL_DP_AUTHORED",
+      "section": "ENGLISH",
+      "topic": "Idioms",
+      "stem": {
+        "text": "What does 'to burn the midnight oil' mean?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "To waste fuel"
+        },
+        {
+          "key": "B",
+          "text": "To work or study late into the night"
+        },
+        {
+          "key": "C",
+          "text": "To make a hasty decision"
+        },
+        {
+          "key": "D",
+          "text": "To lose an opportunity"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "The idiom means to stay up late working or studying."
+      },
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-005",
+      "editorial_status": "DRAFT_UNVERIFIED",
+      "source_kind": "ORIGINAL_DP_AUTHORED",
+      "section": "ENGLISH",
+      "topic": "One word substitution",
+      "stem": {
+        "text": "A person who can speak many languages is a:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Polyglot"
+        },
+        {
+          "key": "B",
+          "text": "Pessimist"
+        },
+        {
+          "key": "C",
+          "text": "Philanthropist"
+        },
+        {
+          "key": "D",
+          "text": "Nomad"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "A polyglot knows or speaks several languages."
+      },
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-006",
+      "editorial_status": "DRAFT_UNVERIFIED",
+      "source_kind": "ORIGINAL_DP_AUTHORED",
+      "section": "ENGLISH",
+      "topic": "Sentence completion",
+      "stem": {
+        "text": "The committee insisted that every application ______ before the deadline."
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "is submitted"
+        },
+        {
+          "key": "B",
+          "text": "was submitted"
+        },
+        {
+          "key": "C",
+          "text": "be submitted"
+        },
+        {
+          "key": "D",
+          "text": "has submitting"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "After 'insisted that', formal English can use the mandative subjunctive 'be submitted'."
+      },
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-007",
+      "editorial_status": "DRAFT_UNVERIFIED",
+      "source_kind": "ORIGINAL_DP_AUTHORED",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Polity",
+      "stem": {
+        "text": "Which Article of the Constitution of India explicitly prohibits discrimination on grounds of religion, race, caste, sex or place of birth by the State?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Article 14"
+        },
+        {
+          "key": "B",
+          "text": "Article 15"
+        },
+        {
+          "key": "C",
+          "text": "Article 17"
+        },
+        {
+          "key": "D",
+          "text": "Article 19"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "Article 15(1) prohibits the State from discriminating against citizens on the listed grounds."
+      },
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-008",
+      "editorial_status": "DRAFT_UNVERIFIED",
+      "source_kind": "ORIGINAL_DP_AUTHORED",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Geography",
+      "stem": {
+        "text": "Which latitude is approximately 23.5° north of the Equator?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Arctic Circle"
+        },
+        {
+          "key": "B",
+          "text": "Tropic of Capricorn"
+        },
+        {
+          "key": "C",
+          "text": "Tropic of Cancer"
+        },
+        {
+          "key": "D",
+          "text": "Antarctic Circle"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "The Tropic of Cancer is approximately 23.5 degrees north latitude."
+      },
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-009",
+      "editorial_status": "DRAFT_UNVERIFIED",
+      "source_kind": "ORIGINAL_DP_AUTHORED",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Basic Science",
+      "stem": {
+        "text": "Which physical quantity is measured in pascals (Pa)?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Power"
+        },
+        {
+          "key": "B",
+          "text": "Pressure"
+        },
+        {
+          "key": "C",
+          "text": "Electric charge"
+        },
+        {
+          "key": "D",
+          "text": "Frequency"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "The pascal (N/m²) is the SI derived unit of pressure."
+      },
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-010",
+      "editorial_status": "DRAFT_UNVERIFIED",
+      "source_kind": "ORIGINAL_DP_AUTHORED",
+      "section": "GENERAL_AWARENESS",
+      "topic": "History",
+      "stem": {
+        "text": "The Treaty of Seringapatam (1792) concluded which conflict?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "First Anglo-Mysore War"
+        },
+        {
+          "key": "B",
+          "text": "Second Anglo-Mysore War"
+        },
+        {
+          "key": "C",
+          "text": "Third Anglo-Mysore War"
+        },
+        {
+          "key": "D",
+          "text": "Fourth Anglo-Mysore War"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "The 1792 treaty ended the Third Anglo-Mysore War."
+      },
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-011",
+      "editorial_status": "DRAFT_UNVERIFIED",
+      "source_kind": "ORIGINAL_DP_AUTHORED",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Environment",
+      "stem": {
+        "text": "Which atmospheric layer contains the highest concentration of the ozone that protects Earth from much of the Sun's ultraviolet radiation?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Troposphere"
+        },
+        {
+          "key": "B",
+          "text": "Stratosphere"
+        },
+        {
+          "key": "C",
+          "text": "Mesosphere"
+        },
+        {
+          "key": "D",
+          "text": "Thermosphere"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "The protective ozone layer lies primarily in the stratosphere."
+      },
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-012",
+      "editorial_status": "DRAFT_UNVERIFIED",
+      "source_kind": "ORIGINAL_DP_AUTHORED",
+      "section": "NUMERICAL_ABILITY",
+      "topic": "Percentage",
+      "stem": {
+        "text": "A price rises by 20% and is then reduced by 20%. What is the overall percentage change?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "No change"
+        },
+        {
+          "key": "B",
+          "text": "4% decrease"
+        },
+        {
+          "key": "C",
+          "text": "4% increase"
+        },
+        {
+          "key": "D",
+          "text": "2% decrease"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "Starting at 100, it becomes 120 and then 96, a 4% decrease."
+      },
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-013",
+      "editorial_status": "DRAFT_UNVERIFIED",
+      "source_kind": "ORIGINAL_DP_AUTHORED",
+      "section": "NUMERICAL_ABILITY",
+      "topic": "Time and Work",
+      "stem": {
+        "text": "A can finish a task in 12 days and B can finish it in 18 days. Working together at constant rates, how many days will they take?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "6.0"
+        },
+        {
+          "key": "B",
+          "text": "7.2"
+        },
+        {
+          "key": "C",
+          "text": "9.0"
+        },
+        {
+          "key": "D",
+          "text": "15.0"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "Combined daily work = 1/12 + 1/18 = 5/36; time = 36/5 = 7.2 days."
+      },
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-014",
+      "editorial_status": "DRAFT_UNVERIFIED",
+      "source_kind": "ORIGINAL_DP_AUTHORED",
+      "section": "NUMERICAL_ABILITY",
+      "topic": "Ratio",
+      "stem": {
+        "text": "Two numbers are in the ratio 3:5 and their sum is 64. What is the larger number?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "24"
+        },
+        {
+          "key": "B",
+          "text": "32"
+        },
+        {
+          "key": "C",
+          "text": "40"
+        },
+        {
+          "key": "D",
+          "text": "48"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "Eight ratio parts equal 64, so one part is 8; the larger number is 5×8 = 40."
+      },
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-015",
+      "editorial_status": "DRAFT_UNVERIFIED",
+      "source_kind": "ORIGINAL_DP_AUTHORED",
+      "section": "NUMERICAL_ABILITY",
+      "topic": "Simple Interest",
+      "stem": {
+        "text": "What is the simple interest on ₹8,000 at 7.5% per annum for 2 years?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "₹600"
+        },
+        {
+          "key": "B",
+          "text": "₹900"
+        },
+        {
+          "key": "C",
+          "text": "₹1,200"
+        },
+        {
+          "key": "D",
+          "text": "₹1,500"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "SI = PRT/100 = 8000×7.5×2/100 = ₹1,200."
+      },
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-016",
+      "editorial_status": "DRAFT_UNVERIFIED",
+      "source_kind": "ORIGINAL_DP_AUTHORED",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Number series",
+      "stem": {
+        "text": "Find the missing term: 3, 8, 15, 24, 35, ?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "46"
+        },
+        {
+          "key": "B",
+          "text": "47"
+        },
+        {
+          "key": "C",
+          "text": "48"
+        },
+        {
+          "key": "D",
+          "text": "49"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "Successive differences are 5, 7, 9, 11, so the next difference is 13; 35+13=48."
+      },
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-017",
+      "editorial_status": "DRAFT_UNVERIFIED",
+      "source_kind": "ORIGINAL_DP_AUTHORED",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Analogy",
+      "stem": {
+        "text": "Thermometer : Temperature :: Barometer : ?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Humidity"
+        },
+        {
+          "key": "B",
+          "text": "Pressure"
+        },
+        {
+          "key": "C",
+          "text": "Altitude"
+        },
+        {
+          "key": "D",
+          "text": "Velocity"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "A thermometer measures temperature; a barometer measures atmospheric pressure."
+      },
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-018",
+      "editorial_status": "DRAFT_UNVERIFIED",
+      "source_kind": "ORIGINAL_DP_AUTHORED",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Coding",
+      "stem": {
+        "text": "In a code each letter is shifted forward by one alphabet position (Z becomes A). How is 'WING' written?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "XJOH"
+        },
+        {
+          "key": "B",
+          "text": "XJNH"
+        },
+        {
+          "key": "C",
+          "text": "VHM F"
+        },
+        {
+          "key": "D",
+          "text": "YJPH"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "W→X, I→J, N→O and G→H, producing XJOH."
+      },
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-019",
+      "editorial_status": "DRAFT_UNVERIFIED",
+      "source_kind": "ORIGINAL_DP_AUTHORED",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Direction sense",
+      "stem": {
+        "text": "A cadet walks 5 km north, then 3 km east, then 5 km south. How far is the cadet from the starting point?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "3 km"
+        },
+        {
+          "key": "B",
+          "text": "5 km"
+        },
+        {
+          "key": "C",
+          "text": "8 km"
+        },
+        {
+          "key": "D",
+          "text": "13 km"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "North and south movements cancel; the remaining displacement is 3 km east."
+      },
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-020",
+      "editorial_status": "DRAFT_UNVERIFIED",
+      "source_kind": "ORIGINAL_DP_AUTHORED",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Syllogism",
+      "stem": {
+        "text": "All gliders are aircraft. Some aircraft are unmanned. Which conclusion necessarily follows?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Some gliders are unmanned"
+        },
+        {
+          "key": "B",
+          "text": "All aircraft are gliders"
+        },
+        {
+          "key": "C",
+          "text": "All gliders are aircraft"
+        },
+        {
+          "key": "D",
+          "text": "No unmanned vehicle is a glider"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "Only the directly stated inclusion follows; the relation between gliders and unmanned aircraft is unspecified."
+      },
+      "requires_independent_review": true
+    }
+  ]
+}
