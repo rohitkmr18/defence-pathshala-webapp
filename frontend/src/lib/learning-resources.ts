@@ -18,7 +18,7 @@ export const resources: readonly ResourceSummary[] = [
     type: "quiz",
     visibility: "unlisted",
     exams: ["NDA", "CDS", "CAPF-AC"],
-    status: "draft",
+    status: "published",
   },
 ];
 /** Public listings must NEVER contain unlisted or token-gated records. */
