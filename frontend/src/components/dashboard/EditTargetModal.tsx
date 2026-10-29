@@ -41,8 +41,7 @@ interface EditTargetModalProps {
   onSuccess?: (updated: { target_exams: string[]; target_year: number | null }) => void;
 }
 
-export default function EditTargetModal({
-  isOpen,
+function TargetEditor({
   onClose,
   initialExams = [],
   initialYear = null,
@@ -67,29 +66,24 @@ export default function EditTargetModal({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Sync props or fetch profile when opening
-  useEffect(() => {
-    if (isOpen) {
-      setError(null);
-      if (initialExams.length > 0) {
-        setSelectedExams(initialExams.map(normalizeExam).filter(Boolean));
-        setSelectedYear(initialYear);
-      } else {
-        getProfile()
-          .then((profile) => {
-            if (profile?.target_exams?.length) {
-              setSelectedExams(profile.target_exams.map(normalizeExam).filter(Boolean));
-            }
-            if (profile?.target_year) {
-              setSelectedYear(profile.target_year);
-            }
-          })
-          .catch(() => {});
-      }
-    }
-  }, [isOpen, initialExams, initialYear]);
+  const [initialSelection] = useState(() => ({ exams: initialExams, year: initialYear }));
+  const [loading, setLoading] = useState(initialExams.length === 0);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (initialSelection.exams.length > 0) return;
+    let active = true;
+    getProfile()
+      .then((profile) => {
+        if (!active) return;
+        setSelectedExams((profile.target_exams ?? []).map(normalizeExam).filter(Boolean));
+        setSelectedYear(profile.target_year ?? null);
+        setLoading(false);
+      })
+      .catch(() => {
+        if (active) setError("Your targets could not be loaded. Close and reopen to retry.");
+      });
+    return () => { active = false; };
+  }, [initialSelection]);
 
   const toggleExam = (examId: string) => {
     setSelectedExams((prev) =>
@@ -98,6 +92,7 @@ export default function EditTargetModal({
   };
 
   const handleSave = async () => {
+    if (loading || saving) return;
     if (selectedExams.length === 0) {
       setError("Please select at least one target exam.");
       return;
@@ -126,8 +121,8 @@ export default function EditTargetModal({
       onSuccess?.(detail);
       router.refresh();
       onClose();
-    } catch (err: any) {
-      setError(err?.message || "Failed to update target preferences.");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to update target preferences.");
     } finally {
       setSaving(false);
     }
@@ -178,11 +173,12 @@ export default function EditTargetModal({
         </div>
 
         {error && (
-          <div className="mt-4 rounded-xl border border-rose-200 bg-rose-50 px-4 py-2.5 text-xs font-semibold text-rose-700 dark:border-rose-900/60 dark:bg-rose-950/50 dark:text-rose-300">
+          <div role="alert" className="mt-4 rounded-xl border border-rose-200 bg-rose-50 px-4 py-2.5 text-xs font-semibold text-rose-700 dark:border-rose-900/60 dark:bg-rose-950/50 dark:text-rose-300">
             {error}
           </div>
         )}
 
+        {loading && !error && <p role="status" className="mt-4 text-sm text-slate-500">Loading your saved targets…</p>}
         <div className="mt-6 space-y-6">
           {/* Section 1: Exams (Multi-Select) */}
           <div>
@@ -202,6 +198,8 @@ export default function EditTargetModal({
                   <button
                     key={exam.id}
                     type="button"
+                    disabled={loading || saving}
+                    aria-pressed={isSelected}
                     onClick={() => toggleExam(exam.id)}
                     className={`flex flex-col items-start rounded-2xl p-3.5 text-left border transition-all ${
                       isSelected
@@ -247,6 +245,8 @@ export default function EditTargetModal({
                   <button
                     key={yr}
                     type="button"
+                    disabled={loading || saving}
+                    aria-pressed={isSelected}
                     onClick={() => setSelectedYear(isSelected ? null : yr)}
                     className={`rounded-xl px-4 py-2 text-sm font-bold border transition-all ${
                       isSelected
@@ -275,7 +275,7 @@ export default function EditTargetModal({
           <button
             type="button"
             onClick={handleSave}
-            disabled={saving || selectedExams.length === 0}
+            disabled={loading || saving || selectedExams.length === 0}
             className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md shadow-blue-600/25 transition hover:bg-blue-500 active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {saving ? (
@@ -294,4 +294,9 @@ export default function EditTargetModal({
       </div>
     </div>
   );
+}
+
+// Mount a fresh editor for each opening; parent rerenders cannot reset user edits.
+export default function EditTargetModal(props: EditTargetModalProps) {
+  return props.isOpen ? <TargetEditor {...props} /> : null;
 }

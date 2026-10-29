@@ -18,14 +18,14 @@ jobs:
         with:
           persist-credentials: false
       - run: npm ci --prefix frontend --ignore-scripts
-      - run: node --test scripts/test-afcat-engine.cjs scripts/test-afcat-db.cjs
+      - run: node --test scripts/test-afcat-engine.cjs scripts/test-afcat-db.cjs scripts/test-target-editor.cjs
       - name: Lint changed product surfaces
         working-directory: frontend
-        run: npx eslint src/app/afcat src/app/api/afcat src/components/afcat src/app/layout.tsx e2e/afcat-player.spec.ts playwright.afcat-player.config.ts
+        run: npx eslint src/app/afcat src/app/api/afcat src/components/afcat src/app/layout.tsx e2e/afcat-player.spec.ts playwright.afcat-player.config.ts src/components/dashboard/EditTargetModal.tsx
       - run: npm run build --prefix frontend
       - name: Desktop and mobile synthetic browser regressions
         working-directory: frontend
-        run: npx playwright test -c playwright.afcat-player.config.ts
+        run: npx playwright test -c playwright.afcat-player.config.ts src/components/dashboard/EditTargetModal.tsx
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
