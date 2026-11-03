@@ -211,7 +211,19 @@ async function persistQuestionAttempt(params: Parameters<typeof recordQuestionAt
       // Marking it as saved here would make completion incorrectly skip persistence.
       return;
     }
-    if (!response.ok) throw new Error("Attempt persistence failed");
+    if (!response.ok) {
+      // The session was already submitted; its finalized answer set is authoritative,
+      // so a late progress write is superseded rather than failed.
+      if (response.status === 409 && !params.reveal) {
+        const rejected = await response.json().catch(() => null);
+        if (rejected?.code === "SESSION_COMPLETED") {
+          if (params.sessionId) failedAttempts.get(params.sessionId)?.delete(params.question.id);
+          acknowledgeAttempt(params);
+          return;
+        }
+      }
+      throw new Error("Attempt persistence failed");
+    }
     const result = await response.json();
     if (cloudId && result.guest) throw new Error("Sign in again to save your attempt.");
     if (!result.guest && result.persisted !== true) throw new Error("Attempt save was not confirmed");
