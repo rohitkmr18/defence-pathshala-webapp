@@ -45,3 +45,11 @@ test('AFCAT learner serializer strictly omits answer keys and explanations', () 
   assert.throws(() => sanitizeAfcatQuestion('q1',1,stem,['One','Two']));
   assert.throws(() => sanitizeAfcatQuestion('q1',1,{html:'<script>'},options));
 });
+
+test('AFCAT learner serializer shows a shared passage above its question', () => {
+  const options = ['One','Two','Three','Four'];
+  const result = sanitizeAfcatQuestion('q1',1,{ text:'Fill blank (1).', passage:'The sky is (1) ___ to carelessness.' },options);
+  assert.equal(result.stem.text,'Passage:\nThe sky is (1) ___ to carelessness.\n\nFill blank (1).');
+  assert.throws(() => sanitizeAfcatQuestion('q1',1,{ text:'Q', passage:'   ' },options));
+  assert.throws(() => sanitizeAfcatQuestion('q1',1,{ text:'Q', passage:{ html:'<b>' } },options));
+});

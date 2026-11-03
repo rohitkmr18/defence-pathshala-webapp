@@ -1,14 +1,14 @@
 {
-  "package": "AFCAT_FM01_V1_DRAFT",
+  "package": "AFCAT_FM01_V2_DRAFT",
   "status": "DRAFT_DO_NOT_PUBLISH",
   "built_by": "scripts/build-afcat-mock01.py",
   "source": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03)",
   "notes": [
-    "Replaces full_mock_01_candidates_v0.json (20 unverified drafts, removed on founder instruction 2026-11-04).",
-    "Items 1-75 are selected from the practice bank; items 76-100 (reasoning) are newly authored because the bank has no reasoning section.",
+    "v2 (2026-11-04): replaced the 10 easiest items with harder ones, added a 4-blank cloze passage, replaced dated current affairs with four verified 2026 items, and added six original figure-based reasoning items.",
     "All items are DP-original practice questions written to the AFCAT pattern. None is an official or memory-reconstructed AFCAT paper question.",
     "Section order follows the AFCAT paper: GA, English, Numerical, Reasoning. 25/30/20/25 is DP's split, not an official IAF allocation.",
-    "Reasoning is text-only: no figure-based non-verbal items yet, unlike the real paper.",
+    "Figures live in assets/fm01 as SVG with alt text and hashes; the learner API does not serve question images yet.",
+    "Current-affairs items carry source_evidence and a recheck_on date.",
     "Difficulty labels are author estimates, not calibrated."
   ],
   "exam_config": {
@@ -29,16 +29,130 @@
     },
     "answer_keys": {
       "A": 25,
-      "B": 28,
+      "B": 25,
       "C": 25,
-      "D": 22
+      "D": 25
     },
     "difficulty": {
-      "EASY": 41,
-      "HARD": 8,
-      "MODERATE": 51
-    }
+      "EASY": 19,
+      "HARD": 12,
+      "MODERATE": 69
+    },
+    "longest_same_key_run": 4,
+    "figure_items": 6
   },
+  "assets": [
+    {
+      "asset_id": "fm01-series-problem",
+      "file": "assets/fm01/fm01-series-problem.svg",
+      "mime_type": "image/svg+xml",
+      "sha256": "b40a4e54b01d552ab369d2e63e8c3cdc5719bd988754fb35e02aa6bd1f1a3e72",
+      "width": 560,
+      "height": 170,
+      "alt": "Three figures in a series. Each square holds an arrow and a dot. Figure 1: arrow up, dot top-left. Figure 2: arrow up-right, dot top-right. Figure 3: arrow right, dot bottom-right. Figure 4 is a question mark.",
+      "license": "DP original artwork",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "asset_id": "fm01-series-answers",
+      "file": "assets/fm01/fm01-series-answers.svg",
+      "mime_type": "image/svg+xml",
+      "sha256": "a44d15503fef29dc8e62743755e4d717ef2317dde81b56e343822d58dede9feb",
+      "width": 560,
+      "height": 170,
+      "alt": "Answer figures. A: arrow down-right, dot bottom-right. B: arrow down, dot bottom-left. C: arrow down-right, dot bottom-left. D: arrow down-right, dot top-left.",
+      "license": "DP original artwork",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "asset_id": "fm01-mirror-problem",
+      "file": "assets/fm01/fm01-mirror-problem.svg",
+      "mime_type": "image/svg+xml",
+      "sha256": "605ec8ccba1e64d99d0c122d1028508f1d637fcd47e7c38ae5b8e6ce652daf84",
+      "width": 280,
+      "height": 180,
+      "alt": "A flag on a pole, with the triangular flag at the top pointing right, a short bar to the right of the pole and a small circle at lower right. A vertical mirror line M is on the right.",
+      "license": "DP original artwork",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "asset_id": "fm01-mirror-answers",
+      "file": "assets/fm01/fm01-mirror-answers.svg",
+      "mime_type": "image/svg+xml",
+      "sha256": "602bbbc3d81574c2383c780f4642a60417302b2910329137168904d141cbd7f3",
+      "width": 600,
+      "height": 180,
+      "alt": "Four answer figures. A: flag at the top pointing right, pole on the left, circle at lower right. B: flag at the bottom pointing right, pole on the left, circle at upper right. C: flag at the bottom pointing left, pole on the right, circle at upper left. D: flag at the top pointing left, pole on the right, circle at lower left.",
+      "license": "DP original artwork",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "asset_id": "fm01-water-problem",
+      "file": "assets/fm01/fm01-water-problem.svg",
+      "mime_type": "image/svg+xml",
+      "sha256": "2d2402d9c75d3c4f6553048b5989c97c6d2322db5b3ea5d5cc8fadfd4950d25d",
+      "width": 220,
+      "height": 220,
+      "alt": "A staircase line rising from bottom-left to top-right ending in an arrowhead pointing right, a small circle at upper left and a filled square at lower right. A horizontal water line is below the figure.",
+      "license": "DP original artwork",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "asset_id": "fm01-water-answers",
+      "file": "assets/fm01/fm01-water-answers.svg",
+      "mime_type": "image/svg+xml",
+      "sha256": "ff14f430f0aa07d6e173c870dd2d49201c8e3fd2d357653ebedfb654ce295612",
+      "width": 600,
+      "height": 180,
+      "alt": "Four answer figures. A: staircase descends from top-left to an arrowhead at lower right; circle at lower left; square at upper right. B: staircase rises from bottom-right to an arrowhead at upper left; circle at upper right; square at lower left. C: staircase descends from top-right to an arrowhead at lower left; circle at lower right; square at upper left. D: the figure turned a quarter-turn clockwise, staircase running top to bottom with the arrowhead pointing down at lower right.",
+      "license": "DP original artwork",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "asset_id": "fm01-fold-problem",
+      "file": "assets/fm01/fm01-fold-problem.svg",
+      "mime_type": "image/svg+xml",
+      "sha256": "ebe02eaebff852c26cdf5cc447b19cef278b760ca2f0deacd16fa4a95d0dd61a",
+      "width": 430,
+      "height": 185,
+      "alt": "Step 1: a square sheet is folded along its vertical centre line, left half onto right. Step 2: the folded sheet is folded along its horizontal centre line, top half onto bottom. Step 3: one hole is punched in the folded quarter, near its lower-left area.",
+      "license": "DP original artwork",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "asset_id": "fm01-fold-answers",
+      "file": "assets/fm01/fm01-fold-answers.svg",
+      "mime_type": "image/svg+xml",
+      "sha256": "eea5bf8d23cf49b47d3d7193b066b43edd9a386e068f715c29273163146e5851",
+      "width": 600,
+      "height": 180,
+      "alt": "Four unfolded squares. A: two holes in the lower half, side by side. B: four holes in the middle band near the left and right edges. C: two holes on a diagonal. D: four holes, one in each quarter, placed symmetrically about both centre lines.",
+      "license": "DP original artwork",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "asset_id": "fm01-count-triangles",
+      "file": "assets/fm01/fm01-count-triangles.svg",
+      "mime_type": "image/svg+xml",
+      "sha256": "f3fa28fa6e71ed2b6b3b60745a9f1461792b42c7e33eec03b5200e49733af164",
+      "width": 300,
+      "height": 230,
+      "alt": "A large triangle with a vertical line from the top vertex to the middle of the base, and a horizontal line across the triangle at half its height.",
+      "license": "DP original artwork",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "asset_id": "fm01-odd-figure",
+      "file": "assets/fm01/fm01-odd-figure.svg",
+      "mime_type": "image/svg+xml",
+      "sha256": "8aaa22016eb150cc6f082d09e23b3c07240ab023b0ef499fcf540ce57e8db523",
+      "width": 600,
+      "height": 185,
+      "alt": "Four figures. A: square with 3 dots. B: triangle with 2 dots. C: pentagon with 4 dots. D: hexagon with 4 dots.",
+      "license": "DP original artwork",
+      "review_status": "REVIEW_REQUIRED"
+    }
+  ],
   "questions": [
     {
       "external_id": "AFCAT-FM01-CAND-V1-001",
@@ -76,7 +190,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q11",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "f1f18f4ba4338120ad0878ea5ccb241fea62a76e750406bb2c8e64b566727a3b",
+      "fingerprint_sha256": "61514c27f798f1dd920e82a46e62e66705c6d90dcaee37df890e9b5066e3a51d",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -117,7 +231,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q4",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "d9191fcb86d3e6f62dae9e4123868f2583017992319ac5135ec75365c20c6ddf",
+      "fingerprint_sha256": "fdb5018c9886c79a18ba36f0b15faa27bda9ccb897499656cabf25849050d249",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -158,7 +272,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q8",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "1b82ec391173cb4774c2371b4a4f7ea2504356027993082626e40dcf1e0fc328",
+      "fingerprint_sha256": "fdbb11132686ac44b02d2953b77f0e1be740ef639f44a6e3951a838c40de25cd",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -199,7 +313,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q15",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "b7ec601c25dd7c65423283381690e71434ecef93356b5510fbdc64eee250bb69",
+      "fingerprint_sha256": "fc6fad340856d14ee8a6bdbacddd43f47b5ded5c75feb4248d46ab18a8a5fe42",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -240,7 +354,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q16",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "a8b7335c51f120c36bf829769d9379fc738c4d487e2efc0707da3c2e7976f4a8",
+      "fingerprint_sha256": "70de88669ac8a462781193a851db2d3630bf8d4323d112baa3929f6c550d6469",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -281,7 +395,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q24",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "84e775dbcceb1923e9b6812c464a0de54f8a849cf52c741d90ed6a115618308e",
+      "fingerprint_sha256": "f8897b9dde7e4212119f329b57da409fa1b6f0604622c766aa597ac58cbf63cc",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -322,7 +436,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q27",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "999deb138d20da64c0aa0b5f76189f79693fda5fc14fd200c8340bf165a12cef",
+      "fingerprint_sha256": "5f5ae3b761483f22213fa3f7d9d1eda29f24a868b7ca1a80af15cf82a12547f9",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -363,7 +477,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q32",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "bcbbab7bcf9f777105379bf34acaa629ecee4861ec0cc7a76ff6d04560775f7c",
+      "fingerprint_sha256": "ecbbe403f790ed60f0b9ee3acfdcd5a74f058b0541f1fbc2e7dc9fac50f53fd6",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -374,37 +488,37 @@
       "pool_type": "FULL_MOCK",
       "section": "GENERAL_AWARENESS",
       "topic": "Polity",
-      "subtopic": "Sources of the Constitution",
+      "subtopic": "Emergency provisions",
       "stem": {
-        "text": "Directive Principles of State Policy were borrowed from the Constitution of:"
+        "text": "Which Article of the Constitution empowers the President to proclaim a Financial Emergency?"
       },
       "options": [
         {
           "key": "A",
-          "text": "Ireland"
+          "text": "Article 352"
         },
         {
           "key": "B",
-          "text": "USA"
+          "text": "Article 356"
         },
         {
           "key": "C",
-          "text": "UK"
+          "text": "Article 360"
         },
         {
           "key": "D",
-          "text": "Canada"
+          "text": "Article 365"
         }
       ],
-      "correct_option": "A",
+      "correct_option": "C",
       "explanation": {
-        "text": "The DPSP (Part IV) were modelled on the Irish Constitution."
+        "text": "Article 360 covers Financial Emergency. Article 352 is National Emergency and Article 356 is President's Rule in a state."
       },
-      "difficulty": "EASY",
+      "difficulty": "MODERATE",
       "source_kind": "ORIGINAL",
-      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q30",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-H03)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "b3c71b85677ea0faddf18ef2ac4d22065d4e06fc9c08b14ad57a75da6e2e4d50",
+      "fingerprint_sha256": "10835f88b1354eb26a8202cd6dcfacf0c708188af589420bf67a2dd5ab5b842e",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -415,37 +529,37 @@
       "pool_type": "FULL_MOCK",
       "section": "GENERAL_AWARENESS",
       "topic": "Science and Technology",
-      "subtopic": "Physics - circular motion",
+      "subtopic": "Physics - scalars and vectors",
       "stem": {
-        "text": "The inward force that keeps a body moving in a circle is:"
+        "text": "Which of the following is NOT a vector quantity?"
       },
       "options": [
         {
           "key": "A",
-          "text": "Centripetal force"
+          "text": "Displacement"
         },
         {
           "key": "B",
-          "text": "Centrifugal force"
+          "text": "Momentum"
         },
         {
           "key": "C",
-          "text": "Friction"
+          "text": "Impulse"
         },
         {
           "key": "D",
-          "text": "Gravity"
+          "text": "Work"
         }
       ],
-      "correct_option": "A",
+      "correct_option": "D",
       "explanation": {
-        "text": "Centripetal force acts towards the centre of the circular path; centrifugal force is an apparent force in the rotating frame."
+        "text": "Work is the dot product of force and displacement, so it has magnitude only. The other three have direction."
       },
-      "difficulty": "EASY",
+      "difficulty": "MODERATE",
       "source_kind": "ORIGINAL",
-      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q42",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-H01)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "da5b78fc9aa5c55ffc722005bcecba453278b7e7a90736b72599a116e44eb9e3",
+      "fingerprint_sha256": "2518aee3b3c779749d7b95eb08873ffb45ec1c89a73aabdd75a5e024da3ce608",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -456,37 +570,37 @@
       "pool_type": "FULL_MOCK",
       "section": "GENERAL_AWARENESS",
       "topic": "Science and Technology",
-      "subtopic": "Chemistry - acids and bases",
+      "subtopic": "Biology - vitamins",
       "stem": {
-        "text": "The pH of pure water at 25 °C is:"
+        "text": "Which of the following vitamins is fat-soluble?"
       },
       "options": [
         {
           "key": "A",
-          "text": "0"
+          "text": "Vitamin C"
         },
         {
           "key": "B",
-          "text": "14"
+          "text": "Vitamin B12"
         },
         {
           "key": "C",
-          "text": "7"
+          "text": "Vitamin K"
         },
         {
           "key": "D",
-          "text": "1"
+          "text": "Vitamin B1"
         }
       ],
       "correct_option": "C",
       "explanation": {
-        "text": "Pure water is neutral; at 25 °C [H+] = 10^-7 mol/L, so pH = 7."
+        "text": "Vitamins A, D, E and K are fat-soluble; vitamin C and the B group are water-soluble."
       },
-      "difficulty": "EASY",
+      "difficulty": "MODERATE",
       "source_kind": "ORIGINAL",
-      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q46",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-H02)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "80a912b027019f320d843cb6d0bc1f423dd27fdf3dfe86a7db84ec80f429a41a",
+      "fingerprint_sha256": "7846440cf7c2bc3e486b026e26b23c0f6d6556ebdb62e2a601e9a3c32ab63a6d",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -494,47 +608,6 @@
     {
       "external_id": "AFCAT-FM01-CAND-V1-012",
       "position": 12,
-      "pool_type": "FULL_MOCK",
-      "section": "GENERAL_AWARENESS",
-      "topic": "Science and Technology",
-      "subtopic": "Biology - blood groups",
-      "stem": {
-        "text": "The universal red-cell donor blood group is:"
-      },
-      "options": [
-        {
-          "key": "A",
-          "text": "AB+"
-        },
-        {
-          "key": "B",
-          "text": "O−"
-        },
-        {
-          "key": "C",
-          "text": "A−"
-        },
-        {
-          "key": "D",
-          "text": "B+"
-        }
-      ],
-      "correct_option": "B",
-      "explanation": {
-        "text": "O-negative red cells carry no A, B or Rh(D) antigens, so they can be given to recipients of any group in emergencies."
-      },
-      "difficulty": "EASY",
-      "source_kind": "ORIGINAL",
-      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q50",
-      "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "36366ef6fd3a9163bfa3214487846fb9922ac334ad2cef09460851ad2d98c581",
-      "content_version": 1,
-      "editorial_status": "DRAFT",
-      "requires_independent_review": true
-    },
-    {
-      "external_id": "AFCAT-FM01-CAND-V1-013",
-      "position": 13,
       "pool_type": "FULL_MOCK",
       "section": "GENERAL_AWARENESS",
       "topic": "Science and Technology",
@@ -568,14 +641,14 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q52",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "18d17a908e876a17be6ebaea9ee63f871e8d2c27b45cb1a6d6c9dee13032d783",
+      "fingerprint_sha256": "a8cd58669d97217045c47356a54191edb0af37467a4d7e05b30e3f6e0bbbb171",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
     },
     {
-      "external_id": "AFCAT-FM01-CAND-V1-014",
-      "position": 14,
+      "external_id": "AFCAT-FM01-CAND-V1-013",
+      "position": 13,
       "pool_type": "FULL_MOCK",
       "section": "GENERAL_AWARENESS",
       "topic": "Environment",
@@ -609,55 +682,14 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q23",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "62a6fd117d08105178688305ef5abf6a6fedae7f3da83609c2f7cb73dd06fd96",
+      "fingerprint_sha256": "e7a1696a2568d5722f16ba07d1bd122125aa109a303f47cf70eef7a1a8b83553",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
     },
     {
-      "external_id": "AFCAT-FM01-CAND-V1-015",
-      "position": 15,
-      "pool_type": "FULL_MOCK",
-      "section": "GENERAL_AWARENESS",
-      "topic": "Environment",
-      "subtopic": "Important days",
-      "stem": {
-        "text": "World Environment Day is observed on:"
-      },
-      "options": [
-        {
-          "key": "A",
-          "text": "22 April"
-        },
-        {
-          "key": "B",
-          "text": "22 March"
-        },
-        {
-          "key": "C",
-          "text": "5 June"
-        },
-        {
-          "key": "D",
-          "text": "16 September"
-        }
-      ],
-      "correct_option": "C",
-      "explanation": {
-        "text": "5 June (UNEP). 22 April is Earth Day, 22 March World Water Day, 16 September World Ozone Day."
-      },
-      "difficulty": "EASY",
-      "source_kind": "ORIGINAL",
-      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q74",
-      "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "b3ba7c768a92ede53a68534db6717e207d876e048eedf02c54eaeff0307749e6",
-      "content_version": 1,
-      "editorial_status": "DRAFT",
-      "requires_independent_review": true
-    },
-    {
-      "external_id": "AFCAT-FM01-CAND-V1-016",
-      "position": 16,
+      "external_id": "AFCAT-FM01-CAND-V1-014",
+      "position": 14,
       "pool_type": "FULL_MOCK",
       "section": "GENERAL_AWARENESS",
       "topic": "Economy",
@@ -691,14 +723,14 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q38",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "0fe34862e6d7646527265db04353c4a9dee57b3228db1f6b25f6fa770a2cb980",
+      "fingerprint_sha256": "f9873611b2acad4b11aa96d7ac9d4400f6e20516c695d78cfdba2d9cc8b3b3f6",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
     },
     {
-      "external_id": "AFCAT-FM01-CAND-V1-017",
-      "position": 17,
+      "external_id": "AFCAT-FM01-CAND-V1-015",
+      "position": 15,
       "pool_type": "FULL_MOCK",
       "section": "GENERAL_AWARENESS",
       "topic": "Economy",
@@ -732,55 +764,55 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q36",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "fefce1f7c0651ea8155a4ec181f86380162a41973394da8889b3048b699d5d7c",
+      "fingerprint_sha256": "77ad0b5f6370fcc3978bb2dd527651563a9c6f0fa391bb66c44ef55ee42b8d2b",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
     },
     {
-      "external_id": "AFCAT-FM01-CAND-V1-018",
-      "position": 18,
+      "external_id": "AFCAT-FM01-CAND-V1-016",
+      "position": 16,
       "pool_type": "FULL_MOCK",
       "section": "GENERAL_AWARENESS",
       "topic": "Sports, Awards and Culture",
-      "subtopic": "National sports awards",
+      "subtopic": "Festivals",
       "stem": {
-        "text": "The Dronacharya Award is conferred on:"
+        "text": "The Hornbill Festival is celebrated in:"
       },
       "options": [
         {
           "key": "A",
-          "text": "Outstanding sportspersons"
+          "text": "Nagaland"
         },
         {
           "key": "B",
-          "text": "Outstanding coaches"
+          "text": "Arunachal Pradesh"
         },
         {
           "key": "C",
-          "text": "Sports journalists"
+          "text": "Mizoram"
         },
         {
           "key": "D",
-          "text": "Umpires"
+          "text": "Meghalaya"
         }
       ],
-      "correct_option": "B",
+      "correct_option": "A",
       "explanation": {
-        "text": "The Dronacharya Award honours coaches whose trainees excel in international events."
+        "text": "Nagaland's Hornbill Festival, held each December near Kohima, showcases the state's Naga tribes."
       },
-      "difficulty": "EASY",
+      "difficulty": "MODERATE",
       "source_kind": "ORIGINAL",
-      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q69",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-H04)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "1798fc283a769996836af3e0b5b35125549944486ed76b5777af51886fe8e799",
+      "fingerprint_sha256": "9be216d352606d984080317600726a29bf8f07262e46328c5b7e7bc38cdc7659",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
     },
     {
-      "external_id": "AFCAT-FM01-CAND-V1-019",
-      "position": 19,
+      "external_id": "AFCAT-FM01-CAND-V1-017",
+      "position": 17,
       "pool_type": "FULL_MOCK",
       "section": "GENERAL_AWARENESS",
       "topic": "Sports, Awards and Culture",
@@ -814,14 +846,14 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q70",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "cc94b158c9242524ba73af2ea74c5149d7f205fe8197e469b2cd3aff6ee3de1d",
+      "fingerprint_sha256": "4e4e1fd91c9b6a5551b206cfd760db6c2a928a2fb47c35adc6833649c1489e7d",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
     },
     {
-      "external_id": "AFCAT-FM01-CAND-V1-020",
-      "position": 20,
+      "external_id": "AFCAT-FM01-CAND-V1-018",
+      "position": 18,
       "pool_type": "FULL_MOCK",
       "section": "GENERAL_AWARENESS",
       "topic": "Sports, Awards and Culture",
@@ -855,14 +887,14 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q71",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "d4086ff0c4fe5317548c8259d8a737ae3b3bc3c48ada430096ae8ff172e163d2",
+      "fingerprint_sha256": "f4856e363805278835e822d96d402de2312b41ab07fa068eb0b96c390644aec0",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
     },
     {
-      "external_id": "AFCAT-FM01-CAND-V1-021",
-      "position": 21,
+      "external_id": "AFCAT-FM01-CAND-V1-019",
+      "position": 19,
       "pool_type": "FULL_MOCK",
       "section": "GENERAL_AWARENESS",
       "topic": "Defence and Aviation",
@@ -896,14 +928,14 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q53",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "c1245dd56be6e761ffc8efdb44df3b3a55490ada5b0a5a41f73a64cda45290cc",
+      "fingerprint_sha256": "e2cbb6f2bea4d61e5634b4ccc958d72499b4bc6253e0137ac06375c5cd46ad52",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
     },
     {
-      "external_id": "AFCAT-FM01-CAND-V1-022",
-      "position": 22,
+      "external_id": "AFCAT-FM01-CAND-V1-020",
+      "position": 20,
       "pool_type": "FULL_MOCK",
       "section": "GENERAL_AWARENESS",
       "topic": "Defence and Aviation",
@@ -937,14 +969,14 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q57",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "5747c4ffff5a4754dba20f1875c8d3cc4f2accb35c083bb1e3a64b7c35c38000",
+      "fingerprint_sha256": "a4ac38479ab65575d39b925cdff9537cf08748454382ef690a3b02f39ec7c663",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
     },
     {
-      "external_id": "AFCAT-FM01-CAND-V1-023",
-      "position": 23,
+      "external_id": "AFCAT-FM01-CAND-V1-021",
+      "position": 21,
       "pool_type": "FULL_MOCK",
       "section": "GENERAL_AWARENESS",
       "topic": "Defence and Aviation",
@@ -978,10 +1010,112 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q58",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "38624338eaa43b03a5e33c6cdc08071d1e91e217dd0b4ca6d69aefe0b5229c18",
+      "fingerprint_sha256": "6d4cfd7eebbe63991b28b954e0651e591a98f6e0451facbe23126bc91c00008b",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-022",
+      "position": 22,
+      "pool_type": "FULL_MOCK",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Current Affairs",
+      "subtopic": "IAF exercises 2026",
+      "stem": {
+        "text": "Exercise Vayu Shakti-2026, witnessed by President Droupadi Murmu in February 2026, was conducted by the IAF at:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Mahajan Field Firing Range, Bikaner"
+        },
+        {
+          "key": "B",
+          "text": "Babina Field Firing Range, Jhansi"
+        },
+        {
+          "key": "C",
+          "text": "Tilpat Range, Faridabad"
+        },
+        {
+          "key": "D",
+          "text": "Pokhran Firing Range, Jaisalmer"
+        }
+      ],
+      "correct_option": "D",
+      "explanation": {
+        "text": "Vayu Shakti-2026 was held on 27 February 2026 at the Pokhran range in Jaisalmer, Rajasthan, with Rafale, Su-30MKI, Tejas and Mirage 2000 fighters taking part."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-CA1)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "5945146c073b2429880ed514b412be8b5ab57ddf95ae11a9edd01496dec840a2",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true,
+      "source_evidence": [
+        {
+          "title": "President of India witnesses the Vayu Shakti-2026 exercise at the Pokhran firing range",
+          "issuer": "President's Secretariat",
+          "url": "https://presidentofindia.nic.in/press_releases/president-india-witnesses-vayu-shakti-2026-exercise-pokhran-firing-range",
+          "accessed": "2026-11-04"
+        }
+      ],
+      "as_of_date": "2026-11-04",
+      "recheck_on": "2027-01-31"
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-023",
+      "position": 23,
+      "pool_type": "FULL_MOCK",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Current Affairs",
+      "subtopic": "IAF exercises 2026",
+      "stem": {
+        "text": "The second edition of the IAF-hosted multinational air exercise Tarang Shakti (September–October 2026) was held at:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Air Force Station Sulur"
+        },
+        {
+          "key": "B",
+          "text": "Air Force Station Jodhpur"
+        },
+        {
+          "key": "C",
+          "text": "Air Force Station Jamnagar"
+        },
+        {
+          "key": "D",
+          "text": "Air Force Station Hindan"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "Tarang Shakti 2026 ran from 26 September to 12 October 2026 at Air Force Station Jodhpur and nearby bases, with eight countries flying and 32 observing."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-CA2)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "b6f9258daec44e5e3c0b9a5aeb7a049e90da28f499d64f11cb8d9c45e2fe1762",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true,
+      "source_evidence": [
+        {
+          "title": "Tarang Shakti-2026 multinational air exercise to begin on 26th September in Jodhpur",
+          "issuer": "News On AIR (Prasar Bharati)",
+          "url": "https://newsonair.gov.in/tarang-shakti-2026-multinational-air-exercise-to-begin-on-26th-september-in-jodhpur/",
+          "accessed": "2026-11-04"
+        }
+      ],
+      "as_of_date": "2026-11-04",
+      "recheck_on": "2027-01-31"
     },
     {
       "external_id": "AFCAT-FM01-CAND-V1-024",
@@ -989,40 +1123,50 @@
       "pool_type": "FULL_MOCK",
       "section": "GENERAL_AWARENESS",
       "topic": "Current Affairs",
-      "subtopic": "Defence exercises",
+      "subtopic": "IAF exercises 2026",
       "stem": {
-        "text": "Tarang Shakti, a multinational air exercise first held in 2024, is organised by the:"
+        "text": "Veer Guardian 2026, held at Air Force Station Jodhpur in September 2026, was a bilateral air exercise between the IAF and the air force of:"
       },
       "options": [
         {
           "key": "A",
-          "text": "Indian Navy"
+          "text": "France"
         },
         {
           "key": "B",
-          "text": "Indian Army"
+          "text": "Egypt"
         },
         {
           "key": "C",
-          "text": "NSG"
+          "text": "Australia"
         },
         {
           "key": "D",
-          "text": "Indian Air Force"
+          "text": "Japan"
         }
       ],
       "correct_option": "D",
       "explanation": {
-        "text": "Tarang Shakti is the IAF's first multinational air exercise hosted in India (2024). Recheck for later editions before release."
+        "text": "Veer Guardian is an India-Japan exercise. In 2026 the Japan Air Self-Defence Force flew F-2A fighters alongside IAF Tejas, Su-30MKI and Rafale aircraft."
       },
       "difficulty": "MODERATE",
       "source_kind": "ORIGINAL",
-      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q66",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-CA3)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "5c4b6728030f911f539761633f91b6cab1122a3f202c479ce46d59f1356c6b2b",
+      "fingerprint_sha256": "ca1a942e202bd4e4f5fc8fa425a89addc9923c0f9ae50c406ffe795145fa0ec6",
       "content_version": 1,
       "editorial_status": "DRAFT",
-      "requires_independent_review": true
+      "requires_independent_review": true,
+      "source_evidence": [
+        {
+          "title": "India, Japan conduct air exercise Veer Guardian 2026 at Air Force Station Jodhpur",
+          "issuer": "News On AIR (Prasar Bharati)",
+          "url": "https://newsonair.gov.in/india-japan-conduct-air-exercise-veer-guardian-2026-at-air-force-station-jodhpur/",
+          "accessed": "2026-11-04"
+        }
+      ],
+      "as_of_date": "2026-11-04",
+      "recheck_on": "2027-01-31"
     },
     {
       "external_id": "AFCAT-FM01-CAND-V1-025",
@@ -1030,40 +1174,50 @@
       "pool_type": "FULL_MOCK",
       "section": "GENERAL_AWARENESS",
       "topic": "Current Affairs",
-      "subtopic": "Naval capability",
+      "subtopic": "IAF exercises 2026",
       "stem": {
-        "text": "India's first indigenously built aircraft carrier, commissioned in 2022, is:"
+        "text": "Exercise Pitch Black 2026, in which IAF Rafale fighters took part in July–August 2026, is hosted by the:"
       },
       "options": [
         {
           "key": "A",
-          "text": "INS Viraat"
+          "text": "Royal Australian Air Force"
         },
         {
           "key": "B",
-          "text": "INS Vikramaditya"
+          "text": "United States Air Force"
         },
         {
           "key": "C",
-          "text": "INS Vikrant"
+          "text": "Royal Air Force (UK)"
         },
         {
           "key": "D",
-          "text": "INS Vishal"
+          "text": "Royal Malaysian Air Force"
         }
       ],
-      "correct_option": "C",
+      "correct_option": "A",
       "explanation": {
-        "text": "INS Vikrant (IAC-1), built by Cochin Shipyard, was commissioned in September 2022."
+        "text": "Pitch Black is hosted by the Royal Australian Air Force from RAAF Base Darwin; the 2026 edition ran from 20 July to 7 August."
       },
-      "difficulty": "EASY",
+      "difficulty": "MODERATE",
       "source_kind": "ORIGINAL",
-      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q62",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-CA4)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "b63dd7822fb74ba7d224b3d09dc2a45ddf20676cf31871f825b8fc7a22437c02",
+      "fingerprint_sha256": "f0720d9e2971b55010f7a34cf0c7fbfc7eda9ad80f7219df5bde6023d71ba953",
       "content_version": 1,
       "editorial_status": "DRAFT",
-      "requires_independent_review": true
+      "requires_independent_review": true,
+      "source_evidence": [
+        {
+          "title": "Indian Air Force: Ex Pitch Black 2026 at Darwin, Australia (summary of PIB release)",
+          "issuer": "SuperKalam current affairs, citing PIB; replace with the PIB release before approval",
+          "url": "https://superkalam.com/current-affairs/20-07-2026/indian-air-force-ex-pitch-black-2026-at-darwin-australia-1b1b9689-5a40-4a6b-b021-4418d2564fed",
+          "accessed": "2026-11-04"
+        }
+      ],
+      "as_of_date": "2026-11-04",
+      "recheck_on": "2027-01-31"
     },
     {
       "external_id": "AFCAT-FM01-CAND-V1-026",
@@ -1103,7 +1257,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q81",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "a19466e7f4f9c8d6a80bc29ec8d3ee46c3878f31e90d1fe9f814a401260dcc5d",
+      "fingerprint_sha256": "ce1ceccd3435182d0735896945500d1e8f1aac93f18371ea91d21d825cf7e344",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -1146,7 +1300,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q82",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "e03df139704e621302e74253cec0e482edc6f87cdd0978bacea22e6ee388f336",
+      "fingerprint_sha256": "9a169ad7f54200cd75a7be51004ce8779dd0a76916884ab0c1177a2bbb2ef5b6",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -1189,7 +1343,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q83",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "1de8b11f14b19b10c6830a60f1dfeb8e10d20708f6d6d73aa480e10056b2d00b",
+      "fingerprint_sha256": "7078c20e8760eaf0b1313e9f09a9f3ab639851a546241b5bb61ca8101586f42b",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -1232,7 +1386,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q84",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "2dd623baa79343f028ebf9b9f866a3bc390f0730ec32f9b637ae5a5a78ff7758",
+      "fingerprint_sha256": "3f5c713ca7bb3946676d7adafa3c1402ae2ed3445501247f821f397a3eee2e55",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -1275,7 +1429,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q85",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "484cb9e4455dc9b19e5eac4c22b2b639694a2e41c3fb04f96dc49259b1a2cdb6",
+      "fingerprint_sha256": "034d2672870ff99198c37620b8737ea3c7a7a20a706c77783998647d8e039716",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -1283,6 +1437,178 @@
     {
       "external_id": "AFCAT-FM01-CAND-V1-031",
       "position": 31,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Cloze Test",
+      "subtopic": "Collocation",
+      "stem": {
+        "text": "In the passage, choose the word that best fills blank (1).",
+        "passage_id": "FM01-CLOZE1",
+        "passage": "Every pilot learns early that the sky is (1) ______ to carelessness. A small error that would pass (2) ______ on the ground can, at altitude, turn into an emergency within seconds. That is why flight training places such (3) ______ on checklists, which leave nothing to memory alone. Over time these routines become second nature, so that when the unexpected happens, the pilot can respond (4) ______ rather than react in panic."
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "indifferent"
+        },
+        {
+          "key": "B",
+          "text": "accustomed"
+        },
+        {
+          "key": "C",
+          "text": "hostile"
+        },
+        {
+          "key": "D",
+          "text": "friendly"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "'Hostile to carelessness' fits the warning tone: the sky punishes careless flying. The other words reverse or blur the meaning."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-C1)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "3bed68695a81d28a384e387064edeafdfeee860e6c5ba6e7bcf08640c3f193a2",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-032",
+      "position": 32,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Cloze Test",
+      "subtopic": "Vocabulary",
+      "stem": {
+        "text": "In the passage, choose the word that best fills blank (2).",
+        "passage_id": "FM01-CLOZE1",
+        "passage": "Every pilot learns early that the sky is (1) ______ to carelessness. A small error that would pass (2) ______ on the ground can, at altitude, turn into an emergency within seconds. That is why flight training places such (3) ______ on checklists, which leave nothing to memory alone. Over time these routines become second nature, so that when the unexpected happens, the pilot can respond (4) ______ rather than react in panic."
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "unhurt"
+        },
+        {
+          "key": "B",
+          "text": "unpaid"
+        },
+        {
+          "key": "C",
+          "text": "unarmed"
+        },
+        {
+          "key": "D",
+          "text": "unnoticed"
+        }
+      ],
+      "correct_option": "D",
+      "explanation": {
+        "text": "The contrast is with altitude, where the same error becomes an emergency; on the ground it would 'pass unnoticed'."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-C2)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "20df10a115fa46ee859ed2f572a502f85b567f8815ebd7a4962e224c07221497",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-033",
+      "position": 33,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Cloze Test",
+      "subtopic": "Collocation",
+      "stem": {
+        "text": "In the passage, choose the word that best fills blank (3).",
+        "passage_id": "FM01-CLOZE1",
+        "passage": "Every pilot learns early that the sky is (1) ______ to carelessness. A small error that would pass (2) ______ on the ground can, at altitude, turn into an emergency within seconds. That is why flight training places such (3) ______ on checklists, which leave nothing to memory alone. Over time these routines become second nature, so that when the unexpected happens, the pilot can respond (4) ______ rather than react in panic."
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "emphasis"
+        },
+        {
+          "key": "B",
+          "text": "burden"
+        },
+        {
+          "key": "C",
+          "text": "doubt"
+        },
+        {
+          "key": "D",
+          "text": "suspicion"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "'Places such emphasis on' means treats as very important, which explains why checklists matter."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-C3)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "09017d5699b03f413a17357435c7f00d7a50e58494187571d327740584fa4fcf",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-034",
+      "position": 34,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Cloze Test",
+      "subtopic": "Vocabulary",
+      "stem": {
+        "text": "In the passage, choose the word that best fills blank (4).",
+        "passage_id": "FM01-CLOZE1",
+        "passage": "Every pilot learns early that the sky is (1) ______ to carelessness. A small error that would pass (2) ______ on the ground can, at altitude, turn into an emergency within seconds. That is why flight training places such (3) ______ on checklists, which leave nothing to memory alone. Over time these routines become second nature, so that when the unexpected happens, the pilot can respond (4) ______ rather than react in panic."
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "carelessly"
+        },
+        {
+          "key": "B",
+          "text": "reluctantly"
+        },
+        {
+          "key": "C",
+          "text": "deliberately"
+        },
+        {
+          "key": "D",
+          "text": "rarely"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "'Respond deliberately rather than react in panic' sets up the intended contrast between considered action and panic."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-C4)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "f9da567584561959c809ab5015895570a1af05c4276a7e8f81637eacd0b93332",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-035",
+      "position": 35,
       "pool_type": "FULL_MOCK",
       "section": "ENGLISH",
       "topic": "Error Detection",
@@ -1316,14 +1642,14 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q50",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "57ca56d2b22d0d4d4c119e6c14d123c04cc3af42c7801795d5de1cb933c3d6c9",
+      "fingerprint_sha256": "ee502a65bf22a5db6f23edeefb6abc8d3a04d7265e6d6a717800a977f10762d7",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
     },
     {
-      "external_id": "AFCAT-FM01-CAND-V1-032",
-      "position": 32,
+      "external_id": "AFCAT-FM01-CAND-V1-036",
+      "position": 36,
       "pool_type": "FULL_MOCK",
       "section": "ENGLISH",
       "topic": "Error Detection",
@@ -1357,14 +1683,14 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q53",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "540a1457852ac5f2392997b7a0ae910880c1ca3cb82b5d8bfb0c02457b3b9f0f",
+      "fingerprint_sha256": "fef45547bd53ac002237805e0cf095d032da22b312512c275f87f7ebdff6566b",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
     },
     {
-      "external_id": "AFCAT-FM01-CAND-V1-033",
-      "position": 33,
+      "external_id": "AFCAT-FM01-CAND-V1-037",
+      "position": 37,
       "pool_type": "FULL_MOCK",
       "section": "ENGLISH",
       "topic": "Error Detection",
@@ -1398,14 +1724,14 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q56",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "66085448d3e3d55387846ff777b7059f21ab2db76bfea01ce72580eccd0b7b7a",
+      "fingerprint_sha256": "e0705a04a9d10f4456068015271e6d20fbb56b35d63ef7156054c6d60a099323",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
     },
     {
-      "external_id": "AFCAT-FM01-CAND-V1-034",
-      "position": 34,
+      "external_id": "AFCAT-FM01-CAND-V1-038",
+      "position": 38,
       "pool_type": "FULL_MOCK",
       "section": "ENGLISH",
       "topic": "Error Detection",
@@ -1439,14 +1765,14 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q57",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "68198e4018d174b982b43a1efcd21fac72cc31fb8c37ab23ac31d29691455440",
+      "fingerprint_sha256": "988187a2a80a6f6a2fa6e545579545f9010dd58429201282b6b487e958c6d0b7",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
     },
     {
-      "external_id": "AFCAT-FM01-CAND-V1-035",
-      "position": 35,
+      "external_id": "AFCAT-FM01-CAND-V1-039",
+      "position": 39,
       "pool_type": "FULL_MOCK",
       "section": "ENGLISH",
       "topic": "Error Detection",
@@ -1480,29 +1806,29 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q58",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "6a11c0bf4a3fb5116e55c6ddf5d21286cd83a83db8ea3a0fb4568a52f63b9808",
+      "fingerprint_sha256": "b18125c51b3dec488bd641e3b26ea6d034c40dbd51ff4e13ea47403555c84476",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
     },
     {
-      "external_id": "AFCAT-FM01-CAND-V1-036",
-      "position": 36,
+      "external_id": "AFCAT-FM01-CAND-V1-040",
+      "position": 40,
       "pool_type": "FULL_MOCK",
       "section": "ENGLISH",
       "topic": "Sentence Completion",
       "subtopic": "Prepositions",
       "stem": {
-        "text": "He was accused ____ stealing the money."
+        "text": "Despite repeated warnings, the cadet persisted ____ his careless habits."
       },
       "options": [
         {
           "key": "A",
-          "text": "for"
+          "text": "in"
         },
         {
           "key": "B",
-          "text": "of"
+          "text": "on"
         },
         {
           "key": "C",
@@ -1510,25 +1836,25 @@
         },
         {
           "key": "D",
-          "text": "on"
+          "text": "at"
         }
       ],
-      "correct_option": "B",
+      "correct_option": "A",
       "explanation": {
-        "text": "The fixed preposition is 'accused of'."
+        "text": "'Persist' takes 'in' (persist in a habit) or 'with' (persist with an effort). With 'habits', 'persisted in' is the standard choice."
       },
-      "difficulty": "EASY",
+      "difficulty": "MODERATE",
       "source_kind": "ORIGINAL",
-      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q61",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-H05)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "c628f298b92a01b2123e933e8165481f8f82d1c2ce29020034a88d9e11c0e281",
+      "fingerprint_sha256": "26574309f2383f592824b9177e940fcf2743dee2178ccaec878b38460c654ebb",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
     },
     {
-      "external_id": "AFCAT-FM01-CAND-V1-037",
-      "position": 37,
+      "external_id": "AFCAT-FM01-CAND-V1-041",
+      "position": 41,
       "pool_type": "FULL_MOCK",
       "section": "ENGLISH",
       "topic": "Sentence Completion",
@@ -1562,55 +1888,14 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q65",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "e059ba0c5d5558b7377e687027c0f291f4a87e09f0554b95bf39debe1de1ae38",
+      "fingerprint_sha256": "b1dbd4a5f5bfd4f30c2256d59d0d30923ec2e66882d1786d9b66e62d7f6a89ed",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
     },
     {
-      "external_id": "AFCAT-FM01-CAND-V1-038",
-      "position": 38,
-      "pool_type": "FULL_MOCK",
-      "section": "ENGLISH",
-      "topic": "Sentence Completion",
-      "subtopic": "Vocabulary",
-      "stem": {
-        "text": "The twins are so alike that it is hard to ____ one from the other."
-      },
-      "options": [
-        {
-          "key": "A",
-          "text": "distinguish"
-        },
-        {
-          "key": "B",
-          "text": "extinguish"
-        },
-        {
-          "key": "C",
-          "text": "disguise"
-        },
-        {
-          "key": "D",
-          "text": "discourage"
-        }
-      ],
-      "correct_option": "A",
-      "explanation": {
-        "text": "'Distinguish one from the other' means to tell them apart."
-      },
-      "difficulty": "EASY",
-      "source_kind": "ORIGINAL",
-      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q66",
-      "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "e4df9861a058f6501e9eb2f6aa773b5ead6c949d62d014a853bdef10289be3cb",
-      "content_version": 1,
-      "editorial_status": "DRAFT",
-      "requires_independent_review": true
-    },
-    {
-      "external_id": "AFCAT-FM01-CAND-V1-039",
-      "position": 39,
+      "external_id": "AFCAT-FM01-CAND-V1-042",
+      "position": 42,
       "pool_type": "FULL_MOCK",
       "section": "ENGLISH",
       "topic": "Sentence Completion",
@@ -1644,14 +1929,14 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q68",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "0f0e770bd6fb14ae39cb525f12031bd2aa8a0b6f228690a03dca90b14eee2529",
+      "fingerprint_sha256": "f113e46c4b87621f46ea8c45f5c6f96bada0a9cae37b871e8b9748681b425d2c",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
     },
     {
-      "external_id": "AFCAT-FM01-CAND-V1-040",
-      "position": 40,
+      "external_id": "AFCAT-FM01-CAND-V1-043",
+      "position": 43,
       "pool_type": "FULL_MOCK",
       "section": "ENGLISH",
       "topic": "Sentence Improvement",
@@ -1685,14 +1970,14 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q72",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "095a67ad7a2c986a01138d4361506c59f6712dd2f161e9cc23e12e451511d3f9",
+      "fingerprint_sha256": "a32ed23d5941441c2ef429c6e22469b9e496fc8fe94e9004cef167f13e2e0300",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
     },
     {
-      "external_id": "AFCAT-FM01-CAND-V1-041",
-      "position": 41,
+      "external_id": "AFCAT-FM01-CAND-V1-044",
+      "position": 44,
       "pool_type": "FULL_MOCK",
       "section": "ENGLISH",
       "topic": "Sentence Improvement",
@@ -1726,14 +2011,14 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q74",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "bde2c8c68f1cbe227161fbfe8688e3b2a59cf110f6bb91bd77f0d16e1e78be10",
+      "fingerprint_sha256": "93069994e02c6d6a2249187c4b557e3f7f1d43a729df4ea1529bd0d57c2e775b",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
     },
     {
-      "external_id": "AFCAT-FM01-CAND-V1-042",
-      "position": 42,
+      "external_id": "AFCAT-FM01-CAND-V1-045",
+      "position": 45,
       "pool_type": "FULL_MOCK",
       "section": "ENGLISH",
       "topic": "Synonyms",
@@ -1767,14 +2052,14 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q1",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "526d5ebf88826295eac778b0d17c398ebecf0efb06f61ae7c6420e0814f797be",
+      "fingerprint_sha256": "34f5ce714b9a946dba9b71b825d3e2ed0309874e27fc1f4aae6119139216f8d9",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
     },
     {
-      "external_id": "AFCAT-FM01-CAND-V1-043",
-      "position": 43,
+      "external_id": "AFCAT-FM01-CAND-V1-046",
+      "position": 46,
       "pool_type": "FULL_MOCK",
       "section": "ENGLISH",
       "topic": "Synonyms",
@@ -1808,55 +2093,14 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q3",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "ccad2a90a3c9b4f4915c1288fdb229b7faf88172ab48e48c526a7c7bf9967058",
+      "fingerprint_sha256": "1e899b2608c6ea073673a8c79cae5ab4c3a61a2f1389471e66e7b27b80016549",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
     },
     {
-      "external_id": "AFCAT-FM01-CAND-V1-044",
-      "position": 44,
-      "pool_type": "FULL_MOCK",
-      "section": "ENGLISH",
-      "topic": "Synonyms",
-      "subtopic": "Vocabulary",
-      "stem": {
-        "text": "Choose the word closest in meaning to PRAGMATIC:"
-      },
-      "options": [
-        {
-          "key": "A",
-          "text": "Idealistic"
-        },
-        {
-          "key": "B",
-          "text": "Practical"
-        },
-        {
-          "key": "C",
-          "text": "Dreamy"
-        },
-        {
-          "key": "D",
-          "text": "Rigid"
-        }
-      ],
-      "correct_option": "B",
-      "explanation": {
-        "text": "Pragmatic means dealing with things sensibly and practically."
-      },
-      "difficulty": "EASY",
-      "source_kind": "ORIGINAL",
-      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q9",
-      "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "c7ddd76e0fd2334ba62c44a000db6c87b039a18b33f6ee6bbc70d5a1107a0e3f",
-      "content_version": 1,
-      "editorial_status": "DRAFT",
-      "requires_independent_review": true
-    },
-    {
-      "external_id": "AFCAT-FM01-CAND-V1-045",
-      "position": 45,
+      "external_id": "AFCAT-FM01-CAND-V1-047",
+      "position": 47,
       "pool_type": "FULL_MOCK",
       "section": "ENGLISH",
       "topic": "Synonyms",
@@ -1890,89 +2134,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q12",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "c0ea9a34ccddaaf466dd8023ba1d1c4f9dbb105608aa7573099010fb0bd09dec",
-      "content_version": 1,
-      "editorial_status": "DRAFT",
-      "requires_independent_review": true
-    },
-    {
-      "external_id": "AFCAT-FM01-CAND-V1-046",
-      "position": 46,
-      "pool_type": "FULL_MOCK",
-      "section": "ENGLISH",
-      "topic": "Antonyms",
-      "subtopic": "Vocabulary",
-      "stem": {
-        "text": "Choose the word most nearly OPPOSITE in meaning to INTRINSIC:"
-      },
-      "options": [
-        {
-          "key": "A",
-          "text": "Innate"
-        },
-        {
-          "key": "B",
-          "text": "Essential"
-        },
-        {
-          "key": "C",
-          "text": "Extrinsic"
-        },
-        {
-          "key": "D",
-          "text": "Basic"
-        }
-      ],
-      "correct_option": "C",
-      "explanation": {
-        "text": "Intrinsic means belonging naturally; extrinsic means coming from outside."
-      },
-      "difficulty": "EASY",
-      "source_kind": "ORIGINAL",
-      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q13",
-      "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "4315e67dd6327252e2e7239ec6d573ffdc11a805a0574798a8084726197cbaa9",
-      "content_version": 1,
-      "editorial_status": "DRAFT",
-      "requires_independent_review": true
-    },
-    {
-      "external_id": "AFCAT-FM01-CAND-V1-047",
-      "position": 47,
-      "pool_type": "FULL_MOCK",
-      "section": "ENGLISH",
-      "topic": "Antonyms",
-      "subtopic": "Vocabulary",
-      "stem": {
-        "text": "Choose the word most nearly OPPOSITE in meaning to FRUGAL:"
-      },
-      "options": [
-        {
-          "key": "A",
-          "text": "Thrifty"
-        },
-        {
-          "key": "B",
-          "text": "Economical"
-        },
-        {
-          "key": "C",
-          "text": "Extravagant"
-        },
-        {
-          "key": "D",
-          "text": "Careful"
-        }
-      ],
-      "correct_option": "C",
-      "explanation": {
-        "text": "Frugal means sparing with money; extravagant means spending excessively."
-      },
-      "difficulty": "EASY",
-      "source_kind": "ORIGINAL",
-      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q15",
-      "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "ece1bb983dcfcf33318dbb4ebd3cfdda465ff32cffd59ffe09c5303f794b27f6",
+      "fingerprint_sha256": "c6d95aba6e8237bc77749778cbb37b94d1affbea5dd633e2b8b866e44193cf83",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -1985,35 +2147,35 @@
       "topic": "Antonyms",
       "subtopic": "Vocabulary",
       "stem": {
-        "text": "Choose the word most nearly OPPOSITE in meaning to VAGUE:"
+        "text": "Choose the word most nearly OPPOSITE in meaning to OBDURATE:"
       },
       "options": [
         {
           "key": "A",
-          "text": "Hazy"
+          "text": "Stubborn"
         },
         {
           "key": "B",
-          "text": "Precise"
+          "text": "Yielding"
         },
         {
           "key": "C",
-          "text": "Obscure"
+          "text": "Callous"
         },
         {
           "key": "D",
-          "text": "Dim"
+          "text": "Unrelenting"
         }
       ],
       "correct_option": "B",
       "explanation": {
-        "text": "Vague means unclear; precise is its opposite."
+        "text": "Obdurate means stubbornly refusing to change; yielding is its opposite. The other three are close to its meaning."
       },
-      "difficulty": "EASY",
+      "difficulty": "HARD",
       "source_kind": "ORIGINAL",
-      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q24",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-H07)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "3916c5c346675f8ae79b716b50f2c549943ef64e856efb1ab367acccf64d030b",
+      "fingerprint_sha256": "3865ed2a251d7486bb00df7c28d1e79a43f49ebce8f4a5b53cb77549c363b166",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -2054,7 +2216,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q37",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "9375ca9242cb482681208bd512d1a6f42d17bf7fa302ee6ddc344d62a90272ae",
+      "fingerprint_sha256": "7965ca827e7ca0c76185ed74efa3671ce58bde155afc35b1f771eaee45833ab2",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -2067,35 +2229,35 @@
       "topic": "Idioms and Phrases",
       "subtopic": "Meaning",
       "stem": {
-        "text": "Choose the meaning of the idiom: To bite the bullet"
+        "text": "Choose the meaning of the idiom: To be on tenterhooks"
       },
       "options": [
         {
           "key": "A",
-          "text": "To face a painful situation bravely"
+          "text": "To be in great danger"
         },
         {
           "key": "B",
-          "text": "To avoid trouble"
+          "text": "To be deeply in debt"
         },
         {
           "key": "C",
-          "text": "To eat quickly"
+          "text": "To be in a state of anxious suspense"
         },
         {
           "key": "D",
-          "text": "To shoot wildly"
+          "text": "To be under strict discipline"
         }
       ],
-      "correct_option": "A",
+      "correct_option": "C",
       "explanation": {
-        "text": "To bite the bullet is to accept something unpleasant with courage."
+        "text": "Tenterhooks held cloth stretched on a frame; to be 'on tenterhooks' is to be tense while waiting for news."
       },
-      "difficulty": "EASY",
+      "difficulty": "HARD",
       "source_kind": "ORIGINAL",
-      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q40",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-H06)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "aac0f860dd4690cb03e4827d3a8776d6eae105483db0ad5f0b061e9b21a5266b",
+      "fingerprint_sha256": "1c55981588220d858c9c1fdda9da4bcc0cf8ba31df34cda38a232c5a2ed6701f",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -2136,7 +2298,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q43",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "b0c39334577cc9b7a55a91f89bb3525c893297eb3fa21d9fb624e7f5777f70c7",
+      "fingerprint_sha256": "42f03b1e41a4bd445afb66c5c329151ca99fc689d57aca736844cf5bd626ff9d",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -2177,7 +2339,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q27",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "c7993bc802ae70d19e0e0411e330d0df94fa6e96d2610f105af45b2c903e2f3a",
+      "fingerprint_sha256": "7659480a8247b615e51c9fae43833c4c3b5be1f1534c3d5d56515292e920ad54",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -2218,7 +2380,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q29",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "c32b64b37817ef8a05232ed6b27229930621a2ae90c4a2ad40e120d90acf9e18",
+      "fingerprint_sha256": "d330b79f0b7c3dc96de047f1f04596ac576164d8300f52dc1c73be34cb84fe6a",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -2259,7 +2421,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q77",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "e840527639c9dd939198986cc611b598b05b2dc3a96786450d08138cde2854da",
+      "fingerprint_sha256": "0200f4b4ffd702cbcc73ed038d578964a62a9c83ee33e89d6c5a169704a4ca03",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -2300,7 +2462,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q78",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "056f34d1ecee6198343ef142498dba24c301f0dd4fa45fafee887c24180a3038",
+      "fingerprint_sha256": "1d617eeb8de47e8bb792a7d52c14c601b94f6d1176427cd2a79a9f873d175f4b",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -2341,7 +2503,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q8",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "ca0be8c85fdf0cea7dba2391ce1804e83cccdfba82b00a3c3a3353993af5c8e3",
+      "fingerprint_sha256": "4a5c24ae94463bcd3e0534349013512519b4ab54738b73648477bc0e29868663",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -2382,7 +2544,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q11",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "c5911eb48bdb7347bc0eb2cdfae36e7966d964e21f01d6902ba313ff1cc8bd69",
+      "fingerprint_sha256": "d3b3b49349c14f4c798b15966deb571d29d428dee62dc1a4987e37f9b059da36",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -2423,7 +2585,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q14",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "7782f2a9bde1b42ebb85b4ca33898bf81a9e3e5b359d450a17720ed86a912268",
+      "fingerprint_sha256": "8448b9d6f3bcd96d7e3e9f69091c988906b5ac622013d09a5dbf9d6be5b91170",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -2464,7 +2626,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q20",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "90147cf43b055a4a71c568692f494be8959e0202859f829eb3eeca79783b630c",
+      "fingerprint_sha256": "3ba542dbe012a5159cba021a51efac4eaa31e5c642f05f3b71212ac755794000",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -2505,7 +2667,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q23",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "37e72b65ecbc9fcbd7ee7f31da9fd8a39e24cd82487beca30a986a294ff37e8a",
+      "fingerprint_sha256": "3b64d103ba77fa15242a67a5ca49a44a3bb6eeeec7c14aa434283d51f7d2290f",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -2546,7 +2708,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q27",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "9f06c6ebd1962a37694ea90d60fd6e67e44dc89daca002e644441d03b0e82589",
+      "fingerprint_sha256": "7672c588a5c8e2781464eec0557389f9bad165d295c0a8f181e899318201b4cb",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -2587,7 +2749,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q28",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "9ee436a7ad8fb79fc944752291935eddb287bf14b70c1bedecb706732d2a223d",
+      "fingerprint_sha256": "08067e7ed7e91f7e100d21fe343d1b1d42de3f0183540c5b672b52af0b846f2e",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -2628,7 +2790,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q29",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "27add93c626f6f912a5ab1c014441565d200b2727f8fc3f68c3dfb074adf4a42",
+      "fingerprint_sha256": "cb38da3d99b7d74c6c1753adff38c0051abb2551e58cf95cc03deaff5da7865b",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -2669,7 +2831,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q10",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "cc010fa809e5cde260fb74072544691d770bd7e05d2d371e4d599663fde6ce08",
+      "fingerprint_sha256": "14aa763d6b0798df2625886bd21961cc675da9fee468ac0e09c710a61367cbe4",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -2710,7 +2872,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q33",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "413074c922460c8bd89668b7924a14a1a80b6c6b47bbab5bea3c238412cc7051",
+      "fingerprint_sha256": "beb7278b0eb7e8b9f70e9fbca4798050f364cb53364cbae10ac2276edb48f055",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -2721,37 +2883,37 @@
       "pool_type": "FULL_MOCK",
       "section": "NUMERICAL_ABILITY",
       "topic": "Profit, Loss and Interest",
-      "subtopic": "Simple interest",
+      "subtopic": "CI minus SI",
       "stem": {
-        "text": "A sum doubles in 5 years at simple interest. The rate per annum is:"
+        "text": "The difference between compound interest and simple interest on a sum for 2 years at 10% per annum is ₹50. The sum is:"
       },
       "options": [
         {
           "key": "A",
-          "text": "10%"
+          "text": "₹4,000"
         },
         {
           "key": "B",
-          "text": "15%"
+          "text": "₹5,000"
         },
         {
           "key": "C",
-          "text": "25%"
+          "text": "₹5,500"
         },
         {
           "key": "D",
-          "text": "20%"
+          "text": "₹6,000"
         }
       ],
-      "correct_option": "D",
+      "correct_option": "B",
       "explanation": {
-        "text": "Interest equal to the principal in 5 years means 100% ÷ 5 = 20% a year."
+        "text": "For 2 years, CI − SI = P × (r/100)² = P × 0.01 = 50, so P = ₹5,000."
       },
-      "difficulty": "EASY",
+      "difficulty": "HARD",
       "source_kind": "ORIGINAL",
-      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q34",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-H10)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "288641be67ceb7e063ddd149483a1d04a7d1c9d20fd5207a52fb7f14a3a246b3",
+      "fingerprint_sha256": "ea29477994f7aee660f99f3c692fcc7bc5d615e21f785b00da43086954e2190b",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -2792,7 +2954,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q4",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "0eddf5882a388c509092268c1f432fa475ee2d6665479818d5084a57893d752b",
+      "fingerprint_sha256": "778470a0b6a4332b9a9e3581c24924bf190e06c25716fe31f392f53adde90ffd",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -2833,7 +2995,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q59",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "7b66c7366df56b4b1690f4d6685ce47886326802159eccc2d301e49299f7bc68",
+      "fingerprint_sha256": "d20b237c54fb70ca7175ac9b4d578d654a14ae20a808a57588482bac17cea06c",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -2874,7 +3036,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q16",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "b0233f5f036940fa9e4986764119ef2be1183ea2a469d666c122421830d980bf",
+      "fingerprint_sha256": "4ecc4bac1a99a13d06a9e7df72edda82ec91159af6a9aecf4c2d7d661314fa45",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -2915,7 +3077,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q18",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "f0ebf2816742b4ed2fe2b46dc3d2f0292d5576c41bfa1d44da9f71007a5c15fb",
+      "fingerprint_sha256": "90e26a9c7fb58c0fc2bf36d3600d9edf8c91631e4b5220abfd373b6052056233",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -2956,7 +3118,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q42",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "e072b8818f4f8e6021ddedb1366581f7c59ac7920e2e83711e8fe15f17c5a437",
+      "fingerprint_sha256": "f60282f67f3f51ad976c17d0a6f17bda3f9f726ac219d63dba36bd175257c0d7",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -2967,37 +3129,37 @@
       "pool_type": "FULL_MOCK",
       "section": "NUMERICAL_ABILITY",
       "topic": "Mensuration",
-      "subtopic": "Cone",
+      "subtopic": "Sphere - percentage change",
       "stem": {
-        "text": "The slant height of a cone with radius 3 cm and height 4 cm is:"
+        "text": "The radius of a sphere is increased by 10%. By what percentage does its volume increase?"
       },
       "options": [
         {
           "key": "A",
-          "text": "5 cm"
+          "text": "30%"
         },
         {
           "key": "B",
-          "text": "7 cm"
+          "text": "21%"
         },
         {
           "key": "C",
-          "text": "6 cm"
+          "text": "10%"
         },
         {
           "key": "D",
-          "text": "4.5 cm"
+          "text": "33.1%"
         }
       ],
-      "correct_option": "A",
+      "correct_option": "D",
       "explanation": {
-        "text": "√(3² + 4²) = 5 cm."
+        "text": "Volume scales with r³: 1.1³ = 1.331, an increase of 33.1%."
       },
-      "difficulty": "EASY",
+      "difficulty": "MODERATE",
       "source_kind": "ORIGINAL",
-      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q45",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-H08)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "3fb7fcba42e920b6c4335ba299306c010c7e8990776bc9e0896ab2f749213cd8",
+      "fingerprint_sha256": "447f90bdfbadcb4f5f26f66fd63d451409f67f7599157f8f125086af1fb023f1",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -3038,7 +3200,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q53",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "2b0f18f282f2bf4c9b81b7fa2d14896ab19745313b3ead042fccc4dd3a34b7ca",
+      "fingerprint_sha256": "e5e17db7d2fb4951e6ecf12812768dd93e24bbb20ba2a3c8d3b17e8e9ed433a9",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -3049,37 +3211,37 @@
       "pool_type": "FULL_MOCK",
       "section": "NUMERICAL_ABILITY",
       "topic": "Probability and Statistics",
-      "subtopic": "Coins",
+      "subtopic": "Dice",
       "stem": {
-        "text": "Two fair coins are tossed. The probability of at least one head is:"
+        "text": "Two fair dice are thrown together. The probability that the sum is 8 is:"
       },
       "options": [
         {
           "key": "A",
-          "text": "1/4"
+          "text": "5/36"
         },
         {
           "key": "B",
-          "text": "1/2"
+          "text": "1/6"
         },
         {
           "key": "C",
-          "text": "3/4"
+          "text": "1/9"
         },
         {
           "key": "D",
-          "text": "1"
+          "text": "7/36"
         }
       ],
-      "correct_option": "C",
+      "correct_option": "A",
       "explanation": {
-        "text": "1 − P(no head) = 1 − 1/4 = 3/4."
+        "text": "Favourable outcomes (2,6), (3,5), (4,4), (5,3), (6,2): 5 of 36."
       },
-      "difficulty": "EASY",
+      "difficulty": "MODERATE",
       "source_kind": "ORIGINAL",
-      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q55",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-H09)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "71c43fec88fe2ed93b3f49d7dfee0419443d22f5101920aa38af90190c294eba",
+      "fingerprint_sha256": "43b8ee9c5e8b7c0cec24432aa1d53f709f452928ac5032e0828ffc6bb6be2580",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -3120,7 +3282,7 @@
       "source_kind": "ORIGINAL",
       "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q19",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "c7f2af35252d894e0b451a43397cd948c43e670eb2de4e779fcf64938f73daff",
+      "fingerprint_sha256": "2925c42c722e0200505265cfe61419741318fb3d04aa780164aa5fce5f0f8490",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -3130,38 +3292,50 @@
       "position": 76,
       "pool_type": "FULL_MOCK",
       "section": "REASONING_MILITARY_APTITUDE",
-      "topic": "Verbal Reasoning",
-      "subtopic": "Analogy",
+      "topic": "Non-Verbal Reasoning",
+      "subtopic": "Figure series",
       "stem": {
-        "text": "Hangar : Aircraft :: Garage : ?"
+        "text": "Study the problem figures and choose the answer figure that comes next in the series.",
+        "assets": [
+          {
+            "asset_id": "fm01-series-problem",
+            "placement": "STEM",
+            "alt": "Three figures in a series. Each square holds an arrow and a dot. Figure 1: arrow up, dot top-left. Figure 2: arrow up-right, dot top-right. Figure 3: arrow right, dot bottom-right. Figure 4 is a question mark."
+          },
+          {
+            "asset_id": "fm01-series-answers",
+            "placement": "STEM",
+            "alt": "Answer figures. A: arrow down-right, dot bottom-right. B: arrow down, dot bottom-left. C: arrow down-right, dot bottom-left. D: arrow down-right, dot top-left."
+          }
+        ]
       },
       "options": [
         {
           "key": "A",
-          "text": "Road"
+          "text": "Figure (A)"
         },
         {
           "key": "B",
-          "text": "Driver"
+          "text": "Figure (B)"
         },
         {
           "key": "C",
-          "text": "Fuel"
+          "text": "Figure (C)"
         },
         {
           "key": "D",
-          "text": "Car"
+          "text": "Figure (D)"
         }
       ],
-      "correct_option": "D",
+      "correct_option": "C",
       "explanation": {
-        "text": "An aircraft is housed in a hangar; a car is housed in a garage."
+        "text": "The arrow turns 45° clockwise each step (up, up-right, right, so down-right next). The dot moves one corner clockwise (top-left, top-right, bottom-right, so bottom-left next). Only (C) has both."
       },
-      "difficulty": "EASY",
+      "difficulty": "MODERATE",
       "source_kind": "ORIGINAL",
-      "source_reference": "NEW-AUTHORED (bank had no reasoning section)",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-F01)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "21fed4b04464cc3b2b232ce8cfe95c35eb498f0f6b8eb35a9ecc507ea52b72ad",
+      "fingerprint_sha256": "5f0280d50f0fa912654c9063af5f7d7e4d83ad8fa4f6ff5a15618107a8ecf746",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -3200,9 +3374,9 @@
       },
       "difficulty": "EASY",
       "source_kind": "ORIGINAL",
-      "source_reference": "NEW-AUTHORED (bank had no reasoning section)",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "925a03880e50fe81010d089e7b5dae7724f9097ab5a94b16c78135d6c6e30d86",
+      "fingerprint_sha256": "7e0e3fc47ca440908c0f91e03a3d318735e30c040f2897d71af36f05af9d88fc",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -3212,38 +3386,50 @@
       "position": 78,
       "pool_type": "FULL_MOCK",
       "section": "REASONING_MILITARY_APTITUDE",
-      "topic": "Verbal Reasoning",
-      "subtopic": "Letter analogy",
+      "topic": "Non-Verbal Reasoning",
+      "subtopic": "Mirror image",
       "stem": {
-        "text": "ACE : BDF :: GIK : ?"
+        "text": "Choose the correct mirror image of the given figure when the mirror is placed along the line M.",
+        "assets": [
+          {
+            "asset_id": "fm01-mirror-problem",
+            "placement": "STEM",
+            "alt": "A flag on a pole, with the triangular flag at the top pointing right, a short bar to the right of the pole and a small circle at lower right. A vertical mirror line M is on the right."
+          },
+          {
+            "asset_id": "fm01-mirror-answers",
+            "placement": "STEM",
+            "alt": "Four answer figures. A: flag at the top pointing right, pole on the left, circle at lower right. B: flag at the bottom pointing right, pole on the left, circle at upper right. C: flag at the bottom pointing left, pole on the right, circle at upper left. D: flag at the top pointing left, pole on the right, circle at lower left."
+          }
+        ]
       },
       "options": [
         {
           "key": "A",
-          "text": "HIJ"
+          "text": "Figure (A)"
         },
         {
           "key": "B",
-          "text": "JLN"
+          "text": "Figure (B)"
         },
         {
           "key": "C",
-          "text": "GHI"
+          "text": "Figure (C)"
         },
         {
           "key": "D",
-          "text": "HJL"
+          "text": "Figure (D)"
         }
       ],
       "correct_option": "D",
       "explanation": {
-        "text": "Each letter moves forward by one: G→H, I→J, K→L."
+        "text": "A vertical mirror swaps left and right but keeps top and bottom. The flag must point left with the pole on the right, and the circle stays at the bottom. (A) is the original, (B) is the water image and (C) is a half-turn."
       },
-      "difficulty": "EASY",
+      "difficulty": "MODERATE",
       "source_kind": "ORIGINAL",
-      "source_reference": "NEW-AUTHORED (bank had no reasoning section)",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-F02)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "9fabd9854284aa0531274283581e980f23663c3d07e102a664f04a2a87d3c0f6",
+      "fingerprint_sha256": "46bf2aee831ddd79d7a0f3f83345c2f88ddcc1fce7f06720c50337e56f74c62e",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -3282,9 +3468,9 @@
       },
       "difficulty": "EASY",
       "source_kind": "ORIGINAL",
-      "source_reference": "NEW-AUTHORED (bank had no reasoning section)",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "ceddd2d0d101f3f501e4bb75acdd54ec19f69ad5a4309e413f82a876e9659496",
+      "fingerprint_sha256": "b89d8ad4f21b7906c16aa82d7633f5cf96ce018cb11e85c5fb1713aee5a77734",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -3323,9 +3509,9 @@
       },
       "difficulty": "MODERATE",
       "source_kind": "ORIGINAL",
-      "source_reference": "NEW-AUTHORED (bank had no reasoning section)",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "3b8c5570743f0325a5fc0ca41ca2750aef443e137c8addb1c4b1ada0bf4c961c",
+      "fingerprint_sha256": "7d3dd7a7d7940d87a7bd9cfd3c2a48f1c8b0ac1c5651fd215f33b269fc4617a3",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -3364,9 +3550,9 @@
       },
       "difficulty": "MODERATE",
       "source_kind": "ORIGINAL",
-      "source_reference": "NEW-AUTHORED (bank had no reasoning section)",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "c9e54e56daae50b18a4c652992f1272412774bc68438f8d42ca2a1fad5338288",
+      "fingerprint_sha256": "8cf6e1deb6e853e7982185d1d567cdbd4d2b71c62a5489826851616682d5b7b1",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -3405,9 +3591,9 @@
       },
       "difficulty": "EASY",
       "source_kind": "ORIGINAL",
-      "source_reference": "NEW-AUTHORED (bank had no reasoning section)",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "07ba056ab51f85892c539fa706edc6a215408ca720f16ad6e16a3047fe0a423f",
+      "fingerprint_sha256": "b8ffd8951d23f493b6b87394f48a5b1cd0a0460029d42c1a8c17f814e3efeb67",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -3417,38 +3603,50 @@
       "position": 83,
       "pool_type": "FULL_MOCK",
       "section": "REASONING_MILITARY_APTITUDE",
-      "topic": "Verbal Reasoning",
-      "subtopic": "Coding-decoding",
+      "topic": "Non-Verbal Reasoning",
+      "subtopic": "Water image",
       "stem": {
-        "text": "If WING is coded as GNIW, how is TAIL coded?"
+        "text": "Choose the correct water image of the given figure (the water line is below the figure).",
+        "assets": [
+          {
+            "asset_id": "fm01-water-problem",
+            "placement": "STEM",
+            "alt": "A staircase line rising from bottom-left to top-right ending in an arrowhead pointing right, a small circle at upper left and a filled square at lower right. A horizontal water line is below the figure."
+          },
+          {
+            "asset_id": "fm01-water-answers",
+            "placement": "STEM",
+            "alt": "Four answer figures. A: staircase descends from top-left to an arrowhead at lower right; circle at lower left; square at upper right. B: staircase rises from bottom-right to an arrowhead at upper left; circle at upper right; square at lower left. C: staircase descends from top-right to an arrowhead at lower left; circle at lower right; square at upper left. D: the figure turned a quarter-turn clockwise, staircase running top to bottom with the arrowhead pointing down at lower right."
+          }
+        ]
       },
       "options": [
         {
           "key": "A",
-          "text": "LAIT"
+          "text": "Figure (A)"
         },
         {
           "key": "B",
-          "text": "LIAT"
+          "text": "Figure (B)"
         },
         {
           "key": "C",
-          "text": "TIAL"
+          "text": "Figure (C)"
         },
         {
           "key": "D",
-          "text": "ILAT"
+          "text": "Figure (D)"
         }
       ],
-      "correct_option": "B",
+      "correct_option": "A",
       "explanation": {
-        "text": "The word is written in reverse: TAIL → LIAT."
+        "text": "A water image flips top and bottom but keeps left and right. The arrowhead stays on the right but the staircase now descends towards it. (B) is the mirror image, (C) a half-turn and (D) a quarter-turn."
       },
-      "difficulty": "EASY",
+      "difficulty": "MODERATE",
       "source_kind": "ORIGINAL",
-      "source_reference": "NEW-AUTHORED (bank had no reasoning section)",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-F03)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "2e8453addce1fc8a6eeea4d6b9dc3e42d529ae648665ef9130af788a039e66fa",
+      "fingerprint_sha256": "6b54b5e33bc650097bca3b2077c20b47cf308ae254ecddde5632ce5d3827bf63",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -3487,9 +3685,9 @@
       },
       "difficulty": "MODERATE",
       "source_kind": "ORIGINAL",
-      "source_reference": "NEW-AUTHORED (bank had no reasoning section)",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "706fd2722b4f4f2e015fd595a2051d1a9918e017c6a3cf57a425bfb4f2b7fe00",
+      "fingerprint_sha256": "537fc7aa4c9b0234070e1e6fc1531e21f681c6c746011f4c5c92dbdf8d0949ae",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -3528,9 +3726,9 @@
       },
       "difficulty": "EASY",
       "source_kind": "ORIGINAL",
-      "source_reference": "NEW-AUTHORED (bank had no reasoning section)",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "b213c538be08e0c1ba47b715543613147f5ddd85b8553e22007110cb5f3d0528",
+      "fingerprint_sha256": "0cd4579f4298a9ba9f8be48956ab9bb653d0dde129ea44588abd193b9ff11fdd",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -3540,38 +3738,50 @@
       "position": 86,
       "pool_type": "FULL_MOCK",
       "section": "REASONING_MILITARY_APTITUDE",
-      "topic": "Patterns and Sequences",
-      "subtopic": "Number series",
+      "topic": "Non-Verbal Reasoning",
+      "subtopic": "Paper folding and punching",
       "stem": {
-        "text": "Find the next term: 2, 5, 10, 17, 26, ?"
+        "text": "A square sheet is folded and punched as shown in figures (1) to (3). How will it look when unfolded?",
+        "assets": [
+          {
+            "asset_id": "fm01-fold-problem",
+            "placement": "STEM",
+            "alt": "Step 1: a square sheet is folded along its vertical centre line, left half onto right. Step 2: the folded sheet is folded along its horizontal centre line, top half onto bottom. Step 3: one hole is punched in the folded quarter, near its lower-left area."
+          },
+          {
+            "asset_id": "fm01-fold-answers",
+            "placement": "STEM",
+            "alt": "Four unfolded squares. A: two holes in the lower half, side by side. B: four holes in the middle band near the left and right edges. C: two holes on a diagonal. D: four holes, one in each quarter, placed symmetrically about both centre lines."
+          }
+        ]
       },
       "options": [
         {
           "key": "A",
-          "text": "35"
+          "text": "Figure (A)"
         },
         {
           "key": "B",
-          "text": "36"
+          "text": "Figure (B)"
         },
         {
           "key": "C",
-          "text": "38"
+          "text": "Figure (C)"
         },
         {
           "key": "D",
-          "text": "37"
+          "text": "Figure (D)"
         }
       ],
       "correct_option": "D",
       "explanation": {
-        "text": "Terms are n² + 1 for n = 1…5; next is 6² + 1 = 37."
+        "text": "Unfold the second fold first: the hole is reflected about the horizontal centre line, giving two holes. Unfolding the first fold reflects both about the vertical centre line, giving four holes placed symmetrically, one in each quarter."
       },
-      "difficulty": "EASY",
+      "difficulty": "HARD",
       "source_kind": "ORIGINAL",
-      "source_reference": "NEW-AUTHORED (bank had no reasoning section)",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-F04)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "a7612e6b6feaec63afc32b1ec25afcedbebc7ca23ea42dadfbad2c0d175f051a",
+      "fingerprint_sha256": "d86749cedb637e5f1c630820eab62451642e24bf96f923bcabeb44a67f63de7a",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -3610,9 +3820,9 @@
       },
       "difficulty": "MODERATE",
       "source_kind": "ORIGINAL",
-      "source_reference": "NEW-AUTHORED (bank had no reasoning section)",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "15971aff6177e07343921d48e8ab41b42a94150ab94a52479e6a886db5b6fae2",
+      "fingerprint_sha256": "d1f8c27c8a36f85ebffe0640aa996dc43b9c928d8d5b4e370fade552787b3f24",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -3651,9 +3861,9 @@
       },
       "difficulty": "MODERATE",
       "source_kind": "ORIGINAL",
-      "source_reference": "NEW-AUTHORED (bank had no reasoning section)",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "94da2da4a7ea00a40dcf34ea7abde31f0945766912b34cbb150d98e6f6fc193a",
+      "fingerprint_sha256": "1e3eaefb66d9f8e58613f12d62f3b0ca76a0b279f7fbc33dd409c9addc2641ba",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -3692,9 +3902,9 @@
       },
       "difficulty": "MODERATE",
       "source_kind": "ORIGINAL",
-      "source_reference": "NEW-AUTHORED (bank had no reasoning section)",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "1e789e8595a818710d327aa7967cb8e583ac16c2bce8952f4313b44b9dea876a",
+      "fingerprint_sha256": "a12f98b9d81979c7e26705baea2de42f7b8a3a8d29d88d574e957f7315314014",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -3733,9 +3943,9 @@
       },
       "difficulty": "MODERATE",
       "source_kind": "ORIGINAL",
-      "source_reference": "NEW-AUTHORED (bank had no reasoning section)",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "ad4800d0a314a8f57c315cf614a1e771ce02048979f6ec175d1ab93cf8e9ad6b",
+      "fingerprint_sha256": "c99103601c65c2419ebff7098cc6a40d5ef7519c3efb3ce35025fb3d1643aaa9",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -3774,9 +3984,9 @@
       },
       "difficulty": "EASY",
       "source_kind": "ORIGINAL",
-      "source_reference": "NEW-AUTHORED (bank had no reasoning section)",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "055296823313e11ddf87082e709f65dd4eacdfe1c2b139d3737c34a290042a2e",
+      "fingerprint_sha256": "c8cce12de81e6c5ac5d21bc29ed3ab90364e66e4c452e3969700eb6a643d26f9",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -3815,9 +4025,9 @@
       },
       "difficulty": "MODERATE",
       "source_kind": "ORIGINAL",
-      "source_reference": "NEW-AUTHORED (bank had no reasoning section)",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "563c382c9052ec54e97dafd851979d5daccf9eab779c555eb041cd47e9bfc3c4",
+      "fingerprint_sha256": "0c8717781294fb70564dbdbaaf51ee1587cadc1c2e956917a19d592d51c277db",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -3856,9 +4066,9 @@
       },
       "difficulty": "HARD",
       "source_kind": "ORIGINAL",
-      "source_reference": "NEW-AUTHORED (bank had no reasoning section)",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "2fd7f1d3c702d93537c85f3862d56c5275a09f739f7f87406d9a963d4c427690",
+      "fingerprint_sha256": "70ce12fcbdbfe107600509e8131230afb0ae38abedfd48c16ce6742eb4c89e76",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -3868,38 +4078,45 @@
       "position": 94,
       "pool_type": "FULL_MOCK",
       "section": "REASONING_MILITARY_APTITUDE",
-      "topic": "Verbal Reasoning",
-      "subtopic": "Ranking",
+      "topic": "Non-Verbal Reasoning",
+      "subtopic": "Counting figures",
       "stem": {
-        "text": "In a row of 40 cadets, Arjun is 12th from the left. What is his position from the right?"
+        "text": "How many triangles are there in the given figure?",
+        "assets": [
+          {
+            "asset_id": "fm01-count-triangles",
+            "placement": "STEM",
+            "alt": "A large triangle with a vertical line from the top vertex to the middle of the base, and a horizontal line across the triangle at half its height."
+          }
+        ]
       },
       "options": [
         {
           "key": "A",
-          "text": "28th"
+          "text": "5"
         },
         {
           "key": "B",
-          "text": "29th"
+          "text": "6"
         },
         {
           "key": "C",
-          "text": "30th"
+          "text": "7"
         },
         {
           "key": "D",
-          "text": "27th"
+          "text": "8"
         }
       ],
       "correct_option": "B",
       "explanation": {
-        "text": "40 − 12 + 1 = 29."
+        "text": "Every triangle uses the top vertex. Pairs of points joined by the cross-line give three (left small, right small, both halves together) and pairs on the base give three more (left half, right half, whole). Total 6."
       },
-      "difficulty": "EASY",
+      "difficulty": "MODERATE",
       "source_kind": "ORIGINAL",
-      "source_reference": "NEW-AUTHORED (bank had no reasoning section)",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-F05)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "b1dc7d31bdc9920b220cd8ce2b6767185140c7c344522c7cc3b4c70c55cb740d",
+      "fingerprint_sha256": "2400c9bd7f8ca0f38a7e341c4776e4a0e5f29310b4a695298824bd170e14aa40",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -3938,9 +4155,9 @@
       },
       "difficulty": "MODERATE",
       "source_kind": "ORIGINAL",
-      "source_reference": "NEW-AUTHORED (bank had no reasoning section)",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "8cd3fcbe95aea53f578c5786a9ebb2def7b7c3cc77ef099e360d14fe940eb5b4",
+      "fingerprint_sha256": "7f66cf3fe2c744bb69dfb7e23baf0c62bdbcfe70c5592d8ddb48982944806c6c",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -3979,9 +4196,9 @@
       },
       "difficulty": "MODERATE",
       "source_kind": "ORIGINAL",
-      "source_reference": "NEW-AUTHORED (bank had no reasoning section)",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "4ab95f7a77f545697616b071b9d8aaa3534e344d341285277dc490739ee88014",
+      "fingerprint_sha256": "47c489145f8c4cf280ccf61b5d9bb952c478f1de8ac122f555e5c6e616d09c9c",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -4020,9 +4237,9 @@
       },
       "difficulty": "MODERATE",
       "source_kind": "ORIGINAL",
-      "source_reference": "NEW-AUTHORED (bank had no reasoning section)",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "01d016c597d475f74c415127efa9c79405eef2124bcace2918fb647796266b0c",
+      "fingerprint_sha256": "c1ec6b2f6f95f4d8d2e8d079d47a20549dd7f56320823c59b43c25aea1256c19",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -4061,9 +4278,9 @@
       },
       "difficulty": "MODERATE",
       "source_kind": "ORIGINAL",
-      "source_reference": "NEW-AUTHORED (bank had no reasoning section)",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "501e7937c9c3e2e4593e9a60e6eaa87e3d50bb4318758380c58577555155ddf8",
+      "fingerprint_sha256": "5f2eda52f3d53e12051f3c9c9b88dbbea59d391437e8fed76fc857a699b110d9",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -4073,38 +4290,45 @@
       "position": 99,
       "pool_type": "FULL_MOCK",
       "section": "REASONING_MILITARY_APTITUDE",
-      "topic": "Spatial Reasoning",
-      "subtopic": "Mirror image",
+      "topic": "Non-Verbal Reasoning",
+      "subtopic": "Odd figure out",
       "stem": {
-        "text": "Which letter looks unchanged when reflected in a mirror placed vertically beside it?"
+        "text": "Three of the four figures follow the same rule. Choose the figure that does not.",
+        "assets": [
+          {
+            "asset_id": "fm01-odd-figure",
+            "placement": "STEM",
+            "alt": "Four figures. A: square with 3 dots. B: triangle with 2 dots. C: pentagon with 4 dots. D: hexagon with 4 dots."
+          }
+        ]
       },
       "options": [
         {
           "key": "A",
-          "text": "A"
+          "text": "Figure (A)"
         },
         {
           "key": "B",
-          "text": "F"
+          "text": "Figure (B)"
         },
         {
           "key": "C",
-          "text": "R"
+          "text": "Figure (C)"
         },
         {
           "key": "D",
-          "text": "N"
+          "text": "Figure (D)"
         }
       ],
-      "correct_option": "A",
+      "correct_option": "D",
       "explanation": {
-        "text": "A is symmetric about its vertical axis; F, R and N are not."
+        "text": "In (A), (B) and (C) the number of dots is one less than the number of sides (square 3, triangle 2, pentagon 4). The hexagon in (D) should have 5 dots but has 4."
       },
       "difficulty": "MODERATE",
       "source_kind": "ORIGINAL",
-      "source_reference": "NEW-AUTHORED (bank had no reasoning section)",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-F06)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "b15d1ea9668ddea5bf4bc82c5cf4054f4c72ac3863e5bfd25c46c1748b76c878",
+      "fingerprint_sha256": "7492e3e0ea219aa7f225e1c1aaeb28c85c811c238753e004481fd532293ea60d",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
@@ -4143,9 +4367,9 @@
       },
       "difficulty": "HARD",
       "source_kind": "ORIGINAL",
-      "source_reference": "NEW-AUTHORED (bank had no reasoning section)",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "e7bbed78634085ff2056904cef00e003dde5055ae2444dbb7a6fcc3b380b1416",
+      "fingerprint_sha256": "c948ac718c49feb7e6cf9af73c03e54f95e28be0056d52a9d5d88a8d7263546f",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true
