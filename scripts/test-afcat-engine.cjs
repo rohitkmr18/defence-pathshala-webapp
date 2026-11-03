@@ -120,3 +120,43 @@ test('AFCAT recommends attempting more only where accuracy is high', () => {
   assert.equal(rec.section, 'GENERAL_AWARENESS');
   assert.ok(rec.reason.includes('15 unanswered') && rec.reason.includes('90%'));
 });
+
+const assetLib = load('frontend/src/lib/afcat/assets.ts');
+const { AFCAT_BUNDLED_ASSETS } = load('frontend/src/lib/afcat/assets/fm01.ts');
+const { createHash } = require('node:crypto');
+const sha = (text) => createHash('sha256').update(text, 'utf8').digest('hex');
+function assetRow(over = {}) {
+  const path = 'fm01/fm01-odd-figure.svg';
+  return { id: '11111111-1111-4111-8111-111111111111', question_id: 'q1', placement: 'STEM', storage_path: path,
+    mime_type: 'image/svg+xml', alt_text: 'Four figures', sha256: sha(AFCAT_BUNDLED_ASSETS[path]), reviewed: true, ...over };
+}
+
+test('AFCAT assets: only reviewed, hash-verified figures reach learners, via the signed-in route', () => {
+  const ok = assetLib.groupAfcatAssets([assetRow()]);
+  const entry = plain(ok.get('q1'));
+  assert.equal(entry.stem.length, 1);
+  assert.equal(entry.stem[0].url, '/api/afcat/assets/11111111-1111-4111-8111-111111111111');
+  assert.equal(entry.stem[0].alt, 'Four figures');
+  assert.ok(entry.stem[0].width > 0 && entry.stem[0].height > 0);
+  assert.equal(assetLib.groupAfcatAssets([assetRow({ reviewed: false })]).size, 0, 'unreviewed is withheld');
+  assert.equal(assetLib.groupAfcatAssets([assetRow({ sha256: 'a'.repeat(64) })]).size, 0, 'hash mismatch is withheld');
+  assert.equal(assetLib.groupAfcatAssets([assetRow({ storage_path: 'fm01/missing.svg' })]).size, 0, 'unknown file is withheld');
+  assert.equal(assetLib.groupAfcatAssets([assetRow({ placement: 'EXPLANATION' })]).size, 0, 'explanation art is not sent with questions');
+  assert.equal(assetLib.groupAfcatAssets([assetRow({ mime_type: 'image/png' })]).size, 0);
+});
+
+test('AFCAT serializer attaches figures to the stem and options without exposing keys', () => {
+  const options = ['One', 'Two', 'Three', 'Four'];
+  const grouped = assetLib.groupAfcatAssets([assetRow(), assetRow({ id: '22222222-2222-4222-8222-222222222222', placement: 'OPTION_B' })]);
+  const q = plain(sanitizeAfcatQuestion('q1', 1, { text: 'Pick one', assets: [{ asset_id: 'x', alt: 'raw' }] }, options, grouped.get('q1')));
+  assert.equal(q.stem.assets.length, 1);
+  assert.equal(q.options[1].content.assets.length, 1);
+  assert.equal(q.options[0].content.assets, undefined);
+  assert.equal(JSON.stringify(q).includes('raw'), false, 'raw stored asset metadata is never forwarded');
+  assert.equal(plain(sanitizeAfcatQuestion('q1', 1, { text: 'Pick one' }, options)).stem.assets, undefined);
+});
+
+test('AFCAT bundled figures match the generated package hashes', () => {
+  const pkg = JSON.parse(require('node:fs').readFileSync('content/afcat/prelaunch/full_mock_01_v1.json', 'utf8'));
+  for (const a of pkg.assets) assert.equal(sha(AFCAT_BUNDLED_ASSETS[`fm01/${a.asset_id}.svg`]), a.sha256, a.asset_id);
+});

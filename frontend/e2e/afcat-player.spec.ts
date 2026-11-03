@@ -86,7 +86,7 @@ for (const width of [320, 390, 1280]) {
       await route.fulfill({ json: body });
     });
     await page.goto("/afcat/lab");
-    await page.getByRole("button", { name: /Synthetic QA mock/ }).click();
+    await page.getByRole("button", { name: "Start Full Mock" }).click();
     await expect(
       page.getByRole("heading", { name: "Question 1", exact: true }),
     ).toBeVisible();
@@ -162,7 +162,7 @@ for (const width of [320, 390, 1280]) {
     await expect(
       page.getByRole("region", { name: "Exam results" }),
     ).toBeVisible();
-    await expect(page.getByRole("radio").first()).toBeDisabled();
+    await expect(page.getByRole("radio")).toHaveCount(0);
     await page.reload();
     await expect(
       page.getByRole("region", { name: "Exam results" }),

@@ -68,7 +68,7 @@ function AfcatVisual({ asset }: { asset: AfcatAsset }) {
   );
 }
 
-function AfcatContentBlock({ content }: { content: AfcatContent }) {
+export function AfcatContentBlock({ content }: { content: AfcatContent }) {
   return (
     <div className="min-w-0 space-y-2">
       {content.text && <MathText as="div" text={content.text} className="max-w-full overflow-x-auto whitespace-pre-wrap break-words text-base leading-7 text-slate-900" />}

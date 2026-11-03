@@ -7,7 +7,7 @@ export async function GET() {
     const db = afcatStagingAdmin();
     const { data, error } = await db.from("afcat_tests")
       .select("id,code,kind,section,title,duration_seconds,expected_questions,max_marks,release_version")
-      .eq("status", "PUBLISHED").order("code");
+      .eq("status", "PUBLISHED").eq("kind", "FULL_MOCK").like("code", "AFCAT-FM%").order("code");
     if (error) throw error;
     return NextResponse.json({ tests: data ?? [] }, { headers: { "Cache-Control": "no-store" } });
   } catch {

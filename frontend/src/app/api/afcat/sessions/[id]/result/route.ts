@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { afcatStagingAdmin, afcatStagingUser } from "@/lib/afcat/staging-server";
 import { analyzeAfcatAttempt, type AfcatReviewItem, type AfcatSection } from "@/lib/afcat/results-analytics";
 import { sanitizeAfcatQuestion } from "@/lib/afcat/serialize";
+import { AFCAT_ASSET_COLUMNS, groupAfcatAssets, type AfcatAssetRow } from "@/lib/afcat/assets";
 export const dynamic = "force-dynamic";
 type Context = { params: Promise<{ id: string }> };
 const explanationText = (value: unknown) =>
@@ -38,6 +39,9 @@ export async function GET(_req: NextRequest, context: Context) {
     const { data: responses, error: ae } = await db.from("afcat_responses")
       .select("question_id,selected_option,marked_for_review,time_spent_seconds").eq("session_id", id).eq("user_id", user.id);
     if (ae) throw ae;
+    const { data: assetRows, error: ase } = await db.from("afcat_question_assets").select(AFCAT_ASSET_COLUMNS).in("question_id", ids);
+    if (ase) throw ase;
+    const assetsByQuestion = groupAfcatAssets((assetRows ?? []) as AfcatAssetRow[]);
     const keyMap = new Map((keys ?? []).map(x => [x.id, x]));
     const answerMap = new Map((responses ?? []).map(x => [x.question_id, x]));
     const review = (items ?? []).map(item => {
@@ -45,7 +49,7 @@ export async function GET(_req: NextRequest, context: Context) {
       const response = answerMap.get(item.question_id);
       let question = null;
       try {
-        question = key ? sanitizeAfcatQuestion(item.question_id, item.position, key.stem, key.options) : null;
+        question = key ? sanitizeAfcatQuestion(item.question_id, item.position, key.stem, key.options, assetsByQuestion.get(item.question_id)) : null;
       } catch {
         question = null;
       }
