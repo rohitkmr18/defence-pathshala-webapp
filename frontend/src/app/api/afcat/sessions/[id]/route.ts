@@ -88,7 +88,7 @@ export async function GET(_request: NextRequest, context: Context) {
       );
     const { data: saved, error: responseError } = await db
       .from("afcat_responses")
-      .select("question_id,selected_option,marked_for_review")
+      .select("question_id,selected_option,marked_for_review,time_spent_seconds")
       .eq("session_id", session.id)
       .eq("user_id", user.id);
     if (responseError) throw responseError;

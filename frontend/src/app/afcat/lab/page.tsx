@@ -2,6 +2,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import AfcatVisualQuestion from "@/components/afcat/AfcatVisualQuestion";
+import AfcatResultAnalysis, {
+  type AfcatResultReport,
+} from "@/components/afcat/AfcatResultAnalysis";
 import type {
   AfcatDisplayQuestion,
   AfcatChoice,
@@ -9,7 +12,6 @@ import type {
 import {
   AFCAT_SECTIONS,
   type AfcatSection,
-  type AfcatSectionSummary,
 } from "@/lib/afcat/results-analytics";
 type Test = {
   id: string;
@@ -32,6 +34,7 @@ type Paper = {
     question_id: string;
     selected_option: AfcatChoice["key"] | null;
     marked_for_review: boolean;
+    time_spent_seconds?: number;
   }[];
 };
 type Result = {
@@ -65,13 +68,18 @@ export default function AfcatLab() {
     [submitting, setSubmitting] = useState(false);
   const [online, setOnline] = useState(true),
     [palette, setPalette] = useState(false);
-  const [result, setResult] = useState<Result | null>(null),
-    [sections, setSections] = useState<AfcatSectionSummary[]>([]);
+  const [report, setReport] = useState<AfcatResultReport | null>(null);
+  const [result, setResult] = useState<Result | null>(null);
   const [left, setLeft] = useState(0),
     [saveState, setSaveState] = useState("All responses saved");
   const lock = useRef(false),
     autoSubmitted = useRef(false);
   const clock = useRef({ remaining: 0, at: 0 });
+  // Per-question time is for post-test analysis only; scoring never uses it.
+  const spent = useRef<Record<string, number>>({}),
+    sent = useRef<Record<string, number>>({}),
+    viewing = useRef<{ id: string; at: number } | null>(null),
+    answersRef = useRef<Record<string, Answer>>({});
   const confirmation = useRef<HTMLDialogElement>(null),
     title = useRef<HTMLDivElement>(null);
   const load = useCallback(async (id: string) => {
@@ -85,6 +93,10 @@ export default function AfcatLab() {
     };
     setLeft(Math.ceil(clock.current.remaining / 1000));
     setPaper(data);
+    spent.current = Object.fromEntries(
+      data.responses.map((r) => [r.question_id, r.time_spent_seconds ?? 0]),
+    );
+    sent.current = { ...spent.current };
     setAnswers(
       Object.fromEntries(
         data.responses.map((r) => [
@@ -120,7 +132,7 @@ export default function AfcatLab() {
     if (data.session.status !== "IN_PROGRESS") {
       const completed = await api(`/api/afcat/sessions/${id}/result`);
       setResult(completed.summary);
-      setSections(completed.sections ?? []);
+      setReport(completed);
     }
   }, []);
   useEffect(() => {
@@ -176,7 +188,7 @@ export default function AfcatLab() {
         `/api/afcat/sessions/${paper.session.id}/result`,
       );
       setResult(completed.summary);
-      setSections(completed.sections ?? []);
+      setReport(completed);
       setPaper((old) =>
         old
           ? { ...old, session: { ...old.session, status: completed.status } }
@@ -268,19 +280,76 @@ export default function AfcatLab() {
   }
   const question = paper?.questions[index];
   const active = paper?.session.status === "IN_PROGRESS" && left > 0 && online;
+  answersRef.current = answers;
+  /** Close the open viewing interval and add it to that question's total. */
+  const checkpoint = useCallback(() => {
+    const view = viewing.current;
+    if (!view) return;
+    const now = performance.now();
+    spent.current[view.id] =
+      (spent.current[view.id] ?? 0) + (now - view.at) / 1000;
+    view.at = now;
+  }, []);
+  const sessionId = paper?.session.id;
+  const questionId = question?.id;
+  useEffect(() => {
+    if (!sessionId || !questionId || !active) return;
+    const open = () => {
+      if (document.visibilityState === "visible")
+        viewing.current = { id: questionId, at: performance.now() };
+    };
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") open();
+      else {
+        checkpoint();
+        viewing.current = null;
+      }
+    };
+    open();
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibility);
+      checkpoint();
+      viewing.current = null;
+      // Leaving a question: record its time in the background. Uses the latest
+      // confirmed answer so this can never overwrite a newer saved choice.
+      const total = Math.round(spent.current[questionId] ?? 0);
+      if (total - (sent.current[questionId] ?? 0) < 2) return;
+      sent.current[questionId] = total;
+      const answer = answersRef.current[questionId] ?? {
+        selected: null,
+        markedForReview: false,
+      };
+      void fetch(`/api/afcat/sessions/${sessionId}/responses`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          questionId,
+          ...answer,
+          timeSpentSeconds: total,
+        }),
+        keepalive: true,
+      }).catch(() => {
+        /* Timing is best-effort analysis data. */
+      });
+    };
+  }, [sessionId, questionId, active, checkpoint]);
   async function save(id: string, answer: Answer) {
     if (!paper || !active || lock.current) return;
     lock.current = true;
     setBusy(true);
     setSaveState("Saving response…");
     setError("");
+    checkpoint();
+    const timeSpentSeconds = Math.round(spent.current[id] ?? 0);
     try {
       await api(`/api/afcat/sessions/${paper.session.id}/responses`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ questionId: id, ...answer }),
+        body: JSON.stringify({ questionId: id, ...answer, timeSpentSeconds }),
       });
       setAnswers((old) => ({ ...old, [id]: answer }));
+      sent.current[id] = timeSpentSeconds;
       setSaveState("All responses saved");
     } catch (e) {
       setSaveState("Save not confirmed — reload to recover");
@@ -461,61 +530,12 @@ export default function AfcatLab() {
             </nav>
             <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_290px]">
               <div className="min-w-0 space-y-4">
-                {result && (
-                  <section
-                    aria-label="Exam results"
-                    className="rounded-2xl border border-blue-200 bg-white p-6"
-                  >
-                    <p className="text-xs font-bold uppercase tracking-wider text-blue-700">
-                      Test complete · {paper.session.status}
-                    </p>
-                    <h2 className="my-3 text-3xl font-bold">
-                      {result.score}{" "}
-                      <span className="text-lg text-slate-500">
-                        / {result.max_marks} marks
-                      </span>
-                    </h2>
-                    <p>
-                      {result.correct_count} correct · {result.incorrect_count}{" "}
-                      incorrect · {result.unanswered_count} unanswered
-                    </p>
-                    <p className="mt-2 text-sm text-slate-600">
-                      {result.correct_count + result.incorrect_count
-                        ? Math.round(
-                            (result.correct_count /
-                              (result.correct_count + result.incorrect_count)) *
-                              10000,
-                          ) / 100
-                        : 0}
-                      % accuracy among attempted questions
-                    </p>
-                    <div
-                      aria-label="Section breakdown"
-                      className="mt-5 grid gap-3 sm:grid-cols-2"
-                    >
-                      {sections.map((s) => (
-                        <div
-                          key={s.section}
-                          className="rounded-xl bg-slate-50 p-4"
-                        >
-                          <strong className="text-sm">{s.label}</strong>
-                          <p className="mt-2 font-bold">
-                            {s.marks}/{s.maximumMarks} marks
-                          </p>
-                          <p className="text-xs text-slate-600">
-                            {s.correct} correct · {s.incorrect} incorrect ·{" "}
-                            {s.unanswered} unanswered
-                          </p>
-                          <p className="mt-1 text-xs">
-                            {s.accuracyPercent}% accuracy
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                    <p className="mt-4 text-xs text-slate-500">
-                      Synthetic QA only. Scores are calculated by the server.
-                    </p>
-                  </section>
+                {result && paper && (
+                  <AfcatResultAnalysis
+                    status={paper.session.status}
+                    summary={result}
+                    report={report}
+                  />
                 )}
                 <div ref={title} tabIndex={-1} className="outline-none">
                   <div className="mb-3 flex justify-between text-xs font-semibold text-slate-500">

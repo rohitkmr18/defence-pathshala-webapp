@@ -17,7 +17,9 @@ export async function PATCH(request: NextRequest, context: Context) {
     if (!payload || typeof payload !== "object" || !("questionId" in payload) ||
         !isUuid(payload.questionId) || !("selected" in payload) ||
         !(payload.selected === null || ["A","B","C","D"].includes(String(payload.selected))) ||
-        !("markedForReview" in payload) || typeof payload.markedForReview !== "boolean") {
+        !("markedForReview" in payload) || typeof payload.markedForReview !== "boolean" ||
+        ("timeSpentSeconds" in payload && !(Number.isInteger(payload.timeSpentSeconds) &&
+          (payload.timeSpentSeconds as number) >= 0))) {
       return NextResponse.json({ error: "Invalid response" }, { status: 400 });
     }
     const db = afcatStagingAdmin();
@@ -35,10 +37,16 @@ export async function PATCH(request: NextRequest, context: Context) {
       .select("question_id").eq("test_id", session.test_id).eq("question_id", payload.questionId).maybeSingle();
     if (itemError) throw itemError;
     if (!item) return NextResponse.json({ error: "Question not assigned" }, { status: 400 });
+    // Time on a question is analysis-only (never scored). The client reports a cumulative
+    // value; the server caps it at the time elapsed since the session started.
+    const elapsed = Math.max(0, Math.floor((Date.now() - Date.parse(session.started_at)) / 1000));
+    const timeSpent = "timeSpentSeconds" in payload
+      ? Math.min(payload.timeSpentSeconds as number, elapsed, test.duration_seconds) : undefined;
     const { error: saveError } = await db.from("afcat_responses").upsert({
       session_id: session.id, user_id: user.id, question_id: payload.questionId,
       selected_option: payload.selected, marked_for_review: payload.markedForReview,
       answered_at: payload.selected === null ? null : new Date().toISOString(),
+      ...(timeSpent === undefined ? {} : { time_spent_seconds: timeSpent }),
     }, { onConflict: "session_id,question_id" });
     if (saveError) throw saveError;
     return NextResponse.json({ saved: true }, { headers: { "Cache-Control": "no-store" } });
