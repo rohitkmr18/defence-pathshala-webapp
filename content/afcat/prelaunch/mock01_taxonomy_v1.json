@@ -1,0 +1,294 @@
+{
+  "document_id": "DP_AFCAT_FM01_TAXONOMY_V1",
+  "editorial_status": "DRAFT_NOT_PUBLISHED",
+  "schema_role": "offline editorial planning only; NOT a database import payload",
+  "official_exam_pattern": {
+    "question_count": 100,
+    "duration_seconds": 7200,
+    "maximum_marks": 300,
+    "marks_correct": 3,
+    "marks_incorrect": -1,
+    "marks_unattempted": 0,
+    "language": "English"
+  },
+  "dp_editorial_allocation_not_official": true,
+  "difficulty_target": {
+    "EASY": 25,
+    "MODERATE": 55,
+    "HARD": 20
+  },
+  "section_distribution": [
+    {
+      "section": "ENGLISH",
+      "count": 30,
+      "groups": [
+        {
+          "key": "reading_comprehension",
+          "count": 4
+        },
+        {
+          "key": "cloze",
+          "count": 3
+        },
+        {
+          "key": "error_detection",
+          "count": 4
+        },
+        {
+          "key": "sentence_completion",
+          "count": 3
+        },
+        {
+          "key": "synonym_antonym",
+          "count": 4
+        },
+        {
+          "key": "idioms_phrases",
+          "count": 3
+        },
+        {
+          "key": "one_word_substitution",
+          "count": 2
+        },
+        {
+          "key": "sentence_rearrangement",
+          "count": 3
+        },
+        {
+          "key": "analogy_homonyms_transformation",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "section": "GENERAL_AWARENESS",
+      "count": 25,
+      "groups": [
+        {
+          "key": "history",
+          "count": 3
+        },
+        {
+          "key": "geography",
+          "count": 3
+        },
+        {
+          "key": "polity",
+          "count": 3
+        },
+        {
+          "key": "science_technology",
+          "count": 4
+        },
+        {
+          "key": "environment_ecology",
+          "count": 2
+        },
+        {
+          "key": "economy",
+          "count": 2
+        },
+        {
+          "key": "sports_awards_arts_culture",
+          "count": 3
+        },
+        {
+          "key": "defence_aviation",
+          "count": 3
+        },
+        {
+          "key": "current_affairs",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "section": "NUMERICAL_ABILITY",
+      "count": 20,
+      "groups": [
+        {
+          "key": "percentages_ratios",
+          "count": 4
+        },
+        {
+          "key": "time_work_speed",
+          "count": 4
+        },
+        {
+          "key": "profit_loss_interest",
+          "count": 3
+        },
+        {
+          "key": "number_system_series",
+          "count": 2
+        },
+        {
+          "key": "fractions_averages",
+          "count": 2
+        },
+        {
+          "key": "mensuration",
+          "count": 2
+        },
+        {
+          "key": "probability_statistics",
+          "count": 2
+        },
+        {
+          "key": "mixture_alligation",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "section": "REASONING_MILITARY_APTITUDE",
+      "count": 25,
+      "groups": [
+        {
+          "key": "verbal_logic_analogy_coding",
+          "count": 8
+        },
+        {
+          "key": "sequences_patterns",
+          "count": 5
+        },
+        {
+          "key": "non_verbal_figures",
+          "count": 12
+        }
+      ]
+    }
+  ],
+  "visual_items": {
+    "count": 12,
+    "section": "REASONING_MILITARY_APTITUDE",
+    "requires_original_asset": true,
+    "types": [
+      {
+        "key": "embedded_figures",
+        "count": 2
+      },
+      {
+        "key": "mirror_spatial",
+        "count": 2
+      },
+      {
+        "key": "paper_folding_cutting",
+        "count": 2
+      },
+      {
+        "key": "venn_spatial_sets",
+        "count": 2
+      },
+      {
+        "key": "figure_series_patterns",
+        "count": 2
+      },
+      {
+        "key": "figure_matrix_analogy",
+        "count": 2
+      }
+    ]
+  },
+  "question_spec": {
+    "editorial_external_id_format": "AFCAT-FM01-CAND-###",
+    "section_enum": [
+      "ENGLISH",
+      "GENERAL_AWARENESS",
+      "NUMERICAL_ABILITY",
+      "REASONING_MILITARY_APTITUDE"
+    ],
+    "type_enum": [
+      "FACTUAL_RECALL",
+      "CONCEPT_APPLICATION",
+      "MULTI_STEP_REASONING",
+      "DATA_INTERPRETATION",
+      "TEXT_COMPREHENSION",
+      "FIGURE_REASONING"
+    ],
+    "required_editorial_fields": [
+      "external_id",
+      "section",
+      "topic",
+      "subtopic",
+      "cognitive_type",
+      "difficulty",
+      "stem",
+      "options",
+      "correct_option",
+      "explanation",
+      "source_kind",
+      "source_reference",
+      "source_rights_status",
+      "estimated_seconds",
+      "author",
+      "reviewer",
+      "review_status",
+      "review_notes"
+    ],
+    "additional_if_current_events": [
+      "as_of_date",
+      "retrieved_on",
+      "authoritative_source_url",
+      "expiry_review_on"
+    ],
+    "additional_if_visual": [
+      "asset_paths",
+      "asset_sha256",
+      "alt_text",
+      "visual_review_status",
+      "render_320px",
+      "render_390px"
+    ],
+    "source_kind_editorial": [
+      "ORIGINAL_DP_AUTHORED",
+      "DERIVED_WITH_LICENSE_REVIEW"
+    ],
+    "editorial_review_status": [
+      "DRAFT_UNVERIFIED",
+      "FACT_CHECK",
+      "KEY_CHECK",
+      "LANGUAGE_REVIEW",
+      "VISUAL_REVIEW",
+      "REQUIRES_REVISION",
+      "REJECTED",
+      "APPROVED_FOR_PACKAGING"
+    ]
+  },
+  "database_adapter_contract": {
+    "target_table": "public.afcat_questions",
+    "mapping": {
+      "source_kind": {
+        "ORIGINAL_DP_AUTHORED": "ORIGINAL"
+      },
+      "editorial_status": {
+        "APPROVED_FOR_PACKAGING": "APPROVED",
+        "DRAFT_UNVERIFIED": "DRAFT"
+      }
+    },
+    "required_generated_values": {
+      "pool_type": "FULL_MOCK",
+      "content_version": 1
+    },
+    "must_compute": [
+      "fingerprint_sha256"
+    ],
+    "must_independently_verify": [
+      "difficulty",
+      "source_rights_status",
+      "option_uniqueness",
+      "answer_key",
+      "visual_assets"
+    ],
+    "never_map_automatically": [
+      "REJECTED",
+      "REQUIRES_REVISION"
+    ],
+    "publication_disabled": true
+  },
+  "sources": [
+    "https://careerairforce.gov.in/afcat-syllabus",
+    "https://careerairforce.gov.in/afcat-examination",
+    "https://www.careerairforce.gov.in/sites/default/files/inline-files/AFCAT-Cycle-02-2026-Notification.pdf"
+  ]
+}
