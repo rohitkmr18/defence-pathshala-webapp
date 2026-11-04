@@ -1,12 +1,29 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import ExamModeSwitcher from "@/components/layout/ExamModeSwitcher";
+import AfcatCtaLink from "@/components/afcat/AfcatCtaLink";
+import AfcatLandingTracker from "@/components/afcat/AfcatLandingTracker";
 import { ArrowRight, BarChart3, Brain, Clock3, FileCheck2, Target, Timer } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "AFCAT Full Mock 01, free — Defence Pathshala",
   description: "A free full-length AFCAT mock: 100 questions, 120 minutes, +3/−1 marking, with a detailed analysis the moment you submit.",
-  robots: { index: false, follow: true },
+  alternates: { canonical: "/afcat" },
+  robots: { index: true, follow: true },
+  openGraph: {
+    type: "website",
+    url: "https://www.defencepathshala.in/afcat",
+    siteName: "Defence Pathshala",
+    title: "AFCAT Full Mock 01 — free, 100 questions, with analysis",
+    description: "100 questions, 120 minutes, +3/−1 marking. Free full-length AFCAT mock with a detailed analysis the moment you submit.",
+    images: [{ url: "/og/afcat-full-mock-01.png", width: 1200, height: 630, alt: "AFCAT Full Mock 01 — free full-length mock by Defence Pathshala" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AFCAT Full Mock 01 — free full-length mock",
+    description: "100 questions, 120 minutes, +3/−1 marking, instant analysis.",
+    images: ["/og/afcat-full-mock-01.png"],
+  },
 };
 
 const stats = [
@@ -31,6 +48,7 @@ const afterwards = [
 export default function AfcatPage() {
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
+      <AfcatLandingTracker />
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-6">
           <Link href="/dashboard" className="flex items-center gap-2 text-sm font-bold">
@@ -53,10 +71,10 @@ export default function AfcatPage() {
             A full-length simulation in the AFCAT pattern: 100 questions, 120 minutes, four sections. Submit it and you get a detailed analysis straight away.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <Link href="/afcat/lab"
+            <AfcatCtaLink href="/afcat/lab" placement="hero"
               className="inline-flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-blue-500 px-8 text-base font-bold text-white shadow-lg shadow-blue-900/40 transition hover:bg-blue-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
               Attempt Full Mock for Free <ArrowRight className="h-5 w-5" aria-hidden="true" />
-            </Link>
+            </AfcatCtaLink>
             <p className="flex items-center gap-2 text-sm text-slate-400">
               <Clock3 className="h-4 w-4" aria-hidden="true" /> Keep 2 uninterrupted hours
             </p>

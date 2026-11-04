@@ -176,3 +176,33 @@ test('AFCAT project guard: staging always, production only with explicit kill-sw
   assert.equal(isAfcatProjectAllowed('not a url', 'true'), false);
   assert.equal(isAfcatProjectAllowed(undefined, 'true'), false);
 });
+
+test('AFCAT landing is indexable, in the sitemap, and has a 1200x630 share image', () => {
+  const fs = require('node:fs'); const path = require('node:path');
+  const read = (f) => fs.readFileSync(path.join(__dirname, '..', f), 'utf8');
+  const page = read('frontend/src/app/afcat/page.tsx');
+  assert.doesNotMatch(page, /index:\s*false/);
+  assert.match(page, /canonical:\s*"\/afcat"/);
+  assert.match(page, /\/og\/afcat-full-mock-01\.png/);
+  assert.match(read('frontend/src/app/sitemap.ts'), /\$\{base\}\/afcat`/);
+  const png = fs.readFileSync(path.join(__dirname, '..', 'frontend/public/og/afcat-full-mock-01.png'));
+  assert.equal(png.readUInt32BE(16), 1200); assert.equal(png.readUInt32BE(20), 630);
+});
+
+test('AFCAT funnel events are all wired and carry no personal data', () => {
+  const fs = require('node:fs'); const path = require('node:path');
+  const read = (f) => fs.readFileSync(path.join(__dirname, '..', f), 'utf8');
+  const wired = [
+    ['afcat_landing_view', 'frontend/src/components/afcat/AfcatLandingTracker.tsx'],
+    ['afcat_cta_click', 'frontend/src/components/afcat/AfcatCtaLink.tsx'],
+    ['afcat_signin_click', 'frontend/src/app/afcat/lab/page.tsx'],
+    ['afcat_mock_start', 'frontend/src/app/afcat/lab/page.tsx'],
+    ['afcat_mock_submit', 'frontend/src/app/afcat/lab/page.tsx'],
+    ['afcat_result_view', 'frontend/src/app/afcat/lab/page.tsx'],
+    ['afcat_share_click', 'frontend/src/components/afcat/AfcatShareButton.tsx'],
+  ];
+  for (const [event, file] of wired) assert.ok(read(file).includes(event), `${event} missing in ${file}`);
+  const funnel = read('frontend/src/lib/afcat/funnel.ts');
+  for (const [event] of wired) assert.ok(funnel.includes(`"${event}"`), `${event} not declared`);
+  assert.doesNotMatch(funnel + read('frontend/src/components/afcat/AfcatShareButton.tsx').match(/trackAfcatFunnel\([^)]*\)/g)?.join(''), /email|user_id|userId/i);
+});
