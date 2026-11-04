@@ -7,6 +7,13 @@ import { trackLearningEvent } from "@/lib/learning-events";
  */
 export const AFCAT_TEST_CODE = "AFCAT-FM01-V2";
 
+/** Test code attached to funnel events. Defaults to Mock 01 for landing/CTA events;
+ *  the player sets it to the mock actually started or resumed. */
+let currentTestCode = AFCAT_TEST_CODE;
+export function setAfcatFunnelTestCode(code: string | undefined | null): void {
+  if (code) currentTestCode = code;
+}
+
 export type AfcatFunnelEvent =
   | "afcat_landing_view"
   | "afcat_cta_click"
@@ -21,5 +28,5 @@ export function trackAfcatFunnel(
   context: Record<string, string | number | boolean | undefined> = {},
   once?: string,
 ): void {
-  trackLearningEvent(event, { test_code: AFCAT_TEST_CODE, ...context }, once);
+  trackLearningEvent(event, { test_code: currentTestCode, ...context }, once);
 }

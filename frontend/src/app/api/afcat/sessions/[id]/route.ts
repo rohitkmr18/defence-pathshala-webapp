@@ -33,7 +33,7 @@ export async function GET(_request: NextRequest, context: Context) {
     const { data: test, error: testError } = await db
       .from("afcat_tests")
       .select(
-        "id,title,kind,section,duration_seconds,expected_questions,release_version",
+        "id,code,title,kind,section,duration_seconds,expected_questions,release_version",
       )
       .eq("id", session.test_id)
       .single();
@@ -109,6 +109,7 @@ export async function GET(_request: NextRequest, context: Context) {
           ).toISOString(),
           expired: isAfcatExpired(session.started_at, test.duration_seconds),
           title: test.title,
+          code: test.code,
           currentPosition: session.current_position,
         },
         serverNow: new Date().toISOString(),
