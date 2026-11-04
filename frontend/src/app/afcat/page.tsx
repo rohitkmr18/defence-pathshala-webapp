@@ -6,7 +6,7 @@ import AfcatLandingTracker from "@/components/afcat/AfcatLandingTracker";
 import { ArrowRight, BarChart3, Brain, Clock3, FileCheck2, Target, Timer } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "AFCAT Full Mock 01, free — Defence Pathshala",
+  title: "AFCAT Full Mock 01, free",
   description: "A free full-length AFCAT mock: 100 questions, 120 minutes, +3/−1 marking, with a detailed analysis the moment you submit.",
   alternates: { canonical: "/afcat" },
   robots: { index: true, follow: true },
