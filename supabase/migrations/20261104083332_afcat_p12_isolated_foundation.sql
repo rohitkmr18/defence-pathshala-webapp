@@ -1,6 +1,3 @@
--- P1.2 AFCAT isolated foundation. Review/staging-test before applying to production.
--- No existing CDS/CAPF/UPSC tables are modified.
-
 create table public.afcat_questions (
  id uuid primary key default gen_random_uuid(),
  external_id text not null unique,
@@ -82,7 +79,6 @@ create index afcat_assets_question_idx on public.afcat_question_assets(question_
 create index afcat_sessions_owner_idx on public.afcat_sessions(user_id,started_at desc);
 create index afcat_responses_session_idx on public.afcat_responses(session_id);
 
--- Independently enforce the assigned pool, section, approved content and version.
 create function public.afcat_validate_assignment() returns trigger
 language plpgsql security invoker set search_path = '' as $$
 declare
@@ -101,7 +97,6 @@ end; $$;
 create trigger afcat_assignment_gate before insert or update on public.afcat_test_items
 for each row execute function public.afcat_validate_assignment();
 
--- Test publication must be a transactionally checked transition, never a status flip.
 create function public.afcat_validate_publication() returns trigger
 language plpgsql security invoker set search_path = '' as $$
 declare
@@ -135,7 +130,6 @@ end; $$;
 create trigger afcat_publication_gate before insert or update on public.afcat_tests
 for each row execute function public.afcat_validate_publication();
 
--- Prevent modifications to the content or assets of any published assigned question.
 create function public.afcat_guard_published_question() returns trigger
 language plpgsql security invoker set search_path = '' as $$
 begin
@@ -167,8 +161,6 @@ to authenticated using ((select auth.uid())=user_id);
 create policy afcat_own_responses on public.afcat_responses for select
 to authenticated using ((select auth.uid())=user_id);
 
-
--- Freeze DELETE operations on assignments, and edits to images after publication.
 create function public.afcat_guard_assignment_delete() returns trigger
 language plpgsql security invoker set search_path = '' as $$
 declare s text;
@@ -200,7 +192,6 @@ end; $$;
 create trigger afcat_asset_freeze before insert or update or delete on public.afcat_question_assets
 for each row execute function public.afcat_guard_assets();
 
--- Every saved response must refer to a question in the user's assigned test.
 create function public.afcat_validate_response() returns trigger
 language plpgsql security invoker set search_path = '' as $$
 declare assigned boolean;
@@ -216,8 +207,6 @@ end; $$;
 create trigger afcat_response_gate before insert or update on public.afcat_responses
 for each row execute function public.afcat_validate_response();
 
--- Prevent tests from changing the scoring blueprint after publication.
--- The release process separately checks the global product quotas and exact counts.
 create function public.afcat_validate_full_mock_sections() returns trigger
 language plpgsql security invoker set search_path = '' as $$
 declare english_count integer; ga_count integer; numerical_count integer; reasoning_count integer;
@@ -240,9 +229,6 @@ end; $$;
 create trigger afcat_mock_blueprint_gate before insert or update on public.afcat_tests
 for each row execute function public.afcat_validate_full_mock_sections();
 
-
--- Session creation requires a published test and pinned current release.
--- Terminal sessions cannot be silently reopened or re-scored.
 create function public.afcat_validate_session() returns trigger
 language plpgsql security invoker set search_path = '' as $$
 declare v record;

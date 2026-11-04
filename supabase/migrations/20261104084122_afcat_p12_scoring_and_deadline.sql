@@ -1,7 +1,3 @@
--- AFCAT production scoring + deadline guard (APPLIED TO PRODUCTION 2026-11-04).
--- Combines staging score_transaction and deadline_guard; touches only afcat_* objects.
--- Requires 20261023131000 foundation (already applied to production).
-
 create table public.afcat_session_results (
  session_id uuid primary key references public.afcat_sessions(id) on delete restrict,
  user_id uuid not null references auth.users(id) on delete restrict,
@@ -19,7 +15,6 @@ grant select on public.afcat_session_results to authenticated;
 create policy afcat_own_result on public.afcat_session_results
 for select to authenticated using ((select auth.uid()) = user_id);
 
--- Serialize saves with submissions (session row lock) and enforce the DB-clock deadline.
 create or replace function public.afcat_validate_response() returns trigger
 language plpgsql security invoker set search_path = '' as $$
 declare v_status text; v_test uuid; v_owner uuid; v_started timestamptz; v_duration integer;
