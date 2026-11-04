@@ -305,8 +305,11 @@ export default function AfcatLab() {
   }
   const question = paper?.questions[index];
   const active = paper?.session.status === "IN_PROGRESS" && left > 0 && online;
-  answersRef.current = answers;
-  indexRef.current = index;
+  // Refs mirror render state for effect cleanups; written after commit, never during render.
+  useEffect(() => {
+    answersRef.current = answers;
+    indexRef.current = index;
+  }, [answers, index]);
   /** Close the open viewing interval and add it to that question's total. */
   const checkpoint = useCallback(() => {
     const view = viewing.current;
