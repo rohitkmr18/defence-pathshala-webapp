@@ -4,5 +4,8 @@
     "deploymentEnabled": {
       "feat/auth-onboarding-state-model": false
     }
-  }
+  },
+  "regions": [
+    "hnd1"
+  ]
 }
