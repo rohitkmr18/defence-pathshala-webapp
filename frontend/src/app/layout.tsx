@@ -20,19 +20,20 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.defencepathshala.in"),
 
   title: {
-    default: "Defence Pathshala | PYQ Intelligence Platform for CDS, CAPF & NDA",
+    default: "Defence Pathshala | CDS & CAPF PYQs, AFCAT Mocks, Current Affairs",
     template: "%s | Defence Pathshala",
   },
 
   description:
-    "Analyze CDS, CAPF and NDA previous year questions with topic-wise filters, full-paper practice, and AI-powered performance analytics.",
+    "Practise official CDS and CAPF (AC) previous year questions topic-wise, attempt free AFCAT full mocks, and read daily current affairs for defence exams, with detailed performance analysis.",
 
   keywords: [
     "CDS PYQ",
     "CAPF Previous Year Questions",
-    "NDA PYQ",
     "Defence Pathshala",
     "CDS Mock Test",
+    "AFCAT Mock Test",
+    "Defence Current Affairs",
     "CAPF AC Preparation",
     "UPSC CAPF",
     "Defence Exams",
@@ -46,9 +47,9 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: "https://www.defencepathshala.in",
-    title: "Defence Pathshala | PYQ Intelligence Platform",
+    title: "Defence Pathshala | CDS, CAPF & AFCAT preparation",
     description:
-      "Practice smarter with topic-wise PYQ analysis, full-paper mocks, and performance analytics.",
+      "Official CDS and CAPF previous year questions, free AFCAT full mocks and daily current affairs, with detailed performance analysis.",
     siteName: "Defence Pathshala",
     images: [
       {
@@ -64,7 +65,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Defence Pathshala",
     description:
-      "CDS • CAPF • NDA PYQ Intelligence Platform",
+      "CDS & CAPF PYQs • Free AFCAT mocks • Daily current affairs",
     images: ["/og-image.png"],
   },
 
@@ -137,7 +138,7 @@ export default function RootLayout({
               logo: "https://www.defencepathshala.in/logo.png",
               image: "https://www.defencepathshala.in/og-image.png",
               description:
-                "AI-powered PYQ Intelligence Platform for CDS, CAPF and NDA aspirants.",
+                "Preparation platform for Indian defence exams: official CDS and CAPF previous year questions, AFCAT mocks and daily current affairs.",
               slogan: "Learn | Prepare | Serve",
               sameAs: [
                 "https://www.instagram.com/defencepathshala_",
@@ -146,7 +147,7 @@ export default function RootLayout({
               knowsAbout: [
                 "CDS Preparation",
                 "CAPF AC Preparation",
-                "NDA Preparation",
+                "AFCAT Preparation",
                 "Previous Year Questions",
                 "Current Affairs",
               ],
