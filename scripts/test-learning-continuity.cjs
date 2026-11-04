@@ -307,7 +307,10 @@ function apiFixture() {
     };
     async function execute() {
       const rows = tables[table];
-      if (payload && !updating && !(writeOptions.ignoreDuplicates && rows.has(payload.id))) rows.set(payload.id, { ...rows.get(payload.id), ...payload });
+      if (payload && !updating) for (const item of Array.isArray(payload) ? payload : [payload]) {
+        if (!(writeOptions.ignoreDuplicates && rows.has(item.id))) rows.set(item.id, { ...rows.get(item.id), ...item });
+      }
+      if (Array.isArray(payload) && !updating) return { data: payload, error: null };
       let row = [...rows.values()].find(r => conditions.every(([k, v]) => Array.isArray(v) ? v.includes(r[k]) : r[k] === v));
       if (updating && row) { row = { ...row, ...payload }; rows.set(row.id, row); }
       return { data: conditions.some(([,v]) => Array.isArray(v)) ? [...rows.values()].filter(r => conditions.every(([k,v]) => Array.isArray(v) ? v.includes(r[k]) : r[k] === v)) : row || null, error: null };
@@ -357,6 +360,39 @@ test('attempt write rejects withheld content and stale versions without changing
   f.tables.v_dp_question_intelligence_v2.get('q1').content_status='WITHHELD';
   assert.equal((await POST(f.request({...body,content_version:1}))).status,409);
   assert.equal(f.tables.user_attempts.size,0);
+});
+
+test('a submitted session rejects late attempt writes without changing the scored attempt', async () => {
+  const f = apiFixture(); const sessionId = '11111111-1111-4111-8111-111111111111';
+  f.tables.practice_sessions.set(sessionId, { id: sessionId, user_id: 'learner', question_ids: ['q1'], is_completed: false });
+  const { POST } = f.load('frontend/src/app/api/practice/attempt/route.ts');
+  const wrong = { question_id: 'q1', content_version: 1, session_id: sessionId, selected_option: 'A', is_correct: false, time_taken: 9 };
+  assert.equal((await POST(f.request(wrong))).body.persisted, true);
+  f.tables.practice_sessions.get(sessionId).is_completed = true;
+  const late = await POST(f.request({ ...wrong, selected_option: 'B', is_correct: true }));
+  assert.equal(late.status, 409); assert.equal(late.body.code, 'SESSION_COMPLETED');
+  const saved = [...f.tables.user_attempts.values()][0];
+  assert.equal(f.tables.user_attempts.size, 1); assert.equal(saved.selected_option, 'A'); assert.equal(saved.is_correct, false);
+});
+
+test('finalization is idempotent: a replay with a different answer set cannot rescore a submitted session', async () => {
+  const f = apiFixture(); const sessionId = '11111111-1111-4111-8111-111111111111';
+  f.tables.practice_sessions.set(sessionId, { id: sessionId, user_id: 'learner', question_ids: ['q1'], mode: 'instant', total_questions: 1, is_completed: false });
+  const { POST } = f.load('frontend/src/app/api/practice/finalize/route.ts');
+  const first = await POST(f.request({ session_id: sessionId, answers: { q1: 'A' }, time_spent_seconds: 30 }));
+  assert.equal(first.status, 200); assert.equal(first.body.session.is_completed, true);
+  const submitted = { ...f.tables.practice_sessions.get(sessionId) };
+  assert.equal(submitted.correct_count, 0); assert.equal(submitted.incorrect_count, 1);
+
+  const replay = await POST(f.request({ session_id: sessionId, answers: { q1: 'B' }, time_spent_seconds: 99 }));
+  assert.equal(replay.status, 200); assert.equal(replay.body.already_completed, true); assert.equal(replay.body.persisted, true);
+  assert.equal(replay.body.session.id, sessionId); assert.equal(replay.body.attempts_persisted, 0);
+  assert.deepEqual(f.tables.practice_sessions.get(sessionId), submitted);
+  const attempt = [...f.tables.user_attempts.values()][0];
+  assert.equal(f.tables.user_attempts.size, 1); assert.equal(attempt.selected_option, 'A'); assert.equal(attempt.is_correct, false);
+
+  f.identity.id = 'other';
+  assert.equal((await POST(f.request({ session_id: sessionId, answers: { q1: 'B' } }))).status, 404);
 });
 
 test('session creation refuses damaged sets and incomplete full papers', async () => {
