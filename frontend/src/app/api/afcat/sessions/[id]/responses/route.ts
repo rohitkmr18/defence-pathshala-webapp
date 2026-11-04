@@ -51,6 +51,6 @@ export async function PATCH(request: NextRequest, context: Context) {
     if (saveError) throw saveError;
     return NextResponse.json({ saved: true }, { headers: { "Cache-Control": "no-store" } });
   } catch {
-    return NextResponse.json({ error: "AFCAT staging autosave unavailable" }, { status: 503 });
+    return NextResponse.json({ error: "AFCAT autosave unavailable" }, { status: 503 });
   }
 }

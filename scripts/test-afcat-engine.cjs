@@ -160,3 +160,19 @@ test('AFCAT bundled figures match the generated package hashes', () => {
   const pkg = JSON.parse(require('node:fs').readFileSync('content/afcat/prelaunch/full_mock_01_v1.json', 'utf8'));
   for (const a of pkg.assets) assert.equal(sha(AFCAT_BUNDLED_ASSETS[`fm01/${a.asset_id}.svg`]), a.sha256, a.asset_id);
 });
+
+test('AFCAT project guard: staging always, production only with explicit kill-switch', () => {
+  const { isAfcatProjectAllowed } = load('frontend/src/lib/afcat/project-guard.ts');
+  const stg = 'https://pxfstrzceyxnweeaydvz.supabase.co';
+  const prod = 'https://afhwegrxnvgsqbqadvwr.supabase.co';
+  assert.equal(isAfcatProjectAllowed(stg, undefined), true);
+  assert.equal(isAfcatProjectAllowed(prod, undefined), false);
+  assert.equal(isAfcatProjectAllowed(prod, 'false'), false);
+  assert.equal(isAfcatProjectAllowed(prod, '1'), false);
+  assert.equal(isAfcatProjectAllowed(prod, 'true'), true);
+  assert.equal(isAfcatProjectAllowed('https://other.supabase.co', 'true'), false);
+  assert.equal(isAfcatProjectAllowed('http://afhwegrxnvgsqbqadvwr.supabase.co', 'true'), false);
+  assert.equal(isAfcatProjectAllowed('https://afhwegrxnvgsqbqadvwr.supabase.co.evil.com', 'true'), false);
+  assert.equal(isAfcatProjectAllowed('not a url', 'true'), false);
+  assert.equal(isAfcatProjectAllowed(undefined, 'true'), false);
+});
