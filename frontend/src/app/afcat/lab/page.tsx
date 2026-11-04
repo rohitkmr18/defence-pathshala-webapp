@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import AfcatShareButton from "@/components/afcat/AfcatShareButton";
-import { trackAfcatFunnel } from "@/lib/afcat/funnel";
+import { setAfcatFunnelTestCode, trackAfcatFunnel } from "@/lib/afcat/funnel";
 import AfcatVisualQuestion from "@/components/afcat/AfcatVisualQuestion";
 import AfcatResultAnalysis, {
   type AfcatResultReport,
@@ -17,6 +17,7 @@ import {
 } from "@/lib/afcat/results-analytics";
 type Test = {
   id: string;
+  code: string;
   title: string;
   expected_questions: number;
   duration_seconds: number;
@@ -27,6 +28,7 @@ type Paper = {
   session: {
     id: string;
     title: string;
+    code?: string;
     status: string;
     deadline: string;
     expired: boolean;
@@ -96,6 +98,7 @@ export default function AfcatLab() {
     };
     setLeft(Math.ceil(clock.current.remaining / 1000));
     setPaper(data);
+    setAfcatFunnelTestCode(data.session.code);
     spent.current = Object.fromEntries(
       data.responses.map((r) => [r.question_id, r.time_spent_seconds ?? 0]),
     );
@@ -289,6 +292,7 @@ export default function AfcatLab() {
   }, [paper, load]);
   async function start(testId: string) {
     if (lock.current) return;
+    setAfcatFunnelTestCode(tests.find((t) => t.id === testId)?.code);
     lock.current = true;
     setLoading(true);
     setError("");
@@ -487,7 +491,7 @@ export default function AfcatLab() {
                 Before you begin
               </p>
               <h2 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl">
-                AFCAT Full Mock 01
+                {tests.length === 1 ? tests[0].title : "AFCAT Full Mocks"}
               </h2>
               <p className="mt-3 leading-7 text-slate-600">
                 Read this once. The timer starts the moment you press Start.
@@ -539,14 +543,15 @@ export default function AfcatLab() {
                 onClick={() => void start(t.id)}
                 className="flex min-h-14 w-full items-center justify-center rounded-2xl bg-blue-600 px-6 text-base font-bold text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-50"
               >
-                Start Full Mock
+                {tests.length > 1 ? `Start ${t.title}` : "Start Full Mock"}
               </button>
             ))}
           </section>
         ) : result ? (
           <>
-            <AfcatShareButton score={result.score} maxMarks={result.max_marks} />
+            <AfcatShareButton score={result.score} maxMarks={result.max_marks} title={paper.session.title} />
             <AfcatResultAnalysis
+              title={paper.session.title}
               status={paper.session.status}
               summary={result}
               report={report}

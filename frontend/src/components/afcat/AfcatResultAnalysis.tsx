@@ -114,10 +114,12 @@ function OutcomeBar({ correct, incorrect, unanswered }: { correct: number; incor
 }
 
 export default function AfcatResultAnalysis({
+  title = "AFCAT Full Mock",
   status,
   summary,
   report,
 }: {
+  title?: string;
   status: string;
   summary: AfcatResultSummary;
   report: AfcatResultReport | null;
@@ -164,7 +166,7 @@ export default function AfcatResultAnalysis({
         <div className="mt-4 flex flex-col items-center gap-6 sm:flex-row sm:items-center">
           <ScoreRing score={summary.score} max={summary.max_marks} />
           <div className="w-full min-w-0 flex-1">
-            <h2 className="text-center text-2xl font-black sm:text-left">AFCAT Full Mock 01</h2>
+            <h2 className="text-center text-2xl font-black sm:text-left">{title}</h2>
             <dl className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
               {[
                 ["Correct", `${summary.correct_count}`, `+${summary.correct_count * 3} marks`, "text-emerald-300"],

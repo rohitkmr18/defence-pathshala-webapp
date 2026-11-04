@@ -6,14 +6,14 @@ import { trackAfcatFunnel } from "@/lib/afcat/funnel";
 const SHARE_URL = "https://www.defencepathshala.in/afcat?utm_source=share&utm_medium=result&utm_campaign=afcat_fm01";
 
 /** User-initiated share of the free mock. The score is included only in text the user can edit before sending. */
-export default function AfcatShareButton({ score, maxMarks }: { score: number; maxMarks: number }) {
+export default function AfcatShareButton({ score, maxMarks, title = "AFCAT Full Mock" }: { score: number; maxMarks: number; title?: string }) {
   const [note, setNote] = useState("");
   async function share() {
     trackAfcatFunnel("afcat_share_click", { method: typeof navigator.share === "function" ? "native" : "copy" });
-    const text = `I scored ${score}/${maxMarks} on the free AFCAT Full Mock 01 from Defence Pathshala. Try it:`;
+    const text = `I scored ${score}/${maxMarks} on the free ${title} from Defence Pathshala. Try it:`;
     try {
       if (typeof navigator.share === "function") {
-        await navigator.share({ title: "AFCAT Full Mock 01 — free", text, url: SHARE_URL });
+        await navigator.share({ title: `${title} — free`, text, url: SHARE_URL });
       } else {
         await navigator.clipboard.writeText(`${text} ${SHARE_URL}`);
         setNote("Link copied");
