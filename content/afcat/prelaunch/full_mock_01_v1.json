@@ -1176,7 +1176,7 @@
       "topic": "Current Affairs",
       "subtopic": "IAF exercises 2026",
       "stem": {
-        "text": "Exercise Pitch Black 2026, in which IAF Rafale fighters took part in July–August 2026, is hosted by the:"
+        "text": "Exercise Pitch Black 2026, in which IAF Rafale fighters took part, is hosted by the:"
       },
       "options": [
         {
@@ -1198,13 +1198,13 @@
       ],
       "correct_option": "A",
       "explanation": {
-        "text": "Pitch Black is hosted by the Royal Australian Air Force from RAAF Base Darwin; the 2026 edition ran from 20 July to 7 August."
+        "text": "Pitch Black is hosted by the Royal Australian Air Force from RAAF Base Darwin, and IAF Rafales took part in the 2026 edition."
       },
       "difficulty": "MODERATE",
       "source_kind": "ORIGINAL",
       "source_reference": "Written for DP Full Mock 01 v2 (V2-CA4)",
       "source_rights_status": "REVIEW_REQUIRED",
-      "fingerprint_sha256": "f0720d9e2971b55010f7a34cf0c7fbfc7eda9ad80f7219df5bde6023d71ba953",
+      "fingerprint_sha256": "1436c2f3fd590f598ffea08a6a87fa6c5846ad98a74243a17dfd4a2f08e78c6f",
       "content_version": 1,
       "editorial_status": "DRAFT",
       "requires_independent_review": true,
