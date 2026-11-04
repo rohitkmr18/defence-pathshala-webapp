@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { afcatStagingAdmin, afcatStagingUser } from "@/lib/afcat/staging-server";
-import { summarizeAfcatSections, type AfcatReviewItem, type AfcatSection } from "@/lib/afcat/results-analytics";
+import { analyzeAfcatAttempt, type AfcatReviewItem, type AfcatSection } from "@/lib/afcat/results-analytics";
+import { sanitizeAfcatQuestion } from "@/lib/afcat/serialize";
+import { AFCAT_ASSET_COLUMNS, groupAfcatAssets, type AfcatAssetRow } from "@/lib/afcat/assets";
 export const dynamic = "force-dynamic";
 type Context = { params: Promise<{ id: string }> };
+const explanationText = (value: unknown) =>
+  value && typeof value === "object" && !Array.isArray(value) &&
+  typeof (value as Record<string, unknown>).text === "string" ? (value as { text: string }).text : null;
+
 export async function GET(_req: NextRequest, context: Context) {
   try {
     const user = await afcatStagingUser();
@@ -15,6 +21,7 @@ export async function GET(_req: NextRequest, context: Context) {
       .select("id,user_id,test_id,status").eq("id", id).eq("user_id", user.id).maybeSingle();
     if (se) throw se;
     if (!s) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    // Answer keys and explanations are released only after authoritative submission or expiry.
     if (!["SUBMITTED","EXPIRED"].includes(s.status))
       return NextResponse.json({ error: "Submit test before viewing results" }, { status: 409 });
     const { data: result, error: re } = await db.from("afcat_session_results")
@@ -27,25 +34,41 @@ export async function GET(_req: NextRequest, context: Context) {
     if (ie) throw ie;
     const ids = (items ?? []).map(x => x.question_id);
     const { data: keys, error: ke } = await db.from("afcat_questions")
-      .select("id,section,correct_option,explanation").in("id", ids);
+      .select("id,section,topic,subtopic,difficulty,stem,options,correct_option,explanation").in("id", ids);
     if (ke) throw ke;
     const { data: responses, error: ae } = await db.from("afcat_responses")
-      .select("question_id,selected_option,marked_for_review").eq("session_id", id).eq("user_id", user.id);
+      .select("question_id,selected_option,marked_for_review,time_spent_seconds").eq("session_id", id).eq("user_id", user.id);
     if (ae) throw ae;
-    const keyMap = new Map((keys??[]).map(x => [x.id,x]));
-    const answerMap = new Map((responses??[]).map(x => [x.question_id,x]));
-    const review = (items??[]).map(item => {
+    const { data: assetRows, error: ase } = await db.from("afcat_question_assets").select(AFCAT_ASSET_COLUMNS).in("question_id", ids);
+    if (ase) throw ase;
+    const assetsByQuestion = groupAfcatAssets((assetRows ?? []) as AfcatAssetRow[]);
+    const keyMap = new Map((keys ?? []).map(x => [x.id, x]));
+    const answerMap = new Map((responses ?? []).map(x => [x.question_id, x]));
+    const review = (items ?? []).map(item => {
       const key = keyMap.get(item.question_id);
       const response = answerMap.get(item.question_id);
-      return { questionId:item.question_id,position:item.position,
+      let question = null;
+      try {
+        question = key ? sanitizeAfcatQuestion(item.question_id, item.position, key.stem, key.options, assetsByQuestion.get(item.question_id)) : null;
+      } catch {
+        question = null;
+      }
+      return {
+        questionId: item.question_id, position: item.position,
         section: key?.section as AfcatSection,
-        selected:response?.selected_option??null,
-        correct:key?.correct_option??null, explanation:key?.explanation??null };
+        topic: key?.topic ?? null, subtopic: key?.subtopic ?? null, difficulty: key?.difficulty ?? null,
+        selected: response?.selected_option ?? null,
+        correct: key?.correct_option ?? null,
+        markedForReview: response?.marked_for_review ?? false,
+        timeSpentSeconds: response?.time_spent_seconds ?? 0,
+        explanation: explanationText(key?.explanation),
+        question,
+      };
     });
-    if (review.some(x => !x.correct || !x.section))
+    if (review.some(x => !x.correct || !x.section || !x.question))
       return NextResponse.json({ error: "Result content incomplete" }, { status: 409 });
-    const sections = summarizeAfcatSections(review as AfcatReviewItem[]);
-    return NextResponse.json({ status:s.status,summary:result,sections,review },
+    const analysis = analyzeAfcatAttempt(review as AfcatReviewItem[]);
+    return NextResponse.json({ status: s.status, summary: result, sections: analysis.sections, analysis, review },
       { headers: { "Cache-Control": "private, no-store" } });
   } catch {
     return NextResponse.json({ error: "AFCAT result unavailable" }, { status: 503 });

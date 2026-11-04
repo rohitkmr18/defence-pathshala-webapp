@@ -5,6 +5,7 @@ import {
 } from "@/lib/afcat/staging-server";
 import { isAfcatExpired } from "@/lib/afcat/engine";
 import { sanitizeAfcatQuestion } from "@/lib/afcat/serialize";
+import { AFCAT_ASSET_COLUMNS, groupAfcatAssets, type AfcatAssetRow } from "@/lib/afcat/assets";
 
 export const dynamic = "force-dynamic";
 type Context = { params: Promise<{ id: string }> };
@@ -58,6 +59,10 @@ export async function GET(_request: NextRequest, context: Context) {
       .select("id,section,stem,options,content_version,editorial_status")
       .in("id", ids);
     if (questionError) throw questionError;
+    const { data: assetRows, error: assetError } = await db
+      .from("afcat_question_assets").select(AFCAT_ASSET_COLUMNS).in("question_id", ids);
+    if (assetError) throw assetError;
+    const assetsByQuestion = groupAfcatAssets((assetRows ?? []) as AfcatAssetRow[]);
     const byId = new Map((questions ?? []).map((q) => [q.id, q]));
     const sanitized = (items ?? []).map((item) => {
       const q = byId.get(item.question_id);
@@ -74,6 +79,7 @@ export async function GET(_request: NextRequest, context: Context) {
             item.position,
             q.stem,
             q.options,
+            assetsByQuestion.get(item.question_id),
           ),
           section: q.section,
         };
@@ -88,7 +94,7 @@ export async function GET(_request: NextRequest, context: Context) {
       );
     const { data: saved, error: responseError } = await db
       .from("afcat_responses")
-      .select("question_id,selected_option,marked_for_review")
+      .select("question_id,selected_option,marked_for_review,time_spent_seconds")
       .eq("session_id", session.id)
       .eq("user_id", user.id);
     if (responseError) throw responseError;

@@ -45,3 +45,118 @@ test('AFCAT learner serializer strictly omits answer keys and explanations', () 
   assert.throws(() => sanitizeAfcatQuestion('q1',1,stem,['One','Two']));
   assert.throws(() => sanitizeAfcatQuestion('q1',1,{html:'<script>'},options));
 });
+
+test('AFCAT learner serializer shows a shared passage above its question', () => {
+  const options = ['One','Two','Three','Four'];
+  const result = sanitizeAfcatQuestion('q1',1,{ text:'Fill blank (1).', passage:'The sky is (1) ___ to carelessness.' },options);
+  assert.equal(result.stem.text,'Passage:\nThe sky is (1) ___ to carelessness.\n\nFill blank (1).');
+  assert.throws(() => sanitizeAfcatQuestion('q1',1,{ text:'Q', passage:'   ' },options));
+  assert.throws(() => sanitizeAfcatQuestion('q1',1,{ text:'Q', passage:{ html:'<b>' } },options));
+});
+
+const analytics = load('frontend/src/lib/afcat/results-analytics.ts');
+// Modules run in a separate VM realm; compare plain copies.
+const plain = (v) => JSON.parse(JSON.stringify(v));
+const SECTIONS = ['GENERAL_AWARENESS','ENGLISH','NUMERICAL_ABILITY','REASONING_MILITARY_APTITUDE'];
+function row(i, section, outcome, extra = {}) {
+  const selected = outcome === 'C' ? 'A' : outcome === 'W' ? 'B' : null;
+  return { questionId:`q${i}`, position:i, section, selected, correct:'A', explanation:null,
+    topic:'T', difficulty:'MODERATE', timeSpentSeconds:0, markedForReview:false, ...extra };
+}
+
+test('AFCAT analysis sums sections, negative marks and accuracy from the review', () => {
+  const review = [row(1,'ENGLISH','C'), row(2,'ENGLISH','W'), row(3,'ENGLISH','S'), row(4,'GENERAL_AWARENESS','C')];
+  const a = analytics.analyzeAfcatAttempt(review);
+  const en = a.sections.find(s => s.section === 'ENGLISH');
+  assert.deepEqual([en.correct,en.incorrect,en.unanswered,en.marks,en.maximumMarks,en.negativeMarks,en.accuracyPercent],
+    [1,1,1,2,9,1,50]);
+  assert.deepEqual([a.overall.marks,a.overall.negativeMarks,a.overall.attempted], [5,1,3]);
+  assert.deepEqual(plain(a.sections.map(s => s.section)), SECTIONS, 'paper order');
+});
+
+test('AFCAT topic summary ranks by marks lost, counting skipped questions', () => {
+  const review = [
+    row(1,'ENGLISH','C',{topic:'Idioms'}), row(2,'ENGLISH','S',{topic:'Cloze'}), row(3,'ENGLISH','W',{topic:'Cloze'}),
+    row(4,'ENGLISH','W',{topic:'Idioms'}),
+  ];
+  const topics = analytics.summarizeAfcatTopics(review);
+  assert.deepEqual(plain(topics.map(t => [t.topic,t.marksLost])), [['Cloze',7],['Idioms',4]]);
+});
+
+test('AFCAT time summary ignores missing time and flags slow and costly answers', () => {
+  assert.equal(analytics.summarizeAfcatTime([row(1,'ENGLISH','C')]).recorded, false);
+  const t = analytics.summarizeAfcatTime([
+    row(1,'ENGLISH','W',{timeSpentSeconds:200}), row(2,'ENGLISH','C',{timeSpentSeconds:30}),
+    row(3,'ENGLISH','W',{timeSpentSeconds:80}), row(4,'ENGLISH','S',{timeSpentSeconds:Number.NaN}),
+  ]);
+  assert.deepEqual([t.recorded,t.totalSeconds,t.costlyMisses], [true,310,2]);
+  assert.deepEqual(plain(t.slowQuestions.map(q => [q.position,q.outcome])), [[1,'INCORRECT']]);
+});
+
+test('AFCAT recommendations: at most three, each backed by the attempt', () => {
+  // Heavy guessing: 20 wrong of 30 attempted, weak English, many skipped.
+  const review = [];
+  let i = 1;
+  for (const s of SECTIONS) for (let k = 0; k < 25; k++) {
+    const outcome = s === 'ENGLISH' ? (k < 15 ? 'W' : 'S') : (k < 5 ? 'W' : k < 15 ? 'C' : 'S');
+    review.push(row(i++, s, outcome, { topic: s === 'ENGLISH' ? 'Cloze' : 'Other', timeSpentSeconds: 100 }));
+  }
+  const a = analytics.analyzeAfcatAttempt(review);
+  assert.ok(a.recommendations.length <= 3);
+  assert.equal(a.recommendations[0].kind, 'REDUCE_GUESSING');
+  assert.ok(a.recommendations[0].reason.includes(`${a.overall.incorrect} wrong answers`));
+  const weakest = a.recommendations.find(r => r.kind === 'WEAKEST_SECTION');
+  assert.equal(weakest.section, 'ENGLISH');
+  // A clean, accurate attempt gets no invented advice.
+  const strong = analytics.analyzeAfcatAttempt(SECTIONS.map((s, n) => row(n + 1, s, 'C')));
+  assert.deepEqual(plain(strong.recommendations), []);
+});
+
+test('AFCAT recommends attempting more only where accuracy is high', () => {
+  const review = [];
+  for (let k = 0; k < 25; k++) review.push(row(k + 1, 'GENERAL_AWARENESS', k < 9 ? 'C' : k < 10 ? 'W' : 'S'));
+  for (let k = 0; k < 30; k++) review.push(row(k + 26, 'ENGLISH', k < 24 ? 'C' : 'W'));
+  const rec = analytics.analyzeAfcatAttempt(review).recommendations.find(r => r.kind === 'ATTEMPT_MORE');
+  assert.equal(rec.section, 'GENERAL_AWARENESS');
+  assert.ok(rec.reason.includes('15 unanswered') && rec.reason.includes('90%'));
+});
+
+const assetLib = load('frontend/src/lib/afcat/assets.ts');
+const { AFCAT_BUNDLED_ASSETS } = load('frontend/src/lib/afcat/assets/fm01.ts');
+const { createHash } = require('node:crypto');
+const sha = (text) => createHash('sha256').update(text, 'utf8').digest('hex');
+function assetRow(over = {}) {
+  const path = 'fm01/fm01-odd-figure.svg';
+  return { id: '11111111-1111-4111-8111-111111111111', question_id: 'q1', placement: 'STEM', storage_path: path,
+    mime_type: 'image/svg+xml', alt_text: 'Four figures', sha256: sha(AFCAT_BUNDLED_ASSETS[path]), reviewed: true, ...over };
+}
+
+test('AFCAT assets: only reviewed, hash-verified figures reach learners, via the signed-in route', () => {
+  const ok = assetLib.groupAfcatAssets([assetRow()]);
+  const entry = plain(ok.get('q1'));
+  assert.equal(entry.stem.length, 1);
+  assert.equal(entry.stem[0].url, '/api/afcat/assets/11111111-1111-4111-8111-111111111111');
+  assert.equal(entry.stem[0].alt, 'Four figures');
+  assert.ok(entry.stem[0].width > 0 && entry.stem[0].height > 0);
+  assert.equal(assetLib.groupAfcatAssets([assetRow({ reviewed: false })]).size, 0, 'unreviewed is withheld');
+  assert.equal(assetLib.groupAfcatAssets([assetRow({ sha256: 'a'.repeat(64) })]).size, 0, 'hash mismatch is withheld');
+  assert.equal(assetLib.groupAfcatAssets([assetRow({ storage_path: 'fm01/missing.svg' })]).size, 0, 'unknown file is withheld');
+  assert.equal(assetLib.groupAfcatAssets([assetRow({ placement: 'EXPLANATION' })]).size, 0, 'explanation art is not sent with questions');
+  assert.equal(assetLib.groupAfcatAssets([assetRow({ mime_type: 'image/png' })]).size, 0);
+});
+
+test('AFCAT serializer attaches figures to the stem and options without exposing keys', () => {
+  const options = ['One', 'Two', 'Three', 'Four'];
+  const grouped = assetLib.groupAfcatAssets([assetRow(), assetRow({ id: '22222222-2222-4222-8222-222222222222', placement: 'OPTION_B' })]);
+  const q = plain(sanitizeAfcatQuestion('q1', 1, { text: 'Pick one', assets: [{ asset_id: 'x', alt: 'raw' }] }, options, grouped.get('q1')));
+  assert.equal(q.stem.assets.length, 1);
+  assert.equal(q.options[1].content.assets.length, 1);
+  assert.equal(q.options[0].content.assets, undefined);
+  assert.equal(JSON.stringify(q).includes('raw'), false, 'raw stored asset metadata is never forwarded');
+  assert.equal(plain(sanitizeAfcatQuestion('q1', 1, { text: 'Pick one' }, options)).stem.assets, undefined);
+});
+
+test('AFCAT bundled figures match the generated package hashes', () => {
+  const pkg = JSON.parse(require('node:fs').readFileSync('content/afcat/prelaunch/full_mock_01_v1.json', 'utf8'));
+  for (const a of pkg.assets) assert.equal(sha(AFCAT_BUNDLED_ASSETS[`fm01/${a.asset_id}.svg`]), a.sha256, a.asset_id);
+});

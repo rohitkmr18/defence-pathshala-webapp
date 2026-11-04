@@ -1,0 +1,4378 @@
+{
+  "package": "AFCAT_FM01_V2_DRAFT",
+  "status": "DRAFT_DO_NOT_PUBLISH",
+  "built_by": "scripts/build-afcat-mock01.py",
+  "source": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03)",
+  "notes": [
+    "v2 (2026-11-04): replaced the 10 easiest items with harder ones, added a 4-blank cloze passage, replaced dated current affairs with four verified 2026 items, and added six original figure-based reasoning items.",
+    "All items are DP-original practice questions written to the AFCAT pattern. None is an official or memory-reconstructed AFCAT paper question.",
+    "Section order follows the AFCAT paper: GA, English, Numerical, Reasoning. 25/30/20/25 is DP's split, not an official IAF allocation.",
+    "Figures live in assets/fm01 as SVG with alt text and hashes; the learner API does not serve question images yet.",
+    "Current-affairs items carry source_evidence and a recheck_on date.",
+    "Difficulty labels are author estimates, not calibrated."
+  ],
+  "exam_config": {
+    "question_count": 100,
+    "duration_seconds": 7200,
+    "correct_marks": 3,
+    "incorrect_marks": -1,
+    "unanswered_marks": 0,
+    "max_marks": 300,
+    "language": "en"
+  },
+  "summary": {
+    "sections": {
+      "GENERAL_AWARENESS": 25,
+      "ENGLISH": 30,
+      "NUMERICAL_ABILITY": 20,
+      "REASONING_MILITARY_APTITUDE": 25
+    },
+    "answer_keys": {
+      "A": 25,
+      "B": 25,
+      "C": 25,
+      "D": 25
+    },
+    "difficulty": {
+      "EASY": 19,
+      "HARD": 12,
+      "MODERATE": 69
+    },
+    "longest_same_key_run": 4,
+    "figure_items": 6
+  },
+  "assets": [
+    {
+      "asset_id": "fm01-series-problem",
+      "file": "assets/fm01/fm01-series-problem.svg",
+      "mime_type": "image/svg+xml",
+      "sha256": "b40a4e54b01d552ab369d2e63e8c3cdc5719bd988754fb35e02aa6bd1f1a3e72",
+      "width": 560,
+      "height": 170,
+      "alt": "Three figures in a series. Each square holds an arrow and a dot. Figure 1: arrow up, dot top-left. Figure 2: arrow up-right, dot top-right. Figure 3: arrow right, dot bottom-right. Figure 4 is a question mark.",
+      "license": "DP original artwork",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "asset_id": "fm01-series-answers",
+      "file": "assets/fm01/fm01-series-answers.svg",
+      "mime_type": "image/svg+xml",
+      "sha256": "a44d15503fef29dc8e62743755e4d717ef2317dde81b56e343822d58dede9feb",
+      "width": 560,
+      "height": 170,
+      "alt": "Answer figures. A: arrow down-right, dot bottom-right. B: arrow down, dot bottom-left. C: arrow down-right, dot bottom-left. D: arrow down-right, dot top-left.",
+      "license": "DP original artwork",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "asset_id": "fm01-mirror-problem",
+      "file": "assets/fm01/fm01-mirror-problem.svg",
+      "mime_type": "image/svg+xml",
+      "sha256": "605ec8ccba1e64d99d0c122d1028508f1d637fcd47e7c38ae5b8e6ce652daf84",
+      "width": 280,
+      "height": 180,
+      "alt": "A flag on a pole, with the triangular flag at the top pointing right, a short bar to the right of the pole and a small circle at lower right. A vertical mirror line M is on the right.",
+      "license": "DP original artwork",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "asset_id": "fm01-mirror-answers",
+      "file": "assets/fm01/fm01-mirror-answers.svg",
+      "mime_type": "image/svg+xml",
+      "sha256": "602bbbc3d81574c2383c780f4642a60417302b2910329137168904d141cbd7f3",
+      "width": 600,
+      "height": 180,
+      "alt": "Four answer figures. A: flag at the top pointing right, pole on the left, circle at lower right. B: flag at the bottom pointing right, pole on the left, circle at upper right. C: flag at the bottom pointing left, pole on the right, circle at upper left. D: flag at the top pointing left, pole on the right, circle at lower left.",
+      "license": "DP original artwork",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "asset_id": "fm01-water-problem",
+      "file": "assets/fm01/fm01-water-problem.svg",
+      "mime_type": "image/svg+xml",
+      "sha256": "2d2402d9c75d3c4f6553048b5989c97c6d2322db5b3ea5d5cc8fadfd4950d25d",
+      "width": 220,
+      "height": 220,
+      "alt": "A staircase line rising from bottom-left to top-right ending in an arrowhead pointing right, a small circle at upper left and a filled square at lower right. A horizontal water line is below the figure.",
+      "license": "DP original artwork",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "asset_id": "fm01-water-answers",
+      "file": "assets/fm01/fm01-water-answers.svg",
+      "mime_type": "image/svg+xml",
+      "sha256": "ff14f430f0aa07d6e173c870dd2d49201c8e3fd2d357653ebedfb654ce295612",
+      "width": 600,
+      "height": 180,
+      "alt": "Four answer figures. A: staircase descends from top-left to an arrowhead at lower right; circle at lower left; square at upper right. B: staircase rises from bottom-right to an arrowhead at upper left; circle at upper right; square at lower left. C: staircase descends from top-right to an arrowhead at lower left; circle at lower right; square at upper left. D: the figure turned a quarter-turn clockwise, staircase running top to bottom with the arrowhead pointing down at lower right.",
+      "license": "DP original artwork",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "asset_id": "fm01-fold-problem",
+      "file": "assets/fm01/fm01-fold-problem.svg",
+      "mime_type": "image/svg+xml",
+      "sha256": "ebe02eaebff852c26cdf5cc447b19cef278b760ca2f0deacd16fa4a95d0dd61a",
+      "width": 430,
+      "height": 185,
+      "alt": "Step 1: a square sheet is folded along its vertical centre line, left half onto right. Step 2: the folded sheet is folded along its horizontal centre line, top half onto bottom. Step 3: one hole is punched in the folded quarter, near its lower-left area.",
+      "license": "DP original artwork",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "asset_id": "fm01-fold-answers",
+      "file": "assets/fm01/fm01-fold-answers.svg",
+      "mime_type": "image/svg+xml",
+      "sha256": "eea5bf8d23cf49b47d3d7193b066b43edd9a386e068f715c29273163146e5851",
+      "width": 600,
+      "height": 180,
+      "alt": "Four unfolded squares. A: two holes in the lower half, side by side. B: four holes in the middle band near the left and right edges. C: two holes on a diagonal. D: four holes, one in each quarter, placed symmetrically about both centre lines.",
+      "license": "DP original artwork",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "asset_id": "fm01-count-triangles",
+      "file": "assets/fm01/fm01-count-triangles.svg",
+      "mime_type": "image/svg+xml",
+      "sha256": "f3fa28fa6e71ed2b6b3b60745a9f1461792b42c7e33eec03b5200e49733af164",
+      "width": 300,
+      "height": 230,
+      "alt": "A large triangle with a vertical line from the top vertex to the middle of the base, and a horizontal line across the triangle at half its height.",
+      "license": "DP original artwork",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "asset_id": "fm01-odd-figure",
+      "file": "assets/fm01/fm01-odd-figure.svg",
+      "mime_type": "image/svg+xml",
+      "sha256": "8aaa22016eb150cc6f082d09e23b3c07240ab023b0ef499fcf540ce57e8db523",
+      "width": 600,
+      "height": 185,
+      "alt": "Four figures. A: square with 3 dots. B: triangle with 2 dots. C: pentagon with 4 dots. D: hexagon with 4 dots.",
+      "license": "DP original artwork",
+      "review_status": "REVIEW_REQUIRED"
+    }
+  ],
+  "questions": [
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-001",
+      "position": 1,
+      "pool_type": "FULL_MOCK",
+      "section": "GENERAL_AWARENESS",
+      "topic": "History",
+      "subtopic": "Modern India - British administration",
+      "stem": {
+        "text": "The Doctrine of Lapse was introduced by:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Lord Wellesley"
+        },
+        {
+          "key": "B",
+          "text": "Lord Cornwallis"
+        },
+        {
+          "key": "C",
+          "text": "Lord Dalhousie"
+        },
+        {
+          "key": "D",
+          "text": "Lord Bentinck"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "Lord Dalhousie (Governor-General 1848-56) used the Doctrine of Lapse to annex states such as Satara, Jhansi and Nagpur."
+      },
+      "difficulty": "EASY",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q11",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "61514c27f798f1dd920e82a46e62e66705c6d90dcaee37df890e9b5066e3a51d",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-002",
+      "position": 2,
+      "pool_type": "FULL_MOCK",
+      "section": "GENERAL_AWARENESS",
+      "topic": "History",
+      "subtopic": "Modern India - reform movements",
+      "stem": {
+        "text": "The Mohammedan Anglo-Oriental College, Aligarh, was founded by:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Annie Besant"
+        },
+        {
+          "key": "B",
+          "text": "Syed Ahmad Khan"
+        },
+        {
+          "key": "C",
+          "text": "Dadabhai Naoroji"
+        },
+        {
+          "key": "D",
+          "text": "M. G. Ranade"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "Sir Syed Ahmad Khan founded the MAO College in 1875; it later became Aligarh Muslim University."
+      },
+      "difficulty": "EASY",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q4",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "fdb5018c9886c79a18ba36f0b15faa27bda9ccb897499656cabf25849050d249",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-003",
+      "position": 3,
+      "pool_type": "FULL_MOCK",
+      "section": "GENERAL_AWARENESS",
+      "topic": "History",
+      "subtopic": "Ancient India - Harappan sites",
+      "stem": {
+        "text": "The Harappan site Lothal is in:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Rajasthan"
+        },
+        {
+          "key": "B",
+          "text": "Haryana"
+        },
+        {
+          "key": "C",
+          "text": "Punjab"
+        },
+        {
+          "key": "D",
+          "text": "Gujarat"
+        }
+      ],
+      "correct_option": "D",
+      "explanation": {
+        "text": "Lothal, known for its dockyard, is in Ahmedabad district, Gujarat."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q8",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "fdbb11132686ac44b02d2953b77f0e1be740ef639f44a6e3951a838c40de25cd",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-004",
+      "position": 4,
+      "pool_type": "FULL_MOCK",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Geography",
+      "subtopic": "Indian physical geography",
+      "stem": {
+        "text": "The Tropic of Cancer passes through how many Indian states?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "6"
+        },
+        {
+          "key": "B",
+          "text": "7"
+        },
+        {
+          "key": "C",
+          "text": "9"
+        },
+        {
+          "key": "D",
+          "text": "8"
+        }
+      ],
+      "correct_option": "D",
+      "explanation": {
+        "text": "Eight: Gujarat, Rajasthan, Madhya Pradesh, Chhattisgarh, Jharkhand, West Bengal, Tripura and Mizoram."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q15",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "fc6fad340856d14ee8a6bdbacddd43f47b5ded5c75feb4248d46ab18a8a5fe42",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-005",
+      "position": 5,
+      "pool_type": "FULL_MOCK",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Geography",
+      "subtopic": "Himalayan peaks",
+      "stem": {
+        "text": "The highest peak lying entirely within India is:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Kanchenjunga"
+        },
+        {
+          "key": "B",
+          "text": "Nanda Devi"
+        },
+        {
+          "key": "C",
+          "text": "Kamet"
+        },
+        {
+          "key": "D",
+          "text": "Saltoro Kangri"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "Kanchenjunga is higher but lies on the India-Nepal border; Nanda Devi (7,816 m) is the highest wholly within India."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q16",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "70de88669ac8a462781193a851db2d3630bf8d4323d112baa3929f6c550d6469",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-006",
+      "position": 6,
+      "pool_type": "FULL_MOCK",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Geography",
+      "subtopic": "Oceanography",
+      "stem": {
+        "text": "Long, narrow and very deep depressions on the ocean floor are called:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Abyssal plains"
+        },
+        {
+          "key": "B",
+          "text": "Mid-ocean ridges"
+        },
+        {
+          "key": "C",
+          "text": "Continental shelves"
+        },
+        {
+          "key": "D",
+          "text": "Oceanic trenches"
+        }
+      ],
+      "correct_option": "D",
+      "explanation": {
+        "text": "Oceanic trenches form at subduction zones; the Mariana Trench is the deepest."
+      },
+      "difficulty": "EASY",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q24",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "f8897b9dde7e4212119f329b57da409fa1b6f0604622c766aa597ac58cbf63cc",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-007",
+      "position": 7,
+      "pool_type": "FULL_MOCK",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Polity",
+      "subtopic": "Constitutional amendments",
+      "stem": {
+        "text": "Fundamental Duties were added to the Constitution by the:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "24th Amendment"
+        },
+        {
+          "key": "B",
+          "text": "42nd Amendment"
+        },
+        {
+          "key": "C",
+          "text": "44th Amendment"
+        },
+        {
+          "key": "D",
+          "text": "52nd Amendment"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "The 42nd Amendment (1976) inserted Part IV-A (Article 51A) on Fundamental Duties."
+      },
+      "difficulty": "EASY",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q27",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "5f5ae3b761483f22213fa3f7d9d1eda29f24a868b7ca1a80af15cf82a12547f9",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-008",
+      "position": 8,
+      "pool_type": "FULL_MOCK",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Polity",
+      "subtopic": "Elections and parties",
+      "stem": {
+        "text": "Recognition of national parties is governed by the:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Representation of the People Act, 1950 only"
+        },
+        {
+          "key": "B",
+          "text": "Article 368"
+        },
+        {
+          "key": "C",
+          "text": "Election Symbols (Reservation and Allotment) Order, 1968"
+        },
+        {
+          "key": "D",
+          "text": "Tenth Schedule"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "The Election Commission recognises national and state parties under paragraph 6 of the Election Symbols Order, 1968."
+      },
+      "difficulty": "HARD",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q32",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "ecbbe403f790ed60f0b9ee3acfdcd5a74f058b0541f1fbc2e7dc9fac50f53fd6",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-009",
+      "position": 9,
+      "pool_type": "FULL_MOCK",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Polity",
+      "subtopic": "Emergency provisions",
+      "stem": {
+        "text": "Which Article of the Constitution empowers the President to proclaim a Financial Emergency?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Article 352"
+        },
+        {
+          "key": "B",
+          "text": "Article 356"
+        },
+        {
+          "key": "C",
+          "text": "Article 360"
+        },
+        {
+          "key": "D",
+          "text": "Article 365"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "Article 360 covers Financial Emergency. Article 352 is National Emergency and Article 356 is President's Rule in a state."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-H03)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "10835f88b1354eb26a8202cd6dcfacf0c708188af589420bf67a2dd5ab5b842e",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-010",
+      "position": 10,
+      "pool_type": "FULL_MOCK",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Science and Technology",
+      "subtopic": "Physics - scalars and vectors",
+      "stem": {
+        "text": "Which of the following is NOT a vector quantity?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Displacement"
+        },
+        {
+          "key": "B",
+          "text": "Momentum"
+        },
+        {
+          "key": "C",
+          "text": "Impulse"
+        },
+        {
+          "key": "D",
+          "text": "Work"
+        }
+      ],
+      "correct_option": "D",
+      "explanation": {
+        "text": "Work is the dot product of force and displacement, so it has magnitude only. The other three have direction."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-H01)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "2518aee3b3c779749d7b95eb08873ffb45ec1c89a73aabdd75a5e024da3ce608",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-011",
+      "position": 11,
+      "pool_type": "FULL_MOCK",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Science and Technology",
+      "subtopic": "Biology - vitamins",
+      "stem": {
+        "text": "Which of the following vitamins is fat-soluble?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Vitamin C"
+        },
+        {
+          "key": "B",
+          "text": "Vitamin B12"
+        },
+        {
+          "key": "C",
+          "text": "Vitamin K"
+        },
+        {
+          "key": "D",
+          "text": "Vitamin B1"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "Vitamins A, D, E and K are fat-soluble; vitamin C and the B group are water-soluble."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-H02)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "7846440cf7c2bc3e486b026e26b23c0f6d6556ebdb62e2a601e9a3c32ab63a6d",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-012",
+      "position": 12,
+      "pool_type": "FULL_MOCK",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Science and Technology",
+      "subtopic": "Physics - optics",
+      "stem": {
+        "text": "Myopia (short-sightedness) is corrected using a:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Convex lens"
+        },
+        {
+          "key": "B",
+          "text": "Cylindrical lens"
+        },
+        {
+          "key": "C",
+          "text": "Bifocal lens"
+        },
+        {
+          "key": "D",
+          "text": "Concave lens"
+        }
+      ],
+      "correct_option": "D",
+      "explanation": {
+        "text": "In myopia the image forms in front of the retina; a diverging (concave) lens moves it back onto the retina."
+      },
+      "difficulty": "EASY",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q52",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "a8cd58669d97217045c47356a54191edb0af37467a4d7e05b30e3f6e0bbbb171",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-013",
+      "position": 13,
+      "pool_type": "FULL_MOCK",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Environment",
+      "subtopic": "Atmosphere",
+      "stem": {
+        "text": "The ozone layer lies in the:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Troposphere"
+        },
+        {
+          "key": "B",
+          "text": "Mesosphere"
+        },
+        {
+          "key": "C",
+          "text": "Stratosphere"
+        },
+        {
+          "key": "D",
+          "text": "Exosphere"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "Most atmospheric ozone is in the stratosphere, roughly 15-35 km above the surface."
+      },
+      "difficulty": "EASY",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q23",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "e7a1696a2568d5722f16ba07d1bd122125aa109a303f47cf70eef7a1a8b83553",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-014",
+      "position": 14,
+      "pool_type": "FULL_MOCK",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Economy",
+      "subtopic": "Monetary policy",
+      "stem": {
+        "text": "The repo rate is the rate at which:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Banks keep deposits with RBI"
+        },
+        {
+          "key": "B",
+          "text": "RBI borrows from banks"
+        },
+        {
+          "key": "C",
+          "text": "Banks lend to the public"
+        },
+        {
+          "key": "D",
+          "text": "Commercial banks borrow short-term from the RBI"
+        }
+      ],
+      "correct_option": "D",
+      "explanation": {
+        "text": "Repo is the rate at which the RBI lends short-term funds to commercial banks against government securities."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q38",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "f9873611b2acad4b11aa96d7ac9d4400f6e20516c695d78cfdba2d9cc8b3b3f6",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-015",
+      "position": 15,
+      "pool_type": "FULL_MOCK",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Economy",
+      "subtopic": "Financial institutions",
+      "stem": {
+        "text": "IDBI (Industrial Development Bank of India) was established in:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "1949"
+        },
+        {
+          "key": "B",
+          "text": "1955"
+        },
+        {
+          "key": "C",
+          "text": "1964"
+        },
+        {
+          "key": "D",
+          "text": "1969"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "IDBI was set up in 1964 as a subsidiary of the RBI to finance industrial development."
+      },
+      "difficulty": "HARD",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q36",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "77ad0b5f6370fcc3978bb2dd527651563a9c6f0fa391bb66c44ef55ee42b8d2b",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-016",
+      "position": 16,
+      "pool_type": "FULL_MOCK",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Sports, Awards and Culture",
+      "subtopic": "Festivals",
+      "stem": {
+        "text": "The Hornbill Festival is celebrated in:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Nagaland"
+        },
+        {
+          "key": "B",
+          "text": "Arunachal Pradesh"
+        },
+        {
+          "key": "C",
+          "text": "Mizoram"
+        },
+        {
+          "key": "D",
+          "text": "Meghalaya"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "Nagaland's Hornbill Festival, held each December near Kohima, showcases the state's Naga tribes."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-H04)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "9be216d352606d984080317600726a29bf8f07262e46328c5b7e7bc38cdc7659",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-017",
+      "position": 17,
+      "pool_type": "FULL_MOCK",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Sports, Awards and Culture",
+      "subtopic": "Dance and theatre",
+      "stem": {
+        "text": "Yakshagana is a traditional dance-drama of:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Kerala"
+        },
+        {
+          "key": "B",
+          "text": "Andhra Pradesh"
+        },
+        {
+          "key": "C",
+          "text": "Karnataka"
+        },
+        {
+          "key": "D",
+          "text": "Tamil Nadu"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "Yakshagana is associated with coastal Karnataka."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q70",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "4e4e1fd91c9b6a5551b206cfd760db6c2a928a2fb47c35adc6833649c1489e7d",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-018",
+      "position": 18,
+      "pool_type": "FULL_MOCK",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Sports, Awards and Culture",
+      "subtopic": "Sports rules",
+      "stem": {
+        "text": "Under standard rules, how many players of the chasing team are on the field at a time in Kho Kho?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "9"
+        },
+        {
+          "key": "B",
+          "text": "11"
+        },
+        {
+          "key": "C",
+          "text": "7"
+        },
+        {
+          "key": "D",
+          "text": "12"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "Nine chasers take the field: eight sit in the squares and one is the active chaser."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q71",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "f4856e363805278835e822d96d402de2312b41ab07fa068eb0b96c390644aec0",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-019",
+      "position": 19,
+      "pool_type": "FULL_MOCK",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Defence and Aviation",
+      "subtopic": "Operations",
+      "stem": {
+        "text": "Operation Safed Sagar (1999) was the code name for the:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Army's ground offensive in Kargil"
+        },
+        {
+          "key": "B",
+          "text": "Navy's blockade of Karachi"
+        },
+        {
+          "key": "C",
+          "text": "IAF's air operations in the Kargil conflict"
+        },
+        {
+          "key": "D",
+          "text": "Evacuation of Indians from Ukraine"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "Safed Sagar was the IAF's air campaign in Kargil; the Army's operation was Operation Vijay and the Navy's Operation Talwar."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q53",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "e2cbb6f2bea4d61e5634b4ccc958d72499b4bc6253e0137ac06375c5cd46ad52",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-020",
+      "position": 20,
+      "pool_type": "FULL_MOCK",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Defence and Aviation",
+      "subtopic": "Gallantry awards",
+      "stem": {
+        "text": "The only IAF officer to receive the Param Vir Chakra is:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Flying Officer Nirmal Jit Singh Sekhon"
+        },
+        {
+          "key": "B",
+          "text": "Sqn Ldr Ajjamada Devayya"
+        },
+        {
+          "key": "C",
+          "text": "Wg Cdr Rakesh Sharma"
+        },
+        {
+          "key": "D",
+          "text": "Gp Capt Varun Singh"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "Fg Offr N. J. S. Sekhon was awarded the PVC posthumously for defending Srinagar airfield in December 1971."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q57",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "a4ac38479ab65575d39b925cdff9537cf08748454382ef690a3b02f39ec7c663",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-021",
+      "position": 21,
+      "pool_type": "FULL_MOCK",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Defence and Aviation",
+      "subtopic": "Indigenous weapons",
+      "stem": {
+        "text": "The Rudram series of air-to-surface anti-radiation missiles was developed by:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "HAL"
+        },
+        {
+          "key": "B",
+          "text": "DRDO"
+        },
+        {
+          "key": "C",
+          "text": "BEL"
+        },
+        {
+          "key": "D",
+          "text": "ISRO"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "Rudram was developed by DRDO for IAF fighters to destroy enemy radar emitters."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section A-Q58",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "6d4cfd7eebbe63991b28b954e0651e591a98f6e0451facbe23126bc91c00008b",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-022",
+      "position": 22,
+      "pool_type": "FULL_MOCK",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Current Affairs",
+      "subtopic": "IAF exercises 2026",
+      "stem": {
+        "text": "Exercise Vayu Shakti-2026, witnessed by President Droupadi Murmu in February 2026, was conducted by the IAF at:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Mahajan Field Firing Range, Bikaner"
+        },
+        {
+          "key": "B",
+          "text": "Babina Field Firing Range, Jhansi"
+        },
+        {
+          "key": "C",
+          "text": "Tilpat Range, Faridabad"
+        },
+        {
+          "key": "D",
+          "text": "Pokhran Firing Range, Jaisalmer"
+        }
+      ],
+      "correct_option": "D",
+      "explanation": {
+        "text": "Vayu Shakti-2026 was held on 27 February 2026 at the Pokhran range in Jaisalmer, Rajasthan, with Rafale, Su-30MKI, Tejas and Mirage 2000 fighters taking part."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-CA1)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "5945146c073b2429880ed514b412be8b5ab57ddf95ae11a9edd01496dec840a2",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true,
+      "source_evidence": [
+        {
+          "title": "President of India witnesses the Vayu Shakti-2026 exercise at the Pokhran firing range",
+          "issuer": "President's Secretariat",
+          "url": "https://presidentofindia.nic.in/press_releases/president-india-witnesses-vayu-shakti-2026-exercise-pokhran-firing-range",
+          "accessed": "2026-11-04"
+        }
+      ],
+      "as_of_date": "2026-11-04",
+      "recheck_on": "2027-01-31"
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-023",
+      "position": 23,
+      "pool_type": "FULL_MOCK",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Current Affairs",
+      "subtopic": "IAF exercises 2026",
+      "stem": {
+        "text": "The second edition of the IAF-hosted multinational air exercise Tarang Shakti (September–October 2026) was held at:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Air Force Station Sulur"
+        },
+        {
+          "key": "B",
+          "text": "Air Force Station Jodhpur"
+        },
+        {
+          "key": "C",
+          "text": "Air Force Station Jamnagar"
+        },
+        {
+          "key": "D",
+          "text": "Air Force Station Hindan"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "Tarang Shakti 2026 ran from 26 September to 12 October 2026 at Air Force Station Jodhpur and nearby bases, with eight countries flying and 32 observing."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-CA2)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "b6f9258daec44e5e3c0b9a5aeb7a049e90da28f499d64f11cb8d9c45e2fe1762",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true,
+      "source_evidence": [
+        {
+          "title": "Tarang Shakti-2026 multinational air exercise to begin on 26th September in Jodhpur",
+          "issuer": "News On AIR (Prasar Bharati)",
+          "url": "https://newsonair.gov.in/tarang-shakti-2026-multinational-air-exercise-to-begin-on-26th-september-in-jodhpur/",
+          "accessed": "2026-11-04"
+        }
+      ],
+      "as_of_date": "2026-11-04",
+      "recheck_on": "2027-01-31"
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-024",
+      "position": 24,
+      "pool_type": "FULL_MOCK",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Current Affairs",
+      "subtopic": "IAF exercises 2026",
+      "stem": {
+        "text": "Veer Guardian 2026, held at Air Force Station Jodhpur in September 2026, was a bilateral air exercise between the IAF and the air force of:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "France"
+        },
+        {
+          "key": "B",
+          "text": "Egypt"
+        },
+        {
+          "key": "C",
+          "text": "Australia"
+        },
+        {
+          "key": "D",
+          "text": "Japan"
+        }
+      ],
+      "correct_option": "D",
+      "explanation": {
+        "text": "Veer Guardian is an India-Japan exercise. In 2026 the Japan Air Self-Defence Force flew F-2A fighters alongside IAF Tejas, Su-30MKI and Rafale aircraft."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-CA3)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "ca1a942e202bd4e4f5fc8fa425a89addc9923c0f9ae50c406ffe795145fa0ec6",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true,
+      "source_evidence": [
+        {
+          "title": "India, Japan conduct air exercise Veer Guardian 2026 at Air Force Station Jodhpur",
+          "issuer": "News On AIR (Prasar Bharati)",
+          "url": "https://newsonair.gov.in/india-japan-conduct-air-exercise-veer-guardian-2026-at-air-force-station-jodhpur/",
+          "accessed": "2026-11-04"
+        }
+      ],
+      "as_of_date": "2026-11-04",
+      "recheck_on": "2027-01-31"
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-025",
+      "position": 25,
+      "pool_type": "FULL_MOCK",
+      "section": "GENERAL_AWARENESS",
+      "topic": "Current Affairs",
+      "subtopic": "IAF exercises 2026",
+      "stem": {
+        "text": "Exercise Pitch Black 2026, in which IAF Rafale fighters took part in July–August 2026, is hosted by the:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Royal Australian Air Force"
+        },
+        {
+          "key": "B",
+          "text": "United States Air Force"
+        },
+        {
+          "key": "C",
+          "text": "Royal Air Force (UK)"
+        },
+        {
+          "key": "D",
+          "text": "Royal Malaysian Air Force"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "Pitch Black is hosted by the Royal Australian Air Force from RAAF Base Darwin; the 2026 edition ran from 20 July to 7 August."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-CA4)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "f0720d9e2971b55010f7a34cf0c7fbfc7eda9ad80f7219df5bde6023d71ba953",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true,
+      "source_evidence": [
+        {
+          "title": "Indian Air Force: Ex Pitch Black 2026 at Darwin, Australia (summary of PIB release)",
+          "issuer": "SuperKalam current affairs, citing PIB; replace with the PIB release before approval",
+          "url": "https://superkalam.com/current-affairs/20-07-2026/indian-air-force-ex-pitch-black-2026-at-darwin-australia-1b1b9689-5a40-4a6b-b021-4418d2564fed",
+          "accessed": "2026-11-04"
+        }
+      ],
+      "as_of_date": "2026-11-04",
+      "recheck_on": "2027-01-31"
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-026",
+      "position": 26,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Reading Comprehension",
+      "subtopic": "Main idea",
+      "stem": {
+        "text": "The main idea of the passage is that:",
+        "passage_id": "FM01-P1",
+        "passage": "Air power has transformed modern warfare. Unlike armies, which must cross terrain, an air force can strike at depth within hours and shift its effort from one theatre to another with little delay. Yet air power alone rarely wins a war. Its true strength lies in partnership with land and naval forces, where it provides surveillance, transport and precision fire. Moreover, technology has made pilots dependent on a vast network of engineers, technicians and controllers on the ground. A single sortie is therefore the visible tip of an enormous, disciplined effort."
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Air power alone wins wars"
+        },
+        {
+          "key": "B",
+          "text": "Air power is powerful but depends on joint effort and a large support network"
+        },
+        {
+          "key": "C",
+          "text": "Armies are obsolete"
+        },
+        {
+          "key": "D",
+          "text": "Pilots are not important"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "The passage praises air power's reach but stresses partnership with other forces and a ground support network."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q81",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "ce1ceccd3435182d0735896945500d1e8f1aac93f18371ea91d21d825cf7e344",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-027",
+      "position": 27,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Reading Comprehension",
+      "subtopic": "Inference",
+      "stem": {
+        "text": "According to the passage, an air force can 'strike at depth' because it can:",
+        "passage_id": "FM01-P1",
+        "passage": "Air power has transformed modern warfare. Unlike armies, which must cross terrain, an air force can strike at depth within hours and shift its effort from one theatre to another with little delay. Yet air power alone rarely wins a war. Its true strength lies in partnership with land and naval forces, where it provides surveillance, transport and precision fire. Moreover, technology has made pilots dependent on a vast network of engineers, technicians and controllers on the ground. A single sortie is therefore the visible tip of an enormous, disciplined effort."
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "depend on armies"
+        },
+        {
+          "key": "B",
+          "text": "need no support"
+        },
+        {
+          "key": "C",
+          "text": "reach distant targets within hours"
+        },
+        {
+          "key": "D",
+          "text": "operate only at night"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "The passage contrasts armies crossing terrain with air forces striking at depth within hours."
+      },
+      "difficulty": "EASY",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q82",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "9a169ad7f54200cd75a7be51004ce8779dd0a76916884ab0c1177a2bbb2ef5b6",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-028",
+      "position": 28,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Reading Comprehension",
+      "subtopic": "Figurative meaning",
+      "stem": {
+        "text": "'The visible tip of an enormous effort' suggests that:",
+        "passage_id": "FM01-P1",
+        "passage": "Air power has transformed modern warfare. Unlike armies, which must cross terrain, an air force can strike at depth within hours and shift its effort from one theatre to another with little delay. Yet air power alone rarely wins a war. Its true strength lies in partnership with land and naval forces, where it provides surveillance, transport and precision fire. Moreover, technology has made pilots dependent on a vast network of engineers, technicians and controllers on the ground. A single sortie is therefore the visible tip of an enormous, disciplined effort."
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "a sortie is the seen part of a large unseen effort"
+        },
+        {
+          "key": "B",
+          "text": "sorties are easy"
+        },
+        {
+          "key": "C",
+          "text": "engineers are unnecessary"
+        },
+        {
+          "key": "D",
+          "text": "pilots work alone"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "Like the tip of an iceberg, the sortie is what is seen; the ground effort behind it is not."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q83",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "7078c20e8760eaf0b1313e9f09a9f3ab639851a546241b5bb61ca8101586f42b",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-029",
+      "position": 29,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Reading Comprehension",
+      "subtopic": "Author's view",
+      "stem": {
+        "text": "The author's view of air power acting alone is that it:",
+        "passage_id": "FM01-P1",
+        "passage": "Air power has transformed modern warfare. Unlike armies, which must cross terrain, an air force can strike at depth within hours and shift its effort from one theatre to another with little delay. Yet air power alone rarely wins a war. Its true strength lies in partnership with land and naval forces, where it provides surveillance, transport and precision fire. Moreover, technology has made pilots dependent on a vast network of engineers, technicians and controllers on the ground. A single sortie is therefore the visible tip of an enormous, disciplined effort."
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "is always decisive"
+        },
+        {
+          "key": "B",
+          "text": "is rarely decisive"
+        },
+        {
+          "key": "C",
+          "text": "is useless"
+        },
+        {
+          "key": "D",
+          "text": "is cheaper than armies"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "'Yet air power alone rarely wins a war.'"
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q84",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "3f5c713ca7bb3946676d7adafa3c1402ae2ed3445501247f821f397a3eee2e55",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-030",
+      "position": 30,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Reading Comprehension",
+      "subtopic": "Vocabulary in context",
+      "stem": {
+        "text": "The word most nearly OPPOSITE in meaning to 'enormous', as used in the passage, is:",
+        "passage_id": "FM01-P1",
+        "passage": "Air power has transformed modern warfare. Unlike armies, which must cross terrain, an air force can strike at depth within hours and shift its effort from one theatre to another with little delay. Yet air power alone rarely wins a war. Its true strength lies in partnership with land and naval forces, where it provides surveillance, transport and precision fire. Moreover, technology has made pilots dependent on a vast network of engineers, technicians and controllers on the ground. A single sortie is therefore the visible tip of an enormous, disciplined effort."
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Tiny"
+        },
+        {
+          "key": "B",
+          "text": "Vast"
+        },
+        {
+          "key": "C",
+          "text": "Huge"
+        },
+        {
+          "key": "D",
+          "text": "Massive"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "Enormous means very large; tiny is its opposite. The other three are synonyms."
+      },
+      "difficulty": "EASY",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q85",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "034d2672870ff99198c37620b8737ea3c7a7a20a706c77783998647d8e039716",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-031",
+      "position": 31,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Cloze Test",
+      "subtopic": "Collocation",
+      "stem": {
+        "text": "In the passage, choose the word that best fills blank (1).",
+        "passage_id": "FM01-CLOZE1",
+        "passage": "Every pilot learns early that the sky is (1) ______ to carelessness. A small error that would pass (2) ______ on the ground can, at altitude, turn into an emergency within seconds. That is why flight training places such (3) ______ on checklists, which leave nothing to memory alone. Over time these routines become second nature, so that when the unexpected happens, the pilot can respond (4) ______ rather than react in panic."
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "indifferent"
+        },
+        {
+          "key": "B",
+          "text": "accustomed"
+        },
+        {
+          "key": "C",
+          "text": "hostile"
+        },
+        {
+          "key": "D",
+          "text": "friendly"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "'Hostile to carelessness' fits the warning tone: the sky punishes careless flying. The other words reverse or blur the meaning."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-C1)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "3bed68695a81d28a384e387064edeafdfeee860e6c5ba6e7bcf08640c3f193a2",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-032",
+      "position": 32,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Cloze Test",
+      "subtopic": "Vocabulary",
+      "stem": {
+        "text": "In the passage, choose the word that best fills blank (2).",
+        "passage_id": "FM01-CLOZE1",
+        "passage": "Every pilot learns early that the sky is (1) ______ to carelessness. A small error that would pass (2) ______ on the ground can, at altitude, turn into an emergency within seconds. That is why flight training places such (3) ______ on checklists, which leave nothing to memory alone. Over time these routines become second nature, so that when the unexpected happens, the pilot can respond (4) ______ rather than react in panic."
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "unhurt"
+        },
+        {
+          "key": "B",
+          "text": "unpaid"
+        },
+        {
+          "key": "C",
+          "text": "unarmed"
+        },
+        {
+          "key": "D",
+          "text": "unnoticed"
+        }
+      ],
+      "correct_option": "D",
+      "explanation": {
+        "text": "The contrast is with altitude, where the same error becomes an emergency; on the ground it would 'pass unnoticed'."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-C2)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "20df10a115fa46ee859ed2f572a502f85b567f8815ebd7a4962e224c07221497",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-033",
+      "position": 33,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Cloze Test",
+      "subtopic": "Collocation",
+      "stem": {
+        "text": "In the passage, choose the word that best fills blank (3).",
+        "passage_id": "FM01-CLOZE1",
+        "passage": "Every pilot learns early that the sky is (1) ______ to carelessness. A small error that would pass (2) ______ on the ground can, at altitude, turn into an emergency within seconds. That is why flight training places such (3) ______ on checklists, which leave nothing to memory alone. Over time these routines become second nature, so that when the unexpected happens, the pilot can respond (4) ______ rather than react in panic."
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "emphasis"
+        },
+        {
+          "key": "B",
+          "text": "burden"
+        },
+        {
+          "key": "C",
+          "text": "doubt"
+        },
+        {
+          "key": "D",
+          "text": "suspicion"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "'Places such emphasis on' means treats as very important, which explains why checklists matter."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-C3)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "09017d5699b03f413a17357435c7f00d7a50e58494187571d327740584fa4fcf",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-034",
+      "position": 34,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Cloze Test",
+      "subtopic": "Vocabulary",
+      "stem": {
+        "text": "In the passage, choose the word that best fills blank (4).",
+        "passage_id": "FM01-CLOZE1",
+        "passage": "Every pilot learns early that the sky is (1) ______ to carelessness. A small error that would pass (2) ______ on the ground can, at altitude, turn into an emergency within seconds. That is why flight training places such (3) ______ on checklists, which leave nothing to memory alone. Over time these routines become second nature, so that when the unexpected happens, the pilot can respond (4) ______ rather than react in panic."
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "carelessly"
+        },
+        {
+          "key": "B",
+          "text": "reluctantly"
+        },
+        {
+          "key": "C",
+          "text": "deliberately"
+        },
+        {
+          "key": "D",
+          "text": "rarely"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "'Respond deliberately rather than react in panic' sets up the intended contrast between considered action and panic."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-C4)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "f9da567584561959c809ab5015895570a1af05c4276a7e8f81637eacd0b93332",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-035",
+      "position": 35,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Error Detection",
+      "subtopic": "Subject-verb agreement",
+      "stem": {
+        "text": "Identify the part of the sentence that contains an error. Choose (D) if there is no error. (A) Neither of the two answers / (B) are correct / (C) according to the key. / (D) No error"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Neither of the two answers"
+        },
+        {
+          "key": "B",
+          "text": "are correct"
+        },
+        {
+          "key": "C",
+          "text": "according to the key."
+        },
+        {
+          "key": "D",
+          "text": "No error"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "'Neither of' takes a singular verb: 'Neither of the two answers is correct.'"
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q50",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "ee502a65bf22a5db6f23edeefb6abc8d3a04d7265e6d6a717800a977f10762d7",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-036",
+      "position": 36,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Error Detection",
+      "subtopic": "Stative verbs",
+      "stem": {
+        "text": "Identify the part of the sentence that contains an error. Choose (D) if there is no error. (A) I have been working here / (B) for five years but / (C) I am knowing the manager well. / (D) No error"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "I have been working here"
+        },
+        {
+          "key": "B",
+          "text": "for five years but"
+        },
+        {
+          "key": "C",
+          "text": "I am knowing the manager well."
+        },
+        {
+          "key": "D",
+          "text": "No error"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "'Know' is a stative verb and is not used in the continuous form: 'I know the manager well.'"
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q53",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "fef45547bd53ac002237805e0cf095d032da22b312512c275f87f7ebdff6566b",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-037",
+      "position": 37,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Error Detection",
+      "subtopic": "Conditionals",
+      "stem": {
+        "text": "Identify the part of the sentence that contains an error. Choose (D) if there is no error. (A) If I would have known / (B) the truth, I would have / (C) acted differently. / (D) No error"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "If I would have known"
+        },
+        {
+          "key": "B",
+          "text": "the truth, I would have"
+        },
+        {
+          "key": "C",
+          "text": "acted differently."
+        },
+        {
+          "key": "D",
+          "text": "No error"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "A third conditional uses the past perfect in the if-clause: 'If I had known…'"
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q56",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "e0705a04a9d10f4456068015271e6d20fbb56b35d63ef7156054c6d60a099323",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-038",
+      "position": 38,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Error Detection",
+      "subtopic": "Subject-verb agreement",
+      "stem": {
+        "text": "Identify the part of the sentence that contains an error. Choose (D) if there is no error. (A) The pilot along with / (B) his crew were rescued / (C) by the villagers. / (D) No error"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "The pilot along with"
+        },
+        {
+          "key": "B",
+          "text": "his crew were rescued"
+        },
+        {
+          "key": "C",
+          "text": "by the villagers."
+        },
+        {
+          "key": "D",
+          "text": "No error"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "The verb agrees with the first subject ('The pilot'); 'along with his crew' does not make it plural: 'was rescued'."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q57",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "988187a2a80a6f6a2fa6e545579545f9010dd58429201282b6b487e958c6d0b7",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-039",
+      "position": 39,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Error Detection",
+      "subtopic": "Relative clauses",
+      "stem": {
+        "text": "Identify the part of the sentence that contains an error. Choose (D) if there is no error. (A) She is one of the best teachers / (B) who has ever taught / (C) in this school. / (D) No error"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "She is one of the best teachers"
+        },
+        {
+          "key": "B",
+          "text": "who has ever taught"
+        },
+        {
+          "key": "C",
+          "text": "in this school."
+        },
+        {
+          "key": "D",
+          "text": "No error"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "'Who' refers to 'teachers' (plural), so the verb is plural: 'who have ever taught'."
+      },
+      "difficulty": "HARD",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q58",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "b18125c51b3dec488bd641e3b26ea6d034c40dbd51ff4e13ea47403555c84476",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-040",
+      "position": 40,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Sentence Completion",
+      "subtopic": "Prepositions",
+      "stem": {
+        "text": "Despite repeated warnings, the cadet persisted ____ his careless habits."
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "in"
+        },
+        {
+          "key": "B",
+          "text": "on"
+        },
+        {
+          "key": "C",
+          "text": "with"
+        },
+        {
+          "key": "D",
+          "text": "at"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "'Persist' takes 'in' (persist in a habit) or 'with' (persist with an effort). With 'habits', 'persisted in' is the standard choice."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-H05)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "26574309f2383f592824b9177e940fcf2743dee2178ccaec878b38460c654ebb",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-041",
+      "position": 41,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Sentence Completion",
+      "subtopic": "Conditionals",
+      "stem": {
+        "text": "Had I known, I ____ helped you."
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "will have"
+        },
+        {
+          "key": "B",
+          "text": "would have"
+        },
+        {
+          "key": "C",
+          "text": "would"
+        },
+        {
+          "key": "D",
+          "text": "had"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "Inverted third conditional: 'Had I known, I would have helped you.'"
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q65",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "b1dbd4a5f5bfd4f30c2256d59d0d30923ec2e66882d1786d9b66e62d7f6a89ed",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-042",
+      "position": 42,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Sentence Completion",
+      "subtopic": "Subject-verb agreement",
+      "stem": {
+        "text": "Neither Ravi nor his friends ____ present."
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "was"
+        },
+        {
+          "key": "B",
+          "text": "is"
+        },
+        {
+          "key": "C",
+          "text": "were"
+        },
+        {
+          "key": "D",
+          "text": "has been"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "With 'neither…nor', the verb agrees with the nearer subject ('friends'), so 'were'."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q68",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "f113e46c4b87621f46ea8c45f5c6f96bada0a9cae37b871e8b9748681b425d2c",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-043",
+      "position": 43,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Sentence Improvement",
+      "subtopic": "Double negatives",
+      "stem": {
+        "text": "Choose the best replacement for the part in quotes: She 'doesn't hardly visit' us now."
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "not hardly visits"
+        },
+        {
+          "key": "B",
+          "text": "did hardly visit"
+        },
+        {
+          "key": "C",
+          "text": "hardly visits"
+        },
+        {
+          "key": "D",
+          "text": "No improvement"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "'Hardly' is already negative; 'doesn't hardly' is a double negative."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q72",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "a32ed23d5941441c2ef429c6e22469b9e496fc8fe94e9004cef167f13e2e0300",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-044",
+      "position": 44,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Sentence Improvement",
+      "subtopic": "Tenses",
+      "stem": {
+        "text": "Choose the best replacement for the part in quotes: I 'am waiting' for him since morning."
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "was waiting"
+        },
+        {
+          "key": "B",
+          "text": "had waited"
+        },
+        {
+          "key": "C",
+          "text": "will wait"
+        },
+        {
+          "key": "D",
+          "text": "have been waiting"
+        }
+      ],
+      "correct_option": "D",
+      "explanation": {
+        "text": "An action that began in the past and continues now, with 'since', takes the present perfect continuous."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q74",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "93069994e02c6d6a2249187c4b557e3f7f1d43a729df4ea1529bd0d57c2e775b",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-045",
+      "position": 45,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Synonyms",
+      "subtopic": "Vocabulary",
+      "stem": {
+        "text": "Choose the word closest in meaning to PRECARIOUS:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Secure"
+        },
+        {
+          "key": "B",
+          "text": "Steady"
+        },
+        {
+          "key": "C",
+          "text": "Uncertain"
+        },
+        {
+          "key": "D",
+          "text": "Strong"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "Precarious means dangerously uncertain or unstable."
+      },
+      "difficulty": "EASY",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q1",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "34f5ce714b9a946dba9b71b825d3e2ed0309874e27fc1f4aae6119139216f8d9",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-046",
+      "position": 46,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Synonyms",
+      "subtopic": "Vocabulary",
+      "stem": {
+        "text": "Choose the word closest in meaning to BELLIGERENT:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Hostile"
+        },
+        {
+          "key": "B",
+          "text": "Peaceful"
+        },
+        {
+          "key": "C",
+          "text": "Gentle"
+        },
+        {
+          "key": "D",
+          "text": "Timid"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "Belligerent means aggressive or eager to fight."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q3",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "1e899b2608c6ea073673a8c79cae5ab4c3a61a2f1389471e66e7b27b80016549",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-047",
+      "position": 47,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Synonyms",
+      "subtopic": "Vocabulary",
+      "stem": {
+        "text": "Choose the word closest in meaning to MOUNTEBANK:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Mountaineer"
+        },
+        {
+          "key": "B",
+          "text": "Charlatan"
+        },
+        {
+          "key": "C",
+          "text": "Banker"
+        },
+        {
+          "key": "D",
+          "text": "Magistrate"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "A mountebank is a person who deceives others, a charlatan or quack."
+      },
+      "difficulty": "HARD",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q12",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "c6d95aba6e8237bc77749778cbb37b94d1affbea5dd633e2b8b866e44193cf83",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-048",
+      "position": 48,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Antonyms",
+      "subtopic": "Vocabulary",
+      "stem": {
+        "text": "Choose the word most nearly OPPOSITE in meaning to OBDURATE:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Stubborn"
+        },
+        {
+          "key": "B",
+          "text": "Yielding"
+        },
+        {
+          "key": "C",
+          "text": "Callous"
+        },
+        {
+          "key": "D",
+          "text": "Unrelenting"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "Obdurate means stubbornly refusing to change; yielding is its opposite. The other three are close to its meaning."
+      },
+      "difficulty": "HARD",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-H07)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "3865ed2a251d7486bb00df7c28d1e79a43f49ebce8f4a5b53cb77549c363b166",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-049",
+      "position": 49,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Idioms and Phrases",
+      "subtopic": "Meaning",
+      "stem": {
+        "text": "Choose the meaning of the idiom: To break a butterfly on the wheel"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "To use excessive force on a trivial matter"
+        },
+        {
+          "key": "B",
+          "text": "To harm a delicate creature accidentally"
+        },
+        {
+          "key": "C",
+          "text": "To fail at an easy task"
+        },
+        {
+          "key": "D",
+          "text": "To waste time"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "It means to spend disproportionate force or effort on something unimportant."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q37",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "7965ca827e7ca0c76185ed74efa3671ce58bde155afc35b1f771eaee45833ab2",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-050",
+      "position": 50,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Idioms and Phrases",
+      "subtopic": "Meaning",
+      "stem": {
+        "text": "Choose the meaning of the idiom: To be on tenterhooks"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "To be in great danger"
+        },
+        {
+          "key": "B",
+          "text": "To be deeply in debt"
+        },
+        {
+          "key": "C",
+          "text": "To be in a state of anxious suspense"
+        },
+        {
+          "key": "D",
+          "text": "To be under strict discipline"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "Tenterhooks held cloth stretched on a frame; to be 'on tenterhooks' is to be tense while waiting for news."
+      },
+      "difficulty": "HARD",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-H06)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "1c55981588220d858c9c1fdda9da4bcc0cf8ba31df34cda38a232c5a2ed6701f",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-051",
+      "position": 51,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Idioms and Phrases",
+      "subtopic": "Meaning",
+      "stem": {
+        "text": "Choose the meaning of the idiom: To cut the Gordian knot"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "To solve a hard problem by a bold stroke"
+        },
+        {
+          "key": "B",
+          "text": "To tie a knot"
+        },
+        {
+          "key": "C",
+          "text": "To end a friendship"
+        },
+        {
+          "key": "D",
+          "text": "To cut a rope"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "From Alexander's legendary cutting of the Gordian knot: a bold, direct solution to an intricate problem."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q43",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "42f03b1e41a4bd445afb66c5c329151ca99fc689d57aca736844cf5bd626ff9d",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-052",
+      "position": 52,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "One-Word Substitution",
+      "subtopic": "Vocabulary",
+      "stem": {
+        "text": "Choose the one word for: A harsh, discordant mixture of sounds"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Euphony"
+        },
+        {
+          "key": "B",
+          "text": "Harmony"
+        },
+        {
+          "key": "C",
+          "text": "Cacophony"
+        },
+        {
+          "key": "D",
+          "text": "Symphony"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "Cacophony is a harsh mixture of sounds; euphony is its opposite."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q27",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "7659480a8247b615e51c9fae43833c4c3b5be1f1534c3d5d56515292e920ad54",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-053",
+      "position": 53,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "One-Word Substitution",
+      "subtopic": "Vocabulary",
+      "stem": {
+        "text": "Choose the one word for: The belief that only one's own mind is certain to exist"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Solipsism"
+        },
+        {
+          "key": "B",
+          "text": "Altruism"
+        },
+        {
+          "key": "C",
+          "text": "Stoicism"
+        },
+        {
+          "key": "D",
+          "text": "Nihilism"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "Solipsism holds that only one's own mind is sure to exist."
+      },
+      "difficulty": "HARD",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q29",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "d330b79f0b7c3dc96de047f1f04596ac576164d8300f52dc1c73be34cb84fe6a",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-054",
+      "position": 54,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Sentence Rearrangement",
+      "subtopic": "Logical sequence",
+      "stem": {
+        "text": "Arrange P, Q, R, S in a logical order. P: The pilot signalled the tower. Q: A warning light flashed on the console. R: The aircraft landed safely. S: He was asked to divert to the nearest airfield."
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "PQSR"
+        },
+        {
+          "key": "B",
+          "text": "QPSR"
+        },
+        {
+          "key": "C",
+          "text": "QSPR"
+        },
+        {
+          "key": "D",
+          "text": "SQPR"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "Warning light (Q), pilot signals tower (P), told to divert (S), lands safely (R)."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q77",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "0200f4b4ffd702cbcc73ed038d578964a62a9c83ee33e89d6c5a169704a4ca03",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-055",
+      "position": 55,
+      "pool_type": "FULL_MOCK",
+      "section": "ENGLISH",
+      "topic": "Sentence Rearrangement",
+      "subtopic": "Logical sequence",
+      "stem": {
+        "text": "Arrange P, Q, R, S in a logical order. P: Hence they prefer routine drills. Q: Discipline is the backbone of any force. R: Without it, chaos would follow. S: Commanders understand this well."
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "SQRP"
+        },
+        {
+          "key": "B",
+          "text": "QSRP"
+        },
+        {
+          "key": "C",
+          "text": "RQSP"
+        },
+        {
+          "key": "D",
+          "text": "QRSP"
+        }
+      ],
+      "correct_option": "D",
+      "explanation": {
+        "text": "Claim (Q), consequence of its absence (R), commanders know it (S), hence drills (P)."
+      },
+      "difficulty": "HARD",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section B-Q78",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "1d617eeb8de47e8bb792a7d52c14c601b94f6d1176427cd2a79a9f873d175f4b",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-056",
+      "position": 56,
+      "pool_type": "FULL_MOCK",
+      "section": "NUMERICAL_ABILITY",
+      "topic": "Percentages and Ratios",
+      "subtopic": "Successive change",
+      "stem": {
+        "text": "A price rises by 25% and then falls by 20%. The net change is:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "5% increase"
+        },
+        {
+          "key": "B",
+          "text": "5% decrease"
+        },
+        {
+          "key": "C",
+          "text": "No change"
+        },
+        {
+          "key": "D",
+          "text": "10% increase"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "1.25 × 0.80 = 1.00, so there is no net change."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q8",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "4a5c24ae94463bcd3e0534349013512519b4ab54738b73648477bc0e29868663",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-057",
+      "position": 57,
+      "pool_type": "FULL_MOCK",
+      "section": "NUMERICAL_ABILITY",
+      "topic": "Percentages and Ratios",
+      "subtopic": "Successive discounts",
+      "stem": {
+        "text": "Two successive discounts of 10% and 20% equal a single discount of:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "30%"
+        },
+        {
+          "key": "B",
+          "text": "28%"
+        },
+        {
+          "key": "C",
+          "text": "25%"
+        },
+        {
+          "key": "D",
+          "text": "32%"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "1 − 0.9 × 0.8 = 0.28, i.e. 28%."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q11",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "d3b3b49349c14f4c798b15966deb571d29d428dee62dc1a4987e37f9b059da36",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-058",
+      "position": 58,
+      "pool_type": "FULL_MOCK",
+      "section": "NUMERICAL_ABILITY",
+      "topic": "Percentages and Ratios",
+      "subtopic": "Population growth",
+      "stem": {
+        "text": "A town of 20,000 grows 10% a year. Its population after 2 years is:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "24,000"
+        },
+        {
+          "key": "B",
+          "text": "24,200"
+        },
+        {
+          "key": "C",
+          "text": "24,400"
+        },
+        {
+          "key": "D",
+          "text": "22,000"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "20,000 × 1.1² = 24,200."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q14",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "8448b9d6f3bcd96d7e3e9f69091c988906b5ac622013d09a5dbf9d6be5b91170",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-059",
+      "position": 59,
+      "pool_type": "FULL_MOCK",
+      "section": "NUMERICAL_ABILITY",
+      "topic": "Percentages and Ratios",
+      "subtopic": "Compound ratio",
+      "stem": {
+        "text": "If a : b = 2 : 3 and b : c = 4 : 5, then a : c is:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "2 : 5"
+        },
+        {
+          "key": "B",
+          "text": "8 : 15"
+        },
+        {
+          "key": "C",
+          "text": "6 : 5"
+        },
+        {
+          "key": "D",
+          "text": "4 : 5"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "a : b : c = 8 : 12 : 15, so a : c = 8 : 15."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q20",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "3ba542dbe012a5159cba021a51efac4eaa31e5c642f05f3b71212ac755794000",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-060",
+      "position": 60,
+      "pool_type": "FULL_MOCK",
+      "section": "NUMERICAL_ABILITY",
+      "topic": "Time, Work and Distance",
+      "subtopic": "Pipes and cisterns",
+      "stem": {
+        "text": "Pipe A fills a tank in 20 minutes and pipe B empties it in 30 minutes. With both open, the tank fills in:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "60 min"
+        },
+        {
+          "key": "B",
+          "text": "50 min"
+        },
+        {
+          "key": "C",
+          "text": "40 min"
+        },
+        {
+          "key": "D",
+          "text": "45 min"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "1/20 − 1/30 = 1/60, so 60 minutes."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q23",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "3b64d103ba77fa15242a67a5ca49a44a3bb6eeeec7c14aa434283d51f7d2290f",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-061",
+      "position": 61,
+      "pool_type": "FULL_MOCK",
+      "section": "NUMERICAL_ABILITY",
+      "topic": "Time, Work and Distance",
+      "subtopic": "Trains",
+      "stem": {
+        "text": "A 150 m train running at 54 km/h crosses a pole in:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "8 s"
+        },
+        {
+          "key": "B",
+          "text": "12 s"
+        },
+        {
+          "key": "C",
+          "text": "9 s"
+        },
+        {
+          "key": "D",
+          "text": "10 s"
+        }
+      ],
+      "correct_option": "D",
+      "explanation": {
+        "text": "54 km/h = 15 m/s; 150 ÷ 15 = 10 s."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q27",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "7672c588a5c8e2781464eec0557389f9bad165d295c0a8f181e899318201b4cb",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-062",
+      "position": 62,
+      "pool_type": "FULL_MOCK",
+      "section": "NUMERICAL_ABILITY",
+      "topic": "Time, Work and Distance",
+      "subtopic": "Average speed",
+      "stem": {
+        "text": "A man covers half a distance at 40 km/h and the rest at 60 km/h. His average speed is:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "50 km/h"
+        },
+        {
+          "key": "B",
+          "text": "48 km/h"
+        },
+        {
+          "key": "C",
+          "text": "52 km/h"
+        },
+        {
+          "key": "D",
+          "text": "45 km/h"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "For equal distances, average = 2 × 40 × 60 ÷ (40 + 60) = 48 km/h."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q28",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "08067e7ed7e91f7e100d21fe343d1b1d42de3f0183540c5b672b52af0b846f2e",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-063",
+      "position": 63,
+      "pool_type": "FULL_MOCK",
+      "section": "NUMERICAL_ABILITY",
+      "topic": "Time, Work and Distance",
+      "subtopic": "Boats and streams",
+      "stem": {
+        "text": "A boat goes 12 km/h in still water and the river flows at 3 km/h. The distance covered downstream in 4 hours is:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "36 km"
+        },
+        {
+          "key": "B",
+          "text": "48 km"
+        },
+        {
+          "key": "C",
+          "text": "60 km"
+        },
+        {
+          "key": "D",
+          "text": "72 km"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "Downstream speed = 15 km/h; 15 × 4 = 60 km."
+      },
+      "difficulty": "EASY",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q29",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "cb38da3d99b7d74c6c1753adff38c0051abb2551e58cf95cc03deaff5da7865b",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-064",
+      "position": 64,
+      "pool_type": "FULL_MOCK",
+      "section": "NUMERICAL_ABILITY",
+      "topic": "Profit, Loss and Interest",
+      "subtopic": "Loss",
+      "stem": {
+        "text": "An item sold for ₹540 gives a 10% loss. Its cost price is:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "₹600"
+        },
+        {
+          "key": "B",
+          "text": "₹580"
+        },
+        {
+          "key": "C",
+          "text": "₹594"
+        },
+        {
+          "key": "D",
+          "text": "₹560"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "CP = 540 ÷ 0.9 = ₹600."
+      },
+      "difficulty": "EASY",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q10",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "14aa763d6b0798df2625886bd21961cc675da9fee468ac0e09c710a61367cbe4",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-065",
+      "position": 65,
+      "pool_type": "FULL_MOCK",
+      "section": "NUMERICAL_ABILITY",
+      "topic": "Profit, Loss and Interest",
+      "subtopic": "Compound interest",
+      "stem": {
+        "text": "Compound interest on ₹10,000 at 10% per annum for 2 years is:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "₹2,000"
+        },
+        {
+          "key": "B",
+          "text": "₹2,100"
+        },
+        {
+          "key": "C",
+          "text": "₹2,200"
+        },
+        {
+          "key": "D",
+          "text": "₹2,050"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "10,000 × (1.21 − 1) = ₹2,100."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q33",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "beb7278b0eb7e8b9f70e9fbca4798050f364cb53364cbae10ac2276edb48f055",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-066",
+      "position": 66,
+      "pool_type": "FULL_MOCK",
+      "section": "NUMERICAL_ABILITY",
+      "topic": "Profit, Loss and Interest",
+      "subtopic": "CI minus SI",
+      "stem": {
+        "text": "The difference between compound interest and simple interest on a sum for 2 years at 10% per annum is ₹50. The sum is:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "₹4,000"
+        },
+        {
+          "key": "B",
+          "text": "₹5,000"
+        },
+        {
+          "key": "C",
+          "text": "₹5,500"
+        },
+        {
+          "key": "D",
+          "text": "₹6,000"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "For 2 years, CI − SI = P × (r/100)² = P × 0.01 = 50, so P = ₹5,000."
+      },
+      "difficulty": "HARD",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-H10)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "ea29477994f7aee660f99f3c692fcc7bc5d615e21f785b00da43086954e2190b",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-067",
+      "position": 67,
+      "pool_type": "FULL_MOCK",
+      "section": "NUMERICAL_ABILITY",
+      "topic": "Number System and Series",
+      "subtopic": "Remainders",
+      "stem": {
+        "text": "The remainder when 2^10 is divided by 7 is:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "1"
+        },
+        {
+          "key": "B",
+          "text": "2"
+        },
+        {
+          "key": "C",
+          "text": "4"
+        },
+        {
+          "key": "D",
+          "text": "3"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "2³ = 8 ≡ 1 (mod 7), so 2^10 = (2³)³ × 2 ≡ 2."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q4",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "778470a0b6a4332b9a9e3581c24924bf190e06c25716fe31f392f53adde90ffd",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-068",
+      "position": 68,
+      "pool_type": "FULL_MOCK",
+      "section": "NUMERICAL_ABILITY",
+      "topic": "Number System and Series",
+      "subtopic": "Number series",
+      "stem": {
+        "text": "The next term of the series 2, 6, 12, 20, 30, … is:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "40"
+        },
+        {
+          "key": "B",
+          "text": "42"
+        },
+        {
+          "key": "C",
+          "text": "44"
+        },
+        {
+          "key": "D",
+          "text": "48"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "Terms are n(n + 1): the next is 6 × 7 = 42."
+      },
+      "difficulty": "EASY",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q59",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "d20b237c54fb70ca7175ac9b4d578d654a14ae20a808a57588482bac17cea06c",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-069",
+      "position": 69,
+      "pool_type": "FULL_MOCK",
+      "section": "NUMERICAL_ABILITY",
+      "topic": "Fractions and Averages",
+      "subtopic": "Averages",
+      "stem": {
+        "text": "The average of five numbers is 18. If the number 10 is removed, the average of the rest is:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "20"
+        },
+        {
+          "key": "B",
+          "text": "19"
+        },
+        {
+          "key": "C",
+          "text": "22"
+        },
+        {
+          "key": "D",
+          "text": "16"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "Total 90; (90 − 10) ÷ 4 = 20."
+      },
+      "difficulty": "EASY",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q16",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "4ecc4bac1a99a13d06a9e7df72edda82ec91159af6a9aecf4c2d7d661314fa45",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-070",
+      "position": 70,
+      "pool_type": "FULL_MOCK",
+      "section": "NUMERICAL_ABILITY",
+      "topic": "Fractions and Averages",
+      "subtopic": "Averages",
+      "stem": {
+        "text": "The average of the first 9 odd natural numbers is:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "8"
+        },
+        {
+          "key": "B",
+          "text": "9"
+        },
+        {
+          "key": "C",
+          "text": "10"
+        },
+        {
+          "key": "D",
+          "text": "11"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "The sum of the first n odd numbers is n² = 81; 81 ÷ 9 = 9."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q18",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "90e26a9c7fb58c0fc2bf36d3600d9edf8c91631e4b5220abfd373b6052056233",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-071",
+      "position": 71,
+      "pool_type": "FULL_MOCK",
+      "section": "NUMERICAL_ABILITY",
+      "topic": "Mensuration",
+      "subtopic": "Cylinder",
+      "stem": {
+        "text": "The volume of a cylinder with radius 7 cm and height 10 cm is (take π = 22/7):"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "1,540 cm³"
+        },
+        {
+          "key": "B",
+          "text": "770 cm³"
+        },
+        {
+          "key": "C",
+          "text": "3,080 cm³"
+        },
+        {
+          "key": "D",
+          "text": "154 cm³"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "(22/7) × 49 × 10 = 1,540 cm³."
+      },
+      "difficulty": "EASY",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q42",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "f60282f67f3f51ad976c17d0a6f17bda3f9f726ac219d63dba36bd175257c0d7",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-072",
+      "position": 72,
+      "pool_type": "FULL_MOCK",
+      "section": "NUMERICAL_ABILITY",
+      "topic": "Mensuration",
+      "subtopic": "Sphere - percentage change",
+      "stem": {
+        "text": "The radius of a sphere is increased by 10%. By what percentage does its volume increase?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "30%"
+        },
+        {
+          "key": "B",
+          "text": "21%"
+        },
+        {
+          "key": "C",
+          "text": "10%"
+        },
+        {
+          "key": "D",
+          "text": "33.1%"
+        }
+      ],
+      "correct_option": "D",
+      "explanation": {
+        "text": "Volume scales with r³: 1.1³ = 1.331, an increase of 33.1%."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-H08)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "447f90bdfbadcb4f5f26f66fd63d451409f67f7599157f8f125086af1fb023f1",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-073",
+      "position": 73,
+      "pool_type": "FULL_MOCK",
+      "section": "NUMERICAL_ABILITY",
+      "topic": "Probability and Statistics",
+      "subtopic": "Cards",
+      "stem": {
+        "text": "The probability of drawing a red king from a standard 52-card deck is:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "1/13"
+        },
+        {
+          "key": "B",
+          "text": "1/52"
+        },
+        {
+          "key": "C",
+          "text": "1/26"
+        },
+        {
+          "key": "D",
+          "text": "1/4"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "There are two red kings: 2/52 = 1/26."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q53",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "e5e17db7d2fb4951e6ecf12812768dd93e24bbb20ba2a3c8d3b17e8e9ed433a9",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-074",
+      "position": 74,
+      "pool_type": "FULL_MOCK",
+      "section": "NUMERICAL_ABILITY",
+      "topic": "Probability and Statistics",
+      "subtopic": "Dice",
+      "stem": {
+        "text": "Two fair dice are thrown together. The probability that the sum is 8 is:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "5/36"
+        },
+        {
+          "key": "B",
+          "text": "1/6"
+        },
+        {
+          "key": "C",
+          "text": "1/9"
+        },
+        {
+          "key": "D",
+          "text": "7/36"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "Favourable outcomes (2,6), (3,5), (4,4), (5,3), (6,2): 5 of 36."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-H09)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "43b8ee9c5e8b7c0cec24432aa1d53f709f452928ac5032e0828ffc6bb6be2580",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-075",
+      "position": 75,
+      "pool_type": "FULL_MOCK",
+      "section": "NUMERICAL_ABILITY",
+      "topic": "Mixture and Alligation",
+      "subtopic": "Mixtures",
+      "stem": {
+        "text": "A 40-litre mixture has milk and water in the ratio 3 : 1. How much water must be added to make the ratio 3 : 2?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "5 L"
+        },
+        {
+          "key": "B",
+          "text": "10 L"
+        },
+        {
+          "key": "C",
+          "text": "15 L"
+        },
+        {
+          "key": "D",
+          "text": "20 L"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "Milk 30 L, water 10 L. For 3 : 2 water must be 20 L, so add 10 L."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "DP AFCAT Practice Bank v0 (Claude Doc 'AFCAT Practice Bank - 300 Original Questions', rev 3, 2026-11-03), Section C-Q19",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "2925c42c722e0200505265cfe61419741318fb3d04aa780164aa5fce5f0f8490",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-076",
+      "position": 76,
+      "pool_type": "FULL_MOCK",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Non-Verbal Reasoning",
+      "subtopic": "Figure series",
+      "stem": {
+        "text": "Study the problem figures and choose the answer figure that comes next in the series.",
+        "assets": [
+          {
+            "asset_id": "fm01-series-problem",
+            "placement": "STEM",
+            "alt": "Three figures in a series. Each square holds an arrow and a dot. Figure 1: arrow up, dot top-left. Figure 2: arrow up-right, dot top-right. Figure 3: arrow right, dot bottom-right. Figure 4 is a question mark."
+          },
+          {
+            "asset_id": "fm01-series-answers",
+            "placement": "STEM",
+            "alt": "Answer figures. A: arrow down-right, dot bottom-right. B: arrow down, dot bottom-left. C: arrow down-right, dot bottom-left. D: arrow down-right, dot top-left."
+          }
+        ]
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Figure (A)"
+        },
+        {
+          "key": "B",
+          "text": "Figure (B)"
+        },
+        {
+          "key": "C",
+          "text": "Figure (C)"
+        },
+        {
+          "key": "D",
+          "text": "Figure (D)"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "The arrow turns 45° clockwise each step (up, up-right, right, so down-right next). The dot moves one corner clockwise (top-left, top-right, bottom-right, so bottom-left next). Only (C) has both."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-F01)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "5f0280d50f0fa912654c9063af5f7d7e4d83ad8fa4f6ff5a15618107a8ecf746",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-077",
+      "position": 77,
+      "pool_type": "FULL_MOCK",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Verbal Reasoning",
+      "subtopic": "Number analogy",
+      "stem": {
+        "text": "4 : 64 :: 7 : ?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "343"
+        },
+        {
+          "key": "B",
+          "text": "49"
+        },
+        {
+          "key": "C",
+          "text": "21"
+        },
+        {
+          "key": "D",
+          "text": "147"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "64 = 4³, so the answer is 7³ = 343."
+      },
+      "difficulty": "EASY",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "7e0e3fc47ca440908c0f91e03a3d318735e30c040f2897d71af36f05af9d88fc",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-078",
+      "position": 78,
+      "pool_type": "FULL_MOCK",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Non-Verbal Reasoning",
+      "subtopic": "Mirror image",
+      "stem": {
+        "text": "Choose the correct mirror image of the given figure when the mirror is placed along the line M.",
+        "assets": [
+          {
+            "asset_id": "fm01-mirror-problem",
+            "placement": "STEM",
+            "alt": "A flag on a pole, with the triangular flag at the top pointing right, a short bar to the right of the pole and a small circle at lower right. A vertical mirror line M is on the right."
+          },
+          {
+            "asset_id": "fm01-mirror-answers",
+            "placement": "STEM",
+            "alt": "Four answer figures. A: flag at the top pointing right, pole on the left, circle at lower right. B: flag at the bottom pointing right, pole on the left, circle at upper right. C: flag at the bottom pointing left, pole on the right, circle at upper left. D: flag at the top pointing left, pole on the right, circle at lower left."
+          }
+        ]
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Figure (A)"
+        },
+        {
+          "key": "B",
+          "text": "Figure (B)"
+        },
+        {
+          "key": "C",
+          "text": "Figure (C)"
+        },
+        {
+          "key": "D",
+          "text": "Figure (D)"
+        }
+      ],
+      "correct_option": "D",
+      "explanation": {
+        "text": "A vertical mirror swaps left and right but keeps top and bottom. The flag must point left with the pole on the right, and the circle stays at the bottom. (A) is the original, (B) is the water image and (C) is a half-turn."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-F02)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "46bf2aee831ddd79d7a0f3f83345c2f88ddcc1fce7f06720c50337e56f74c62e",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-079",
+      "position": 79,
+      "pool_type": "FULL_MOCK",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Verbal Reasoning",
+      "subtopic": "Classification",
+      "stem": {
+        "text": "Find the odd one out:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Rafale"
+        },
+        {
+          "key": "B",
+          "text": "Tejas"
+        },
+        {
+          "key": "C",
+          "text": "Chinook"
+        },
+        {
+          "key": "D",
+          "text": "Su-30MKI"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "Chinook is a transport helicopter; the others are fighter aircraft."
+      },
+      "difficulty": "EASY",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "b89d8ad4f21b7906c16aa82d7633f5cf96ce018cb11e85c5fb1713aee5a77734",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-080",
+      "position": 80,
+      "pool_type": "FULL_MOCK",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Verbal Reasoning",
+      "subtopic": "Classification",
+      "stem": {
+        "text": "Find the odd one out:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "121"
+        },
+        {
+          "key": "B",
+          "text": "169"
+        },
+        {
+          "key": "C",
+          "text": "289"
+        },
+        {
+          "key": "D",
+          "text": "225"
+        }
+      ],
+      "correct_option": "D",
+      "explanation": {
+        "text": "121, 169 and 289 are squares of primes (11, 13, 17); 225 is the square of 15, which is not prime."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "7d3dd7a7d7940d87a7bd9cfd3c2a48f1c8b0ac1c5651fd215f33b269fc4617a3",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-081",
+      "position": 81,
+      "pool_type": "FULL_MOCK",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Verbal Reasoning",
+      "subtopic": "Classification",
+      "stem": {
+        "text": "Find the odd one out:"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "UWZ"
+        },
+        {
+          "key": "B",
+          "text": "BDF"
+        },
+        {
+          "key": "C",
+          "text": "KMO"
+        },
+        {
+          "key": "D",
+          "text": "PRT"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "BDF, KMO and PRT each skip one letter (+2, +2); in UWZ the second step is +3."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "8cf6e1deb6e853e7982185d1d567cdbd4d2b71c62a5489826851616682d5b7b1",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-082",
+      "position": 82,
+      "pool_type": "FULL_MOCK",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Verbal Reasoning",
+      "subtopic": "Coding-decoding",
+      "stem": {
+        "text": "If AIR is coded as BJS, how is FORCE coded?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "GPSEF"
+        },
+        {
+          "key": "B",
+          "text": "HQTEG"
+        },
+        {
+          "key": "C",
+          "text": "GQSDF"
+        },
+        {
+          "key": "D",
+          "text": "GPSDF"
+        }
+      ],
+      "correct_option": "D",
+      "explanation": {
+        "text": "Each letter is shifted forward by one: F→G, O→P, R→S, C→D, E→F."
+      },
+      "difficulty": "EASY",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "b8ffd8951d23f493b6b87394f48a5b1cd0a0460029d42c1a8c17f814e3efeb67",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-083",
+      "position": 83,
+      "pool_type": "FULL_MOCK",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Non-Verbal Reasoning",
+      "subtopic": "Water image",
+      "stem": {
+        "text": "Choose the correct water image of the given figure (the water line is below the figure).",
+        "assets": [
+          {
+            "asset_id": "fm01-water-problem",
+            "placement": "STEM",
+            "alt": "A staircase line rising from bottom-left to top-right ending in an arrowhead pointing right, a small circle at upper left and a filled square at lower right. A horizontal water line is below the figure."
+          },
+          {
+            "asset_id": "fm01-water-answers",
+            "placement": "STEM",
+            "alt": "Four answer figures. A: staircase descends from top-left to an arrowhead at lower right; circle at lower left; square at upper right. B: staircase rises from bottom-right to an arrowhead at upper left; circle at upper right; square at lower left. C: staircase descends from top-right to an arrowhead at lower left; circle at lower right; square at upper left. D: the figure turned a quarter-turn clockwise, staircase running top to bottom with the arrowhead pointing down at lower right."
+          }
+        ]
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Figure (A)"
+        },
+        {
+          "key": "B",
+          "text": "Figure (B)"
+        },
+        {
+          "key": "C",
+          "text": "Figure (C)"
+        },
+        {
+          "key": "D",
+          "text": "Figure (D)"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "A water image flips top and bottom but keeps left and right. The arrowhead stays on the right but the staircase now descends towards it. (B) is the mirror image, (C) a half-turn and (D) a quarter-turn."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-F03)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "6b54b5e33bc650097bca3b2077c20b47cf308ae254ecddde5632ce5d3827bf63",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-084",
+      "position": 84,
+      "pool_type": "FULL_MOCK",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Verbal Reasoning",
+      "subtopic": "Coding-decoding",
+      "stem": {
+        "text": "If CAT = 24 because C = 3, A = 1 and T = 20, what is DOG?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "24"
+        },
+        {
+          "key": "B",
+          "text": "27"
+        },
+        {
+          "key": "C",
+          "text": "28"
+        },
+        {
+          "key": "D",
+          "text": "26"
+        }
+      ],
+      "correct_option": "D",
+      "explanation": {
+        "text": "D (4) + O (15) + G (7) = 26."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "537fc7aa4c9b0234070e1e6fc1531e21f681c6c746011f4c5c92dbdf8d0949ae",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-085",
+      "position": 85,
+      "pool_type": "FULL_MOCK",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Patterns and Sequences",
+      "subtopic": "Number series",
+      "stem": {
+        "text": "Find the next term: 3, 7, 15, 31, 63, ?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "127"
+        },
+        {
+          "key": "B",
+          "text": "125"
+        },
+        {
+          "key": "C",
+          "text": "126"
+        },
+        {
+          "key": "D",
+          "text": "128"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "Each term is double the previous plus 1: 63 × 2 + 1 = 127."
+      },
+      "difficulty": "EASY",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "0cd4579f4298a9ba9f8be48956ab9bb653d0dde129ea44588abd193b9ff11fdd",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-086",
+      "position": 86,
+      "pool_type": "FULL_MOCK",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Non-Verbal Reasoning",
+      "subtopic": "Paper folding and punching",
+      "stem": {
+        "text": "A square sheet is folded and punched as shown in figures (1) to (3). How will it look when unfolded?",
+        "assets": [
+          {
+            "asset_id": "fm01-fold-problem",
+            "placement": "STEM",
+            "alt": "Step 1: a square sheet is folded along its vertical centre line, left half onto right. Step 2: the folded sheet is folded along its horizontal centre line, top half onto bottom. Step 3: one hole is punched in the folded quarter, near its lower-left area."
+          },
+          {
+            "asset_id": "fm01-fold-answers",
+            "placement": "STEM",
+            "alt": "Four unfolded squares. A: two holes in the lower half, side by side. B: four holes in the middle band near the left and right edges. C: two holes on a diagonal. D: four holes, one in each quarter, placed symmetrically about both centre lines."
+          }
+        ]
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Figure (A)"
+        },
+        {
+          "key": "B",
+          "text": "Figure (B)"
+        },
+        {
+          "key": "C",
+          "text": "Figure (C)"
+        },
+        {
+          "key": "D",
+          "text": "Figure (D)"
+        }
+      ],
+      "correct_option": "D",
+      "explanation": {
+        "text": "Unfold the second fold first: the hole is reflected about the horizontal centre line, giving two holes. Unfolding the first fold reflects both about the vertical centre line, giving four holes placed symmetrically, one in each quarter."
+      },
+      "difficulty": "HARD",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-F04)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "d86749cedb637e5f1c630820eab62451642e24bf96f923bcabeb44a67f63de7a",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-087",
+      "position": 87,
+      "pool_type": "FULL_MOCK",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Patterns and Sequences",
+      "subtopic": "Letter series",
+      "stem": {
+        "text": "Find the next letter: B, E, I, N, ?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "S"
+        },
+        {
+          "key": "B",
+          "text": "U"
+        },
+        {
+          "key": "C",
+          "text": "T"
+        },
+        {
+          "key": "D",
+          "text": "R"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "Gaps are +3, +4, +5, +6: N (14) + 6 = T (20)."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "d1f8c27c8a36f85ebffe0640aa996dc43b9c928d8d5b4e370fade552787b3f24",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-088",
+      "position": 88,
+      "pool_type": "FULL_MOCK",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Verbal Reasoning",
+      "subtopic": "Directions",
+      "stem": {
+        "text": "A man walks 5 km north, turns right and walks 3 km, then turns right again and walks 9 km. How far and in which direction is he from his starting point?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "5 km North-East"
+        },
+        {
+          "key": "B",
+          "text": "7 km South"
+        },
+        {
+          "key": "C",
+          "text": "4 km South-West"
+        },
+        {
+          "key": "D",
+          "text": "5 km South-East"
+        }
+      ],
+      "correct_option": "D",
+      "explanation": {
+        "text": "He ends 3 km east and 4 km south of the start: √(3² + 4²) = 5 km, to the south-east."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "1e3eaefb66d9f8e58613f12d62f3b0ca76a0b279f7fbc33dd409c9addc2641ba",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-089",
+      "position": 89,
+      "pool_type": "FULL_MOCK",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Verbal Reasoning",
+      "subtopic": "Directions",
+      "stem": {
+        "text": "A cadet facing North turns 90° clockwise, then 180° anticlockwise, then 45° clockwise. Which direction does he now face?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "North-West"
+        },
+        {
+          "key": "B",
+          "text": "North-East"
+        },
+        {
+          "key": "C",
+          "text": "South-West"
+        },
+        {
+          "key": "D",
+          "text": "South-East"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "North → East (90° clockwise) → West (180° anticlockwise) → North-West (45° clockwise)."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "a12f98b9d81979c7e26705baea2de42f7b8a3a8d29d88d574e957f7315314014",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-090",
+      "position": 90,
+      "pool_type": "FULL_MOCK",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Verbal Reasoning",
+      "subtopic": "Blood relations",
+      "stem": {
+        "text": "Pointing to a boy, Ravi (a man) says, 'He is the son of my father's only daughter.' How is the boy related to Ravi?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Son"
+        },
+        {
+          "key": "B",
+          "text": "Brother"
+        },
+        {
+          "key": "C",
+          "text": "Cousin"
+        },
+        {
+          "key": "D",
+          "text": "Nephew"
+        }
+      ],
+      "correct_option": "D",
+      "explanation": {
+        "text": "Ravi's father's only daughter is Ravi's sister; her son is Ravi's nephew."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "c99103601c65c2419ebff7098cc6a40d5ef7519c3efb3ce35025fb3d1643aaa9",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-091",
+      "position": 91,
+      "pool_type": "FULL_MOCK",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Verbal Reasoning",
+      "subtopic": "Blood relations",
+      "stem": {
+        "text": "A is B's sister. C is B's mother. D is C's father. How is A related to D?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Daughter"
+        },
+        {
+          "key": "B",
+          "text": "Niece"
+        },
+        {
+          "key": "C",
+          "text": "Granddaughter"
+        },
+        {
+          "key": "D",
+          "text": "Grandmother"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "A is C's daughter, and C is D's daughter, so A is D's granddaughter."
+      },
+      "difficulty": "EASY",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "c8cce12de81e6c5ac5d21bc29ed3ab90364e66e4c452e3969700eb6a643d26f9",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-092",
+      "position": 92,
+      "pool_type": "FULL_MOCK",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Verbal Reasoning",
+      "subtopic": "Syllogism",
+      "stem": {
+        "text": "Statements: All pilots are officers. Some officers are engineers. Conclusions: I. Some pilots are engineers. II. Some engineers are officers."
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Only II follows"
+        },
+        {
+          "key": "B",
+          "text": "Only I follows"
+        },
+        {
+          "key": "C",
+          "text": "Both I and II follow"
+        },
+        {
+          "key": "D",
+          "text": "Neither follows"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "II is the converse of 'some officers are engineers'. I does not follow: the officers who are engineers need not be pilots."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "0c8717781294fb70564dbdbaaf51ee1587cadc1c2e956917a19d592d51c277db",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-093",
+      "position": 93,
+      "pool_type": "FULL_MOCK",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Verbal Reasoning",
+      "subtopic": "Syllogism",
+      "stem": {
+        "text": "Statements: All aircraft are machines. No machine is alive. Conclusions: I. No aircraft is alive. II. Some machines are aircraft."
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Only I follows"
+        },
+        {
+          "key": "B",
+          "text": "Only II follows"
+        },
+        {
+          "key": "C",
+          "text": "Neither follows"
+        },
+        {
+          "key": "D",
+          "text": "Both I and II follow"
+        }
+      ],
+      "correct_option": "D",
+      "explanation": {
+        "text": "I follows because aircraft fall inside machines, which exclude living things. II follows by converting 'All aircraft are machines'."
+      },
+      "difficulty": "HARD",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "70ce12fcbdbfe107600509e8131230afb0ae38abedfd48c16ce6742eb4c89e76",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-094",
+      "position": 94,
+      "pool_type": "FULL_MOCK",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Non-Verbal Reasoning",
+      "subtopic": "Counting figures",
+      "stem": {
+        "text": "How many triangles are there in the given figure?",
+        "assets": [
+          {
+            "asset_id": "fm01-count-triangles",
+            "placement": "STEM",
+            "alt": "A large triangle with a vertical line from the top vertex to the middle of the base, and a horizontal line across the triangle at half its height."
+          }
+        ]
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "5"
+        },
+        {
+          "key": "B",
+          "text": "6"
+        },
+        {
+          "key": "C",
+          "text": "7"
+        },
+        {
+          "key": "D",
+          "text": "8"
+        }
+      ],
+      "correct_option": "B",
+      "explanation": {
+        "text": "Every triangle uses the top vertex. Pairs of points joined by the cross-line give three (left small, right small, both halves together) and pairs on the base give three more (left half, right half, whole). Total 6."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-F05)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "2400c9bd7f8ca0f38a7e341c4776e4a0e5f29310b4a695298824bd170e14aa40",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-095",
+      "position": 95,
+      "pool_type": "FULL_MOCK",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Verbal Reasoning",
+      "subtopic": "Calendar",
+      "stem": {
+        "text": "If 1 January 2025 was a Wednesday, what day of the week was 1 January 2026?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Wednesday"
+        },
+        {
+          "key": "B",
+          "text": "Friday"
+        },
+        {
+          "key": "C",
+          "text": "Tuesday"
+        },
+        {
+          "key": "D",
+          "text": "Thursday"
+        }
+      ],
+      "correct_option": "D",
+      "explanation": {
+        "text": "2025 is not a leap year, so 365 days = 52 weeks + 1 day: Wednesday + 1 = Thursday."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "7f66cf3fe2c744bb69dfb7e23baf0c62bdbcfe70c5592d8ddb48982944806c6c",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-096",
+      "position": 96,
+      "pool_type": "FULL_MOCK",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Verbal Reasoning",
+      "subtopic": "Seating arrangement",
+      "stem": {
+        "text": "Five cadets P, Q, R, S and T sit in a row facing north. R is in the middle. P is at the left end. Q is immediately to the right of P. T is not at either end. Who is at the right end?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "S"
+        },
+        {
+          "key": "B",
+          "text": "Q"
+        },
+        {
+          "key": "C",
+          "text": "T"
+        },
+        {
+          "key": "D",
+          "text": "R"
+        }
+      ],
+      "correct_option": "A",
+      "explanation": {
+        "text": "Order from left: P, Q, R, then T (not at an end) and S. S is at the right end."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "47c489145f8c4cf280ccf61b5d9bb952c478f1de8ac122f555e5c6e616d09c9c",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-097",
+      "position": 97,
+      "pool_type": "FULL_MOCK",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Spatial Reasoning",
+      "subtopic": "Clock mirror image",
+      "stem": {
+        "text": "A clock shows 3:40. What time will its mirror image show?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "9:20"
+        },
+        {
+          "key": "B",
+          "text": "7:20"
+        },
+        {
+          "key": "C",
+          "text": "8:20"
+        },
+        {
+          "key": "D",
+          "text": "8:40"
+        }
+      ],
+      "correct_option": "C",
+      "explanation": {
+        "text": "Mirror time = 11:60 − 3:40 = 8:20."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "c1ec6b2f6f95f4d8d2e8d079d47a20549dd7f56320823c59b43c25aea1256c19",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-098",
+      "position": 98,
+      "pool_type": "FULL_MOCK",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Patterns and Sequences",
+      "subtopic": "Missing number",
+      "stem": {
+        "text": "Find the missing number. Row 1: 3, 4, 12. Row 2: 5, 6, 30. Row 3: 7, 2, ?"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "9"
+        },
+        {
+          "key": "B",
+          "text": "12"
+        },
+        {
+          "key": "C",
+          "text": "16"
+        },
+        {
+          "key": "D",
+          "text": "14"
+        }
+      ],
+      "correct_option": "D",
+      "explanation": {
+        "text": "The third number in each row is the product of the first two: 7 × 2 = 14."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "5f2eda52f3d53e12051f3c9c9b88dbbea59d391437e8fed76fc857a699b110d9",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-099",
+      "position": 99,
+      "pool_type": "FULL_MOCK",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Non-Verbal Reasoning",
+      "subtopic": "Odd figure out",
+      "stem": {
+        "text": "Three of the four figures follow the same rule. Choose the figure that does not.",
+        "assets": [
+          {
+            "asset_id": "fm01-odd-figure",
+            "placement": "STEM",
+            "alt": "Four figures. A: square with 3 dots. B: triangle with 2 dots. C: pentagon with 4 dots. D: hexagon with 4 dots."
+          }
+        ]
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "Figure (A)"
+        },
+        {
+          "key": "B",
+          "text": "Figure (B)"
+        },
+        {
+          "key": "C",
+          "text": "Figure (C)"
+        },
+        {
+          "key": "D",
+          "text": "Figure (D)"
+        }
+      ],
+      "correct_option": "D",
+      "explanation": {
+        "text": "In (A), (B) and (C) the number of dots is one less than the number of sides (square 3, triangle 2, pentagon 4). The hexagon in (D) should have 5 dots but has 4."
+      },
+      "difficulty": "MODERATE",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 v2 (V2-F06)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "7492e3e0ea219aa7f225e1c1aaeb28c85c811c238753e004481fd532293ea60d",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    },
+    {
+      "external_id": "AFCAT-FM01-CAND-V1-100",
+      "position": 100,
+      "pool_type": "FULL_MOCK",
+      "section": "REASONING_MILITARY_APTITUDE",
+      "topic": "Verbal Reasoning",
+      "subtopic": "Dictionary order",
+      "stem": {
+        "text": "Arrange in dictionary order: 1. Sortie 2. Sorting 3. Sorrow 4. Sort"
+      },
+      "options": [
+        {
+          "key": "A",
+          "text": "4, 3, 1, 2"
+        },
+        {
+          "key": "B",
+          "text": "4, 1, 2, 3"
+        },
+        {
+          "key": "C",
+          "text": "3, 4, 2, 1"
+        },
+        {
+          "key": "D",
+          "text": "3, 4, 1, 2"
+        }
+      ],
+      "correct_option": "D",
+      "explanation": {
+        "text": "Sorrow (sorr- before sort-), Sort (a prefix of the others), Sortie (e before n), Sorting."
+      },
+      "difficulty": "HARD",
+      "source_kind": "ORIGINAL",
+      "source_reference": "Written for DP Full Mock 01 (the bank has no reasoning section)",
+      "source_rights_status": "REVIEW_REQUIRED",
+      "fingerprint_sha256": "c948ac718c49feb7e6cf9af73c03e54f95e28be0056d52a9d5d88a8d7263546f",
+      "content_version": 1,
+      "editorial_status": "DRAFT",
+      "requires_independent_review": true
+    }
+  ]
+}
