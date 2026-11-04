@@ -58,6 +58,15 @@ export function relativeDayLabel(date: string, today: string): "Today" | "Yester
   return null;
 }
 
+const WEEKDAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+/** Weekday name for a YYYY-MM-DD date (calendar date, no timezone shift). */
+export function weekdayName(date: string): string | null {
+  const m = DATE_RE.exec(date);
+  if (!m) return null;
+  return WEEKDAY_NAMES[new Date(Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3]))).getUTCDay()];
+}
+
 export function monthKeyOf(date: string): string {
   return date.slice(0, 7);
 }

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   buildMonthGrid, shiftMonth, formatMonthLabel, summariseMonths, relativeDayLabel,
-  indiaToday, addDays, isValidDateKey, isValidMonthKey,
+  indiaToday, addDays, isValidDateKey, isValidMonthKey, weekdayName,
 } from '../lib/current-affairs-calendar.ts';
 
 test('month grid is Monday-first and padded to whole weeks', () => {
@@ -47,4 +47,9 @@ test('month keys are validated', () => {
   assert.equal(isValidMonthKey('2026-10'), true);
   assert.equal(isValidMonthKey('2026-13'), false);
   assert.equal(isValidMonthKey('2026-1'), false);
+});
+
+test('weekday names come from the calendar date', () => {
+  assert.equal(weekdayName('2026-11-02'), 'Monday');
+  assert.equal(weekdayName('bad'), null);
 });

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, CalendarDays, FileText, ListChecks } from "lucide-react";
 import { getDailyCurrentAffairsList, type CurrentAffairsPost } from "@/lib/current-affairs";
-import { indiaToday, relativeDayLabel, summariseMonths } from "@/lib/current-affairs-calendar";
+import { indiaToday, relativeDayLabel, summariseMonths, weekdayName } from "@/lib/current-affairs-calendar";
 import CurrentAffairsCalendar from "@/components/current-affairs/CurrentAffairsCalendar";
 
 export const revalidate = 300;
@@ -90,7 +90,7 @@ export default async function CurrentAffairsPage() {
                     key={post.id}
                     post={post}
                     primary={i === 0}
-                    label={relativeDayLabel(post.date, today) ?? (i === 0 ? "Latest" : post.formattedDate)}
+                    label={relativeDayLabel(post.date, today) ?? weekdayName(post.date) ?? (i === 0 ? "Latest" : "Earlier")}
                   />
                 ))}
               </div>
