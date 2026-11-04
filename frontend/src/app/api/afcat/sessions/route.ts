@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
     );
   } catch {
     return NextResponse.json(
-      { error: "Unable to start AFCAT staging test" },
+      { error: "Unable to start AFCAT test" },
       { status: 503 },
     );
   }

@@ -11,6 +11,6 @@ export async function GET() {
     if (error) throw error;
     return NextResponse.json({ tests: data ?? [] }, { headers: { "Cache-Control": "no-store" } });
   } catch {
-    return NextResponse.json({ error: "AFCAT staging unavailable" }, { status: 503 });
+    return NextResponse.json({ error: "AFCAT unavailable" }, { status: 503 });
   }
 }

@@ -119,7 +119,7 @@ export async function GET(_request: NextRequest, context: Context) {
     );
   } catch {
     return NextResponse.json(
-      { error: "AFCAT staging session unavailable" },
+      { error: "AFCAT session unavailable" },
       { status: 503 },
     );
   }
