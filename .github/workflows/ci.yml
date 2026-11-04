@@ -47,6 +47,14 @@ jobs:
       - name: Run npm run verify
         run: npm run verify
 
+      - name: Verify AFCAT engine invariants
+        run: node --test scripts/test-afcat-engine.cjs
+
+      - name: Verify AFCAT visual benchmark interactions
+        env:
+          DP_CHROMIUM_PATH: /usr/bin/google-chrome
+        run: npm exec --prefix frontend -- playwright test --config frontend/playwright.afcat.config.ts
+
       - name: Verify session resume regressions
         run: >-
           node --experimental-strip-types --test

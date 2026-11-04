@@ -26,13 +26,13 @@ export async function savePreparation(request: NextRequest, setup: boolean) {
     const targetYear = rawYear == null || rawYear === "" ? null :
       (typeof rawYear === "number" || typeof rawYear === "string" ? Number(rawYear) : NaN);
     const exams = body.target_exams ?? existing?.target_exams;
-    const allowedExams = setup ? ["CDS", "CAPF-AC"] : ["CDS", "CAPF-AC", "NDA", "AFCAT", "UPSC-CSE"];
+    const allowedExams = setup ? ["CDS", "CAPF-AC", "AFCAT"] : ["CDS", "CAPF-AC", "NDA", "AFCAT", "UPSC-CSE"];
     if ((fullName !== null && (typeof fullName !== "string" || fullName.trim().length > 200)) ||
         (targetYear !== null && (!Number.isInteger(targetYear) ||
           ((targetYear < 2026 || targetYear > 2032) && (setup || targetYear !== existing?.target_year)))) ||
         !Array.isArray(exams) || exams.length === 0 ||
         exams.some((exam: unknown) => typeof exam !== "string" || !allowedExams.includes(exam))) {
-      return NextResponse.json({ error: "Choose CDS, CAPF AC, or both, and a valid optional target year." }, { status: 400 });
+      return NextResponse.json({ error: "Choose at least one available exam and a valid optional target year." }, { status: 400 });
     }
     // One authenticated transaction owns all writes; no backend service-role fallback.
     const { data: result, error: saveError } = await supabase.rpc(setup ? "complete_onboarding" : "update_preparation_profile", {

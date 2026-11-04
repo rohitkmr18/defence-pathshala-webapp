@@ -1,0 +1,33 @@
+name: AFCAT staging gates
+on:
+  push:
+    branches: [feature/afcat-launch]
+permissions:
+  contents: read
+jobs:
+  synthetic-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:54321
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: synthetic-fixture-key
+      NEXT_TELEMETRY_DISABLED: '1'
+      DP_CHROMIUM_PATH: /usr/bin/google-chrome
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - run: npm ci --prefix frontend --ignore-scripts
+      - run: node --test scripts/test-afcat-engine.cjs scripts/test-afcat-db.cjs scripts/test-target-editor.cjs
+      - name: Lint changed product surfaces
+        working-directory: frontend
+        run: npx eslint src/app/afcat src/app/api/afcat src/components/afcat src/app/layout.tsx e2e/afcat-player.spec.ts playwright.afcat-player.config.ts src/components/dashboard/EditTargetModal.tsx
+      - run: npm run build --prefix frontend
+      - name: Desktop and mobile synthetic browser regressions
+        working-directory: frontend
+        run: npx playwright test -c playwright.afcat-player.config.ts
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: afcat-synthetic-player-evidence
+          path: frontend/test-results

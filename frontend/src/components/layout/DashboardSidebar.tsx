@@ -21,6 +21,7 @@ import {
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
 import EditTargetModal from "@/components/dashboard/EditTargetModal";
+import ExamModeSwitcher from "./ExamModeSwitcher";
 
 const baseItems = [
   {
@@ -155,6 +156,11 @@ export default function DashboardSidebar({
             </button>
           )}
         </div>
+      </div>
+
+      {/* Exam product switcher — keeps AFCAT outside official UPSC PYQs */}
+      <div className="border-b border-slate-100 px-3 py-3">
+        {collapsed && !mobile ? <Link href="/afcat" title="AFCAT Exam Mode" className="block rounded-lg bg-blue-50 px-2 py-2 text-center text-xs font-bold text-blue-700">AF</Link> : <ExamModeSwitcher />}
       </div>
 
       {/* ── Navigation ──────────────────────────────────────────────────── */}
