@@ -1,6 +1,8 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import AfcatShareButton from "@/components/afcat/AfcatShareButton";
+import { trackAfcatFunnel } from "@/lib/afcat/funnel";
 import AfcatVisualQuestion from "@/components/afcat/AfcatVisualQuestion";
 import AfcatResultAnalysis, {
   type AfcatResultReport,
@@ -214,6 +216,7 @@ export default function AfcatLab() {
       );
       setResult(completed.summary);
       setReport(completed);
+      trackAfcatFunnel("afcat_mock_submit", { status: String(completed.status) }, `submit:${paper.session.id}`);
       setPaper((old) =>
         old
           ? { ...old, session: { ...old.session, status: completed.status } }
@@ -296,6 +299,7 @@ export default function AfcatLab() {
         body: JSON.stringify({ testId }),
       });
       await load(started.sessionId);
+      trackAfcatFunnel("afcat_mock_start", { resumed: Boolean(started.resumed) }, `start:${started.sessionId}`);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Unable to start test");
     } finally {
@@ -303,6 +307,10 @@ export default function AfcatLab() {
       setLoading(false);
     }
   }
+  const resultSessionId = result ? paper?.session.id : undefined;
+  useEffect(() => {
+    if (resultSessionId) trackAfcatFunnel("afcat_result_view", {}, `result:${resultSessionId}`);
+  }, [resultSessionId]);
   const question = paper?.questions[index];
   const active = paper?.session.status === "IN_PROGRESS" && left > 0 && online;
   // Refs mirror render state for effect cleanups; written after commit, never during render.
@@ -452,6 +460,7 @@ export default function AfcatLab() {
             {/sign in required/i.test(error) ? (
               <Link
                 className="font-semibold text-blue-700 underline"
+                onClick={() => trackAfcatFunnel("afcat_signin_click", { placement: "lab" })}
                 href={`/auth/login?next=${encodeURIComponent(`/afcat/lab${typeof window !== "undefined" ? window.location.search : ""}`)}`}
               >
                 Sign in with Defence Pathshala
@@ -535,11 +544,14 @@ export default function AfcatLab() {
             ))}
           </section>
         ) : result ? (
-          <AfcatResultAnalysis
-            status={paper.session.status}
-            summary={result}
-            report={report}
-          />
+          <>
+            <AfcatShareButton score={result.score} maxMarks={result.max_marks} />
+            <AfcatResultAnalysis
+              status={paper.session.status}
+              summary={result}
+              report={report}
+            />
+          </>
         ) : (
           <>
             <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
