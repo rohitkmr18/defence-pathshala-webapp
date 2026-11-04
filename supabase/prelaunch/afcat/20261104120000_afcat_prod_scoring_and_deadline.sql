@@ -1,4 +1,4 @@
--- AFCAT production scoring + deadline guard (REVIEWED, NOT YET APPLIED).
+-- AFCAT production scoring + deadline guard (APPLIED TO PRODUCTION as 20261104084122).
 -- Combines staging score_transaction and deadline_guard; touches only afcat_* objects.
 -- Requires 20261023131000 foundation (already applied to production).
 begin;
