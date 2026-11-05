@@ -1,10 +1,12 @@
 import Link from "next/link";
+import { latestMonthlyCapsule } from "@/lib/monthly-capsules";
 import HeroSection from "@/components/home/HeroSection";
 import ProductShowcase from "@/components/home/ProductShowcase";
 import FounderCredibility from "@/components/home/FounderCredibility";
 import ObjectionAndFinalCtaSection from "@/components/home/ObjectionAndFinalCtaSection";
 
 export default function HomePage() {
+  const capsule = latestMonthlyCapsule();
   return (
     <main className="min-h-screen overflow-x-hidden bg-white text-slate-900 selection:bg-blue-600 selection:text-white">
       {/* ── Navbar ───────────────────────────────────────────────────────── */}
@@ -67,6 +69,17 @@ export default function HomePage() {
             <Link href="/exams/capf" className="hover:text-blue-600 transition">
               CAPF Exam
             </Link>
+            <Link href="/afcat" className="hover:text-blue-600 transition">
+              AFCAT Free Mocks
+            </Link>
+            <Link href="/current-affairs" className="hover:text-blue-600 transition">
+              Current Affairs
+            </Link>
+            {capsule && (
+              <Link href={`/current-affairs/monthly/${capsule.edition}`} className="hover:text-blue-600 transition">
+                Monthly Capsule
+              </Link>
+            )}
             <Link href="/about" className="hover:text-blue-600 transition">
               About
             </Link>
