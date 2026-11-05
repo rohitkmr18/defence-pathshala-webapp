@@ -2,6 +2,7 @@ import { MetadataRoute } from "next";
 import { getAllEligibleSeoRoutes } from "@/lib/seo-data";
 import { getPublishedCurrentAffairsEditions, toLastModified } from "@/lib/current-affairs-sitemap";
 import { summariseMonths } from "@/lib/current-affairs-calendar";
+import { MONTHLY_CAPSULES } from "@/lib/monthly-capsules";
 
 const base = "https://www.defencepathshala.in";
 
@@ -11,6 +12,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/afcat`, changeFrequency: "weekly", priority: 0.9 },
     { url: `${base}/current-affairs`, changeFrequency: "daily", priority: 0.9 },
     { url: `${base}/about`, changeFrequency: "monthly", priority: 0.6 },
+    ...MONTHLY_CAPSULES.map((c) => ({
+      url: `${base}/current-affairs/monthly/${c.edition}`,
+      lastModified: new Date(`${c.publishedOn}T00:00:00Z`),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    })),
   ];
 
   const [pyqEntries, currentAffairsEntries] = await Promise.all([
