@@ -1,0 +1,426 @@
+{
+  "version": "cds-english-maths-v1",
+  "approved": "2026-11-05 (founder, taxonomy doc https://claude.ai/artifact/MuWFxpU5ahi9vPrmwxAM9A)",
+  "column_mapping": {
+    "subject": "approved Subject",
+    "topic": "approved Subtopic",
+    "subtopic": "one listed theme",
+    "theme": "specific concept, set at tagging time (unnumbered)"
+  },
+  "conditional_topics": {
+    "cds-english": [
+      "Active and Passive Voice / Direct and Indirect Speech"
+    ]
+  },
+  "conditional_note": "Kept only if found in the 2024-2026 papers; otherwise removed before release.",
+  "allowed_patterns": [
+    "Single MCQ",
+    "2-Statement Combination",
+    "3-Statement Combination",
+    "4-Statement Combination",
+    "Statement Count",
+    "Ordering/Sequence",
+    "Assertion-Reason",
+    "Chronology",
+    "Match the Following",
+    "Linked Item Set"
+  ],
+  "pending_patterns": {
+    "Linked Item Set": "PATTERN.LINKED_SET, added to dp_pattern_dictionary with the first ingestion migration"
+  },
+  "papers": {
+    "cds-maths": {
+      "exam": "CDS",
+      "paper": "Elementary Mathematics",
+      "section_id": "cds-maths:maths",
+      "question_id_code": "MATHS",
+      "taxonomy": [
+        {
+          "subject": "Arithmetic",
+          "topics": [
+            {
+              "topic": "Number System",
+              "subtopics": [
+                "Natural Numbers, Integers, Rational and Real Numbers",
+                "Fundamental Operations"
+              ]
+            },
+            {
+              "topic": "Unitary Method",
+              "subtopics": [
+                "Direct and Inverse Variation"
+              ]
+            },
+            {
+              "topic": "Percentage",
+              "subtopics": [
+                "Successive Change",
+                "Population and Depreciation"
+              ]
+            },
+            {
+              "topic": "Ratio, Proportion and Variation",
+              "subtopics": [
+                "Partnership",
+                "Mixtures and Alligation"
+              ]
+            },
+            {
+              "topic": "Profit and Loss",
+              "subtopics": [
+                "Discount and Marked Price"
+              ]
+            },
+            {
+              "topic": "Simple and Compound Interest",
+              "subtopics": [
+                "Instalments",
+                "Difference of CI and SI"
+              ]
+            },
+            {
+              "topic": "Time and Work",
+              "subtopics": [
+                "Pipes and Cisterns",
+                "Work Efficiency"
+              ]
+            },
+            {
+              "topic": "Time and Distance",
+              "subtopics": [
+                "Trains",
+                "Boats and Streams",
+                "Relative Speed"
+              ]
+            },
+            {
+              "topic": "Divisibility and Remainders",
+              "subtopics": [
+                "Division Algorithm",
+                "Tests of Divisibility",
+                "Unit Digit"
+              ]
+            },
+            {
+              "topic": "Primes, Factors and Multiples",
+              "subtopics": [
+                "Prime and Composite Numbers",
+                "Factorisation Theorem",
+                "Number of Factors"
+              ]
+            },
+            {
+              "topic": "HCF and LCM",
+              "subtopics": [
+                "Euclidean Algorithm",
+                "HCF and LCM Word Problems"
+              ]
+            },
+            {
+              "topic": "Logarithms",
+              "subtopics": [
+                "Laws of Logarithms"
+              ]
+            }
+          ]
+        },
+        {
+          "subject": "Algebra",
+          "topics": [
+            {
+              "topic": "Polynomials and Factorisation",
+              "subtopics": [
+                "Basic Operations",
+                "Simple Factors",
+                "Remainder Theorem"
+              ]
+            },
+            {
+              "topic": "HCF and LCM of Polynomials",
+              "subtopics": [
+                "HCF and LCM of Polynomials"
+              ]
+            },
+            {
+              "topic": "Quadratic Equations",
+              "subtopics": [
+                "Roots and Coefficients",
+                "Nature of Roots",
+                "Quadratic Word Problems"
+              ]
+            },
+            {
+              "topic": "Linear Equations in Two Variables",
+              "subtopics": [
+                "Analytical Solution",
+                "Graphical Solution",
+                "Linear Word Problems"
+              ]
+            },
+            {
+              "topic": "Linear Inequations",
+              "subtopics": [
+                "Simultaneous Inequations in Two Variables"
+              ]
+            },
+            {
+              "topic": "Sets",
+              "subtopics": [
+                "Set Language and Notation",
+                "Venn Diagrams"
+              ]
+            },
+            {
+              "topic": "Rational Expressions and Identities",
+              "subtopics": [
+                "Conditional Identities",
+                "Simplification"
+              ]
+            },
+            {
+              "topic": "Laws of Indices",
+              "subtopics": [
+                "Surds and Exponents"
+              ]
+            }
+          ]
+        },
+        {
+          "subject": "Trigonometry",
+          "topics": [
+            {
+              "topic": "Trigonometric Ratios and Identities",
+              "subtopics": [
+                "Ratios from 0 to 90 Degrees",
+                "Standard Angles",
+                "Identities"
+              ]
+            },
+            {
+              "topic": "Heights and Distances",
+              "subtopics": [
+                "Angles of Elevation and Depression"
+              ]
+            }
+          ]
+        },
+        {
+          "subject": "Geometry",
+          "topics": [
+            {
+              "topic": "Lines and Angles",
+              "subtopics": [
+                "Angles at a Point",
+                "Parallel Lines and Transversals"
+              ]
+            },
+            {
+              "topic": "Triangles",
+              "subtopics": [
+                "Sides and Angles",
+                "Congruence",
+                "Similarity",
+                "Medians and Altitudes"
+              ]
+            },
+            {
+              "topic": "Quadrilaterals",
+              "subtopics": [
+                "Parallelogram, Rectangle and Square"
+              ]
+            },
+            {
+              "topic": "Circles",
+              "subtopics": [
+                "Chords",
+                "Tangents and Normals",
+                "Cyclic Quadrilaterals"
+              ]
+            },
+            {
+              "topic": "Loci",
+              "subtopics": [
+                "Loci"
+              ]
+            }
+          ]
+        },
+        {
+          "subject": "Mensuration",
+          "topics": [
+            {
+              "topic": "Area of Plane Figures",
+              "subtopics": [
+                "Squares, Rectangles and Parallelograms",
+                "Triangles",
+                "Circles",
+                "Composite Figures"
+              ]
+            },
+            {
+              "topic": "Cuboid and Cube",
+              "subtopics": [
+                "Surface Area",
+                "Volume"
+              ]
+            },
+            {
+              "topic": "Cylinder and Cone",
+              "subtopics": [
+                "Surface Area",
+                "Volume"
+              ]
+            },
+            {
+              "topic": "Sphere and Hemisphere",
+              "subtopics": [
+                "Surface Area",
+                "Volume"
+              ]
+            }
+          ]
+        },
+        {
+          "subject": "Statistics",
+          "topics": [
+            {
+              "topic": "Data and Graphical Representation",
+              "subtopics": [
+                "Tabulation",
+                "Frequency Polygon and Histogram",
+                "Bar Chart and Pie Chart"
+              ]
+            },
+            {
+              "topic": "Measures of Central Tendency",
+              "subtopics": [
+                "Mean",
+                "Median",
+                "Mode"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "cds-english": {
+      "exam": "CDS",
+      "paper": "English",
+      "section_id": "cds-english:english",
+      "question_id_code": "ENG",
+      "taxonomy": [
+        {
+          "subject": "Vocabulary",
+          "topics": [
+            {
+              "topic": "Synonyms",
+              "subtopics": [
+                "Word Meaning",
+                "Contextual Meaning"
+              ]
+            },
+            {
+              "topic": "Antonyms",
+              "subtopics": [
+                "Word Meaning",
+                "Contextual Meaning"
+              ]
+            },
+            {
+              "topic": "Idioms and Phrases",
+              "subtopics": [
+                "Idiom Meaning",
+                "Phrasal Verbs"
+              ]
+            },
+            {
+              "topic": "One-word Substitution",
+              "subtopics": [
+                "One-word Substitution"
+              ]
+            }
+          ]
+        },
+        {
+          "subject": "Grammar and Usage",
+          "topics": [
+            {
+              "topic": "Spotting Errors",
+              "subtopics": [
+                "Subject-Verb Agreement",
+                "Tenses",
+                "Articles",
+                "Prepositions",
+                "Pronouns",
+                "Modifiers",
+                "Parallelism"
+              ]
+            },
+            {
+              "topic": "Sentence Improvement",
+              "subtopics": [
+                "Grammar Correction",
+                "Redundancy",
+                "Word Choice"
+              ]
+            },
+            {
+              "topic": "Fill in the Blanks",
+              "subtopics": [
+                "Prepositions",
+                "Articles",
+                "Conjunctions",
+                "Vocabulary in Context"
+              ]
+            },
+            {
+              "topic": "Active and Passive Voice / Direct and Indirect Speech",
+              "subtopics": [
+                "Voice",
+                "Narration"
+              ]
+            }
+          ]
+        },
+        {
+          "subject": "Sentence Organisation",
+          "topics": [
+            {
+              "topic": "Ordering of Sentence Parts",
+              "subtopics": [
+                "Sentence Parts"
+              ]
+            },
+            {
+              "topic": "Ordering of Sentences in a Passage",
+              "subtopics": [
+                "Sentence Sequence"
+              ]
+            }
+          ]
+        },
+        {
+          "subject": "Reading Comprehension",
+          "topics": [
+            {
+              "topic": "Comprehension Passages",
+              "subtopics": [
+                "Main Idea",
+                "Inference",
+                "Tone",
+                "Vocabulary in Context",
+                "Factual Detail"
+              ]
+            },
+            {
+              "topic": "Cloze Test",
+              "subtopics": [
+                "Passage-based Blanks"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
