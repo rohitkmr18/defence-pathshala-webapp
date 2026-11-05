@@ -77,13 +77,31 @@ insert into public.exam_sections (id, paper_id, label, question_count, sort_orde
   ('nda-gat:gk',                 'nda-gat',     'General Knowledge',      100, 2)
 on conflict (id) do nothing;
 
+-- One question number per paper, not per exam. The old key (exam, year, cycle,
+-- q_num) would reject CDS English Q1 of 2024-I because GK Q1 of 2024-I exists.
+-- No code depends on the old key (all upserts use question_id; checked 5 Nov 2026).
+do $$
+begin
+  if not exists (select 1 from pg_constraint where conname = 'questions_exam_year_paper_qnum_unique'
+                 and conrelid = 'public.questions'::regclass) then
+    alter table public.questions
+      add constraint questions_exam_year_paper_qnum_unique unique (exam, year, cycle, paper, q_num);
+  end if;
+end $$;
+alter table public.questions drop constraint if exists questions_exam_year_qnum_unique;
+
 -- Deterministic backfill for the existing corpus (verified 5 Nov 2026:
 -- CDS rows all have paper = 'General Knowledge'; CAPF-AC rows all 'Paper I').
+-- dp_content_revision fires per row; question content is untouched, so
+-- content_version and content_status stay as they are. The audit rows it
+-- writes carry this evidence label instead of a blank.
+select set_config('dp.content_evidence', 'exam-registry backfill 20261105 (paper_id/section_id only)', true);
 update public.questions set paper_id = 'cds-gk',  section_id = 'cds-gk:gk'
   where exam = 'CDS' and paper = 'General Knowledge' and paper_id is null;
 update public.questions set paper_id = 'capf-p1',
        section_id = case when subject = 'General Mental Ability' then 'capf-p1:gma' else 'capf-p1:general-ability' end
   where exam = 'CAPF-AC' and paper = 'Paper I' and paper_id is null;
+select set_config('dp.content_evidence', '', true);
 
 -- Reference tables are public, read-only to clients.
 alter table public.exam_papers       enable row level security;
@@ -98,4 +116,6 @@ create policy question_passages_read on public.question_passages for select usin
 
 -- Post-apply checks (expected on production as of 5 Nov 2026):
 --   select paper_id, count(*) from public.questions group by 1;  -- cds-gk 1678, capf-p1 873, null 0
+--   select section_id, count(*) from public.questions group by 1; -- cds-gk:gk 1678, capf-p1:gma 112, capf-p1:general-ability 761
+--   content_version / content_status unchanged; +2551 rows in dp_content_private.revisions with the evidence label
 commit;
