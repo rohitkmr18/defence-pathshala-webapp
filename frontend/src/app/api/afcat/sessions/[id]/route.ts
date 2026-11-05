@@ -3,6 +3,7 @@ import {
   afcatStagingAdmin,
   afcatStagingUser,
 } from "@/lib/afcat/staging-server";
+import { afcatMockLabel } from "@/lib/afcat/mock-labels";
 import { isAfcatExpired } from "@/lib/afcat/engine";
 import { sanitizeAfcatQuestion } from "@/lib/afcat/serialize";
 import { AFCAT_ASSET_COLUMNS, groupAfcatAssets, type AfcatAssetRow } from "@/lib/afcat/assets";
@@ -108,7 +109,7 @@ export async function GET(_request: NextRequest, context: Context) {
             Date.parse(session.started_at) + test.duration_seconds * 1000,
           ).toISOString(),
           expired: isAfcatExpired(session.started_at, test.duration_seconds),
-          title: test.title,
+          title: afcatMockLabel(test.code, test.title),
           code: test.code,
           currentPosition: session.current_position,
         },

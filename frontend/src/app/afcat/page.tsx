@@ -33,10 +33,10 @@ const stats = [
   { value: "+3 / −1", label: "Marking" },
 ];
 const sections = [
-  { name: "General Awareness", count: 25, note: "History, geography, polity, science, defence and 2026 current affairs" },
+  { name: "General Awareness", count: 25, note: "Statement-based and match-the-following: history, geography, polity, economy, science, defence and 2026 current affairs" },
   { name: "English", count: 30, note: "Comprehension, cloze test, error spotting, vocabulary" },
   { name: "Numerical Ability", count: 20, note: "Percentages, time and work, interest, mensuration, probability" },
-  { name: "Reasoning & Military Aptitude", count: 25, note: "Verbal reasoning plus figure-based spatial questions" },
+  { name: "Reasoning & Military Aptitude", count: 25, note: "Coding-decoding, blood relations, syllogisms, series, spatial and military aptitude" },
 ];
 const afterwards = [
   { icon: Target, title: "Your score, the honest way", text: "Marks, accuracy and how many marks wrong guesses cost you." },
@@ -68,7 +68,7 @@ export default function AfcatPage() {
             AFCAT Full Mock 01
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
-            A full-length simulation in the AFCAT pattern: 100 questions, 120 minutes, four sections. Submit it and you get a detailed analysis straight away.
+            A full-length simulation at the tougher 2026 AFCAT level: 100 questions, 120 minutes, four sections. Submit it and you get a detailed analysis straight away.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
             <AfcatCtaLink href="/afcat/lab" placement="hero"

@@ -5,9 +5,9 @@ import { trackLearningEvent } from "@/lib/learning-events";
  * Names are fixed here so the funnel can be built in GA4 Explore without guessing.
  * No personal data is sent: only the test code and a coarse placement label.
  */
-export const AFCAT_TEST_CODE = "AFCAT-FM01-V2";
+export const AFCAT_TEST_CODE = "AFCAT-FM02-V1";
 
-/** Test code attached to funnel events. Defaults to Mock 01 for landing/CTA events;
+/** Test code attached to funnel events. Defaults to the live mock (AFCAT-FM02-V1, shown as "Full Mock 01") for landing/CTA events;
  *  the player sets it to the mock actually started or resumed. */
 let currentTestCode = AFCAT_TEST_CODE;
 export function setAfcatFunnelTestCode(code: string | undefined | null): void {
