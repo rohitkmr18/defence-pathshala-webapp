@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ date: str
   if (!post) return {};
 
   return {
-    title: `${post.title} | Defence Pathshala`,
+    title: post.title,
     description: post.summary || `Exam-focused current affairs for ${post.formattedDate} with structured key facts and daily MCQs.`,
     alternates: {
       canonical: `/current-affairs/${date}`,

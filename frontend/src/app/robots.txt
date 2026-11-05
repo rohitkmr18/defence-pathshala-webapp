@@ -1,5 +1,11 @@
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /auth/
+Disallow: /onboarding
+Disallow: /dashboard/
+Disallow: /admin/
+Disallow: /afcat/lab
+Disallow: /afcat/visual-preview
 
-Host: https://www.defencepathshala.in
 Sitemap: https://www.defencepathshala.in/sitemap.xml
