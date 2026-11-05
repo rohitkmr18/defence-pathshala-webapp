@@ -13,8 +13,18 @@ export function trackLearningEvent(name: string, context: Record<string, string 
     } catch { /* In-memory deduplication remains available. */ }
     emitted.add(key);
   }
+  // gtag.js only processes Arguments objects in the dataLayer; a plain array is
+  // silently ignored, so before this fix no custom event reached GA4 (28 days, zero).
+  // Push `arguments` exactly as the gtag() stub does. Events queued before gtag.js
+  // loads are replayed by it, so early landing events are kept.
   const analytics = window as AnalyticsWindow;
   analytics.dataLayer ??= [];
-  // Same argument shape as @next/third-parties sendGAEvent.
-  analytics.dataLayer.push(["event", name, context]);
+  analytics.dataLayer.push(asArguments("event", name, context));
+}
+
+/** Returns a real Arguments object, the only shape gtag.js reads from the dataLayer. */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function asArguments(..._args: unknown[]): IArguments {
+  // eslint-disable-next-line prefer-rest-params
+  return arguments;
 }
