@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next";
 import { getAllEligibleSeoRoutes } from "@/lib/seo-data";
 import { getPublishedCurrentAffairsEditions, toLastModified } from "@/lib/current-affairs-sitemap";
+import { summariseMonths } from "@/lib/current-affairs-calendar";
 
 const base = "https://www.defencepathshala.in";
 
@@ -26,12 +27,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         const newest = editions[0];
         const hub = staticEntries.find((e) => e.url === `${base}/current-affairs`);
         if (hub && newest) hub.lastModified = toLastModified(newest.updatedAt) ?? toLastModified(newest.date);
-        return editions.map((edition) => ({
+        const editionEntries: MetadataRoute.Sitemap = editions.map((edition) => ({
           url: `${base}/current-affairs/${edition.date}`,
           lastModified: toLastModified(edition.updatedAt) ?? toLastModified(edition.date),
           changeFrequency: "monthly",
           priority: 0.7,
         }));
+        const monthEntries: MetadataRoute.Sitemap = summariseMonths(editions.map((e) => e.date)).map((m) => ({
+          url: `${base}/current-affairs/month/${m.month}`,
+          changeFrequency: "weekly",
+          priority: 0.6,
+        }));
+        return [...monthEntries, ...editionEntries];
       })
       .catch((err) => {
         console.error("[Sitemap] Failed to generate Current Affairs routes:", err);
