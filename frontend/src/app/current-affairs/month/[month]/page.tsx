@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, CalendarDays, ChevronRight, ListChecks } from "lucide-react";
 import { getDailyCurrentAffairsList } from "@/lib/current-affairs";
 import { formatMonthLabel, isValidMonthKey, monthKeyOf, summariseMonths } from "@/lib/current-affairs-calendar";
+import MonthlyCapsuleCard from "@/components/current-affairs/MonthlyCapsuleCard";
+import { getMonthlyCapsule } from "@/lib/monthly-capsules";
 
 export const revalidate = 300;
 
@@ -40,6 +42,7 @@ export default async function CurrentAffairsMonthPage({ params }: { params: Prom
   const label = formatMonthLabel(month);
   const stories = data.posts.reduce((n, p) => n + p.storyCount, 0);
   const mcqs = data.posts.reduce((n, p) => n + p.quizCount, 0);
+  const capsule = getMonthlyCapsule(month);
 
   return (
     <main className="min-h-screen bg-slate-50">
@@ -55,6 +58,12 @@ export default async function CurrentAffairsMonthPage({ params }: { params: Prom
             {data.posts.length} {data.posts.length === 1 ? "edition" : "editions"} · {stories} stories · {mcqs} MCQs
           </p>
         </header>
+
+        {capsule && (
+          <div className="mt-8">
+            <MonthlyCapsuleCard capsule={capsule} />
+          </div>
+        )}
 
         <ul className="mt-8 space-y-3">
           {data.posts.map((post) => (

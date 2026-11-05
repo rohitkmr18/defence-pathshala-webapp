@@ -3,6 +3,8 @@ import { ArrowRight, CalendarDays, FileText, ListChecks } from "lucide-react";
 import { getDailyCurrentAffairsList, type CurrentAffairsPost } from "@/lib/current-affairs";
 import { indiaToday, relativeDayLabel, summariseMonths, weekdayName } from "@/lib/current-affairs-calendar";
 import CurrentAffairsCalendar from "@/components/current-affairs/CurrentAffairsCalendar";
+import MonthlyCapsuleCard from "@/components/current-affairs/MonthlyCapsuleCard";
+import { latestMonthlyCapsule } from "@/lib/monthly-capsules";
 
 export const revalidate = 300;
 
@@ -61,6 +63,7 @@ export default async function CurrentAffairsPage() {
   const today = indiaToday();
   const pinned = posts.slice(0, PINNED_EDITIONS);
   const months = summariseMonths(posts.map((p) => p.date));
+  const capsule = latestMonthlyCapsule();
   const calendarEditions = posts.map((p) => ({ date: p.date, storyCount: p.storyCount, quizCount: p.quizCount }));
 
   return (
@@ -95,6 +98,8 @@ export default async function CurrentAffairsPage() {
                 ))}
               </div>
             </section>
+
+            {capsule && <MonthlyCapsuleCard capsule={capsule} />}
 
             <CurrentAffairsCalendar editions={calendarEditions} />
 
