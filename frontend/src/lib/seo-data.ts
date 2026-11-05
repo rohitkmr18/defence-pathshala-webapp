@@ -1,5 +1,6 @@
 import { unstable_cache } from "next/cache";
 import { createClient } from "@supabase/supabase-js";
+import { liveDbPaperValues } from "@/lib/exam-registry";
 
 const supabaseUrl =
   process.env.NEXT_PUBLIC_SUPABASE_URL ||
@@ -100,7 +101,7 @@ export const getCachedQuestionsMeta = unstable_cache(
     while (true) {
       const { data, error } = await client
         .from("v_dp_question_intelligence_v2")
-        .select("exam,year,subject,topic").eq("content_eligible", true)
+        .select("exam,year,subject,topic").eq("content_eligible", true).in("paper", liveDbPaperValues())
         .range(start, start + pageSize - 1);
 
       if (error) {
@@ -443,7 +444,7 @@ export async function getSubjectArchive(
           .from("v_dp_question_intelligence_v2")
           .select(
             "id,question_id,exam,year,cycle,paper,q_num,subject,topic,subtopic,theme,question,opt_a,opt_b,opt_c,opt_d,final_opt,explanation,source,verified_status,difficulty_score,difficulty_category"
-          ).eq("content_eligible", true)
+          ).eq("content_eligible", true).in("paper", liveDbPaperValues())
           .eq("exam", exam)
           .ilike("subject", subj)
           .order("year", { ascending: false })

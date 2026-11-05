@@ -7,6 +7,7 @@ import { normalizeQuestion } from "@/lib/question-intelligence";
 import { parseFiltersFromSearchParams, parseListParam } from "@/lib/question-filters";
 
 import { isContentEligible, isCompletePaper, CONTENT_UNAVAILABLE_MESSAGE, PAPER_UNAVAILABLE_MESSAGE } from "@/lib/content-quality";
+import { liveDbPaperValues } from "@/lib/exam-registry";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://afhwegrxnvgsqbqadvwr.supabase.co";
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -35,7 +36,7 @@ export async function GET(request: NextRequest) {
     let query = supabase
       .from("v_dp_question_intelligence_v2")
       .select("*")
-      .eq("content_eligible", true);
+      .eq("content_eligible", true).in("paper", liveDbPaperValues());
 
     if (externalId !== null) {
       query = query.eq("question_id", externalId);

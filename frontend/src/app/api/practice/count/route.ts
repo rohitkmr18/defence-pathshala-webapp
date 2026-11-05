@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { expandExamQuery } from "@/lib/exams";
 import { parseFiltersFromSearchParams, parseListParam } from "@/lib/question-filters";
+import { liveDbPaperValues } from "@/lib/exam-registry";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://afhwegrxnvgsqbqadvwr.supabase.co";
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -20,7 +21,7 @@ export async function GET(request: NextRequest) {
 
     let query = supabase
       .from("v_dp_question_intelligence_v2")
-      .select("id", { count: "exact", head: true }).eq("content_eligible", true);
+      .select("id", { count: "exact", head: true }).eq("content_eligible", true).in("paper", liveDbPaperValues());
 
     if (specificIds.length > 0) {
       query = query.in("id", specificIds);

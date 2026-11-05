@@ -209,6 +209,17 @@ export function resolvePaper(exam: string | null | undefined, dbPaper?: string |
   return def.papers.find((p) => p.status === "live" && p.format === "mcq") ?? null;
 }
 
+/**
+ * `questions.paper` values whose registry paper is live. Learner-facing question
+ * reads must stay inside this set so a staged or coming-soon paper (for example
+ * Elementary Mathematics) can never surface in another paper's practice.
+ */
+export function liveDbPaperValues(): string[] {
+  return Array.from(new Set(
+    EXAM_REGISTRY.flatMap((def) => def.papers.filter((p) => p.status === "live").flatMap((p) => p.dbPaperValues)),
+  ));
+}
+
 export function liveExams(): ExamDefinition[] {
   return EXAM_REGISTRY.filter((e) => e.status === "live");
 }
