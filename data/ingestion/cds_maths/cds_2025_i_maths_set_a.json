@@ -10,7 +10,7 @@
   "source_file": "QP-CDSE-I-25-ELEMENTARY-MATHEMATICS-150425.pdf",
   "source_question_sha256": "f6d829f6421ccc8ac0b822cb240f9a5657c7449576283fc74bd98905d5c32983",
   "source_version": "scan-transcription-v1",
-  "notes": "English side only; set A. Keys are DP_SOLVED_INTERNAL (model-solved), NOT official; founder approval pending. Q6, Q7, Q51, Q60, Q89, Q92 were minimally adapted from the printed paper (tag provenance:adapted_pyq); they must NOT be shown as authentic PYQs. Pie charts Q96-98 need redrawing.",
+  "notes": "English side only; set A. Keys are DP_SOLVED_INTERNAL (model-solved), NOT official; founder approval pending. Q6, Q7, Q51, Q60, Q89, Q92 were minimally adapted from the printed paper (tag provenance:adapted_pyq); they must NOT be shown as authentic PYQs. Pie charts Q96-98 need redrawing. DISPLAY RULE: 6 question(s) tagged display:practice_not_pyq were modified from the printed paper; the webapp must show them as ordinary practice questions (not as PYQ and not as 'adapted from CDS'), and exclude them from PYQ counts/filters. Passages with a 'figure' field have an SVG in figures/.",
   "key_policy": "FOUNDER_APPROVED_SOLVED",
   "key_policy_status": "PENDING_FOUNDER_APPROVAL",
   "status": "REVIEW_FILE_ONLY_NOT_LOADED"
@@ -70,7 +70,8 @@
   },
   {
    "title": "Questions 96–98",
-   "body": "For the next three items: Study the following Pie Charts (values transcribed from the figures; original charts to be redrawn before release).\nChart-I: Number of houses 1,20,000 — Pucca $110^{\\circ}$, Kutcha $40^{\\circ}$, Semi pucca $210^{\\circ}$.\nChart-II: Population 21,00,000 — Living in pucca houses $60^{\\circ}$, living in semi pucca houses $210^{\\circ}$, living in kutcha houses $70^{\\circ}$, houseless $20^{\\circ}$.\nChart-III: Number of families 3,60,000 — Living in pucca houses $70^{\\circ}$, living in semi pucca houses $85^{\\circ}$, houseless $20^{\\circ}$, living in kutcha houses $185^{\\circ}$."
+   "body": "For the next three items: Study the following Pie Charts (values transcribed from the figures; original charts to be redrawn before release).\nChart-I: Number of houses 1,20,000 — Pucca $110^{\\circ}$, Kutcha $40^{\\circ}$, Semi pucca $210^{\\circ}$.\nChart-II: Population 21,00,000 — Living in pucca houses $60^{\\circ}$, living in semi pucca houses $210^{\\circ}$, living in kutcha houses $70^{\\circ}$, houseless $20^{\\circ}$.\nChart-III: Number of families 3,60,000 — Living in pucca houses $70^{\\circ}$, living in semi pucca houses $85^{\\circ}$, houseless $20^{\\circ}$, living in kutcha houses $185^{\\circ}$.",
+   "figure": "figures/cds_2025_i_q96_98.svg"
   }
  ],
  "questions": [
@@ -227,7 +228,8 @@
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
-    "provenance:adapted_pyq"
+    "provenance:adapted_pyq",
+    "display:practice_not_pyq"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now asks for the largest n (n = 13 and 14 both work otherwise). Founder to confirm before load."
   },
@@ -254,7 +256,8 @@
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
-    "provenance:adapted_pyq"
+    "provenance:adapted_pyq",
+    "display:practice_not_pyq"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): third denominator changed from 523900 to 532900 (likely misprint); minimum p is then 27. Founder to confirm before load."
   },
@@ -1403,7 +1406,8 @@
    "tags": [
     "format:linked_set",
     "key:dp_solved",
-    "provenance:adapted_pyq"
+    "provenance:adapted_pyq",
+    "display:practice_not_pyq"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now says 'approximately' (exact value 4.882πk²; option (a) 4.875πk² is the only close one). Founder to confirm before load."
   },
@@ -1638,7 +1642,8 @@
    "tags": [
     "format:linked_set",
     "key:dp_solved",
-    "provenance:adapted_pyq"
+    "provenance:adapted_pyq",
+    "display:practice_not_pyq"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now says 'upward' vertical line. Founder to confirm before load."
   },
@@ -2394,7 +2399,8 @@
    "tags": [
     "format:linked_set",
     "key:dp_solved",
-    "provenance:adapted_pyq"
+    "provenance:adapted_pyq",
+    "display:practice_not_pyq"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now says X is a discrete variable. Founder to confirm before load."
   },
@@ -2473,7 +2479,8 @@
    "tags": [
     "format:linked_set",
     "key:dp_solved",
-    "provenance:adapted_pyq"
+    "provenance:adapted_pyq",
+    "display:practice_not_pyq"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now fixes the total at 350 students. Founder to confirm before load."
   },

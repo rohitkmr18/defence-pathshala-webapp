@@ -10,7 +10,7 @@
   "source_file": "QP-CDSE-II-24-ELEMENTARY-MATHEMATICS-020924.pdf",
   "source_question_sha256": "deb6567c34396beb077eb097646035dcfe659f8f596391f996ab79a1f2b66e59",
   "source_version": "scan-transcription-v1",
-  "notes": "English side only; set A. Keys are DP_SOLVED_INTERNAL (model-solved, numerically cross-checked), NOT an official UPSC key; founder approval pending. Questions Q34, Q35, Q44, Q61, Q83 were minimally clarified from the printed wording (tag provenance:adapted_pyq); they must NOT be shown as authentic PYQs. Q90 answer is 118 (option d). Data-sufficiency items use two different option sets (Q64 and Q65 offer 'can be answered even without using any of the Statements'); the per-item option text is stored.",
+  "notes": "English side only; set A. Keys are DP_SOLVED_INTERNAL (model-solved, numerically cross-checked), NOT an official UPSC key; founder approval pending. Questions Q34, Q35, Q44, Q61, Q83 were minimally clarified from the printed wording (tag provenance:adapted_pyq); they must NOT be shown as authentic PYQs. Q90 answer is 118 (option d). Data-sufficiency items use two different option sets (Q64 and Q65 offer 'can be answered even without using any of the Statements'); the per-item option text is stored. DISPLAY RULE: 5 question(s) tagged display:practice_not_pyq were modified from the printed paper; the webapp must show them as ordinary practice questions (not as PYQ and not as 'adapted from CDS'), and exclude them from PYQ counts/filters. Passages with a 'figure' field have an SVG in figures/.",
   "key_policy": "FOUNDER_APPROVED_SOLVED",
   "key_policy_status": "PENDING_FOUNDER_APPROVAL",
   "status": "REVIEW_FILE_ONLY_NOT_LOADED"
@@ -918,7 +918,8 @@
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
-    "provenance:adapted_pyq"
+    "provenance:adapted_pyq",
+    "display:practice_not_pyq"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now says 'only coffee' and 'only tea' so n = 20 is the single reading. Founder to confirm before load."
   },
@@ -945,7 +946,8 @@
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
-    "provenance:adapted_pyq"
+    "provenance:adapted_pyq",
+    "display:practice_not_pyq"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now states that θ is acute. Founder to confirm before load."
   },
@@ -1180,7 +1182,8 @@
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
-    "provenance:adapted_pyq"
+    "provenance:adapted_pyq",
+    "display:practice_not_pyq"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now states that the right wheel is on the inner side. Founder to confirm before load."
   },
@@ -1623,7 +1626,8 @@
    "tags": [
     "format:data_sufficiency",
     "key:dp_solved",
-    "provenance:adapted_pyq"
+    "provenance:adapted_pyq",
+    "display:practice_not_pyq"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now says positive for all real x. Founder to confirm before load."
   },
@@ -2199,7 +2203,8 @@
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
-    "provenance:adapted_pyq"
+    "provenance:adapted_pyq",
+    "display:practice_not_pyq"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now says the area of triangle ABC. Founder to confirm before load."
   },

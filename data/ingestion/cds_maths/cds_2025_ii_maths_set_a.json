@@ -10,7 +10,7 @@
   "source_file": "QP-CDSE-II-25-ELEMENTARY-MATHEMATICS-150925.pdf",
   "source_question_sha256": "0a3654c25177fbd18e9c9dfe2d123d497881147a02edf70f9acf14133b2246b3",
   "source_version": "scan-transcription-v1",
-  "notes": "English side only; set A. Keys are DP_SOLVED_INTERNAL (model-solved), NOT official; founder approval pending. Q93, Q96, Q97, Q98 were minimally adapted from the printed paper (tag provenance:adapted_pyq); they must NOT be shown as authentic PYQs.",
+  "notes": "English side only; set A. Keys are DP_SOLVED_INTERNAL (model-solved), NOT official; founder approval pending. Q93, Q96, Q97, Q98 were minimally adapted from the printed paper (tag provenance:adapted_pyq); they must NOT be shown as authentic PYQs. DISPLAY RULE: 4 question(s) tagged display:practice_not_pyq were modified from the printed paper; the webapp must show them as ordinary practice questions (not as PYQ and not as 'adapted from CDS'), and exclude them from PYQ counts/filters. Passages with a 'figure' field have an SVG in figures/.",
   "key_policy": "FOUNDER_APPROVED_SOLVED",
   "key_policy_status": "PENDING_FOUNDER_APPROVAL",
   "status": "REVIEW_FILE_ONLY_NOT_LOADED"
@@ -2469,7 +2469,8 @@
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
-    "provenance:adapted_pyq"
+    "provenance:adapted_pyq",
+    "display:practice_not_pyq"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now says all candidates scored at most 50 marks (top class 40-50). Founder to confirm before load."
   },
@@ -2548,7 +2549,8 @@
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
-    "provenance:adapted_pyq"
+    "provenance:adapted_pyq",
+    "display:practice_not_pyq"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): option (c) changed from 'Mode' to 'Harmonic mean' so only the median is a positional average. Founder to confirm before load."
   },
@@ -2575,7 +2577,8 @@
    "tags": [
     "format:linked_set",
     "key:dp_solved",
-    "provenance:adapted_pyq"
+    "provenance:adapted_pyq",
+    "display:practice_not_pyq"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): mean of the second group restated as 17.24 (correct to 2 d.p.) so that u = 3 is exact. Founder to confirm before load."
   },
@@ -2602,7 +2605,8 @@
    "tags": [
     "format:linked_set",
     "key:dp_solved",
-    "provenance:adapted_pyq"
+    "provenance:adapted_pyq",
+    "display:practice_not_pyq"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): depends on the restated mean in Q97 (u = 3, so v = 7). Founder to confirm before load."
   },

@@ -10,7 +10,7 @@
   "source_file": "QP_CDSI2024_ELEMENTARY-MATHEMATICS_22042024.pdf",
   "source_question_sha256": "78fe1a8a7f36d5ff80780897e8fee3cb3adda52db9ac80a8aeb5c4cb196400ae",
   "source_version": "scan-transcription-v1",
-  "notes": "English side only; set A. Keys are DP_SOLVED_INTERNAL (model-solved, numerically cross-checked), NOT an official UPSC key; founder approval pending. Questions Q7, Q22, Q24, Q57, Q66, Q87, Q92, Q95 were minimally adapted from the printed paper to remove errors or ambiguity (tag provenance:adapted_pyq); they must NOT be shown as authentic PYQs. Figure-dependent items Q76-Q100 carry written figure descriptions and need redrawn figures before learner use.",
+  "notes": "English side only; set A. Keys are DP_SOLVED_INTERNAL (model-solved, numerically cross-checked), NOT an official UPSC key; founder approval pending. Questions Q7, Q22, Q24, Q57, Q66, Q87, Q92, Q95 were minimally adapted from the printed paper to remove errors or ambiguity (tag provenance:adapted_pyq); they must NOT be shown as authentic PYQs. Figure-dependent items Q76-Q100 carry written figure descriptions and need redrawn figures before learner use. DISPLAY RULE: 8 question(s) tagged display:practice_not_pyq were modified from the printed paper; the webapp must show them as ordinary practice questions (not as PYQ and not as 'adapted from CDS'), and exclude them from PYQ counts/filters. Passages with a 'figure' field have an SVG in figures/.",
   "key_policy": "FOUNDER_APPROVED_SOLVED",
   "key_policy_status": "PENDING_FOUNDER_APPROVAL",
   "status": "REVIEW_FILE_ONLY_NOT_LOADED"
@@ -26,43 +26,53 @@
   },
   {
    "title": "Questions 76–78",
-   "body": "For the next three items: A triangle CEF is drawn inside a square ABCD as shown in the figure. Given: CF = 8 cm, EF = 6 cm and CE = 10 cm. [Figure description: square ABCD with A top-left, D top-right, B bottom-left, C bottom-right. E lies on side AD and F lies on side AB. α is the angle FCB at C; β is the angle AEF at E.]"
+   "body": "For the next three items: A triangle CEF is drawn inside a square ABCD as shown in the figure. Given: CF = 8 cm, EF = 6 cm and CE = 10 cm. [Figure description: square ABCD with A top-left, D top-right, B bottom-left, C bottom-right. E lies on side AD and F lies on side AB. α is the angle FCB at C; β is the angle AEF at E.]",
+   "figure": "figures/cds_2024_i_q76_78.svg"
   },
   {
    "title": "Questions 79–80",
-   "body": "For the next two items: ABCD is a circle with centre O and taking OC as a diameter, a circle is drawn as shown in the figure. Let OB = 7 cm. (Use π = 22/7) [Figure description: B and D are the top and bottom ends of the vertical diameter, C and A the left and right ends of the horizontal diameter. The small circle on diameter OC is shaded. The two segments of the big circle cut off by the chords BA and DA (between each chord and the arc, on the right) are also shaded.]"
+   "body": "For the next two items: ABCD is a circle with centre O and taking OC as a diameter, a circle is drawn as shown in the figure. Let OB = 7 cm. (Use π = 22/7) [Figure description: B and D are the top and bottom ends of the vertical diameter, C and A the left and right ends of the horizontal diameter. The small circle on diameter OC is shaded. The two segments of the big circle cut off by the chords BA and DA (between each chord and the arc, on the right) are also shaded.]",
+   "figure": "figures/cds_2024_i_q79_80.svg"
   },
   {
    "title": "Questions 81–82",
-   "body": "For the next two items: Let two parallel line segments PQ = 5 cm and RS = 3 cm be perpendicular to a horizontal line AB, as shown in the figure. The point of intersection of PS and QR is M and MN is perpendicular to QS. [Figure description: Q, N, S lie in that order on line AB; PQ stands on Q and RS stands on S; N is the foot of the perpendicular from M to QS.]"
+   "body": "For the next two items: Let two parallel line segments PQ = 5 cm and RS = 3 cm be perpendicular to a horizontal line AB, as shown in the figure. The point of intersection of PS and QR is M and MN is perpendicular to QS. [Figure description: Q, N, S lie in that order on line AB; PQ stands on Q and RS stands on S; N is the foot of the perpendicular from M to QS.]",
+   "figure": "figures/cds_2024_i_q81_82.svg"
   },
   {
    "title": "Questions 83–85",
-   "body": "For the next three items: The following Pie-Chart-I shows the people migrating to Delhi from different Indian States (P, Q and R are three different States and S is the combined group of other States) and Pie-Chart-II indicates the different age groups A, B, C and D of these migrating people for each State.\n\n| Pie-Chart-I: State | Share of migrants |\n|---|---|\n| P | 40% |\n| Q | 30% |\n| R | 10% |\n| S | 20% |\n\n\n| Pie-Chart-II: Age group | Share (for each State) |\n|---|---|\n| A | 50% |\n| B | 15% |\n| C | 15% |\n| D | 20% |\n"
+   "body": "For the next three items: The following Pie-Chart-I shows the people migrating to Delhi from different Indian States (P, Q and R are three different States and S is the combined group of other States) and Pie-Chart-II indicates the different age groups A, B, C and D of these migrating people for each State.\n\n| Pie-Chart-I: State | Share of migrants |\n|---|---|\n| P | 40% |\n| Q | 30% |\n| R | 10% |\n| S | 20% |\n\n\n| Pie-Chart-II: Age group | Share (for each State) |\n|---|---|\n| A | 50% |\n| B | 15% |\n| C | 15% |\n| D | 20% |\n",
+   "figure": "figures/cds_2024_i_q83_85.svg"
   },
   {
    "title": "Questions 86–87",
-   "body": "For the next two items: Consider two identical rectangles ABCD and BEDF as shown in the figure. Let AB = 1 cm and BC = 2 cm. [Figure description: rectangle ABCD stands upright with A bottom-left, B bottom-right, C top-right, D top-left. The second rectangle BEDF has the same diagonal BD, with E to the right of BC and F to the left of AD. The overlapping region is shaded.]"
+   "body": "For the next two items: Consider two identical rectangles ABCD and BEDF as shown in the figure. Let AB = 1 cm and BC = 2 cm. [Figure description: rectangle ABCD stands upright with A bottom-left, B bottom-right, C top-right, D top-left. The second rectangle BEDF has the same diagonal BD, with E to the right of BC and F to the left of AD. The overlapping region is shaded.]",
+   "figure": "figures/cds_2024_i_q86_87.svg"
   },
   {
    "title": "Questions 88–90",
-   "body": "For the next three items: ABC is a right-angled triangle with ∠ABC = 90°. The centre of the incircle of the given triangle is at O, whose radius is 2 cm. Two more circles with centres at O1 and O2, touch this circle and the two sides as shown in the figure. Further, MA : MC = 2 : 3. [Figure description: M is the point where the incircle touches AC. O1 lies near vertex A and O2 near vertex C; each small circle touches the incircle and the two sides meeting at that vertex.]"
+   "body": "For the next three items: ABC is a right-angled triangle with ∠ABC = 90°. The centre of the incircle of the given triangle is at O, whose radius is 2 cm. Two more circles with centres at O1 and O2, touch this circle and the two sides as shown in the figure. Further, MA : MC = 2 : 3. [Figure description: M is the point where the incircle touches AC. O1 lies near vertex A and O2 near vertex C; each small circle touches the incircle and the two sides meeting at that vertex.]",
+   "figure": "figures/cds_2024_i_q88_90.svg"
   },
   {
    "title": "Questions 91–93",
-   "body": "For the next three items: Consider two identical semicircles and one circle inscribed in a rectangle of length 10 cm as shown in the figure. (Take π = 3.14 and √2 = 1.4). [Figure description: rectangle ABCD with AB = 10 cm at the bottom and DC at the top; O is the mid-point of DC. The two identical semicircles have the sides DC and AB as diameters and bulge into the rectangle; the circle touches DC at O and AB. E and F lie on the horizontal middle line where the circle meets the semicircles; the segments OE, OF, AE and FB are drawn. P and Q are the top and bottom points of the shaded lens between E and F.]"
+   "body": "For the next three items: Consider two identical semicircles and one circle inscribed in a rectangle of length 10 cm as shown in the figure. (Take π = 3.14 and √2 = 1.4). [Figure description: rectangle ABCD with AB = 10 cm at the bottom and DC at the top; O is the mid-point of DC. The two identical semicircles have the sides DC and AB as diameters and bulge into the rectangle; the circle touches DC at O and AB. E and F lie on the horizontal middle line where the circle meets the semicircles; the segments OE, OF, AE and FB are drawn. P and Q are the top and bottom points of the shaded lens between E and F.]",
+   "figure": "figures/cds_2024_i_q91_93.svg"
   },
   {
    "title": "Questions 94–95",
-   "body": "For the next two items: Consider a circle of area 9π square unit and an equilateral triangle ABC as shown in the figure. [Figure description: B and C lie on a horizontal line that touches the circle at its lowest point; A is the top point of the circle. The sides AB and AC cut the circle again. Shaded: the two parts of the circle outside the triangle and the two small regions of the triangle outside the circle near B and C.]"
+   "body": "For the next two items: Consider a circle of area 9π square unit and an equilateral triangle ABC as shown in the figure. [Figure description: B and C lie on a horizontal line that touches the circle at its lowest point; A is the top point of the circle. The sides AB and AC cut the circle again. Shaded: the two parts of the circle outside the triangle and the two small regions of the triangle outside the circle near B and C.]",
+   "figure": "figures/cds_2024_i_q94_95.svg"
   },
   {
    "title": "Questions 96–98",
-   "body": "For the next three items: Two circles with centres at O1 and O2 touching each other are placed inside a rectangle of sides 9 cm and 8 cm as shown in the figure. [Figure description: rectangle ABCD with AB = 9 cm at the bottom and AD = 8 cm. The larger circle (centre O1) touches AD, DC and AB (at P). The smaller circle (centre O2) touches the larger circle, AB and BC. θ is the angle between O1P and O1O2. The shaded region lies between the base, the two circles, from P to the small circle's foot on AB.]"
+   "body": "For the next three items: Two circles with centres at O1 and O2 touching each other are placed inside a rectangle of sides 9 cm and 8 cm as shown in the figure. [Figure description: rectangle ABCD with AB = 9 cm at the bottom and AD = 8 cm. The larger circle (centre O1) touches AD, DC and AB (at P). The smaller circle (centre O2) touches the larger circle, AB and BC. θ is the angle between O1P and O1O2. The shaded region lies between the base, the two circles, from P to the small circle's foot on AB.]",
+   "figure": "figures/cds_2024_i_q96_98.svg"
   },
   {
    "title": "Questions 99–100",
-   "body": "For the next two items: Let ABCD be the diameter of a circle of radius 6 cm. The lengths AB, BC and CD are equal. Semi-circles are drawn with AB and BD as diameters as shown in the figure. [Figure description: the semicircles on AB and BD lie in the lower half of the big circle; the shaded region is the part of the lower half of the big circle left outside both semicircles.]"
+   "body": "For the next two items: Let ABCD be the diameter of a circle of radius 6 cm. The lengths AB, BC and CD are equal. Semi-circles are drawn with AB and BD as diameters as shown in the figure. [Figure description: the semicircles on AB and BD lie in the lower half of the big circle; the shaded region is the part of the lower half of the big circle left outside both semicircles.]",
+   "figure": "figures/cds_2024_i_q99_100.svg"
   }
  ],
  "questions": [
@@ -245,7 +255,8 @@
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
-    "provenance:adapted_pyq"
+    "provenance:adapted_pyq",
+    "display:practice_not_pyq"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now says 'monic' quadratic so exactly one equation fits. Founder to confirm before load."
   },
@@ -637,7 +648,8 @@
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
-    "provenance:adapted_pyq"
+    "provenance:adapted_pyq",
+    "display:practice_not_pyq"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): option (a) replaced with the correct value 20 (original options 45/90/400/500 had no correct answer). Founder to confirm before load."
   },
@@ -690,7 +702,8 @@
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
-    "provenance:adapted_pyq"
+    "provenance:adapted_pyq",
+    "display:practice_not_pyq"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now says x and y are prime numbers; only (2,3) fits, so x+y = 5. Founder to confirm before load."
   },
@@ -1553,7 +1566,8 @@
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
-    "provenance:adapted_pyq"
+    "provenance:adapted_pyq",
+    "display:practice_not_pyq"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): option (a) replaced with the correct share 2400 (original option 2307 was the amount left after the deduction). Founder to confirm before load."
   },
@@ -1789,7 +1803,8 @@
    "tags": [
     "format:data_sufficiency",
     "key:dp_solved",
-    "provenance:adapted_pyq"
+    "provenance:adapted_pyq",
+    "display:practice_not_pyq"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): question changed to 'Is Q > 0.8P?' because the original (Is P > Q?) needed neither statement. Founder to confirm before load."
   },
@@ -2336,7 +2351,8 @@
    "tags": [
     "format:linked_set",
     "key:dp_solved",
-    "provenance:adapted_pyq"
+    "provenance:adapted_pyq",
+    "display:practice_not_pyq"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now defines the non-overlapping region as the parts of both rectangles outside the overlap (3/2). Founder to confirm before load."
   },
@@ -2467,7 +2483,8 @@
    "tags": [
     "format:linked_set",
     "key:dp_solved",
-    "provenance:adapted_pyq"
+    "provenance:adapted_pyq",
+    "display:practice_not_pyq"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): option (a) changed from 30 to 29.75, the value obtained with the given √2 = 1.4. Founder to confirm before load."
   },
@@ -2546,7 +2563,8 @@
    "tags": [
     "format:linked_set",
     "key:dp_solved",
-    "provenance:adapted_pyq"
+    "provenance:adapted_pyq",
+    "display:practice_not_pyq"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): option (a) replaced with the correct value 3(π+√3) (original options had no correct answer). Founder to confirm before load."
   },
