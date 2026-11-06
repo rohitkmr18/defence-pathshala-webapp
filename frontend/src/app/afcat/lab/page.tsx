@@ -22,6 +22,15 @@ type Test = {
   expected_questions: number;
   duration_seconds: number;
 };
+type Attempt = {
+  id: string;
+  code: string;
+  title: string;
+  status: string;
+  startedAt: string;
+  score: number | null;
+  maxMarks: number | null;
+};
 type Answer = { selected: AfcatChoice["key"] | null; markedForReview: boolean };
 type Paper = {
   serverNow: string;
@@ -62,6 +71,7 @@ const button =
   "min-h-11 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold hover:border-blue-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-40 disabled:cursor-not-allowed";
 export default function AfcatLab() {
   const [tests, setTests] = useState<Test[]>([]),
+    [attempts, setAttempts] = useState<Attempt[]>([]),
     [paper, setPaper] = useState<Paper | null>(null);
   const [index, setIndex] = useState(0),
     [answers, setAnswers] = useState<Record<string, Answer>>({});
@@ -141,9 +151,18 @@ export default function AfcatLab() {
       setReport(completed);
     }
   }, []);
+  /** Mock list plus the learner's own attempts. Attempts are best effort (signed-out learners have none). */
+  const loadHome = useCallback(async () => {
+    const [t, a] = await Promise.all([
+      api("/api/afcat/tests"),
+      api("/api/afcat/sessions").catch(() => ({ attempts: [] })),
+    ]);
+    setTests(t.tests);
+    setAttempts(a.attempts ?? []);
+  }, []);
   useEffect(() => {
     const id = new URLSearchParams(window.location.search).get("session");
-    (id ? load(id) : api("/api/afcat/tests").then((x) => setTests(x.tests)))
+    (id ? load(id) : loadHome())
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
     const update = () => setOnline(navigator.onLine);
@@ -169,7 +188,42 @@ export default function AfcatLab() {
       window.removeEventListener("online", update);
       window.removeEventListener("offline", update);
     };
-  }, [load]);
+  }, [load, loadHome]);
+  /** Reopen a saved attempt (in-progress or finished) without starting a new one. */
+  async function openAttempt(id: string) {
+    if (lock.current) return;
+    lock.current = true;
+    setLoading(true);
+    setError("");
+    try {
+      await load(id);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Unable to open this attempt");
+    } finally {
+      lock.current = false;
+      setLoading(false);
+    }
+  }
+  /** Leave a result view and return to the mock list with fresh attempts. */
+  async function backToMocks() {
+    if (lock.current) return;
+    lock.current = true;
+    setLoading(true);
+    setError("");
+    setPaper(null);
+    setResult(null);
+    setReport(null);
+    window.history.replaceState(null, "", "/afcat/lab");
+    window.scrollTo({ top: 0, behavior: "instant" });
+    try {
+      await loadHome();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Unable to load mocks");
+    } finally {
+      lock.current = false;
+      setLoading(false);
+    }
+  }
   useEffect(() => {
     if (!paper) return;
     try {
@@ -486,6 +540,51 @@ export default function AfcatLab() {
         )}
         {!paper ? (
           <section aria-label="Before you begin" className="mx-auto max-w-3xl space-y-6 py-2 sm:py-8">
+            {attempts.length > 0 && (
+              <div className="rounded-2xl border border-blue-200 bg-blue-50 p-5 shadow-sm">
+                <h3 className="text-sm font-bold uppercase tracking-[0.14em] text-blue-800">
+                  Your saved attempts
+                </h3>
+                <ul className="mt-3 divide-y divide-blue-100">
+                  {attempts.map((a) => {
+                    const finished = a.status !== "IN_PROGRESS";
+                    const viewable = !finished || a.score !== null;
+                    return (
+                      <li
+                        key={a.id}
+                        className="flex flex-wrap items-center justify-between gap-3 py-3"
+                      >
+                        <div className="min-w-0">
+                          <p className="font-semibold">{a.title}</p>
+                          <p className="text-sm text-slate-600">
+                            {new Date(a.startedAt).toLocaleDateString("en-IN", {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            })}
+                            {" · "}
+                            {a.status === "IN_PROGRESS"
+                              ? "In progress"
+                              : a.score !== null
+                                ? `Score ${a.score} / ${a.maxMarks}`
+                                : "Time expired"}
+                          </p>
+                        </div>
+                        {viewable && (
+                          <button
+                            disabled={loading}
+                            onClick={() => void openAttempt(a.id)}
+                            className={button}
+                          >
+                            {finished ? "View result" : "Resume"}
+                          </button>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.16em] text-blue-700">
                 Before you begin
@@ -543,12 +642,25 @@ export default function AfcatLab() {
                 onClick={() => void start(t.id)}
                 className="flex min-h-14 w-full items-center justify-center rounded-2xl bg-blue-600 px-6 text-base font-bold text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-50"
               >
-                {tests.length > 1 ? `Start ${t.title}` : "Start Full Mock"}
+                {attempts.some((a) => a.code === t.code && a.status === "IN_PROGRESS")
+                  ? `Resume ${t.title}`
+                  : attempts.some((a) => a.code === t.code)
+                    ? `Attempt ${t.title} again`
+                    : tests.length > 1
+                      ? `Start ${t.title}`
+                      : "Start Full Mock"}
               </button>
             ))}
           </section>
         ) : result ? (
           <>
+            <button
+              disabled={loading}
+              onClick={() => void backToMocks()}
+              className={`${button} mb-4`}
+            >
+              ← All mocks &amp; saved attempts
+            </button>
             <AfcatShareButton score={result.score} maxMarks={result.max_marks} title={paper.session.title} />
             <AfcatResultAnalysis
               title={paper.session.title}
