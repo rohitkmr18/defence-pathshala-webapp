@@ -35,3 +35,26 @@ try {
 } catch (e) {
   console.log("[seed-staging-maths] FAILED (build continues):", e.message);
 }
+
+// Staging has no learner content of its own: mirror production's GS corpus and Current Affairs (read-only copy) so the preview looks like the real site.
+try {
+  const db2 = createClient(url, key, { auth: { persistSession: false } });
+  const up = async (table, rows, onConflict, size = 100) => {
+    for (let i = 0; i < rows.length; i += size) {
+      const { error } = await db2.from(table).upsert(rows.slice(i, i + size), { onConflict });
+      if (error) throw new Error(`${table}: ${error.message}`);
+    }
+  };
+  const read = (f) => JSON.parse(readFileSync(new URL(`./seed/${f}`, import.meta.url), "utf8"));
+  for (let n = 0; n < 4; n++) await up("questions", read(`gs_questions_${n}.json`), "question_id");
+  await up("dp_question_intelligence_v1", read("gs_intelligence.json"), "question_id", 300);
+  const ca = read("current_affairs.json");
+  await up("current_affairs_posts", ca.posts, "id");
+  await up("current_affairs_stories", ca.stories, "id");
+  await up("current_affairs_mcqs", ca.mcqs, "id");
+  const { count: gs } = await db2.from("questions").select("id", { count: "exact", head: true }).in("paper_id", ["cds-gk", "capf-p1"]);
+  const { count: cp } = await db2.from("current_affairs_posts").select("id", { count: "exact", head: true });
+  console.log(`[seed-staging-maths] GS/CA mirror OK: ${gs} GS questions, ${cp} CA posts`);
+} catch (e) {
+  console.log("[seed-staging-maths] GS/CA mirror FAILED (build continues):", e.message);
+}
