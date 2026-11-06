@@ -99,6 +99,28 @@ export function parseMathSegments(rawText: string): Segment[] {
   return segments;
 }
 
+// English papers mark underlined words as __word__. Render them as <u>.
+const UNDERLINE_REGEX = /__([^_\n][^\n]*?)__/g;
+
+function renderUnderlines(text: string): React.ReactNode {
+  if (!text.includes("__")) return text;
+  const nodes: React.ReactNode[] = [];
+  let last = 0;
+  let m: RegExpExecArray | null;
+  UNDERLINE_REGEX.lastIndex = 0;
+  while ((m = UNDERLINE_REGEX.exec(text)) !== null) {
+    if (m.index > last) nodes.push(text.slice(last, m.index));
+    nodes.push(
+      <u key={m.index} className="underline decoration-2 underline-offset-2">
+        {m[1]}
+      </u>
+    );
+    last = m.index + m[0].length;
+  }
+  if (last < text.length) nodes.push(text.slice(last));
+  return nodes;
+}
+
 export default function MathText({
   text,
   className = "",
@@ -116,7 +138,7 @@ export default function MathText({
     <Component className={className}>
       {segments.map((segment, index) => {
         if (segment.type === "text") {
-          return <React.Fragment key={index}>{segment.content}</React.Fragment>;
+          return <React.Fragment key={index}>{renderUnderlines(segment.content)}</React.Fragment>;
         }
 
         const renderedHtml = renderMathToString(
