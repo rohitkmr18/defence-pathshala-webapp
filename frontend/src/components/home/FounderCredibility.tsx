@@ -196,7 +196,7 @@ export default function FounderCredibility() {
         {/* ── Direct Action CTA ────────────────────────────────────────── */}
         <div className="mt-10 sm:mt-12 text-center">
           <Link
-            href="/dashboard/question-bank"
+            href="/dashboard/question-bank?paper=gs"
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-8 py-4 text-base font-bold text-white shadow-lg shadow-blue-600/30 transition-all duration-200 hover:bg-blue-500 hover:shadow-blue-600/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 active:scale-[0.98]"
           >
             <span>Explore Official PYQ Intelligence</span>

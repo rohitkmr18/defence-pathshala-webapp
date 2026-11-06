@@ -42,6 +42,11 @@ function KeeperInner() {
     if (!isPaperAwarePath(pathname)) return;
 
     const paper = searchParams.get("paper");
+    // Landing-page links say paper=gs explicitly: GS is the primary entry and resets a sticky Maths/English choice.
+    if (paper === "gs") {
+      rememberPaperChoice("gs");
+      return;
+    }
     if (paper === "maths" || paper === "english") {
       rememberPaperChoice(paper);
       return;

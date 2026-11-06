@@ -41,7 +41,7 @@ export default function PublicNavbar() {
             Login
           </Link>
           <Link
-            href="/dashboard/practice"
+            href="/dashboard/practice?paper=gs"
             className="rounded-xl bg-blue-600 px-4 py-2 text-xs sm:text-sm font-bold text-white shadow-md shadow-blue-600/20 transition hover:bg-blue-500 active:scale-95"
           >
             Start Practicing Free

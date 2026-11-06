@@ -86,7 +86,7 @@ export default function HomePage() {
             <Link href="/dashboard" className="hover:text-blue-600 transition">
               Dashboard
             </Link>
-            <Link href="/dashboard/question-bank" className="hover:text-blue-600 transition">
+            <Link href="/dashboard/question-bank?paper=gs" className="hover:text-blue-600 transition">
               Question Bank
             </Link>
             <Link href="/auth/login" className="hover:text-blue-600 transition">
