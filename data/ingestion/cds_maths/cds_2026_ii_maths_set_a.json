@@ -10,7 +10,7 @@
   "source_file": "QP-CDSE-II-26-ELEMENTARY-MATHEMATICS-140926.pdf",
   "source_question_sha256": "76ba727df62cc9ede113f44b9d032fe97059273f1102011a82b4d121e10fd557",
   "source_version": "scan-transcription-v1",
-  "notes": "English side only; set A. Keys are DP_SOLVED_INTERNAL (model-solved, numerically cross-checked), NOT an official UPSC key; founder approval pending. Q47: options (a) and (c) both print as 2 in the source (correct option (b)).",
+  "notes": "English side only; set A. Keys are DP_SOLVED_INTERNAL (model-solved, numerically cross-checked), NOT an official UPSC key; founder approval pending. Q47: options (a) and (c) both print as 2 in the source (correct option (b)). DISPLAY RULE: 1 question(s) tagged display:inline_in_paper were lightly edited from the printed paper (Q47: printed options (a) and (c) were identical). They appear inline with the other questions of the paper, with NO badge on the question card; the edit note is shown only in that question's explanation. Keep provenance:adapted_pyq internal; exclude from any exact-PYQ claim/count.",
   "key_policy": "FOUNDER_APPROVED_SOLVED",
   "key_policy_status": "PENDING_FOUNDER_APPROVAL",
   "status": "REVIEW_FILE_ONLY_NOT_LOADED"
@@ -1244,7 +1244,7 @@
    "question": "What is the ratio of the greatest value of $\\sin^{2} x + 2$ (where $0 \\le x \\le \\frac{\\pi}{2}$) to its least value?",
    "opt_a": "2",
    "opt_b": "$\\frac{3}{2}$",
-   "opt_c": "2",
+   "opt_c": "3",
    "opt_d": "$\\frac{1}{2}$",
    "final_opt": "B",
    "key_authority": "MODEL_ONLY",
@@ -1256,12 +1256,15 @@
    "pattern_id": "PATTERN.DIRECT",
    "passage": null,
    "difficulty": "Easy",
-   "explanation": "Concept: For $0\\le x\\le\\frac\\pi2$, $0\\le\\sin^2x\\le1$.\nStep 1: Greatest value of $\\sin^2x+2=1+2=3$; least $=0+2=2$.\nStep 2: Ratio $=\\frac32$.\nNote: In the printed paper options (a) and (c) both read 2; the correct value is option (b).\nAnswer: (b) $\\frac32$",
+   "explanation": "Concept: For $0\\le x\\le\\frac\\pi2$, $0\\le\\sin^2x\\le1$.\nStep 1: Greatest value of $\\sin^2x+2=1+2=3$; least $=0+2=2$.\nStep 2: Ratio $=\\frac32$.\nAnswer: (b) $\\frac32$\n\nNote: This question has been lightly edited from the printed paper for clarity and a single defensible answer.",
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:dp_solved",
+    "provenance:adapted_pyq",
+    "display:inline_in_paper",
+    "display:edit_note_in_explanation"
    ],
-   "scan_note": "Options (a) and (c) both appear as 2 in the scan; verify by zoom."
+   "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): printed options (a) and (c) were both '2' (confirmed on the scan); option (c) changed to '3' so options are distinct. Key B unchanged."
   },
   {
    "question_id": "CDS_II_2026_MATHS_048",
