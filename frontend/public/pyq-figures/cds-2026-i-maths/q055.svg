@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 262" font-family="Arial, sans-serif" font-size="13">
+<rect width="320" height="262" fill="#ffffff"/>
+<line x1="48.8" y1="34.0" x2="48.8" y2="211.9" stroke="#0f172a" stroke-width="2"/>
+<line x1="48.8" y1="211.9" x2="286.0" y2="211.9" stroke="#0f172a" stroke-width="2"/>
+<line x1="48.8" y1="34.0" x2="286.0" y2="211.9" stroke="#0f172a" stroke-width="2"/>
+<line x1="48.8" y1="34.0" x2="167.4" y2="211.9" stroke="#1d4ed8" stroke-width="2"/>
+<path d="M 48.8 195.6 L 65.1 195.6 L 65.1 211.9" fill="none" stroke="#0f172a" stroke-width="1.5"/>
+<text x="34.0" y="126.9" fill="#1d4ed8" text-anchor="middle" font-size="13">b</text>
+<text x="108.1" y="232.2" fill="#1d4ed8" text-anchor="middle" font-size="13">m</text>
+<text x="226.7" y="232.2" fill="#1d4ed8" text-anchor="middle" font-size="13">m</text>
+<text x="179.3" y="118.0" fill="#1d4ed8" text-anchor="middle" font-size="13">20</text>
+<text x="121.5" y="121.0" fill="#1d4ed8" text-anchor="middle" font-size="13">4√13</text>
+<circle cx="48.8" cy="211.9" r="2.5" fill="#0f172a"/>
+<text x="36.3" y="223.1" fill="#0f172a" text-anchor="middle" font-weight="bold">C</text>
+<circle cx="48.8" cy="34.0" r="2.5" fill="#0f172a"/>
+<text x="41.1" y="27.4" fill="#0f172a" text-anchor="middle" font-weight="bold">A</text>
+<circle cx="286.0" cy="211.9" r="2.5" fill="#0f172a"/>
+<text x="299.4" y="220.9" fill="#0f172a" text-anchor="middle" font-weight="bold">B</text>
+<circle cx="167.4" cy="211.9" r="2.5" fill="#0f172a"/>
+<text x="175.2" y="224.9" fill="#0f172a" text-anchor="middle" font-weight="bold">P</text>
+</svg>
