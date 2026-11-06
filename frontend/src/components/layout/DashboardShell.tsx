@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import EditTargetModal from "@/components/dashboard/EditTargetModal";
+import DPLogo from "@/components/common/DPLogo";
 
 // ─── User avatar / menu ──────────────────────────────────────────────────────
 
@@ -192,9 +193,7 @@ function DashboardShellContent({
 
             {/* Brand */}
             <Link href={withPaper("/dashboard", activePaper)} className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white text-xs font-black shadow-md shadow-blue-600/20">
-                DP
-              </div>
+              <DPLogo className="h-8 w-auto" />
               <span className="text-sm font-bold text-slate-900">
                 Defence Pathshala
               </span>
