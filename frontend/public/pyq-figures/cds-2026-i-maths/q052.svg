@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 322" font-family="Arial, sans-serif" font-size="13">
+<rect width="300" height="322" fill="#ffffff"/>
+<circle cx="150.0" cy="150.0" r="116.0" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+<line x1="97.3" y1="46.6" x2="150.0" y2="34.0" stroke="#0f172a" stroke-width="2"/>
+<line x1="150.0" y1="34.0" x2="202.7" y2="46.6" stroke="#0f172a" stroke-width="2"/>
+<line x1="150.0" y1="150.0" x2="97.3" y2="46.6" stroke="#1d4ed8" stroke-width="2"/>
+<line x1="150.0" y1="150.0" x2="202.7" y2="46.6" stroke="#1d4ed8" stroke-width="2"/>
+<path d="M 138.4 127.3 A 25.5 25.5 0 0 1 161.6 127.3" fill="none" stroke="#dc2626" stroke-width="1.5"/>
+<text x="150.0" y="105.5" fill="#dc2626" text-anchor="middle" font-size="12">54°</text>
+<path d="M 136.5 37.2 A 13.9 13.9 0 0 0 163.5 37.2" fill="none" stroke="#059669" stroke-width="1.5"/>
+<text x="150.0" y="82.1" fill="#059669" text-anchor="middle" font-size="11">∠ABC = 153°</text>
+<circle cx="150.0" cy="150.0" r="2.5" fill="#0f172a"/>
+<text x="150.0" y="171.0" fill="#0f172a" text-anchor="middle" font-weight="bold">O</text>
+<circle cx="97.3" cy="46.6" r="2.5" fill="#0f172a"/>
+<text x="84.5" y="46.1" fill="#0f172a" text-anchor="middle" font-weight="bold">A</text>
+<circle cx="202.7" cy="46.6" r="2.5" fill="#0f172a"/>
+<text x="215.5" y="46.1" fill="#0f172a" text-anchor="middle" font-weight="bold">C</text>
+<circle cx="150.0" cy="34.0" r="2.5" fill="#0f172a"/>
+<text x="150.0" y="25.0" fill="#0f172a" text-anchor="middle" font-weight="bold">B</text>
+<text x="150.0" y="314" fill="#475569" text-anchor="middle" font-size="12">Reflex ∠AOC = 2 × 153° = 306°</text>
+</svg>
