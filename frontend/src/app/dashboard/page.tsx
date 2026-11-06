@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import LearnerDashboardOverview from "@/components/dashboard/LearnerDashboardOverview";
 import LoggedOutDashboard from "@/components/dashboard/LoggedOutDashboard";
 import { getSafeProfile } from "@/lib/profile-server";
@@ -24,10 +25,12 @@ export default async function DashboardPage() {
   return (
     <main className="min-h-screen bg-white">
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
-        <LearnerDashboardOverview
-          firstName={firstName}
-          targetExams={profile.target_exams || []}
-        />
+        <Suspense fallback={<div className="h-52 animate-pulse rounded-3xl border border-slate-200 bg-slate-50" />}>
+          <LearnerDashboardOverview
+            firstName={firstName}
+            targetExams={profile.target_exams || []}
+          />
+        </Suspense>
       </div>
     </main>
   );

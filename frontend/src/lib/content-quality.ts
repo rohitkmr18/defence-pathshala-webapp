@@ -7,7 +7,8 @@ export function isContentEligible(row: Record<string, unknown>): boolean {
   return new Set(options).size === 4 && /^[ABCD]$/.test(String(row.final_opt || "").trim().toUpperCase());
 }
 
-export function expectedPaperQuestions(exam: string): number | null {
+export function expectedPaperQuestions(exam: string, paper?: string | null): number | null {
+  if (exam === "CDS" && paper === "Elementary Mathematics") return 100;
   if (exam === "CDS") return 120;
   if (["CAPF", "CAPF-AC", "CAPF AC"].includes(exam)) return 125;
   return null;
@@ -95,7 +96,7 @@ export function getPaperContentManifest(row: Record<string, unknown>): PaperCont
 export function isCompletePaper(rows: Record<string, unknown>[]): boolean {
   if (!rows.length || !rows.every(isContentEligible)) return false;
   const first = rows[0];
-  const expected = expectedPaperQuestions(String(first.exam));
+  const expected = expectedPaperQuestions(String(first.exam), first.paper == null ? null : String(first.paper));
   if (!expected || rows.some(row =>
     row.exam !== first.exam || row.year !== first.year || row.cycle !== first.cycle || row.paper !== first.paper)) return false;
 

@@ -7,12 +7,17 @@ import { PAPER_TAB_PARAM, parsePaperTab, visiblePaperTabs } from "@/lib/exam-reg
 
 /** Paths where the GS / Maths / English paper tab applies. */
 const PAPER_AWARE_PATHS = ["/dashboard/practice", "/dashboard/question-bank"];
+const PAPER_AWARE_EXACT = ["/dashboard"];
+
+/** Shared with the exam switcher so both rows have identical size. */
+export const PAPER_TAB_GROUP_CLASS = "flex gap-1 rounded-xl border border-slate-200 bg-slate-100 p-1";
+export const PAPER_TAB_CLASS = "flex-1 whitespace-nowrap rounded-lg px-3 py-2 text-center text-xs font-semibold transition-colors";
 
 function PaperTabsInner() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const tabs = visiblePaperTabs();
-  const applies = PAPER_AWARE_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+  const applies = PAPER_AWARE_EXACT.includes(pathname) || PAPER_AWARE_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
   // Only the picker pages carry the tab; session/full-paper screens keep the paper from their own URL.
   if (!applies || tabs.length < 2 || pathname.includes("/session") || pathname.includes("/full-paper")) return null;
 
@@ -27,10 +32,10 @@ function PaperTabsInner() {
   };
 
   return (
-    <nav aria-label="Paper" className="mt-2 flex gap-1 rounded-xl border border-slate-200 bg-slate-100 p-1">
+    <nav aria-label="Paper" className={PAPER_TAB_GROUP_CLASS}>
       {tabs.map((tab) => (
         <Link key={tab.id} href={hrefFor(tab.id)} replace aria-current={active === tab.id ? "page" : undefined}
-          className={`flex-1 rounded-lg px-2 py-1.5 text-center text-xs font-semibold transition-colors ${active === tab.id ? "bg-white text-blue-700 shadow-sm" : "text-slate-600 hover:bg-white/70"}`}>
+          className={`${PAPER_TAB_CLASS} ${active === tab.id ? "bg-white text-blue-700 shadow-sm" : "text-slate-600 hover:bg-white/70"}`}>
           {tab.label}
         </Link>
       ))}
