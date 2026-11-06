@@ -67,6 +67,8 @@ export default function PracticeFilters({
 
   // Accordion for advanced secondary filters (Years / Cycles)
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  // On a paper tab (Maths/English) with several years of papers, show the Year & Cycle choice up front.
+  const [yearPanelAutoOpened, setYearPanelAutoOpened] = useState(false);
 
   const applyInitialSelection = (data: PracticeFiltersResponse) => {
     if (typeof window !== "undefined") {
@@ -310,6 +312,13 @@ export default function PracticeFilters({
 
     return Array.from(yearsSet).sort((a, b) => b - a);
   }, [filters, selectedExams]);
+
+  useEffect(() => {
+    if (paper && !yearPanelAutoOpened && availableYears.length > 1) {
+      setShowAdvancedFilters(true);
+      setYearPanelAutoOpened(true);
+    }
+  }, [paper, availableYears, yearPanelAutoOpened]);
 
   // Available cycles for selected exams
   const cycleOptions = useMemo(() => {
@@ -738,7 +747,7 @@ export default function PracticeFilters({
           className="flex w-full items-center justify-between p-3.5 text-left text-xs font-bold text-slate-700 hover:bg-slate-50 rounded-2xl transition"
         >
           <span className="flex items-center gap-2">
-            <span>📅 Refine by Year & Cycle</span>
+            <span>{paper ? `$4. Year & Cycle` : "📅 Refine by Year & Cycle"}</span>
             {(selectedYears.length > 0 || selectedCycles.length > 0) && (
               <span className="rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-blue-700">
                 Active: {[
