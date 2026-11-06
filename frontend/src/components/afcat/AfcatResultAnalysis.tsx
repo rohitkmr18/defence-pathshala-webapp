@@ -483,8 +483,8 @@ export default function AfcatResultAnalysis({
       )}
 
       <div className="flex flex-col gap-2 pt-2 sm:flex-row">
-        <Link href="/afcat" className="inline-flex min-h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-800 hover:border-blue-400">
-          Back to AFCAT home
+        <Link href="/afcat/dashboard" className="inline-flex min-h-11 items-center justify-center rounded-xl bg-blue-600 px-5 text-sm font-bold text-white hover:bg-blue-500">
+          Go to AFCAT Home
         </Link>
       </div>
     </section>

@@ -22,6 +22,7 @@ import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
 import EditTargetModal from "@/components/dashboard/EditTargetModal";
 import ExamModeSwitcher from "./ExamModeSwitcher";
+import { rememberExamMode, useActivePaper, withPaper } from "@/lib/learner-mode";
 
 const baseItems = [
   {
@@ -65,6 +66,7 @@ export default function DashboardSidebar({
   const searchParams = useSearchParams();
   const loginHref = authUrl("/auth/login", `${pathname}${searchParams.size ? `?${searchParams}` : ""}`);
   const router = useRouter();
+  const activePaper = useActivePaper();
   const [editTargetOpen, setEditTargetOpen] = useState(false);
 
   const isAdmin =
@@ -160,7 +162,7 @@ export default function DashboardSidebar({
 
       {/* Exam product switcher — keeps AFCAT outside official UPSC PYQs */}
       <div className="border-b border-slate-100 px-3 py-3">
-        {collapsed && !mobile ? <Link href="/afcat/dashboard" title="AFCAT Exam Mode" className="block rounded-lg bg-blue-50 px-2 py-2 text-center text-xs font-bold text-blue-700">AF</Link> : <ExamModeSwitcher />}
+        {collapsed && !mobile ? <Link href="/afcat/dashboard" onClick={() => rememberExamMode("afcat")} title="AFCAT Exam Mode" className="block rounded-lg bg-blue-50 px-2 py-2 text-center text-xs font-bold text-blue-700">AF</Link> : <ExamModeSwitcher />}
       </div>
 
       {/* ── Navigation ──────────────────────────────────────────────────── */}
@@ -178,7 +180,7 @@ export default function DashboardSidebar({
             return (
               <Link
                 key={item.href}
-                href={item.href}
+                href={withPaper(item.href, activePaper)}
                 onClick={() => closeMobile?.()}
                 title={collapsed && !mobile ? item.name : undefined}
                 className={`flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-150 ${
