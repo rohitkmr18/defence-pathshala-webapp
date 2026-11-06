@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 270" font-family="Arial, sans-serif" font-size="14">
+  <rect width="340" height="270" fill="#ffffff"/>
+  <path d="M 40 230 A 125 125 0 0 0 190 30" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <line x1="40" y1="230" x2="290" y2="230" stroke="#0f172a" stroke-width="2"/>
+  <line x1="190" y1="230" x2="190" y2="30" stroke="#0f172a" stroke-width="2"/>
+  <line x1="40" y1="230" x2="190" y2="30" stroke="#0f172a" stroke-width="2"/>
+  <line x1="190" y1="30" x2="290" y2="230" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="7 4"/>
+  <path d="M 190 218 L 202 218 L 202 230" fill="none" stroke="#0f172a" stroke-width="1.5"/>
+  <g fill="#0f172a" font-weight="bold">
+    <text x="24" y="248">A</text><text x="184" y="22">B</text><text x="186" y="250">C</text><text x="292" y="248">P</text>
+  </g>
+  <g fill="#1d4ed8">
+    <text x="48" y="120">AB = 10</text>
+    <text x="132" y="160">BC = 8</text>
+    <text x="96" y="222">AC = 6</text>
+    <text x="226" y="222">CP = 4</text>
+  </g>
+  <text x="250" y="120" fill="#dc2626" font-weight="bold">BP = ?</text>
+  <text x="40" y="264" fill="#475569" font-size="12">AP = AC + CP = 10 cm</text>
+</svg>
