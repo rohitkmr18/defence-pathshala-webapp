@@ -26,7 +26,7 @@ function PaperTabsInner() {
     const next = new URLSearchParams(searchParams.toString());
     if (id === "gs") next.delete(PAPER_TAB_PARAM); else next.set(PAPER_TAB_PARAM, id);
     // Filters from another paper's taxonomy do not carry over.
-    for (const key of ["subject", "subjects", "topic", "topics", "subtopic", "subtopics", "year", "years", "cycle", "cycles"]) next.delete(key);
+    for (const key of ["exam", "exams", "subject", "subjects", "topic", "topics", "subtopic", "subtopics", "year", "years", "cycle", "cycles"]) next.delete(key);
     const qs = next.toString();
     return qs ? `${pathname}?${qs}` : pathname;
   };

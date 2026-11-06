@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { activePaperParam } from "@/lib/question-filters";
 import {
   BarChart,
   Bar,
@@ -22,6 +21,7 @@ export interface DistributionItem {
 }
 
 interface QuestionDistributionChartProps {
+  paper?: "maths" | "english" | null;
   activeFilters: ActiveFilters;
   allExamsSelected?: boolean;
   onBarClick: (type: "cycle" | "year" | "exam", value: string | number) => void;
@@ -29,6 +29,7 @@ interface QuestionDistributionChartProps {
 }
 
 export default function QuestionDistributionChart({
+  paper = null,
   activeFilters,
   allExamsSelected,
   onBarClick,
@@ -125,7 +126,7 @@ export default function QuestionDistributionChart({
         if (activeFilters.topics.length)
           params.set("topic", activeFilters.topics.join(","));
 
-        const paperTab = activePaperParam();
+        const paperTab = paper;
         if (paperTab) params.set("paper", paperTab);
         const res = await fetch(
           `/api/practice/distribution?${params.toString()}`,

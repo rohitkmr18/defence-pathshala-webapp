@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { afcatMockLabel } from "@/lib/afcat/mock-labels";
 import { afcatStagingAdmin, afcatStagingUser } from "@/lib/afcat/staging-server";
 import {
   summarizeAfcatSections,
@@ -30,7 +31,7 @@ export async function GET() {
 
     const testIds = [...new Set(all.map((s) => s.test_id))];
     const { data: tests, error: te } = testIds.length
-      ? await db.from("afcat_tests").select("id,title,max_marks,duration_seconds").in("id", testIds)
+      ? await db.from("afcat_tests").select("id,code,title,max_marks,duration_seconds").in("id", testIds)
       : { data: [], error: null };
     if (te) throw te;
     const testById = new Map((tests ?? []).map((t) => [t.id, t]));
@@ -84,7 +85,7 @@ export async function GET() {
       const r = resultBySession.get(s.id);
       const t = testById.get(s.test_id);
       return {
-        sessionId: s.id, title: t?.title ?? "AFCAT mock", status: s.status,
+        sessionId: s.id, title: t ? afcatMockLabel(t.code, t.title) : "AFCAT mock", status: s.status,
         score: r?.score ?? null, maxMarks: r?.max_marks ?? t?.max_marks ?? 300,
         correct: r?.correct_count ?? 0, incorrect: r?.incorrect_count ?? 0, unanswered: r?.unanswered_count ?? 0,
         timeSeconds: s.elapsed_seconds ?? 0, completedAt: r?.completed_at ?? s.finished_at,
@@ -96,7 +97,7 @@ export async function GET() {
 
     return NextResponse.json({
       attempts,
-      inProgress: inProgress ? { sessionId: inProgress.id, title: testById.get(inProgress.test_id)?.title ?? "AFCAT mock" } : null,
+      inProgress: inProgress ? { sessionId: inProgress.id, title: (() => { const t = testById.get(inProgress.test_id); return t ? afcatMockLabel(t.code, t.title) : "AFCAT mock"; })() } : null,
       bestScore: scored.length ? Math.max(...scored.map((a) => a.score as number)) : null,
       averageScore: scored.length ? Math.round(scored.reduce((s, a) => s + (a.score as number), 0) / scored.length) : null,
       sections: review.length ? summarizeAfcatSections(review) : [],

@@ -24,7 +24,7 @@ export default function ExamModeSwitcher({ compact = false }: ExamModeSwitcherPr
           className={`${PAPER_TAB_CLASS} ${!isAfcat ? "bg-white text-blue-700 shadow-sm" : "text-slate-600 hover:bg-white/70"}`}>
           <Suspense fallback="CDS/CAPF"><UpscLabel /></Suspense>
         </Link>
-        <Link href="/afcat" aria-current={isAfcat ? "page" : undefined}
+        <Link href="/afcat/dashboard" aria-current={isAfcat ? "page" : undefined}
           className={`${PAPER_TAB_CLASS} ${isAfcat ? "bg-white text-blue-700 shadow-sm" : "text-slate-600 hover:bg-white/70"}`}>
           AFCAT
         </Link>
