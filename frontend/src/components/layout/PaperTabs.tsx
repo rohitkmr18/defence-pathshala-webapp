@@ -3,6 +3,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
+import { rememberPaperChoice } from "@/lib/learner-mode";
 import { PAPER_TAB_PARAM, parsePaperTab, visiblePaperTabs } from "@/lib/exam-registry";
 
 /** Paths where the GS / Maths / English paper tab applies. */
@@ -34,7 +35,7 @@ function PaperTabsInner() {
   return (
     <nav aria-label="Paper" className={PAPER_TAB_GROUP_CLASS}>
       {tabs.map((tab) => (
-        <Link key={tab.id} href={hrefFor(tab.id)} replace aria-current={active === tab.id ? "page" : undefined}
+        <Link key={tab.id} href={hrefFor(tab.id)} replace onClick={() => rememberPaperChoice(tab.id)} aria-current={active === tab.id ? "page" : undefined}
           className={`${PAPER_TAB_CLASS} ${active === tab.id ? "bg-white text-blue-700 shadow-sm" : "text-slate-600 hover:bg-white/70"}`}>
           {tab.label}
         </Link>
