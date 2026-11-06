@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { AfcatAsset, AfcatChoice, AfcatContent, AfcatDisplayQuestion } from "@/lib/afcat/visual-types";
 import MathText from "@/components/common/MathText";
 import { isSafeAfcatAssetUrl } from "@/lib/afcat/visual-types";
+import { parseMatchingStem } from "@/lib/afcat/matching-stem";
 
 /** External SVGs render as images, never inline executable markup. */
 function AfcatVisual({ asset }: { asset: AfcatAsset }) {
@@ -79,6 +80,31 @@ export function AfcatContentBlock({ content }: { content: AfcatContent }) {
   );
 }
 
+/** Matching questions (List-I / List-II) show as two columns; everything else renders as before. */
+function QuestionStem({ stem }: { stem: AfcatContent }) {
+  const matching = stem.text && !stem.assets?.length ? parseMatchingStem(stem.text) : null;
+  if (!matching) return <AfcatContentBlock content={stem} />;
+  return (
+    <div className="min-w-0 space-y-3">
+      <MathText as="div" text={matching.intro} className="max-w-full whitespace-pre-wrap break-words text-base leading-7 text-slate-900" />
+      <div className="grid grid-cols-2 gap-3">
+        {[matching.left, matching.right].map((column) => (
+          <div key={column.label} className="min-w-0 rounded-xl border border-slate-200 bg-slate-50 p-3">
+            <p className="mb-2 text-xs font-bold uppercase tracking-wide text-slate-600">{column.label}</p>
+            <ul className="space-y-2">
+              {column.items.map((item) => (
+                <li key={item} className="text-base leading-7 text-slate-900">
+                  <MathText as="span" text={item} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function AfcatVisualQuestion({
   question, selected, onSelect, disabled = false,
 }: {
@@ -90,7 +116,7 @@ export default function AfcatVisualQuestion({
   return (
     <section aria-label={`Question ${question.number}`} className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-6">
       <h2 className="mb-4 text-base font-bold text-slate-900">Question {question.number}</h2>
-      <AfcatContentBlock content={question.stem} />
+      <QuestionStem stem={question.stem} />
       <fieldset className="mt-6 space-y-3" disabled={disabled}>
         <legend className="mb-3 text-sm font-semibold text-slate-700">Choose one answer</legend>
         {question.options.map((option) => {

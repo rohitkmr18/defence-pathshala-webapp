@@ -41,6 +41,7 @@ export interface LearnerQuestionMeta {
   id: string;
   question_id?: string;
   exam: string;
+  paper?: string | null;
   question?: string | null;
   final_opt?: string | null;
   taxonomy_subject?: string | null;
@@ -226,7 +227,7 @@ export function deriveLearnerIntelligence(input: {
   for (const attempt of attempts) {
     const meta = metaById.get(attempt.question_id);
     if (!meta) continue;
-    const rules = getScoringRules(meta.exam || targetExams[0] || "CDS");
+    const rules = getScoringRules(meta.exam || targetExams[0] || "CDS", meta.paper ?? null);
     possibleMarks += rules.correctMarks;
     earnedMarks += attempt.is_correct ? rules.correctMarks : -rules.penaltyMarks;
   }
@@ -367,7 +368,7 @@ export function deriveLearnerIntelligence(input: {
       sessionAttempts[0]?.question_id || session.question_ids?.[0] || "";
     const exam =
       metaById.get(firstQuestionId)?.exam || targetExams[0] || "CAPF-AC";
-    const rules = getScoringRules(exam);
+    const rules = getScoringRules(exam, metaById.get(firstQuestionId)?.paper ?? null);
     const sessionCorrect = sessionAttempts.filter((attempt) => attempt.is_correct).length;
     const sessionIncorrect = sessionAttempts.length - sessionCorrect;
     const easyModerateMisses = sessionAttempts.filter((attempt) => {
@@ -484,6 +485,7 @@ export function deriveLearnerIntelligence(input: {
             if (exams[0]) params.set("exam", String(exams[0]));
             if (years[0]) params.set("year", String(years[0]));
             if (cycles[0]) params.set("cycle", String(cycles[0]));
+            if (filters.paper === "maths" || filters.paper === "english") params.set("paper", String(filters.paper));
             return `/dashboard/practice/full-paper?${params.toString()}`;
           })()
         : null;

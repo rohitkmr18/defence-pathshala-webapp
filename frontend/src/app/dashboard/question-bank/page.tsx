@@ -10,8 +10,9 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default async function QuestionBankPage() {
-  const meta = await getQuestionBankMeta();
+export default async function QuestionBankPage({ searchParams }: { searchParams: Promise<{ paper?: string | string[] }> }) {
+  const { paper } = await searchParams;
+  const meta = await getQuestionBankMeta(Array.isArray(paper) ? paper[0] : paper);
 
   return (
     <main className="min-h-screen bg-white">

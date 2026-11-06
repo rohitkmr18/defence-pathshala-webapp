@@ -83,6 +83,8 @@ export default function PracticePageClient() {
   const returnTo = searchParams.get("returnTo");
 
   const practiceMode = searchParams.get("mode") === "full_paper" ? "full-paper" : "targeted";
+  const paperTabParam = searchParams.get("paper") === "maths" ? "maths" : searchParams.get("paper") === "english" ? "english" : null;
+  const isPaperTab = paperTabParam !== null;
   const sessionStyle = searchParams.get("mode") === "attempt" ? "attempt" : "instant";
 
   function preserveIntent(filters: ActiveFilters, style: "instant" | "attempt" = sessionStyle, workflow: "targeted" | "full-paper" = practiceMode) {
@@ -150,6 +152,7 @@ export default function PracticePageClient() {
           topics: activeFilters.topics,
           subtopics: activeFilters.subtopics,
           difficulties: [],
+          paper: paperTabParam ?? undefined,
         });
 
         const res = await fetch(
@@ -181,7 +184,7 @@ export default function PracticePageClient() {
     return () => {
       cancelled = true;
     };
-  }, [activeFilters]);
+  }, [activeFilters, paperTabParam]);
 
   // ── External filter override (from chart bar clicks) ───────────────────────
   const [filterOverride, setFilterOverride] = useState<FilterOverride | null>(null);
@@ -269,7 +272,7 @@ export default function PracticePageClient() {
 
   // Filter summary breadcrumbs
   const filterSummary = [
-    activeFilters.exams.join("/"),
+    paperTabParam ? `CDS ${paperTabParam === "maths" ? "Maths" : "English"}` : activeFilters.exams.join("/"),
     activeFilters.subjects.length > 0 ? (activeFilters.subjects.length === 1 ? activeFilters.subjects[0] : `${activeFilters.subjects.length} Subjects`) : "All Subjects",
     activeFilters.topics.length > 0 ? (activeFilters.topics.length === 1 ? activeFilters.topics[0] : `${activeFilters.topics.length} Topics`) : null,
   ].filter(Boolean).join(" › ");
@@ -343,6 +346,8 @@ export default function PracticePageClient() {
           {/* Main Progressive Filter Card */}
           <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
             <PracticeFilters
+              key={paperTabParam ?? "gs"}
+              paper={paperTabParam}
               onFilterChange={handleFilterChange}
               filterOverride={filterOverride}
             />
@@ -455,6 +460,8 @@ export default function PracticePageClient() {
             {showDistribution && (
               <div className="border-t border-slate-100 p-5 sm:p-7">
                 <QuestionDistributionChart
+                  key={paperTabParam ?? "gs"}
+                  paper={paperTabParam}
                   activeFilters={activeFilters}
                   allExamsSelected={activeFilters.allExamsSelected}
                   onBarClick={handleBarClick}
@@ -469,9 +476,17 @@ export default function PracticePageClient() {
       {/* ═══════════════════════════════════════════════════════════════════════
           MODE 2: FULL PAPER SIMULATION (DECOUPLED FLOW)
           ═══════════════════════════════════════════════════════════════════════ */}
-      {practiceMode === "full-paper" && (
+      {practiceMode === "full-paper" && isPaperTab && paperTabParam === "english" && (
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 text-sm text-slate-600">
+          <p className="font-bold text-slate-900">Timed full-paper mock for this paper is coming soon.</p>
+          <p className="mt-1">Use Targeted Practice to attempt these questions now.</p>
+        </div>
+      )}
+      {practiceMode === "full-paper" && paperTabParam !== "english" && (
         <div className="space-y-6">
           <FullPaperHero
+            key={paperTabParam ?? "gs"}
+            paperTab={paperTabParam ?? undefined}
             onStart={handleStartFullPaper}
             initialExam={primaryExam}
             initialYear={activeFilters.years[0]}

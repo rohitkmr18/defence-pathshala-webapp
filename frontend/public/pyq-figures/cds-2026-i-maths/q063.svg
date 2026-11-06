@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 268" font-family="Arial, sans-serif" font-size="13">
+<rect width="300" height="268" fill="#ffffff"/>
+<circle cx="150.0" cy="123.2" r="89.2" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+<line x1="34.0" y1="212.5" x2="266.0" y2="212.5" stroke="#dc2626" stroke-width="2"/>
+<line x1="150.0" y1="212.5" x2="234.9" y2="150.8" stroke="#0f172a" stroke-width="2"/>
+<line x1="234.9" y1="150.8" x2="72.7" y2="78.6" stroke="#0f172a" stroke-width="2"/>
+<line x1="72.7" y1="78.6" x2="150.0" y2="212.5" stroke="#0f172a" stroke-width="2"/>
+<line x1="150.0" y1="123.2" x2="150.0" y2="212.5" stroke="#1d4ed8" stroke-width="2" stroke-dasharray="7 4"/>
+<line x1="150.0" y1="123.2" x2="234.9" y2="150.8" stroke="#1d4ed8" stroke-width="2" stroke-dasharray="7 4"/>
+<path d="M 176.8 212.5 A 26.8 26.8 0 0 0 171.7 196.7" fill="none" stroke="#dc2626" stroke-width="1.5"/>
+<text x="198.4" y="200.7" fill="#dc2626" text-anchor="middle" font-size="12">36°</text>
+<path d="M 150.0 141.1 A 17.8 17.8 0 0 0 167.0 128.7" fill="none" stroke="#1d4ed8" stroke-width="1.5"/>
+<text x="169.9" y="154.7" fill="#1d4ed8" text-anchor="middle" font-size="12">?</text>
+<circle cx="150.0" cy="123.2" r="2.5" fill="#0f172a"/>
+<text x="138.0" y="128.2" fill="#0f172a" text-anchor="middle" font-weight="bold">O</text>
+<circle cx="150.0" cy="212.5" r="2.5" fill="#0f172a"/>
+<text x="144.4" y="230.3" fill="#0f172a" text-anchor="middle" font-weight="bold">P</text>
+<circle cx="234.9" cy="150.8" r="2.5" fill="#0f172a"/>
+<text x="248.8" y="154.7" fill="#0f172a" text-anchor="middle" font-weight="bold">Q</text>
+<circle cx="72.7" cy="78.6" r="2.5" fill="#0f172a"/>
+<text x="61.5" y="75.2" fill="#0f172a" text-anchor="middle" font-weight="bold">R</text>
+<circle cx="266.0" cy="212.5" r="2.5" fill="#0f172a"/>
+<text x="266.0" y="231.5" fill="#0f172a" text-anchor="middle" font-weight="bold">T</text>
+<text x="150.0" y="260" fill="#475569" text-anchor="middle" font-size="12">OP ⟂ tangent PT; OP = OQ (radii)</text>
+</svg>

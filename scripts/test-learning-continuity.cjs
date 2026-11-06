@@ -123,6 +123,8 @@ test('shell reserves the global bar space only on normal pages, leaving attempt 
     'next/navigation': { usePathname: () => path, useSearchParams: () => new URLSearchParams() },
     './MobileLearningNavigation': 'mobile-nav', './DashboardSidebar': 'sidebar', './ExamModeSwitcher': 'exam-switcher',
     '@/components/dashboard/EditTargetModal': 'edit-modal',
+    './LearnerModeKeeper': 'mode-keeper',
+    '@/lib/learner-mode': { useActivePaper: () => null, withPaper: href => href },
   });
   const Shell = load('frontend/src/components/layout/DashboardShell.tsx').default;
   for (const current of ['/dashboard', '/dashboard/question-bank', '/dashboard/practice',

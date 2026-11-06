@@ -1,4 +1,5 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { paperTabDbValues } from "@/lib/exam-registry";
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
@@ -69,7 +70,7 @@ async function getCorpus(supabase: SupabaseClient): Promise<LearnerQuestionMeta[
     supabase
       .from("v_dp_question_intelligence_v2")
       .select(
-        "id,question_id,exam,question,final_opt,subject,topic,difficulty_category,taxonomy_subject,taxonomy_topic,taxonomy_concept,production_eligible,intelligence_eligible,student_release_status"
+        "id,question_id,exam,paper,question,final_opt,subject,topic,difficulty_category,taxonomy_subject,taxonomy_topic,taxonomy_concept,production_eligible,intelligence_eligible,student_release_status"
       )
       .eq("production_eligible", true)
       .range(from, to)
@@ -79,7 +80,25 @@ async function getCorpus(supabase: SupabaseClient): Promise<LearnerQuestionMeta[
   return rows;
 }
 
-export async function GET() {
+/** Keep the learner inside the selected paper tab when they follow a dashboard link. */
+function withPaperLinks<T>(value: T, tab: string): T {
+  const walk = (node: unknown, key = ""): unknown => {
+    if (typeof node === "string") {
+      if (/href$/i.test(key) && /^\/dashboard\/(practice|question-bank|mistakes)/.test(node) && !/[?&]paper=/.test(node)) {
+        return `${node}${node.includes("?") ? "&" : "?"}paper=${tab}`;
+      }
+      return node;
+    }
+    if (Array.isArray(node)) return node.map((item) => walk(item, key));
+    if (node && typeof node === "object") {
+      return Object.fromEntries(Object.entries(node).map(([k, v]) => [k, walk(v, k)]));
+    }
+    return node;
+  };
+  return walk(value) as T;
+}
+
+export async function GET(request: NextRequest) {
   try {
     const userId = await getAuthenticatedUserId();
     if (!userId) {
@@ -127,14 +146,21 @@ export async function GET() {
     if (preferenceResult.error) throw new Error(preferenceResult.error.message);
 
     const targetExams = (preferenceResult.data || []).map((row) => row.exam);
+    // Each paper tab (GS / Maths / English) gets its own dashboard: only its questions,
+    // attempts and sessions count, so Maths never dilutes GS analytics and vice versa.
+    const papers = new Set(paperTabDbValues(request.nextUrl.searchParams.get("paper")));
+    const scopedCorpus = corpus.filter((q) => papers.has(String(q.paper ?? "")));
+    const scopedIds = new Set(scopedCorpus.map((q) => q.id));
     const intelligence = deriveLearnerIntelligence({
-      attempts,
-      sessions,
-      corpus,
+      attempts: attempts.filter((a) => scopedIds.has(a.question_id)),
+      sessions: sessions.filter((s) => (s.question_ids || []).some((id) => scopedIds.has(id))),
+      corpus: scopedCorpus,
       targetExams,
     });
 
-    return NextResponse.json(intelligence, {
+    const tab = request.nextUrl.searchParams.get("paper");
+    const body = tab === "maths" || tab === "english" ? withPaperLinks(intelligence, tab) : intelligence;
+    return NextResponse.json(body, {
       headers: { "Cache-Control": "private, no-store" },
     });
   } catch (error) {

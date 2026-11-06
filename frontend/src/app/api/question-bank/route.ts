@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { backendGET } from "@/lib/backend";
 import { createClient } from "@supabase/supabase-js";
 import { expandExamQuery } from "@/lib/exams";
-import { liveDbPaperValues } from "@/lib/exam-registry";
+import { paperTabDbValues } from "@/lib/exam-registry";
 
 const supabaseUrl =
   process.env.NEXT_PUBLIC_SUPABASE_URL ||
@@ -11,26 +10,7 @@ const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 export async function GET(request: NextRequest) {
-  // 1. Try FastAPI backend first
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 1500);
-
-    const response = await backendGET(
-      `/analytics/question-bank${request.nextUrl.search}`
-    );
-    clearTimeout(timeoutId);
-
-    if (response.ok) {
-      const data = await response.json();
-      return NextResponse.json(data, {
-        status: response.status,
-      });
-    }
-  } catch {
-    // Backend unreachable — fallback to direct Supabase query
-  }
-
+  // Read canonical content directly (paper-scoped) so a backend cannot mix Maths/English into GS.
   // 2. Direct Supabase query fallback (bulletproof)
   try {
     const key = serviceRoleKey || anonKey;
@@ -57,7 +37,7 @@ export async function GET(request: NextRequest) {
 
     let query = supabase
       .from("v_dp_question_intelligence_v2")
-      .select("exam,year,cycle,subject,topic,q_type,q_pattern,difficulty_category").eq("content_eligible", true).in("paper", liveDbPaperValues());
+      .select("exam,year,cycle,subject,topic,q_type,q_pattern,difficulty_category").eq("content_eligible", true).in("paper", paperTabDbValues(searchParams.get("paper")));
     if (examParam) {
       const expanded = expandExamQuery(examParam);
       if (expanded.length > 0) {

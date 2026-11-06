@@ -16,11 +16,23 @@ export interface QuestionSetFilters {
   mode?: "instant" | "attempt" | "full_paper";
   returnTo?: string;
   origin?: string;
+  /** CDS/CAPF paper tab. Absent = GS. Only "maths" | "english" are serialized. */
+  paper?: "maths" | "english";
   progress?: {
     checked_ids: string[];
     marked_for_review_ids?: string[];
     question_times: Record<string, number>;
   };
+}
+
+function parsePaper(value: unknown): QuestionSetFilters["paper"] {
+  return value === "maths" || value === "english" ? value : undefined;
+}
+
+/** Paper tab from the current browser URL (client only); null = GS. */
+export function activePaperParam(): "maths" | "english" | null {
+  if (typeof window === "undefined") return null;
+  return parsePaper(new URLSearchParams(window.location.search).get("paper")) ?? null;
 }
 
 function parseMode(value: unknown): QuestionSetFilters["mode"] {
@@ -117,6 +129,7 @@ export function parseFiltersFromSearchParams(
       mode: parseMode(getter.get("mode")),
       returnTo: getter.get("returnTo") || undefined,
       origin: getter.get("origin") || undefined,
+      paper: parsePaper(getter.get("paper")),
     };
   }
 
@@ -134,6 +147,7 @@ export function parseFiltersFromSearchParams(
     mode: parseMode(record.mode),
     returnTo: typeof record.returnTo === "string" ? record.returnTo : undefined,
     origin: typeof record.origin === "string" ? record.origin : undefined,
+    paper: parsePaper(record.paper),
   };
 }
 
@@ -175,6 +189,7 @@ export function serializeFiltersToSearchParams(
   if (filters.mode) params.set("mode", filters.mode);
   if (filters.returnTo) params.set("returnTo", filters.returnTo);
   if (filters.origin) params.set("origin", filters.origin);
+  if (filters.paper) params.set("paper", filters.paper);
 
   return params;
 }

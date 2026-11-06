@@ -9,6 +9,7 @@ interface FullPaperPageProps {
     origin?: string;
     session_id?: string;
     analysis?: string;
+    paper?: string;
   }>;
 }
 
@@ -25,6 +26,7 @@ export default async function FullPaperPage({ searchParams }: FullPaperPageProps
         origin={params.origin}
         resumeSessionId={params.session_id}
         analysis={params.analysis === "true"}
+        initialPaperTab={params.paper}
       />
     </div>
   );

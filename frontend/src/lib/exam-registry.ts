@@ -229,3 +229,37 @@ export function scorePaper(paper: ExamPaper, correct: number, wrong: number): nu
   if (!paper.marking) throw new Error(`${paper.id} is not an objective paper`);
   return correct * paper.marking.correct - wrong * paper.marking.wrong;
 }
+
+/** Learner-facing paper tabs shown under the CDS/CAPF exam mode. GS is the default and never mixes with Maths/English. */
+export type PaperTabId = "gs" | "maths" | "english";
+export const PAPER_TAB_PARAM = "paper";
+const PAPER_TABS: { id: PaperTabId; label: string; paperId: string | null }[] = [
+  { id: "gs", label: "GS", paperId: null },
+  { id: "maths", label: "Maths", paperId: "cds-maths" },
+  { id: "english", label: "English", paperId: "cds-english" },
+];
+
+export function parsePaperTab(value: string | null | undefined): PaperTabId {
+  return value === "maths" || value === "english" ? value : "gs";
+}
+
+/** Tabs to show: GS always, Maths/English only once their registry paper is live. */
+export function visiblePaperTabs(): { id: PaperTabId; label: string }[] {
+  return PAPER_TABS.filter((t) => t.paperId === null || getPaper(t.paperId)?.status === "live")
+    .map(({ id, label }) => ({ id, label }));
+}
+
+/**
+ * `questions.paper` values readable for a tab. GS = every live paper except Maths/English, so
+ * existing GS practice and explore are unchanged. Maths/English resolve to nothing until live.
+ */
+export function paperTabDbValues(value: string | null | undefined): string[] {
+  const tab = parsePaperTab(value);
+  const live = liveDbPaperValues();
+  if (tab === "gs") {
+    const separate = PAPER_TABS.flatMap((t) => (t.paperId ? getPaper(t.paperId)?.dbPaperValues ?? [] : []));
+    return live.filter((v) => !separate.includes(v));
+  }
+  const paper = getPaper(PAPER_TABS.find((t) => t.id === tab)!.paperId!);
+  return paper?.status === "live" ? paper.dbPaperValues : [];
+}

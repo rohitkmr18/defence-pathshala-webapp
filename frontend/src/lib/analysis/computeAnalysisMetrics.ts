@@ -134,7 +134,7 @@ export function computeAnalysisMetrics(
   // Resolve exam-aware scoring rules. A complete full paper retains the official
   // denominator; manifest-backed subsets use only the marks actually in play.
   const sampleExam = examIdentifier || questions[0]?.exam || "CAPF-AC";
-  const scoringRule = getScoringRules(sampleExam);
+  const scoringRule = getScoringRules(sampleExam, questions[0]?.paper ?? null);
   const marksPerCorrect = scoringRule.correctMarks;
   const penaltyPerWrong = scoringRule.penaltyMarks;
   const recoverableMultiplier = scoringRule.recoverableSwingPerQuestion;
