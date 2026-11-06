@@ -20,7 +20,7 @@ if (hook) process.on("uncaughtException", (e) => { console.log("[cds-maths-load]
 if (!url || !key) throw new Error("Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY");
 if (apply && !url.includes(PROD_REF) && !process.env.ALLOW_NON_PROD) throw new Error("--apply only against production (or set ALLOW_NON_PROD=1)");
 
-const dir = new URL("./prod_load/", import.meta.url);
+const dir = new URL("../../data/ingestion/cds_maths/prod_load/", import.meta.url);
 const first = JSON.parse(readFileSync(new URL("cds_i_2026_maths.json", dir), "utf8"));
 const more = JSON.parse(readFileSync(new URL("cds_maths_more_papers.json", dir), "utf8"));
 const uuid = (t) => { const h = createHash("sha1").update(t).digest("hex"); return `${h.slice(0, 8)}-${h.slice(8, 12)}-5${h.slice(13, 16)}-a${h.slice(17, 20)}-${h.slice(20, 32)}`; };
