@@ -6,6 +6,7 @@ import { ArrowRight, Check, CheckCircle2, Compass, GraduationCap, Shield, Sparkl
 import type { Profile } from "@/lib/profile/types";
 import { authUrl, safeAuthNext } from "@/lib/auth-redirect";
 import { createSetupSaver } from "@/lib/onboarding-save";
+import DPLogo from "@/components/common/DPLogo";
 
 const EXAMS = [
   { id: "CDS", name: "CDS", description: "Combined Defence Services", icon: GraduationCap },
@@ -57,7 +58,7 @@ export default function OnboardingForm({ profile, next }: { profile: Profile; ne
         <aside className="relative hidden overflow-hidden rounded-l-[28px] bg-[#07162e] p-10 text-white lg:flex lg:flex-col lg:justify-between">
           <div className="pointer-events-none absolute -right-32 -top-32 h-80 w-80 rounded-full bg-blue-500/20 blur-3xl" />
           <div className="relative flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-sm font-black">DP</span>
+            <DPLogo className="h-11 w-auto" />
             <div><p className="text-xs font-bold uppercase tracking-[0.2em] text-blue-300">Defence Pathshala</p>
               <p className="text-xs text-slate-400">Your preparation, intelligently guided.</p></div>
           </div>
@@ -83,7 +84,7 @@ export default function OnboardingForm({ profile, next }: { profile: Profile; ne
         <section className="flex items-center justify-center px-4 py-8 sm:px-8 lg:rounded-r-[28px] lg:border lg:border-l-0 lg:border-slate-200 lg:bg-white lg:px-12 lg:py-12 lg:shadow-xl lg:shadow-slate-200/50">
           <form onSubmit={submit} className="w-full max-w-xl space-y-7">
             <div className="flex items-center justify-between gap-3 lg:hidden">
-              <div className="flex items-center gap-2.5"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-sm font-black text-white">DP</span>
+              <div className="flex items-center gap-2.5"><DPLogo className="h-10 w-auto" />
                 <span className="text-sm font-bold tracking-tight">Defence Pathshala</span></div>
               <span className="rounded-full bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700">Quick setup</span>
             </div>

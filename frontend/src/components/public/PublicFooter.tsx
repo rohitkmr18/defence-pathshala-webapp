@@ -1,4 +1,5 @@
 import Link from "next/link";
+import DPLogo from "@/components/common/DPLogo";
 
 export default function PublicFooter() {
   const currentYear = new Date().getFullYear();
@@ -10,9 +11,7 @@ export default function PublicFooter() {
           {/* Brand info */}
           <div className="md:col-span-1 space-y-4">
             <Link href="/" className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-white text-sm font-black shadow-md shadow-blue-600/30">
-                DP
-              </div>
+              <DPLogo className="h-9 w-auto" />
               <span className="text-base font-bold text-white tracking-tight">
                 Defence Pathshala
               </span>
