@@ -579,7 +579,7 @@ export default function PracticeFilters({
       <div>
         <div className="mb-2 flex items-center justify-between">
           <label className="text-xs font-bold uppercase tracking-wider text-slate-600">
-            {paper ? "1. Subject" : "2. Subject"}
+            {paper ? "1" : "2"}. Subject
             {selectedSubjects.length > 0 && (
               <span className="ml-1.5 font-normal text-slate-500">
                 ({selectedSubjects.length} selected)
@@ -624,7 +624,7 @@ export default function PracticeFilters({
             <div className="flex items-center gap-1.5">
               <BookOpen className="h-3.5 w-3.5 text-blue-600" />
               <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                3. Topic in {selectedSubjects.join(", ")}
+                {paper ? 2 : 3}. Topic in {selectedSubjects.join(", ")}
               </label>
             </div>
             <button
@@ -665,7 +665,7 @@ export default function PracticeFilters({
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 <Compass aria-hidden="true" className="h-4 w-4 shrink-0 text-blue-600" />
-                <h3 className="text-sm font-bold text-slate-900">4. Subtopics</h3>
+                <h3 className="text-sm font-bold text-slate-900">{paper ? 3 : 4}. Subtopics</h3>
                 <span className="rounded-full bg-white px-2 py-0.5 text-xs font-medium text-slate-500">
                   Optional
                 </span>
