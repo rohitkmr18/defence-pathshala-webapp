@@ -245,3 +245,14 @@ create policy "Authenticated can upload CA slides" on storage.objects for insert
 create policy "Authenticated can update CA slides" on storage.objects for update to authenticated using (bucket_id = 'current-affairs' and exists (select 1 from public.profiles p where p.id = (select auth.uid()) and p.role = 'admin')) with check (bucket_id = 'current-affairs' and exists (select 1 from public.profiles p where p.id = (select auth.uid()) and p.role = 'admin'));
 
 create policy "Authenticated can delete CA slides" on storage.objects for delete to authenticated using (bucket_id = 'current-affairs' and exists (select 1 from public.profiles p where p.id = (select auth.uid()) and p.role = 'admin'));
+
+-- Applied to production from supabase/pending/20261105150000_exam_registry_foundation.sql before it entered the ledger;
+-- the CDS maths pilot migration inserts into it.
+create table if not exists public.question_passages (
+  id uuid primary key default gen_random_uuid(),
+  paper_id text not null,
+  title text,
+  body text not null,
+  source text,
+  created_at timestamptz not null default now()
+);
