@@ -10,7 +10,7 @@
   "source_file": "QP_CDSI2024_ELEMENTARY-MATHEMATICS_22042024.pdf",
   "source_question_sha256": "78fe1a8a7f36d5ff80780897e8fee3cb3adda52db9ac80a8aeb5c4cb196400ae",
   "source_version": "scan-transcription-v1",
-  "notes": "English side only; set A. Keys are DP_SOLVED_INTERNAL (model-solved, numerically cross-checked), NOT an official UPSC key; founder approval pending. Questions Q7, Q22, Q24, Q57, Q66, Q87, Q92, Q95 were minimally adapted from the printed paper to remove errors or ambiguity (tag provenance:adapted_pyq); they must NOT be shown as authentic PYQs. Figure-dependent items Q76-Q100 carry written figure descriptions and need redrawn figures before learner use. DISPLAY RULE: 8 question(s) tagged display:practice_not_pyq were modified from the printed paper; the webapp must show them as ordinary practice questions (not as PYQ and not as 'adapted from CDS'), and exclude them from PYQ counts/filters. Passages with a 'figure' field have an SVG in figures/.",
+  "notes": "English side only; set A. Keys are DP_SOLVED_INTERNAL (model-solved, numerically cross-checked), NOT an official UPSC key; founder approval pending. Questions Q7, Q22, Q24, Q57, Q66, Q87, Q92, Q95 were minimally adapted from the printed paper to remove errors or ambiguity (tag provenance:adapted_pyq); they must NOT be shown as authentic PYQs. Figure-dependent items Q76-Q100 carry written figure descriptions and need redrawn figures before learner use. DISPLAY RULE: 8 question(s) tagged display:inline_in_paper were lightly edited from the printed paper. They appear inline with the other questions of the paper, with NO badge on the question card; the edit note is shown only in that question's explanation. Keep provenance:adapted_pyq internal; exclude from any exact-PYQ claim/count. Passages with a 'figure' field have an SVG in figures/.",
   "key_policy": "FOUNDER_APPROVED_SOLVED",
   "key_policy_status": "PENDING_FOUNDER_APPROVAL",
   "status": "REVIEW_FILE_ONLY_NOT_LOADED"
@@ -251,12 +251,13 @@
    "pattern_id": "PATTERN.DIRECT",
    "passage": null,
    "difficulty": "Easy",
-   "explanation": "Concept: A monic quadratic with sum of roots $S$ and product $P$ is $x^2-Sx+P=0$.\nStep 1: $S=2$, $P=-100$.\nStep 2: The equation is $x^2-2x-100=0$ (its roots are real since the discriminant $4+400>0$).\nStep 3: The sum is $2$, not $-2$, so option (b) is wrong. Roots are fixed by $S$ and $P$, so (a) is wrong.\nAnswer: (c) There is only one such equation which is $x^2-2x-100=0$",
+   "explanation": "Concept: A monic quadratic with sum of roots $S$ and product $P$ is $x^2-Sx+P=0$.\nStep 1: $S=2$, $P=-100$.\nStep 2: The equation is $x^2-2x-100=0$ (its roots are real since the discriminant $4+400>0$).\nStep 3: The sum is $2$, not $-2$, so option (b) is wrong. Roots are fixed by $S$ and $P$, so (a) is wrong.\nAnswer: (c) There is only one such equation which is $x^2-2x-100=0$\n\nNote: This question has been lightly edited from the printed paper for clarity and a single defensible answer.",
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
     "provenance:adapted_pyq",
-    "display:practice_not_pyq"
+    "display:inline_in_paper",
+    "display:edit_note_in_explanation"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now says 'monic' quadratic so exactly one equation fits. Founder to confirm before load."
   },
@@ -644,12 +645,13 @@
    "pattern_id": "PATTERN.DIRECT",
    "passage": null,
    "difficulty": "Medium",
-   "explanation": "Concept: Largest square side $=$ HCF of the two lengths (in the same unit).\nStep 1: $4.25\\text{ m}=425\\text{ cm}$, $3.4\\text{ m}=340\\text{ cm}$. HCF$(425,340)=85$ cm.\nStep 2: Pieces $=\\frac{425}{85}\\times\\frac{340}{85}=5\\times4=20$.\nAnswer: (a) 20",
+   "explanation": "Concept: Largest square side $=$ HCF of the two lengths (in the same unit).\nStep 1: $4.25\\text{ m}=425\\text{ cm}$, $3.4\\text{ m}=340\\text{ cm}$. HCF$(425,340)=85$ cm.\nStep 2: Pieces $=\\frac{425}{85}\\times\\frac{340}{85}=5\\times4=20$.\nAnswer: (a) 20\n\nNote: This question has been lightly edited from the printed paper for clarity and a single defensible answer.",
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
     "provenance:adapted_pyq",
-    "display:practice_not_pyq"
+    "display:inline_in_paper",
+    "display:edit_note_in_explanation"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): option (a) replaced with the correct value 20 (original options 45/90/400/500 had no correct answer). Founder to confirm before load."
   },
@@ -698,12 +700,13 @@
    "pattern_id": "PATTERN.DIRECT",
    "passage": null,
    "difficulty": "Hard",
-   "explanation": "Concept: $768=2^8\\times3$. We need $\\gcd(768,\\,x^6y^2)=32xy$ with $x,y$ prime.\nStep 1: Try $x=2,y=3$: $x^6y^2=576=2^6\\times3^2$, and $\\gcd(768,576)=192=32\\times6$. It works, so $x+y=5$.\nStep 2: Other prime pairs fail (for example $(3,2)$ gives gcd 12 against $32xy=192$, and $(2,2)$ gives 256 against 128).\nAnswer: (a) 5",
+   "explanation": "Concept: $768=2^8\\times3$. We need $\\gcd(768,\\,x^6y^2)=32xy$ with $x,y$ prime.\nStep 1: Try $x=2,y=3$: $x^6y^2=576=2^6\\times3^2$, and $\\gcd(768,576)=192=32\\times6$. It works, so $x+y=5$.\nStep 2: Other prime pairs fail (for example $(3,2)$ gives gcd 12 against $32xy=192$, and $(2,2)$ gives 256 against 128).\nAnswer: (a) 5\n\nNote: This question has been lightly edited from the printed paper for clarity and a single defensible answer.",
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
     "provenance:adapted_pyq",
-    "display:practice_not_pyq"
+    "display:inline_in_paper",
+    "display:edit_note_in_explanation"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now says x and y are prime numbers; only (2,3) fits, so x+y = 5. Founder to confirm before load."
   },
@@ -1562,12 +1565,13 @@
    "pattern_id": "PATTERN.DIRECT",
    "passage": null,
    "difficulty": "Medium",
-   "explanation": "Concept: First remove the deductions, share in the given ratio, then add them back.\nStep 1: Total deducted $=93+24+55=172$. Money left $=9400-172=9228$.\nStep 2: One part $=\\frac{9228}{12}=769$. P has $3\\times769=2307$ left.\nStep 3: P's original share $=2307+93=2400$.\nAnswer: (a) ₹ 2400",
+   "explanation": "Concept: First remove the deductions, share in the given ratio, then add them back.\nStep 1: Total deducted $=93+24+55=172$. Money left $=9400-172=9228$.\nStep 2: One part $=\\frac{9228}{12}=769$. P has $3\\times769=2307$ left.\nStep 3: P's original share $=2307+93=2400$.\nAnswer: (a) ₹ 2400\n\nNote: This question has been lightly edited from the printed paper for clarity and a single defensible answer.",
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
     "provenance:adapted_pyq",
-    "display:practice_not_pyq"
+    "display:inline_in_paper",
+    "display:edit_note_in_explanation"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): option (a) replaced with the correct share 2400 (original option 2307 was the amount left after the deduction). Founder to confirm before load."
   },
@@ -1799,12 +1803,13 @@
    "pattern_id": "PATTERN.DATA_SUFFICIENCY",
    "passage": null,
    "difficulty": "Easy",
-   "explanation": "Concept: Parallelogram area $=xy\\sin\\theta$, rectangle area $=xy$, so $Q=P\\sin\\theta$.\nStep 1: Q > 0.8P means $\\sin\\theta>0.8$.\nStep 2: Statement I ($x:y=2:1$) says nothing about $\\theta$. Not enough.\nStep 3: Statement II ($\\theta=60^\\circ$) gives $\\sin60^\\circ=0.866>0.8$, so the answer is Yes. Enough.\nAnswer: (a) The Question can be answered by using one of the Statements alone, but not by the other.",
+   "explanation": "Concept: Parallelogram area $=xy\\sin\\theta$, rectangle area $=xy$, so $Q=P\\sin\\theta$.\nStep 1: Q > 0.8P means $\\sin\\theta>0.8$.\nStep 2: Statement I ($x:y=2:1$) says nothing about $\\theta$. Not enough.\nStep 3: Statement II ($\\theta=60^\\circ$) gives $\\sin60^\\circ=0.866>0.8$, so the answer is Yes. Enough.\nAnswer: (a) The Question can be answered by using one of the Statements alone, but not by the other.\n\nNote: This question has been lightly edited from the printed paper for clarity and a single defensible answer.",
    "tags": [
     "format:data_sufficiency",
     "key:dp_solved",
     "provenance:adapted_pyq",
-    "display:practice_not_pyq"
+    "display:inline_in_paper",
+    "display:edit_note_in_explanation"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): question changed to 'Is Q > 0.8P?' because the original (Is P > Q?) needed neither statement. Founder to confirm before load."
   },
@@ -2347,12 +2352,13 @@
    "pattern_id": "PATTERN.LINKED_SET",
    "passage": "Questions 86–87",
    "difficulty": "Medium",
-   "explanation": "Concept: Non-overlapping area $=$ (total of both rectangles) $-$ 2 $\\times$ overlap.\nStep 1: Each rectangle has area 2, overlap $=\\frac54$.\nStep 2: Non-overlapping parts of both rectangles $=2\\times\\left(2-\\frac54\\right)=\\frac32$ sq cm.\nAnswer: (c) $\\frac{3}{2}$ square cm",
+   "explanation": "Concept: Non-overlapping area $=$ (total of both rectangles) $-$ 2 $\\times$ overlap.\nStep 1: Each rectangle has area 2, overlap $=\\frac54$.\nStep 2: Non-overlapping parts of both rectangles $=2\\times\\left(2-\\frac54\\right)=\\frac32$ sq cm.\nAnswer: (c) $\\frac{3}{2}$ square cm\n\nNote: This question has been lightly edited from the printed paper for clarity and a single defensible answer.",
    "tags": [
     "format:linked_set",
     "key:dp_solved",
     "provenance:adapted_pyq",
-    "display:practice_not_pyq"
+    "display:inline_in_paper",
+    "display:edit_note_in_explanation"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now defines the non-overlapping region as the parts of both rectangles outside the overlap (3/2). Founder to confirm before load."
   },
@@ -2479,12 +2485,13 @@
    "pattern_id": "PATTERN.LINKED_SET",
    "passage": "Questions 91–93",
    "difficulty": "Hard",
-   "explanation": "Concept: Trapezium area $=\\frac12(\\text{sum of parallel sides})\\times\\text{height}$.\nStep 1: With $\\sqrt2=1.4$: $EF=5\\sqrt2=7$ cm and height $=\\frac{5\\sqrt2}2=3.5$ cm. $AB=10$.\nStep 2: Area $=\\frac{10+7}2\\times3.5=29.75$ sq cm.\nAnswer: (a) 29.75 square cm",
+   "explanation": "Concept: Trapezium area $=\\frac12(\\text{sum of parallel sides})\\times\\text{height}$.\nStep 1: With $\\sqrt2=1.4$: $EF=5\\sqrt2=7$ cm and height $=\\frac{5\\sqrt2}2=3.5$ cm. $AB=10$.\nStep 2: Area $=\\frac{10+7}2\\times3.5=29.75$ sq cm.\nAnswer: (a) 29.75 square cm\n\nNote: This question has been lightly edited from the printed paper for clarity and a single defensible answer.",
    "tags": [
     "format:linked_set",
     "key:dp_solved",
     "provenance:adapted_pyq",
-    "display:practice_not_pyq"
+    "display:inline_in_paper",
+    "display:edit_note_in_explanation"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): option (a) changed from 30 to 29.75, the value obtained with the given √2 = 1.4. Founder to confirm before load."
   },
@@ -2559,12 +2566,13 @@
    "pattern_id": "PATTERN.LINKED_SET",
    "passage": "Questions 94–95",
    "difficulty": "Hard",
-   "explanation": "Concept: Shaded $=$ (circle outside triangle) $+$ (triangle outside circle).\nStep 1: Each side of the triangle cuts a chord of length $3\\sqrt3$ (central angle $120^\\circ$). Segment $=\\frac{9}2\\left(\\frac{2\\pi}3-\\frac{\\sqrt3}2\\right)=3\\pi-\\frac{9\\sqrt3}4$. Two segments $=6\\pi-\\frac{9\\sqrt3}2$.\nStep 2: Triangle area $=\\frac{\\sqrt3}4\\times48=12\\sqrt3$. Triangle inside circle $=9\\pi-(6\\pi-\\frac{9\\sqrt3}2)=3\\pi+\\frac{9\\sqrt3}2$. So triangle outside circle $=\\frac{15\\sqrt3}2-3\\pi$.\nStep 3: Shaded $=6\\pi-\\frac{9\\sqrt3}2+\\frac{15\\sqrt3}2-3\\pi=3\\pi+3\\sqrt3=3(\\pi+\\sqrt3)\\approx14.6$. \nAnswer: (a) $3(\\pi+\\sqrt3)$ square unit",
+   "explanation": "Concept: Shaded $=$ (circle outside triangle) $+$ (triangle outside circle).\nStep 1: Each side of the triangle cuts a chord of length $3\\sqrt3$ (central angle $120^\\circ$). Segment $=\\frac{9}2\\left(\\frac{2\\pi}3-\\frac{\\sqrt3}2\\right)=3\\pi-\\frac{9\\sqrt3}4$. Two segments $=6\\pi-\\frac{9\\sqrt3}2$.\nStep 2: Triangle area $=\\frac{\\sqrt3}4\\times48=12\\sqrt3$. Triangle inside circle $=9\\pi-(6\\pi-\\frac{9\\sqrt3}2)=3\\pi+\\frac{9\\sqrt3}2$. So triangle outside circle $=\\frac{15\\sqrt3}2-3\\pi$.\nStep 3: Shaded $=6\\pi-\\frac{9\\sqrt3}2+\\frac{15\\sqrt3}2-3\\pi=3\\pi+3\\sqrt3=3(\\pi+\\sqrt3)\\approx14.6$. \nAnswer: (a) $3(\\pi+\\sqrt3)$ square unit\n\nNote: This question has been lightly edited from the printed paper for clarity and a single defensible answer.",
    "tags": [
     "format:linked_set",
     "key:dp_solved",
     "provenance:adapted_pyq",
-    "display:practice_not_pyq"
+    "display:inline_in_paper",
+    "display:edit_note_in_explanation"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): option (a) replaced with the correct value 3(π+√3) (original options had no correct answer). Founder to confirm before load."
   },

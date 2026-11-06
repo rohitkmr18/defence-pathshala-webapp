@@ -10,7 +10,7 @@
   "source_file": "QP-CDSE-II-25-ELEMENTARY-MATHEMATICS-150925.pdf",
   "source_question_sha256": "0a3654c25177fbd18e9c9dfe2d123d497881147a02edf70f9acf14133b2246b3",
   "source_version": "scan-transcription-v1",
-  "notes": "English side only; set A. Keys are DP_SOLVED_INTERNAL (model-solved), NOT official; founder approval pending. Q93, Q96, Q97, Q98 were minimally adapted from the printed paper (tag provenance:adapted_pyq); they must NOT be shown as authentic PYQs. DISPLAY RULE: 4 question(s) tagged display:practice_not_pyq were modified from the printed paper; the webapp must show them as ordinary practice questions (not as PYQ and not as 'adapted from CDS'), and exclude them from PYQ counts/filters. Passages with a 'figure' field have an SVG in figures/.",
+  "notes": "English side only; set A. Keys are DP_SOLVED_INTERNAL (model-solved), NOT official; founder approval pending. Q93, Q96, Q97, Q98 were minimally adapted from the printed paper (tag provenance:adapted_pyq); they must NOT be shown as authentic PYQs. DISPLAY RULE: 4 question(s) tagged display:inline_in_paper were lightly edited from the printed paper. They appear inline with the other questions of the paper, with NO badge on the question card; the edit note is shown only in that question's explanation. Keep provenance:adapted_pyq internal; exclude from any exact-PYQ claim/count. Passages with a 'figure' field have an SVG in figures/.",
   "key_policy": "FOUNDER_APPROVED_SOLVED",
   "key_policy_status": "PENDING_FOUNDER_APPROVAL",
   "status": "REVIEW_FILE_ONLY_NOT_LOADED"
@@ -2465,12 +2465,13 @@
    "pattern_id": "PATTERN.DIRECT",
    "passage": null,
    "difficulty": "Medium",
-   "explanation": "Concept: Convert the cumulative 'more than' table into class frequencies, then use mid-points.\nStep 1: 10–20: $100-75=25$; 20–30: $75-60=15$; 30–40: $60-40=20$; the last class has 40 candidates (taken as 40–50, as the printed top class is open).\nStep 2: Mean $=\\frac{25\\times15+15\\times25+20\\times35+40\\times45}{100}=\\frac{3250}{100}=32.5$.\nAnswer: (d) 32.5",
+   "explanation": "Concept: Convert the cumulative 'more than' table into class frequencies, then use mid-points.\nStep 1: 10–20: $100-75=25$; 20–30: $75-60=15$; 30–40: $60-40=20$; the last class has 40 candidates (taken as 40–50, as the printed top class is open).\nStep 2: Mean $=\\frac{25\\times15+15\\times25+20\\times35+40\\times45}{100}=\\frac{3250}{100}=32.5$.\nAnswer: (d) 32.5\n\nNote: This question has been lightly edited from the printed paper for clarity and a single defensible answer.",
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
     "provenance:adapted_pyq",
-    "display:practice_not_pyq"
+    "display:inline_in_paper",
+    "display:edit_note_in_explanation"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now says all candidates scored at most 50 marks (top class 40-50). Founder to confirm before load."
   },
@@ -2545,12 +2546,13 @@
    "pattern_id": "PATTERN.DIRECT",
    "passage": null,
    "difficulty": "Easy",
-   "explanation": "Concept: Positional averages (median, mode, quartiles) are found from the position of a value in the ordered data; means are calculated from all the values.\nStep 1: Arithmetic, geometric and harmonic means are calculated averages.\nStep 2: The median is the middle value by position.\nAnswer: (b) Median",
+   "explanation": "Concept: Positional averages (median, mode, quartiles) are found from the position of a value in the ordered data; means are calculated from all the values.\nStep 1: Arithmetic, geometric and harmonic means are calculated averages.\nStep 2: The median is the middle value by position.\nAnswer: (b) Median\n\nNote: This question has been lightly edited from the printed paper for clarity and a single defensible answer.",
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
     "provenance:adapted_pyq",
-    "display:practice_not_pyq"
+    "display:inline_in_paper",
+    "display:edit_note_in_explanation"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): option (c) changed from 'Mode' to 'Harmonic mean' so only the median is a positional average. Founder to confirm before load."
   },
@@ -2573,12 +2575,13 @@
    "pattern_id": "PATTERN.LINKED_SET",
    "passage": "Questions 97–98",
    "difficulty": "Hard",
-   "explanation": "Concept: Use the median formula for the first group and the mean formula for the second.\nStep 1: First group, median class 20–25: $20+\\frac{N/2-(u+v+63)}{75}\\times5=20.8$ with $N=u+v+160$. This gives $u+v=10$.\nStep 2: Second group with mid-points 2.5, 7.5, 12.5, 17.5, 22.5, 27.5: mean $=\\frac{7.5u+15v+500+875+675+770}{3u+2v+148}$. With $v=10-u$ and $u=3$: mean $=17.24$ (to 2 d.p.); $u=2$ gives 17.38 and $u=4$ gives 17.09.\nAnswer: (c) 3",
+   "explanation": "Concept: Use the median formula for the first group and the mean formula for the second.\nStep 1: First group, median class 20–25: $20+\\frac{N/2-(u+v+63)}{75}\\times5=20.8$ with $N=u+v+160$. This gives $u+v=10$.\nStep 2: Second group with mid-points 2.5, 7.5, 12.5, 17.5, 22.5, 27.5: mean $=\\frac{7.5u+15v+500+875+675+770}{3u+2v+148}$. With $v=10-u$ and $u=3$: mean $=17.24$ (to 2 d.p.); $u=2$ gives 17.38 and $u=4$ gives 17.09.\nAnswer: (c) 3\n\nNote: This question has been lightly edited from the printed paper for clarity and a single defensible answer.",
    "tags": [
     "format:linked_set",
     "key:dp_solved",
     "provenance:adapted_pyq",
-    "display:practice_not_pyq"
+    "display:inline_in_paper",
+    "display:edit_note_in_explanation"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): mean of the second group restated as 17.24 (correct to 2 d.p.) so that u = 3 is exact. Founder to confirm before load."
   },
@@ -2601,12 +2604,13 @@
    "pattern_id": "PATTERN.LINKED_SET",
    "passage": "Questions 97–98",
    "difficulty": "Hard",
-   "explanation": "Concept: From the previous item $u+v=10$.\nStep 1: $u=3$ gives $v=7$.\nAnswer: (c) 7",
+   "explanation": "Concept: From the previous item $u+v=10$.\nStep 1: $u=3$ gives $v=7$.\nAnswer: (c) 7\n\nNote: This question has been lightly edited from the printed paper for clarity and a single defensible answer.",
    "tags": [
     "format:linked_set",
     "key:dp_solved",
     "provenance:adapted_pyq",
-    "display:practice_not_pyq"
+    "display:inline_in_paper",
+    "display:edit_note_in_explanation"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): depends on the restated mean in Q97 (u = 3, so v = 7). Founder to confirm before load."
   },

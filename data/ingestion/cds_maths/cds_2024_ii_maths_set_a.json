@@ -10,7 +10,7 @@
   "source_file": "QP-CDSE-II-24-ELEMENTARY-MATHEMATICS-020924.pdf",
   "source_question_sha256": "deb6567c34396beb077eb097646035dcfe659f8f596391f996ab79a1f2b66e59",
   "source_version": "scan-transcription-v1",
-  "notes": "English side only; set A. Keys are DP_SOLVED_INTERNAL (model-solved, numerically cross-checked), NOT an official UPSC key; founder approval pending. Questions Q34, Q35, Q44, Q61, Q83 were minimally clarified from the printed wording (tag provenance:adapted_pyq); they must NOT be shown as authentic PYQs. Q90 answer is 118 (option d). Data-sufficiency items use two different option sets (Q64 and Q65 offer 'can be answered even without using any of the Statements'); the per-item option text is stored. DISPLAY RULE: 5 question(s) tagged display:practice_not_pyq were modified from the printed paper; the webapp must show them as ordinary practice questions (not as PYQ and not as 'adapted from CDS'), and exclude them from PYQ counts/filters. Passages with a 'figure' field have an SVG in figures/.",
+  "notes": "English side only; set A. Keys are DP_SOLVED_INTERNAL (model-solved, numerically cross-checked), NOT an official UPSC key; founder approval pending. Questions Q34, Q35, Q44, Q61, Q83 were minimally clarified from the printed wording (tag provenance:adapted_pyq); they must NOT be shown as authentic PYQs. Q90 answer is 118 (option d). Data-sufficiency items use two different option sets (Q64 and Q65 offer 'can be answered even without using any of the Statements'); the per-item option text is stored. DISPLAY RULE: 5 question(s) tagged display:inline_in_paper were lightly edited from the printed paper. They appear inline with the other questions of the paper, with NO badge on the question card; the edit note is shown only in that question's explanation. Keep provenance:adapted_pyq internal; exclude from any exact-PYQ claim/count. Passages with a 'figure' field have an SVG in figures/.",
   "key_policy": "FOUNDER_APPROVED_SOLVED",
   "key_policy_status": "PENDING_FOUNDER_APPROVAL",
   "status": "REVIEW_FILE_ONLY_NOT_LOADED"
@@ -914,12 +914,13 @@
    "pattern_id": "PATTERN.DIRECT",
    "passage": null,
    "difficulty": "Medium",
-   "explanation": "Concept: Group the class into four separate parts that add up to 200.\nStep 1: Read the four groups as separate parts: both $=n$, coffee only $=2n$, tea only $=3n$, neither $=4n$.\nStep 2: $n+2n+3n+4n=10n=200$, so $n=20$.\nStep 3: (If instead $2n$ and $3n$ were the totals for coffee and tea, the union would be $4n$, giving $8n=200$ and $n=25$.)\nAnswer: (a) 20",
+   "explanation": "Concept: Group the class into four separate parts that add up to 200.\nStep 1: Read the four groups as separate parts: both $=n$, coffee only $=2n$, tea only $=3n$, neither $=4n$.\nStep 2: $n+2n+3n+4n=10n=200$, so $n=20$.\nStep 3: (If instead $2n$ and $3n$ were the totals for coffee and tea, the union would be $4n$, giving $8n=200$ and $n=25$.)\nAnswer: (a) 20\n\nNote: This question has been lightly edited from the printed paper for clarity and a single defensible answer.",
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
     "provenance:adapted_pyq",
-    "display:practice_not_pyq"
+    "display:inline_in_paper",
+    "display:edit_note_in_explanation"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now says 'only coffee' and 'only tea' so n = 20 is the single reading. Founder to confirm before load."
   },
@@ -942,12 +943,13 @@
    "pattern_id": "PATTERN.DIRECT",
    "passage": null,
    "difficulty": "Medium",
-   "explanation": "Concept: Area $=\\frac12\\,ab\\sin\\theta$.\nStep 1: $36=\\frac12\\times9\\times12\\times\\sin\\theta=54\\sin\\theta$, so $\\sin\\theta=\\frac23$.\nStep 2: $\\cos\\theta=\\sqrt{1-\\frac49}=\\frac{\\sqrt5}3$ (taking $\\theta$ acute).\nAnswer: (a) $\\frac{\\sqrt5}{3}$",
+   "explanation": "Concept: Area $=\\frac12\\,ab\\sin\\theta$.\nStep 1: $36=\\frac12\\times9\\times12\\times\\sin\\theta=54\\sin\\theta$, so $\\sin\\theta=\\frac23$.\nStep 2: $\\cos\\theta=\\sqrt{1-\\frac49}=\\frac{\\sqrt5}3$ (taking $\\theta$ acute).\nAnswer: (a) $\\frac{\\sqrt5}{3}$\n\nNote: This question has been lightly edited from the printed paper for clarity and a single defensible answer.",
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
     "provenance:adapted_pyq",
-    "display:practice_not_pyq"
+    "display:inline_in_paper",
+    "display:edit_note_in_explanation"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now states that θ is acute. Founder to confirm before load."
   },
@@ -1178,12 +1180,13 @@
    "pattern_id": "PATTERN.DIRECT",
    "passage": null,
    "difficulty": "Medium",
-   "explanation": "Concept: On a circular track the outer wheel travels farther in proportion to its path radius. Equal wheels turn in proportion to distance.\nStep 1: Going clockwise the right wheel is on the inner side, radius 50 m. The left wheel is 1 m outside: radius 51 m.\nStep 2: Turns of left wheel $=1000\\times\\frac{51}{50}=1020$.\nAnswer: (c) 1020",
+   "explanation": "Concept: On a circular track the outer wheel travels farther in proportion to its path radius. Equal wheels turn in proportion to distance.\nStep 1: Going clockwise the right wheel is on the inner side, radius 50 m. The left wheel is 1 m outside: radius 51 m.\nStep 2: Turns of left wheel $=1000\\times\\frac{51}{50}=1020$.\nAnswer: (c) 1020\n\nNote: This question has been lightly edited from the printed paper for clarity and a single defensible answer.",
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
     "provenance:adapted_pyq",
-    "display:practice_not_pyq"
+    "display:inline_in_paper",
+    "display:edit_note_in_explanation"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now states that the right wheel is on the inner side. Founder to confirm before load."
   },
@@ -1622,12 +1625,13 @@
    "pattern_id": "PATTERN.DATA_SUFFICIENCY",
    "passage": null,
    "difficulty": "Hard",
-   "explanation": "Concept: $4x^2-kx+1>0$ for all $x$ needs discriminant $k^2-16<0$, i.e. $-4<k<4$.\nStep 1: I ($k<-2$) with $-4<k<4$ gives $-4<k<-2$, so the only integer is $k=-3$. Enough.\nStep 2: II ($k>-4$) leaves $-4<k<4$: integers $-3,\\ldots,3$. Not enough.\nAnswer: (a) The Question can be answered by using one of the Statements alone, but cannot be answered using the other Statement alone",
+   "explanation": "Concept: $4x^2-kx+1>0$ for all $x$ needs discriminant $k^2-16<0$, i.e. $-4<k<4$.\nStep 1: I ($k<-2$) with $-4<k<4$ gives $-4<k<-2$, so the only integer is $k=-3$. Enough.\nStep 2: II ($k>-4$) leaves $-4<k<4$: integers $-3,\\ldots,3$. Not enough.\nAnswer: (a) The Question can be answered by using one of the Statements alone, but cannot be answered using the other Statement alone\n\nNote: This question has been lightly edited from the printed paper for clarity and a single defensible answer.",
    "tags": [
     "format:data_sufficiency",
     "key:dp_solved",
     "provenance:adapted_pyq",
-    "display:practice_not_pyq"
+    "display:inline_in_paper",
+    "display:edit_note_in_explanation"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now says positive for all real x. Founder to confirm before load."
   },
@@ -2199,12 +2203,13 @@
    "pattern_id": "PATTERN.DIRECT",
    "passage": null,
    "difficulty": "Medium",
-   "explanation": "Concept: Let $AD=a$, $AB=b$, $AC=c$.\nStep 1: $c=a+4$ and $b=3a-c=2a-4$.\nStep 2: $a^2+(2a-4)^2=(a+4)^2$ gives $4a^2-24a=0$, so $a=6$, $b=8$, $c=10$.\nStep 3: Area of triangle ABC (half the rectangle) $=\\frac12\\times6\\times8=24$ sq unit.\nAnswer: (a) 24 square unit",
+   "explanation": "Concept: Let $AD=a$, $AB=b$, $AC=c$.\nStep 1: $c=a+4$ and $b=3a-c=2a-4$.\nStep 2: $a^2+(2a-4)^2=(a+4)^2$ gives $4a^2-24a=0$, so $a=6$, $b=8$, $c=10$.\nStep 3: Area of triangle ABC (half the rectangle) $=\\frac12\\times6\\times8=24$ sq unit.\nAnswer: (a) 24 square unit\n\nNote: This question has been lightly edited from the printed paper for clarity and a single defensible answer.",
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
     "provenance:adapted_pyq",
-    "display:practice_not_pyq"
+    "display:inline_in_paper",
+    "display:edit_note_in_explanation"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now says the area of triangle ABC. Founder to confirm before load."
   },

@@ -10,7 +10,7 @@
   "source_file": "QP-CDSE-I-25-ELEMENTARY-MATHEMATICS-150425.pdf",
   "source_question_sha256": "f6d829f6421ccc8ac0b822cb240f9a5657c7449576283fc74bd98905d5c32983",
   "source_version": "scan-transcription-v1",
-  "notes": "English side only; set A. Keys are DP_SOLVED_INTERNAL (model-solved), NOT official; founder approval pending. Q6, Q7, Q51, Q60, Q89, Q92 were minimally adapted from the printed paper (tag provenance:adapted_pyq); they must NOT be shown as authentic PYQs. Pie charts Q96-98 need redrawing. DISPLAY RULE: 6 question(s) tagged display:practice_not_pyq were modified from the printed paper; the webapp must show them as ordinary practice questions (not as PYQ and not as 'adapted from CDS'), and exclude them from PYQ counts/filters. Passages with a 'figure' field have an SVG in figures/.",
+  "notes": "English side only; set A. Keys are DP_SOLVED_INTERNAL (model-solved), NOT official; founder approval pending. Q6, Q7, Q51, Q60, Q89, Q92 were minimally adapted from the printed paper (tag provenance:adapted_pyq); they must NOT be shown as authentic PYQs. Pie charts Q96-98 need redrawing. DISPLAY RULE: 6 question(s) tagged display:inline_in_paper were lightly edited from the printed paper. They appear inline with the other questions of the paper, with NO badge on the question card; the edit note is shown only in that question's explanation. Keep provenance:adapted_pyq internal; exclude from any exact-PYQ claim/count. Passages with a 'figure' field have an SVG in figures/.",
   "key_policy": "FOUNDER_APPROVED_SOLVED",
   "key_policy_status": "PENDING_FOUNDER_APPROVAL",
   "status": "REVIEW_FILE_ONLY_NOT_LOADED"
@@ -224,12 +224,13 @@
    "pattern_id": "PATTERN.DIRECT",
    "passage": null,
    "difficulty": "Hard",
-   "explanation": "Concept: Remainder 1 on division by $2^n$ means $N-1$ is a multiple of $2^n$.\nStep 1: $N$ is a 5-digit number, so $N\\ge10000$ and $N-1\\ge9999$.\nStep 2: Multiples of $2^{14}=16384$: $16384$ is the smallest above 9999 for this power, giving $N=16385$.\nStep 3: $N-1=2^{14}$, so the largest $n$ for which every divisor $2,2^2,\\ldots,2^n$ leaves remainder 1 is $n=14$.\nAnswer: (c) 14",
+   "explanation": "Concept: Remainder 1 on division by $2^n$ means $N-1$ is a multiple of $2^n$.\nStep 1: $N$ is a 5-digit number, so $N\\ge10000$ and $N-1\\ge9999$.\nStep 2: Multiples of $2^{14}=16384$: $16384$ is the smallest above 9999 for this power, giving $N=16385$.\nStep 3: $N-1=2^{14}$, so the largest $n$ for which every divisor $2,2^2,\\ldots,2^n$ leaves remainder 1 is $n=14$.\nAnswer: (c) 14\n\nNote: This question has been lightly edited from the printed paper for clarity and a single defensible answer.",
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
     "provenance:adapted_pyq",
-    "display:practice_not_pyq"
+    "display:inline_in_paper",
+    "display:edit_note_in_explanation"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now asks for the largest n (n = 13 and 14 both work otherwise). Founder to confirm before load."
   },
@@ -252,12 +253,13 @@
    "pattern_id": "PATTERN.DIRECT",
    "passage": null,
    "difficulty": "Hard",
-   "explanation": "Concept: Put the fractions over a common denominator and look for a perfect square.\nStep 1: $\\frac1{532900}+\\frac{2p^2}{532900}+\\frac{p^4}{532900}=\\frac{(p^2+1)^2}{730^2}$ (since $532900=730^2$ and $266450=\\frac{532900}2$).\nStep 2: This is an integer only if $730=2\\times5\\times73$ divides $p^2+1$. Testing $p=1,\\ldots$: the first value that works is $p=27$ ($27^2+1=730$).\nStep 3: Options $1$ gives $\\frac{4}{730^2}$, not an integer; $243$ and $729$ are larger.\nAnswer: (c) 27",
+   "explanation": "Concept: Put the fractions over a common denominator and look for a perfect square.\nStep 1: $\\frac1{532900}+\\frac{2p^2}{532900}+\\frac{p^4}{532900}=\\frac{(p^2+1)^2}{730^2}$ (since $532900=730^2$ and $266450=\\frac{532900}2$).\nStep 2: This is an integer only if $730=2\\times5\\times73$ divides $p^2+1$. Testing $p=1,\\ldots$: the first value that works is $p=27$ ($27^2+1=730$).\nStep 3: Options $1$ gives $\\frac{4}{730^2}$, not an integer; $243$ and $729$ are larger.\nAnswer: (c) 27\n\nNote: This question has been lightly edited from the printed paper for clarity and a single defensible answer.",
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
     "provenance:adapted_pyq",
-    "display:practice_not_pyq"
+    "display:inline_in_paper",
+    "display:edit_note_in_explanation"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): third denominator changed from 523900 to 532900 (likely misprint); minimum p is then 27. Founder to confirm before load."
   },
@@ -1402,12 +1404,13 @@
    "pattern_id": "PATTERN.LINKED_SET",
    "passage": "Questions 51–52",
    "difficulty": "Hard",
-   "explanation": "Concept: Whole surface $=\\pi(r_1^2+r_2^2)+\\pi(r_1+r_2)l$ with $l=\\sqrt{h^2+(r_2-r_1)^2}$.\nStep 1: $r_1=k$, $r_2=1.25k$, $h=k$, so $l=\\sqrt{k^2+0.0625k^2}=\\frac{\\sqrt{17}}4k\\approx1.031k$.\nStep 2: Surface $=\\pi k^2(1+1.5625+2.25\\times1.031)\\approx4.88\\pi k^2$.\nStep 3: $\\frac{39}8=4.875$ is the nearest option.\nNote: the exact value is not any option, so the key is the nearest.\nAnswer: (a) $39\\pi k^2/8$",
+   "explanation": "Concept: Whole surface $=\\pi(r_1^2+r_2^2)+\\pi(r_1+r_2)l$ with $l=\\sqrt{h^2+(r_2-r_1)^2}$.\nStep 1: $r_1=k$, $r_2=1.25k$, $h=k$, so $l=\\sqrt{k^2+0.0625k^2}=\\frac{\\sqrt{17}}4k\\approx1.031k$.\nStep 2: Surface $=\\pi k^2(1+1.5625+2.25\\times1.031)\\approx4.88\\pi k^2$.\nStep 3: $\\frac{39}8=4.875$ is the nearest option.\nNote: the exact value is not any option, so the key is the nearest.\nAnswer: (a) $39\\pi k^2/8$\n\nNote: This question has been lightly edited from the printed paper for clarity and a single defensible answer.",
    "tags": [
     "format:linked_set",
     "key:dp_solved",
     "provenance:adapted_pyq",
-    "display:practice_not_pyq"
+    "display:inline_in_paper",
+    "display:edit_note_in_explanation"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now says 'approximately' (exact value 4.882πk²; option (a) 4.875πk² is the only close one). Founder to confirm before load."
   },
@@ -1638,12 +1641,13 @@
    "pattern_id": "PATTERN.LINKED_SET",
    "passage": "Questions 59–60",
    "difficulty": "Medium",
-   "explanation": "Concept: From the centre, the rim point is $10\\sqrt3$ cm sideways and 10 cm above.\nStep 1: $\\tan\\phi=\\frac{10\\sqrt3}{10}=\\sqrt3$ with the upward vertical, so $\\phi=60^\\circ=\\frac\\pi3$.\nAnswer: (a) $\\pi/3$",
+   "explanation": "Concept: From the centre, the rim point is $10\\sqrt3$ cm sideways and 10 cm above.\nStep 1: $\\tan\\phi=\\frac{10\\sqrt3}{10}=\\sqrt3$ with the upward vertical, so $\\phi=60^\\circ=\\frac\\pi3$.\nAnswer: (a) $\\pi/3$\n\nNote: This question has been lightly edited from the printed paper for clarity and a single defensible answer.",
    "tags": [
     "format:linked_set",
     "key:dp_solved",
     "provenance:adapted_pyq",
-    "display:practice_not_pyq"
+    "display:inline_in_paper",
+    "display:edit_note_in_explanation"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now says 'upward' vertical line. Founder to confirm before load."
   },
@@ -2395,12 +2399,13 @@
    "pattern_id": "PATTERN.LINKED_SET",
    "passage": "Questions 86–90",
    "difficulty": "Medium",
-   "explanation": "Concept: $X$ takes separate (discrete) values 3, 5, 6, 7, so each value gets its own bar.\nStep 1: Histograms are for continuous class intervals; a pie chart suits parts of a whole.\nStep 2: A bar diagram is the most appropriate.\nAnswer: (a) Bar diagram",
+   "explanation": "Concept: $X$ takes separate (discrete) values 3, 5, 6, 7, so each value gets its own bar.\nStep 1: Histograms are for continuous class intervals; a pie chart suits parts of a whole.\nStep 2: A bar diagram is the most appropriate.\nAnswer: (a) Bar diagram\n\nNote: This question has been lightly edited from the printed paper for clarity and a single defensible answer.",
    "tags": [
     "format:linked_set",
     "key:dp_solved",
     "provenance:adapted_pyq",
-    "display:practice_not_pyq"
+    "display:inline_in_paper",
+    "display:edit_note_in_explanation"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now says X is a discrete variable. Founder to confirm before load."
   },
@@ -2475,12 +2480,13 @@
    "pattern_id": "PATTERN.LINKED_SET",
    "passage": "Questions 91–92",
    "difficulty": "Easy",
-   "explanation": "Concept: Students scoring more than 50 $=$ total $-$ (below 50).\nStep 1: Total $=350$ (all below 80). Below 50 $=125$.\nStep 2: $350-125=225$.\nAnswer: (d) 225",
+   "explanation": "Concept: Students scoring more than 50 $=$ total $-$ (below 50).\nStep 1: Total $=350$ (all below 80). Below 50 $=125$.\nStep 2: $350-125=225$.\nAnswer: (d) 225\n\nNote: This question has been lightly edited from the printed paper for clarity and a single defensible answer.",
    "tags": [
     "format:linked_set",
     "key:dp_solved",
     "provenance:adapted_pyq",
-    "display:practice_not_pyq"
+    "display:inline_in_paper",
+    "display:edit_note_in_explanation"
    ],
    "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now fixes the total at 350 students. Founder to confirm before load."
   },
