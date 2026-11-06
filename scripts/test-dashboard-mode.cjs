@@ -31,7 +31,9 @@ test("dashboard renders learner intelligence for authenticated users", async () 
   });
   const DashboardPage = load("frontend/src/app/dashboard/page.tsx").default;
   const tree = await DashboardPage();
-  const learner = tree.props.children.props.children;
+  // The overview reads ?paper= (GS / Maths / English), so the page wraps it in <Suspense>.
+  const boundary = tree.props.children.props.children;
+  const learner = boundary.props.fallback !== undefined ? boundary.props.children : boundary;
   assert.equal(learner.type, "learner-dashboard");
   assert.equal(learner.props.firstName, "Test");
   assert.deepEqual(Array.from(learner.props.targetExams), ["CDS"]);
