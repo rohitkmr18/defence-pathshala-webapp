@@ -74,6 +74,8 @@
             {
               "topic": "Simple and Compound Interest",
               "subtopics": [
+                "Simple Interest",
+                "Compound Interest",
                 "Instalments",
                 "Difference of CI and SI"
               ]
