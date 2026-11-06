@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { liveDbPaperValues } from "@/lib/exam-registry";
+import { liveDbPaperValues, paperTabDbValues } from "@/lib/exam-registry";
 
 const supabaseUrl =
   process.env.NEXT_PUBLIC_SUPABASE_URL ||
@@ -8,7 +8,7 @@ const supabaseUrl =
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   // Read canonical content directly so an older backend cannot bypass holds or omit versions.
   try {
     const key = serviceRoleKey || anonKey;
@@ -23,7 +23,7 @@ export async function GET() {
     const query = supabase
       .from("v_dp_question_intelligence_v2")
       .select("exam,year,cycle,subject,topic,subtopic")
-      .eq("content_eligible", true).in("paper", liveDbPaperValues())
+      .eq("content_eligible", true).in("paper", paperTabDbValues(request.nextUrl.searchParams.get("paper")))
       ;
 
     const pageSize = 1000;

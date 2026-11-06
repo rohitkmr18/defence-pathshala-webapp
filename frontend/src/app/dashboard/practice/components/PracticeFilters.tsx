@@ -10,7 +10,7 @@ import {
   Compass,
 } from "lucide-react";
 import { getExamLabel } from "@/lib/exams";
-import { parseFiltersFromSearchParams } from "@/lib/question-filters";
+import { parseFiltersFromSearchParams, activePaperParam } from "@/lib/question-filters";
 import type { ActiveFilters } from "./PracticePageClient";
 import { useSearchParams } from "next/navigation";
 
@@ -117,7 +117,7 @@ export default function PracticeFilters({
       setError(null);
 
       try {
-        const response = await fetch("/api/practice/filters", { cache: "no-store" });
+        const response = await fetch(`/api/practice/filters${activePaperParam() ? `?paper=${activePaperParam()}` : ""}`, { cache: "no-store" });
         if (!response.ok) {
           throw new Error("Failed to load practice filters");
         }

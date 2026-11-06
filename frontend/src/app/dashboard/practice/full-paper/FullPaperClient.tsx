@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
+import { activePaperParam } from "@/lib/question-filters";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, CheckCircle2, Loader2, LogIn, RefreshCw, ShieldCheck, Sparkles } from "lucide-react";
@@ -124,6 +125,8 @@ export default function FullPaperClient({
           params.set("cycle", paper.cycle);
         }
         params.set("limit", saved ? String(saved.question_ids.length) : "150");
+        const paperTab = activePaperParam();
+        if (paperTab && !saved) params.set("paper", paperTab);
         if (saved) params.set("ids", saved.question_ids.join(","));
 
         const res = await fetch(`/api/practice/questions?${params.toString()}`, {

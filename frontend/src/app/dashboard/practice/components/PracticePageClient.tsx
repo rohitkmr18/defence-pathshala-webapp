@@ -27,6 +27,7 @@ import {
   buildPracticeUrl,
   parseFiltersFromSearchParams,
   serializeFiltersToSearchParams,
+  activePaperParam,
 } from "@/lib/question-filters";
 
 // ─── Active filter shape ───────────────────────────────────────────────────────
@@ -83,6 +84,7 @@ export default function PracticePageClient() {
   const returnTo = searchParams.get("returnTo");
 
   const practiceMode = searchParams.get("mode") === "full_paper" ? "full-paper" : "targeted";
+  const isPaperTab = searchParams.get("paper") === "maths" || searchParams.get("paper") === "english";
   const sessionStyle = searchParams.get("mode") === "attempt" ? "attempt" : "instant";
 
   function preserveIntent(filters: ActiveFilters, style: "instant" | "attempt" = sessionStyle, workflow: "targeted" | "full-paper" = practiceMode) {
@@ -150,6 +152,7 @@ export default function PracticePageClient() {
           topics: activeFilters.topics,
           subtopics: activeFilters.subtopics,
           difficulties: [],
+          paper: activePaperParam() ?? undefined,
         });
 
         const res = await fetch(
@@ -469,7 +472,13 @@ export default function PracticePageClient() {
       {/* ═══════════════════════════════════════════════════════════════════════
           MODE 2: FULL PAPER SIMULATION (DECOUPLED FLOW)
           ═══════════════════════════════════════════════════════════════════════ */}
-      {practiceMode === "full-paper" && (
+      {practiceMode === "full-paper" && isPaperTab && (
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 text-sm text-slate-600">
+          <p className="font-bold text-slate-900">Timed full-paper mock for this paper is coming soon.</p>
+          <p className="mt-1">Use Targeted Practice to attempt these questions now.</p>
+        </div>
+      )}
+      {practiceMode === "full-paper" && !isPaperTab && (
         <div className="space-y-6">
           <FullPaperHero
             onStart={handleStartFullPaper}

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import PaperTabs from "./PaperTabs";
 
 type ExamModeSwitcherProps = { compact?: boolean };
 
@@ -21,6 +22,7 @@ export default function ExamModeSwitcher({ compact = false }: ExamModeSwitcherPr
           AFCAT
         </Link>
       </div>
+      {!isAfcat && <PaperTabs />}
     </nav>
   );
 }

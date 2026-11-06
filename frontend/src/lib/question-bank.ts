@@ -1,7 +1,7 @@
 import { backendGET } from "@/lib/backend";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { getExamLabel, getExamDbValue } from "@/lib/exams";
-import { liveDbPaperValues } from "@/lib/exam-registry";
+import { paperTabDbValues } from "@/lib/exam-registry";
 
 export { getExamLabel, getExamDbValue };
 
@@ -72,7 +72,7 @@ export async function getQuestionBankMeta(): Promise<QuestionBankMeta> {
     const supabase = createSupabaseClient(supabaseUrl, key);
     const query = supabase
       .from("v_dp_question_intelligence_v2")
-      .select("exam,year,cycle").eq("content_eligible", true).in("paper", liveDbPaperValues());
+      .select("exam,year,cycle").eq("content_eligible", true).in("paper", paperTabDbValues(null));
 
     const pageSize = 1000;
     const rows: any[] = [];

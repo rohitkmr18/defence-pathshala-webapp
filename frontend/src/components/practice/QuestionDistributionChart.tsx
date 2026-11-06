@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
+import { activePaperParam } from "@/lib/question-filters";
 import {
   BarChart,
   Bar,
@@ -124,6 +125,8 @@ export default function QuestionDistributionChart({
         if (activeFilters.topics.length)
           params.set("topic", activeFilters.topics.join(","));
 
+        const paperTab = activePaperParam();
+        if (paperTab) params.set("paper", paperTab);
         const res = await fetch(
           `/api/practice/distribution?${params.toString()}`,
           {
