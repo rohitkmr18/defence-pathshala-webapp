@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Clock, Target, Award } from "lucide-react";
 import PaperSelector from "./PaperSelector";
 
@@ -265,6 +266,39 @@ export const AVAILABLE_FULL_PAPERS: FullPaperDefinition[] = [
     marks: 250,
   },
   {
+    id: "cds-2020-2",
+    exam: "CDS",
+    year: 2020,
+    cycle: "II",
+    label: "CDS II 2020",
+    questions: 120,
+    duration: "2 Hours",
+    durationSeconds: 7200,
+    marks: 100,
+  },
+  {
+    id: "cds-2020-1",
+    exam: "CDS",
+    year: 2020,
+    cycle: "I",
+    label: "CDS I 2020",
+    questions: 120,
+    duration: "2 Hours",
+    durationSeconds: 7200,
+    marks: 100,
+  },
+  {
+    id: "capf-2020",
+    exam: "CAPF-AC",
+    year: 2020,
+    cycle: "I",
+    label: "CAPF 2020",
+    questions: 125,
+    duration: "2 Hours",
+    durationSeconds: 7200,
+    marks: 250,
+  },
+  {
     id: "cds-2021-2",
     exam: "CDS",
     year: 2021,
@@ -413,6 +447,21 @@ export default function FullPaperHero({
         <div className="mt-4 rounded-xl border border-amber-300/20 bg-amber-300/10 px-4 py-3 text-xs leading-5 text-amber-100">
           <span className="font-bold">Verified mock subset:</span> {selectedPaper.availabilityNote}
           {" "}Held items are not scored or shown.
+        </div>
+      )}
+
+      {!paperTab && (
+        <div className="mt-5 rounded-xl border border-sky-400/30 bg-sky-500/10 p-4">
+          <p className="text-sm font-bold text-white">Preparing for AFCAT?</p>
+          <p className="mt-1 text-xs leading-5 text-gray-300">
+            AFCAT Full Mock 01 uses its own 100-question, 120-minute exam player with +3/−1 scoring and detailed analysis.
+          </p>
+          <Link
+            href="/afcat"
+            className="mt-3 inline-flex min-h-10 items-center rounded-lg border border-sky-300/40 px-3 py-2 text-sm font-bold text-sky-200 transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-200"
+          >
+            Open AFCAT Full Mock 01 →
+          </Link>
         </div>
       )}
 
