@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { backendGET } from "@/lib/backend";
 import { createClient } from "@supabase/supabase-js";
 import { expandExamQuery } from "@/lib/exams";
+import { liveDbPaperValues } from "@/lib/exam-registry";
 
 const supabaseUrl =
   process.env.NEXT_PUBLIC_SUPABASE_URL ||
@@ -56,7 +57,7 @@ export async function GET(request: NextRequest) {
 
     let query = supabase
       .from("v_dp_question_intelligence_v2")
-      .select("exam,year,cycle,subject,topic,q_type,q_pattern,difficulty_category").eq("content_eligible", true);
+      .select("exam,year,cycle,subject,topic,q_type,q_pattern,difficulty_category").eq("content_eligible", true).in("paper", liveDbPaperValues());
     if (examParam) {
       const expanded = expandExamQuery(examParam);
       if (expanded.length > 0) {

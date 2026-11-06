@@ -93,11 +93,11 @@ test('new atomic RPC preserves source bytes and every section, rejects invalid c
   try {
     const schema = fs.readFileSync('scripts/test-current-affairs-db-rollback.cjs', 'utf8').match(/const schema = `([\s\S]*?)`;/)[1];
     await db.exec(schema);
-    await db.exec(`create table public.questions(id uuid primary key, question_id text unique, is_active boolean, content_eligible boolean);
+    await db.exec(`create table public.questions(id uuid primary key, question_id text unique, is_active boolean, content_eligible boolean, paper text);
       create view public.v_dp_question_intelligence_v2 as select * from public.questions where is_active;
       grant select,update on public.questions to service_role;
       grant select on public.v_dp_question_intelligence_v2 to service_role;
-      insert into public.questions values ('11111111-1111-4111-a111-111111111111','CDS_II_2026_GK_011',true,true);
+      insert into public.questions values ('11111111-1111-4111-a111-111111111111','CDS_II_2026_GK_011',true,true,'General Knowledge');
       insert into public.current_affairs_posts(date,title,published) values ('2026-10-07','Untouched legacy edition',true);`);
     const before = (await db.query("select * from current_affairs_posts where date='2026-10-07'")).rows[0];
     await db.exec(fs.readFileSync('supabase/migrations/20261008060157_atomic_current_affairs_publish.sql', 'utf8'));

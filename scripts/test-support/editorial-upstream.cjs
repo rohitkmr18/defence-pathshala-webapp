@@ -5,7 +5,7 @@ const p = edition();
 const userId = '22222222-2222-4222-a222-222222222222';
 const question = { id: '11111111-1111-4111-a111-111111111111', question_id: 'CDS_II_2026_GK_011',
   question: 'Synthetic exact linked question: which option is two?', exam: 'CDS', year: 2026, cycle: 'II',
-  q_num: 11, subject: 'Economy', topic: 'Synthetic', opt_a: 'One', opt_b: 'Two', opt_c: 'Three', opt_d: 'Four',
+  q_num: 11, paper: 'General Knowledge', subject: 'Economy', topic: 'Synthetic', opt_a: 'One', opt_b: 'Two', opt_c: 'Three', opt_d: 'Four',
   final_opt: 'B', official_opt: 'B', llm_opt: 'B', explanation: 'Synthetic answer explanation: two is B.',
   content_version: 1, content_status: 'VERIFIED', content_eligible: true };
 const sessions = new Map(); const attempts = new Map();
@@ -54,7 +54,7 @@ http.createServer(async (req, res) => {
   for (const [key, condition] of url.searchParams) {
     if (['select', 'order', 'limit', 'on_conflict'].includes(key)) continue;
     if (condition.startsWith('eq.')) rows = rows.filter(row => String(row[key]) === condition.slice(3));
-    if (condition.startsWith('in.')) rows = rows.filter(row => condition.slice(4, -1).split(',').includes(String(row[key])));
+    if (condition.startsWith('in.')) rows = rows.filter(row => condition.slice(4, -1).split(',').map(v => v.replace(/^"|"$/g, '')).includes(String(row[key])));
     if (condition.startsWith('lt.')) rows = rows.filter(row => String(row[key]) < condition.slice(3));
     if (condition.startsWith('gt.')) rows = rows.filter(row => String(row[key]) > condition.slice(3));
   }
