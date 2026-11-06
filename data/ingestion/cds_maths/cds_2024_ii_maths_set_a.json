@@ -10,7 +10,7 @@
   "source_file": "QP-CDSE-II-24-ELEMENTARY-MATHEMATICS-020924.pdf",
   "source_question_sha256": "deb6567c34396beb077eb097646035dcfe659f8f596391f996ab79a1f2b66e59",
   "source_version": "scan-transcription-v1",
-  "notes": "English side only; set A. Keys are DP_SOLVED_INTERNAL (model-solved, numerically cross-checked), NOT an official UPSC key; founder approval pending. Ambiguous or assumption-based keys (recommend review): Q34 (n=20 vs 25), Q35 (acute angle assumed), Q44 (right wheel inner), Q61 (positive for all x), Q83 (triangle vs rectangle). Q90 answer is 118 (option d). Data-sufficiency items use two different option sets (Q65 and Q64 offer 'can be answered even without using any of the Statements'); the per-item option text is stored.",
+  "notes": "English side only; set A. Keys are DP_SOLVED_INTERNAL (model-solved, numerically cross-checked), NOT an official UPSC key; founder approval pending. Questions Q34, Q35, Q44, Q61, Q83 were minimally clarified from the printed wording (tag provenance:adapted_pyq); they must NOT be shown as authentic PYQs. Q90 answer is 118 (option d). Data-sufficiency items use two different option sets (Q64 and Q65 offer 'can be answered even without using any of the Statements'); the per-item option text is stored.",
   "key_policy": "FOUNDER_APPROVED_SOLVED",
   "key_policy_status": "PENDING_FOUNDER_APPROVAL",
   "status": "REVIEW_FILE_ONLY_NOT_LOADED"
@@ -899,7 +899,7 @@
    "question_id": "CDS_II_2024_MATHS_034",
    "q_num": 34,
    "source_page": 13,
-   "question": "In a class containing 200 students, $n$ students prefer both tea and coffee; $2n$ students prefer coffee; $3n$ students prefer tea; $4n$ students prefer neither tea nor coffee. What is the value of $n$?",
+   "question": "In a class containing 200 students, $n$ students prefer both tea and coffee; $2n$ students prefer only coffee; $3n$ students prefer only tea; $4n$ students prefer neither tea nor coffee. What is the value of $n$?",
    "opt_a": "20",
    "opt_b": "25",
    "opt_c": "30",
@@ -917,15 +917,16 @@
    "explanation": "Concept: Group the class into four separate parts that add up to 200.\nStep 1: Read the four groups as separate parts: both $=n$, coffee only $=2n$, tea only $=3n$, neither $=4n$.\nStep 2: $n+2n+3n+4n=10n=200$, so $n=20$.\nStep 3: (If instead $2n$ and $3n$ were the totals for coffee and tea, the union would be $4n$, giving $8n=200$ and $n=25$.)\nAnswer: (a) 20",
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:dp_solved",
+    "provenance:adapted_pyq"
    ],
-   "review_flag": "AMBIGUOUS: if '2n prefer coffee' and '3n prefer tea' are totals (including those who prefer both), n=25 (option b); if they are separate groups, n=20 (option a). Key given as A; recommend review or exclude."
+   "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now says 'only coffee' and 'only tea' so n = 20 is the single reading. Founder to confirm before load."
   },
   {
    "question_id": "CDS_II_2024_MATHS_035",
    "q_num": 35,
    "source_page": 13,
-   "question": "Let $ABC$ be a triangle with area 36 square cm. If $AB=9$ cm, $BC=12$ cm and $\\angle ABC=\\theta$, then what is $\\cos\\theta$ equal to?",
+   "question": "Let $ABC$ be a triangle with area 36 square cm. If $AB=9$ cm, $BC=12$ cm and $\\angle ABC=\\theta$ (an acute angle), then what is $\\cos\\theta$ equal to?",
    "opt_a": "$\\frac{\\sqrt5}{3}$",
    "opt_b": "$\\frac{\\sqrt5}{4}$",
    "opt_c": "$\\frac13$",
@@ -943,9 +944,10 @@
    "explanation": "Concept: Area $=\\frac12\\,ab\\sin\\theta$.\nStep 1: $36=\\frac12\\times9\\times12\\times\\sin\\theta=54\\sin\\theta$, so $\\sin\\theta=\\frac23$.\nStep 2: $\\cos\\theta=\\sqrt{1-\\frac49}=\\frac{\\sqrt5}3$ (taking $\\theta$ acute).\nAnswer: (a) $\\frac{\\sqrt5}{3}$",
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:dp_solved",
+    "provenance:adapted_pyq"
    ],
-   "review_flag": "MINOR_ASSUMPTION: an obtuse angle theta would give cos = -sqrt5/3; the only matching option is the acute value."
+   "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now states that θ is acute. Founder to confirm before load."
   },
   {
    "question_id": "CDS_II_2024_MATHS_036",
@@ -1159,7 +1161,7 @@
    "question_id": "CDS_II_2024_MATHS_044",
    "q_num": 44,
    "source_page": 15,
-   "question": "A trolley with two wheels one metre apart is moved clockwise on the circular track around a ground with radius 50 m (described by right wheel). If the size of each wheel is of 1 foot radius and the right wheel turns 1000 times, how many times will the other wheel turn?",
+   "question": "A trolley with two wheels one metre apart is moved clockwise on the circular track around a ground with radius 50 m (described by the right wheel, which is on the inner side of the track). If the size of each wheel is of 1 foot radius and the right wheel turns 1000 times, how many times will the other wheel turn?",
    "opt_a": "1010",
    "opt_b": "1015",
    "opt_c": "1020",
@@ -1177,9 +1179,10 @@
    "explanation": "Concept: On a circular track the outer wheel travels farther in proportion to its path radius. Equal wheels turn in proportion to distance.\nStep 1: Going clockwise the right wheel is on the inner side, radius 50 m. The left wheel is 1 m outside: radius 51 m.\nStep 2: Turns of left wheel $=1000\\times\\frac{51}{50}=1020$.\nAnswer: (c) 1020",
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:dp_solved",
+    "provenance:adapted_pyq"
    ],
-   "review_flag": "ASSUMPTION: moving clockwise, the right wheel is the inner wheel (radius 50 m) and the left wheel is the outer wheel (51 m). Without this the answer would be 980 (not an option)."
+   "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now states that the right wheel is on the inner side. Founder to confirm before load."
   },
   {
    "question_id": "CDS_II_2024_MATHS_045",
@@ -1601,7 +1604,7 @@
    "question_id": "CDS_II_2024_MATHS_061",
    "q_num": 61,
    "source_page": 21,
-   "question": "Question: What is the integral value of $k$ for which the expression $4x^{2}-kx+1$ is positive?\n\nStatement I: $k<-2$\nStatement II: $k>-4$",
+   "question": "Question: What is the integral value of $k$ for which the expression $4x^{2}-kx+1$ is positive for all real values of $x$?\n\nStatement I: $k<-2$\nStatement II: $k>-4$",
    "opt_a": "The Question can be answered by using one of the Statements alone, but cannot be answered using the other Statement alone",
    "opt_b": "The Question can be answered by using either Statement alone",
    "opt_c": "The Question can be answered by using both the Statements together, but cannot be answered using either Statement alone",
@@ -1619,9 +1622,10 @@
    "explanation": "Concept: $4x^2-kx+1>0$ for all $x$ needs discriminant $k^2-16<0$, i.e. $-4<k<4$.\nStep 1: I ($k<-2$) with $-4<k<4$ gives $-4<k<-2$, so the only integer is $k=-3$. Enough.\nStep 2: II ($k>-4$) leaves $-4<k<4$: integers $-3,\\ldots,3$. Not enough.\nAnswer: (a) The Question can be answered by using one of the Statements alone, but cannot be answered using the other Statement alone",
    "tags": [
     "format:data_sufficiency",
-    "key:dp_solved"
+    "key:dp_solved",
+    "provenance:adapted_pyq"
    ],
-   "review_flag": "ASSUMPTION: 'positive' is read as positive for every real x (the usual meaning of this question type)."
+   "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now says positive for all real x. Founder to confirm before load."
   },
   {
    "question_id": "CDS_II_2024_MATHS_062",
@@ -2176,7 +2180,7 @@
    "question_id": "CDS_II_2024_MATHS_083",
    "q_num": 83,
    "source_page": 35,
-   "question": "In a rectangle $ABCD$, $AC$ is one of the diagonals. If $AC+AB=3AD$ and $AC-AD=4$ units, then what is the area of the triangle?",
+   "question": "In a rectangle $ABCD$, $AC$ is one of the diagonals. If $AC+AB=3AD$ and $AC-AD=4$ units, then what is the area of the triangle ABC?",
    "opt_a": "24 square unit",
    "opt_b": "36 square unit",
    "opt_c": "48 square unit",
@@ -2194,9 +2198,10 @@
    "explanation": "Concept: Let $AD=a$, $AB=b$, $AC=c$.\nStep 1: $c=a+4$ and $b=3a-c=2a-4$.\nStep 2: $a^2+(2a-4)^2=(a+4)^2$ gives $4a^2-24a=0$, so $a=6$, $b=8$, $c=10$.\nStep 3: Area of triangle ABC (half the rectangle) $=\\frac12\\times6\\times8=24$ sq unit.\nAnswer: (a) 24 square unit",
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:dp_solved",
+    "provenance:adapted_pyq"
    ],
-   "review_flag": "MINOR_INTERPRETATION: 'the triangle' is read as triangle ABC or ACD (24 sq unit). The rectangle area is 48."
+   "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now says the area of triangle ABC. Founder to confirm before load."
   },
   {
    "question_id": "CDS_II_2024_MATHS_084",

@@ -10,7 +10,7 @@
   "source_file": "QP_CDSI2024_ELEMENTARY-MATHEMATICS_22042024.pdf",
   "source_question_sha256": "78fe1a8a7f36d5ff80780897e8fee3cb3adda52db9ac80a8aeb5c4cb196400ae",
   "source_version": "scan-transcription-v1",
-  "notes": "English side only; set A. Keys are DP_SOLVED_INTERNAL (model-solved, numerically cross-checked), NOT an official UPSC key; founder approval pending. No valid option as printed (key left blank; recommend exclude): Q22, Q57, Q95. Ambiguous or interpretive keys (recommend review): Q7, Q24, Q66, Q87. Nearest-option key: Q92. Figure-dependent items Q76-Q100 carry written figure descriptions and need redrawn figures before learner use.",
+  "notes": "English side only; set A. Keys are DP_SOLVED_INTERNAL (model-solved, numerically cross-checked), NOT an official UPSC key; founder approval pending. Questions Q7, Q22, Q24, Q57, Q66, Q87, Q92, Q95 were minimally adapted from the printed paper to remove errors or ambiguity (tag provenance:adapted_pyq); they must NOT be shown as authentic PYQs. Figure-dependent items Q76-Q100 carry written figure descriptions and need redrawn figures before learner use.",
   "key_policy": "FOUNDER_APPROVED_SOLVED",
   "key_policy_status": "PENDING_FOUNDER_APPROVAL",
   "status": "REVIEW_FILE_ONLY_NOT_LOADED"
@@ -226,7 +226,7 @@
    "question_id": "CDS_I_2024_MATHS_007",
    "q_num": 7,
    "source_page": 3,
-   "question": "If the sum and product of the roots of a quadratic equation are 2 and $-100$ respectively, then which one of the following is correct?",
+   "question": "If the sum and product of the roots of a monic quadratic equation are 2 and $-100$ respectively, then which one of the following is correct?",
    "opt_a": "There are infinitely many such equations having different roots.",
    "opt_b": "There is only one such equation which is $x^{2}+2x-100=0$.",
    "opt_c": "There is only one such equation which is $x^{2}-2x-100=0$.",
@@ -244,9 +244,10 @@
    "explanation": "Concept: A monic quadratic with sum of roots $S$ and product $P$ is $x^2-Sx+P=0$.\nStep 1: $S=2$, $P=-100$.\nStep 2: The equation is $x^2-2x-100=0$ (its roots are real since the discriminant $4+400>0$).\nStep 3: The sum is $2$, not $-2$, so option (b) is wrong. Roots are fixed by $S$ and $P$, so (a) is wrong.\nAnswer: (c) There is only one such equation which is $x^2-2x-100=0$",
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:dp_solved",
+    "provenance:adapted_pyq"
    ],
-   "review_flag": "MINOR_INTERPRETATION: any non-zero multiple k(x²−2x−100)=0 has the same roots; the key follows the monic-equation reading used by the options."
+   "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now says 'monic' quadratic so exactly one equation fits. Founder to confirm before load."
   },
   {
    "question_id": "CDS_I_2024_MATHS_008",
@@ -618,11 +619,11 @@
    "q_num": 22,
    "source_page": 9,
    "question": "A plank of wood 4.25 m long and 3.4 m wide is to be cut into square pieces of equal size. How many square pieces of largest size can be cut from the plank, if no wastage is allowed?",
-   "opt_a": "45",
-   "opt_b": "90",
-   "opt_c": "400",
-   "opt_d": "500",
-   "final_opt": null,
+   "opt_a": "20",
+   "opt_b": "45",
+   "opt_c": "90",
+   "opt_d": "400",
+   "final_opt": "A",
    "key_authority": "MODEL_ONLY",
    "subject": "Arithmetic",
    "topic": "HCF and LCM",
@@ -632,12 +633,13 @@
    "pattern_id": "PATTERN.DIRECT",
    "passage": null,
    "difficulty": "Medium",
-   "explanation": "Concept: Largest square side $=$ HCF of the two lengths (in the same unit).\nStep 1: $4.25\\text{ m}=425\\text{ cm}$, $3.4\\text{ m}=340\\text{ cm}$. HCF$(425,340)=85$ cm.\nStep 2: Pieces $=\\frac{425}{85}\\times\\frac{340}{85}=5\\times4=20$.\nStep 3: 20 is not among the printed options (45, 90, 400, 500).\nAnswer: None of the printed options is correct; the value is 20 pieces",
+   "explanation": "Concept: Largest square side $=$ HCF of the two lengths (in the same unit).\nStep 1: $4.25\\text{ m}=425\\text{ cm}$, $3.4\\text{ m}=340\\text{ cm}$. HCF$(425,340)=85$ cm.\nStep 2: Pieces $=\\frac{425}{85}\\times\\frac{340}{85}=5\\times4=20$.\nAnswer: (a) 20",
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:dp_solved",
+    "provenance:adapted_pyq"
    ],
-   "review_flag": "NO_VALID_OPTION: the correct value is 20 squares of side 85 cm; none of the options 45/90/400/500 matches. Recommend exclude unless the official key is traced."
+   "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): option (a) replaced with the correct value 20 (original options 45/90/400/500 had no correct answer). Founder to confirm before load."
   },
   {
    "question_id": "CDS_I_2024_MATHS_023",
@@ -669,7 +671,7 @@
    "question_id": "CDS_I_2024_MATHS_024",
    "q_num": 24,
    "source_page": 9,
-   "question": "If HCF of 768 and $x^{6}y^{2}$ is $32xy$ for natural numbers $x\\ge2$, $y\\ge2$, then what is the value of $(x+y)$?",
+   "question": "If HCF of 768 and $x^{6}y^{2}$ is $32xy$ for prime numbers $x$ and $y$, then what is the value of $(x+y)$?",
    "opt_a": "5",
    "opt_b": "7",
    "opt_c": "9",
@@ -684,12 +686,13 @@
    "pattern_id": "PATTERN.DIRECT",
    "passage": null,
    "difficulty": "Hard",
-   "explanation": "Concept: $768=2^8\\times3$. We need $\\gcd(768,\\,x^6y^2)=32xy$.\nStep 1: Try $x=2,y=3$: $x^6y^2=64\\times9=576=2^6\\times3^2$, and $\\gcd(768,576)=2^6\\times3=192=32\\times6$. It works, so $x+y=5$.\nStep 2: Try $x=3,y=2$ or $x=2,y=2$: the gcd is 12 and 256 while $32xy$ is 192 and 128, so they fail.\nStep 3: Sums 7 and 9 give no solution, so among the options 5 is the intended value.\nAnswer: (a) 5",
+   "explanation": "Concept: $768=2^8\\times3$. We need $\\gcd(768,\\,x^6y^2)=32xy$ with $x,y$ prime.\nStep 1: Try $x=2,y=3$: $x^6y^2=576=2^6\\times3^2$, and $\\gcd(768,576)=192=32\\times6$. It works, so $x+y=5$.\nStep 2: Other prime pairs fail (for example $(3,2)$ gives gcd 12 against $32xy=192$, and $(2,2)$ gives 256 against 128).\nAnswer: (a) 5",
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:dp_solved",
+    "provenance:adapted_pyq"
    ],
-   "review_flag": "AMBIGUOUS: (x,y)=(8,3) also satisfies gcd(768,x^6y^2)=32xy and gives x+y=11 (option d); (2,3) gives 5 (option a). Key given as A; recommend exclude unless the official key is traced."
+   "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now says x and y are prime numbers; only (2,3) fits, so x+y = 5. Founder to confirm before load."
   },
   {
    "question_id": "CDS_I_2024_MATHS_025",
@@ -1532,11 +1535,11 @@
    "q_num": 57,
    "source_page": 19,
    "question": "₹ 9400 is distributed among P, Q, R in such a way that if ₹ 93, ₹ 24, ₹ 55 are deducted from their respective shares, then they have money in the ratio $3:4:5$. What is the share of P?",
-   "opt_a": "₹ 2307",
+   "opt_a": "₹ 2400",
    "opt_b": "₹ 2376",
    "opt_c": "₹ 2508",
    "opt_d": "₹ 2896",
-   "final_opt": null,
+   "final_opt": "A",
    "key_authority": "MODEL_ONLY",
    "subject": "Arithmetic",
    "topic": "Ratio, Proportion and Variation",
@@ -1546,12 +1549,13 @@
    "pattern_id": "PATTERN.DIRECT",
    "passage": null,
    "difficulty": "Medium",
-   "explanation": "Concept: First remove the deductions, share in the given ratio, then add them back.\nStep 1: Total deducted $=93+24+55=172$. Money left $=9400-172=9228$.\nStep 2: One part $=\\frac{9228}{12}=769$. P has $3\\times769=2307$ left.\nStep 3: P's original share $=2307+93=2400$. The printed 2307 is the amount after deduction, not P's share, so no option equals 2400.\nAnswer: None of the printed options is correct; P's share is ₹ 2400",
+   "explanation": "Concept: First remove the deductions, share in the given ratio, then add them back.\nStep 1: Total deducted $=93+24+55=172$. Money left $=9400-172=9228$.\nStep 2: One part $=\\frac{9228}{12}=769$. P has $3\\times769=2307$ left.\nStep 3: P's original share $=2307+93=2400$.\nAnswer: (a) ₹ 2400",
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:dp_solved",
+    "provenance:adapted_pyq"
    ],
-   "review_flag": "NO_VALID_OPTION: P's share is 2400 (2307 is the amount left after the deduction). Option (a) 2307 is probably the setter's answer but is not what the question asks. Recommend exclude unless the official key is traced."
+   "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): option (a) replaced with the correct share 2400 (original option 2307 was the amount left after the deduction). Founder to confirm before load."
   },
   {
    "question_id": "CDS_I_2024_MATHS_058",
@@ -1766,12 +1770,12 @@
    "question_id": "CDS_I_2024_MATHS_066",
    "q_num": 66,
    "source_page": 21,
-   "question": "Area of a rectangle with length $x$ and breadth $y$ is P and area of a parallelogram (which is strictly not a rectangle) with adjacent sides of length $x$ and $y$ is Q. Question: Is P > Q?\n\nStatement I: $x:y=2:1$\nStatement II: The angle between the two adjacent sides of the parallelogram is $60^{\\circ}$.",
+   "question": "Area of a rectangle with length $x$ and breadth $y$ is P and area of a parallelogram (which is strictly not a rectangle) with adjacent sides of length $x$ and $y$ is Q. Question: Is Q > 0.8P?\n\nStatement I: $x:y=2:1$\nStatement II: The angle between the two adjacent sides of the parallelogram is $60^{\\circ}$.",
    "opt_a": "The Question can be answered by using one of the Statements alone, but not by the other.",
    "opt_b": "The Question can be answered by using either Statement alone.",
    "opt_c": "The Question can be answered by using both the Statements together, but cannot be answered by using either Statement alone.",
    "opt_d": "The Question cannot be answered even by using both Statements together.",
-   "final_opt": "B",
+   "final_opt": "A",
    "key_authority": "MODEL_ONLY",
    "subject": "Geometry",
    "topic": "Quadrilaterals",
@@ -1781,12 +1785,13 @@
    "pattern_id": "PATTERN.DATA_SUFFICIENCY",
    "passage": null,
    "difficulty": "Easy",
-   "explanation": "Concept: Parallelogram area $=xy\\sin\\theta<xy$ unless $\\theta=90^\\circ$.\nStep 1: A parallelogram that is strictly not a rectangle has $\\sin\\theta<1$, so $Q<P$ always.\nStep 2: The answer (Yes) is known without either statement, so either Statement alone is sufficient.\nAnswer: (b) The Question can be answered by using either Statement alone.",
+   "explanation": "Concept: Parallelogram area $=xy\\sin\\theta$, rectangle area $=xy$, so $Q=P\\sin\\theta$.\nStep 1: Q > 0.8P means $\\sin\\theta>0.8$.\nStep 2: Statement I ($x:y=2:1$) says nothing about $\\theta$. Not enough.\nStep 3: Statement II ($\\theta=60^\\circ$) gives $\\sin60^\\circ=0.866>0.8$, so the answer is Yes. Enough.\nAnswer: (a) The Question can be answered by using one of the Statements alone, but not by the other.",
    "tags": [
     "format:data_sufficiency",
-    "key:dp_solved"
+    "key:dp_solved",
+    "provenance:adapted_pyq"
    ],
-   "review_flag": "INTERPRETATION: the question is answerable without any statement (P > Q always), so (b) is chosen as 'either statement alone suffices'. Recommend review or exclude."
+   "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): question changed to 'Is Q > 0.8P?' because the original (Is P > Q?) needed neither statement. Founder to confirm before load."
   },
   {
    "question_id": "CDS_I_2024_MATHS_067",
@@ -2312,7 +2317,7 @@
    "question_id": "CDS_I_2024_MATHS_087",
    "q_num": 87,
    "source_page": 29,
-   "question": "What is the area of the non-overlapping region?",
+   "question": "What is the total area of the non-overlapping region (the parts of both rectangles lying outside the overlap)?",
    "opt_a": "$\\frac{3}{4}$ square cm",
    "opt_b": "$\\frac{11}{4}$ square cm",
    "opt_c": "$\\frac{3}{2}$ square cm",
@@ -2330,9 +2335,10 @@
    "explanation": "Concept: Non-overlapping area $=$ (total of both rectangles) $-$ 2 $\\times$ overlap.\nStep 1: Each rectangle has area 2, overlap $=\\frac54$.\nStep 2: Non-overlapping parts of both rectangles $=2\\times\\left(2-\\frac54\\right)=\\frac32$ sq cm.\nAnswer: (c) $\\frac{3}{2}$ square cm",
    "tags": [
     "format:linked_set",
-    "key:dp_solved"
+    "key:dp_solved",
+    "provenance:adapted_pyq"
    ],
-   "review_flag": "INTERPRETATION: 'non-overlapping region' read as the combined non-overlapping parts of both rectangles (3/2). Reading it as one rectangle's leftover gives 3/4 (option a). Recommend founder confirmation. Also NEEDS_FIGURE."
+   "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now defines the non-overlapping region as the parts of both rectangles outside the overlap (3/2). Founder to confirm before load."
   },
   {
    "question_id": "CDS_I_2024_MATHS_088",
@@ -2443,7 +2449,7 @@
    "q_num": 92,
    "source_page": 31,
    "question": "What is the area of trapezium AEFB?",
-   "opt_a": "30 square cm",
+   "opt_a": "29.75 square cm",
    "opt_b": "25 square cm",
    "opt_c": "20 square cm",
    "opt_d": "18.75 square cm",
@@ -2457,12 +2463,13 @@
    "pattern_id": "PATTERN.LINKED_SET",
    "passage": "Questions 91–93",
    "difficulty": "Hard",
-   "explanation": "Concept: Trapezium area $=\\frac12(\\text{sum of parallel sides})\\times\\text{height}$.\nStep 1: $AB=10$, $EF=5\\sqrt2=7.07$ ($\\sqrt2=1.4$ gives 7), height $=\\frac h2=\\frac{5\\sqrt2}2\\approx3.54$ (3.5).\nStep 2: Area $=\\frac{10+7.07}2\\times3.54\\approx30.2$; with $\\sqrt2=1.4$: $\\frac{17}2\\times3.5=29.75$. Nearest option is 30.\nAnswer: (a) 30 square cm",
+   "explanation": "Concept: Trapezium area $=\\frac12(\\text{sum of parallel sides})\\times\\text{height}$.\nStep 1: With $\\sqrt2=1.4$: $EF=5\\sqrt2=7$ cm and height $=\\frac{5\\sqrt2}2=3.5$ cm. $AB=10$.\nStep 2: Area $=\\frac{10+7}2\\times3.5=29.75$ sq cm.\nAnswer: (a) 29.75 square cm",
    "tags": [
     "format:linked_set",
-    "key:dp_solved"
+    "key:dp_solved",
+    "provenance:adapted_pyq"
    ],
-   "review_flag": "APPROXIMATE_KEY: the exact area is 12.5(1+sqrt2)=30.18 (29.75 with sqrt2=1.4); option (a) 30 is the nearest. Also NEEDS_FIGURE."
+   "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): option (a) changed from 30 to 29.75, the value obtained with the given √2 = 1.4. Founder to confirm before load."
   },
   {
    "question_id": "CDS_I_2024_MATHS_093",
@@ -2521,11 +2528,11 @@
    "q_num": 95,
    "source_page": 33,
    "question": "What is the area of the shaded region?",
-   "opt_a": "$6(\\pi+\\sqrt3)$ square unit",
+   "opt_a": "$3(\\pi+\\sqrt3)$ square unit",
    "opt_b": "$3(\\pi+2\\sqrt3)$ square unit",
    "opt_c": "$1.5(3\\pi+8\\sqrt3)$ square unit",
    "opt_d": "$6(\\pi+2\\sqrt3)$ square unit",
-   "final_opt": null,
+   "final_opt": "A",
    "key_authority": "MODEL_ONLY",
    "subject": "Mensuration",
    "topic": "Area of Plane Figures",
@@ -2535,12 +2542,13 @@
    "pattern_id": "PATTERN.LINKED_SET",
    "passage": "Questions 94–95",
    "difficulty": "Hard",
-   "explanation": "Concept: Shaded $=$ (circle outside triangle) $+$ (triangle outside circle).\nStep 1: Each side of the triangle cuts a chord of length $3\\sqrt3$ (central angle $120^\\circ$). Segment $=\\frac{9}2\\left(\\frac{2\\pi}3-\\frac{\\sqrt3}2\\right)=3\\pi-\\frac{9\\sqrt3}4$. Two segments $=6\\pi-\\frac{9\\sqrt3}2$.\nStep 2: Triangle area $=\\frac{\\sqrt3}4\\times48=12\\sqrt3$. Triangle inside circle $=9\\pi-(6\\pi-\\frac{9\\sqrt3}2)=3\\pi+\\frac{9\\sqrt3}2$. So triangle outside circle $=\\frac{15\\sqrt3}2-3\\pi$.\nStep 3: Shaded $=6\\pi-\\frac{9\\sqrt3}2+\\frac{15\\sqrt3}2-3\\pi=3\\pi+3\\sqrt3=3(\\pi+\\sqrt3)\\approx14.6$. This is not among the options.\nAnswer: None of the printed options is correct; the value is $3(\\pi+\\sqrt3)$",
+   "explanation": "Concept: Shaded $=$ (circle outside triangle) $+$ (triangle outside circle).\nStep 1: Each side of the triangle cuts a chord of length $3\\sqrt3$ (central angle $120^\\circ$). Segment $=\\frac{9}2\\left(\\frac{2\\pi}3-\\frac{\\sqrt3}2\\right)=3\\pi-\\frac{9\\sqrt3}4$. Two segments $=6\\pi-\\frac{9\\sqrt3}2$.\nStep 2: Triangle area $=\\frac{\\sqrt3}4\\times48=12\\sqrt3$. Triangle inside circle $=9\\pi-(6\\pi-\\frac{9\\sqrt3}2)=3\\pi+\\frac{9\\sqrt3}2$. So triangle outside circle $=\\frac{15\\sqrt3}2-3\\pi$.\nStep 3: Shaded $=6\\pi-\\frac{9\\sqrt3}2+\\frac{15\\sqrt3}2-3\\pi=3\\pi+3\\sqrt3=3(\\pi+\\sqrt3)\\approx14.6$. \nAnswer: (a) $3(\\pi+\\sqrt3)$ square unit",
    "tags": [
     "format:linked_set",
-    "key:dp_solved"
+    "key:dp_solved",
+    "provenance:adapted_pyq"
    ],
-   "review_flag": "NO_VALID_OPTION: the computed area is 3(π+√3) (about 14.6); options are 6(π+√3), 3(π+2√3), 1.5(3π+8√3), 6(π+2√3). Recommend exclude unless the official key is traced. Also NEEDS_FIGURE."
+   "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): option (a) replaced with the correct value 3(π+√3) (original options had no correct answer). Founder to confirm before load."
   },
   {
    "question_id": "CDS_I_2024_MATHS_096",

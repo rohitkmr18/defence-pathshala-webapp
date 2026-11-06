@@ -10,7 +10,7 @@
   "source_file": "QP-CDSE-I-25-ELEMENTARY-MATHEMATICS-150425.pdf",
   "source_question_sha256": "f6d829f6421ccc8ac0b822cb240f9a5657c7449576283fc74bd98905d5c32983",
   "source_version": "scan-transcription-v1",
-  "notes": "English side only; set A. Keys are DP_SOLVED_INTERNAL (model-solved, numerically cross-checked), NOT an official UPSC key; founder approval pending. Review flags: Q6 ambiguous (13 and 14 both valid), Q7 no valid key as printed (recommend exclude), Q51 nearest-option key, Q60/Q89/Q92 assumptions. Pie charts (Q96-98) transcribed as data; figures need redrawing.",
+  "notes": "English side only; set A. Keys are DP_SOLVED_INTERNAL (model-solved), NOT official; founder approval pending. Q6, Q7, Q51, Q60, Q89, Q92 were minimally adapted from the printed paper (tag provenance:adapted_pyq); they must NOT be shown as authentic PYQs. Pie charts Q96-98 need redrawing.",
   "key_policy": "FOUNDER_APPROVED_SOLVED",
   "key_policy_status": "PENDING_FOUNDER_APPROVAL",
   "status": "REVIEW_FILE_ONLY_NOT_LOADED"
@@ -208,7 +208,7 @@
    "question_id": "CDS_I_2025_MATHS_006",
    "q_num": 6,
    "source_page": 3,
-   "question": "$N$ is the smallest 5-digit number which when divided by $2, 2^{2}, 2^{3}, 2^{4}, \\ldots, 2^{n}$ leaves a remainder 1. What is the value of $n$?",
+   "question": "$N$ is the smallest 5-digit number which when divided by $2, 2^{2}, 2^{3}, 2^{4}, \\ldots, 2^{n}$ leaves a remainder 1. What is the largest value of $n$?",
    "opt_a": "12",
    "opt_b": "13",
    "opt_c": "14",
@@ -223,23 +223,24 @@
    "pattern_id": "PATTERN.DIRECT",
    "passage": null,
    "difficulty": "Hard",
-   "explanation": "Concept: Remainder 1 on division by $2^n$ means $N-1$ is a multiple of $2^n$.\nStep 1: $N$ is a 5-digit number, so $N\\ge10000$ and $N-1\\ge9999$.\nStep 2: Multiples of $2^{14}=16384$: $16384$ is the smallest above 9999 for this power, giving $N=16385$.\nStep 3: $N-1=2^{14}$, so the largest power of 2 that works is $n=14$.\nNote: $n=13$ gives the same $N$, so the item is not fully determined; the key is the largest valid $n$.\nAnswer: (c) 14",
+   "explanation": "Concept: Remainder 1 on division by $2^n$ means $N-1$ is a multiple of $2^n$.\nStep 1: $N$ is a 5-digit number, so $N\\ge10000$ and $N-1\\ge9999$.\nStep 2: Multiples of $2^{14}=16384$: $16384$ is the smallest above 9999 for this power, giving $N=16385$.\nStep 3: $N-1=2^{14}$, so the largest $n$ for which every divisor $2,2^2,\\ldots,2^n$ leaves remainder 1 is $n=14$.\nAnswer: (c) 14",
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:dp_solved",
+    "provenance:adapted_pyq"
    ],
-   "review_flag": "AMBIGUOUS_AS_PRINTED: n=13 and n=14 both give N=16385. Key C (14) is the largest valid n. Founder to confirm or exclude."
+   "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now asks for the largest n (n = 13 and 14 both work otherwise). Founder to confirm before load."
   },
   {
    "question_id": "CDS_I_2025_MATHS_007",
    "q_num": 7,
    "source_page": 3,
-   "question": "What is the minimum value of $p$ for which $\\frac{1}{532900} + \\frac{p^{2}}{266450} + \\frac{p^{4}}{523900}$ is an integer?",
+   "question": "What is the minimum value of $p$ for which $\\frac{1}{532900} + \\frac{p^{2}}{266450} + \\frac{p^{4}}{532900}$ is an integer?",
    "opt_a": "729",
    "opt_b": "243",
    "opt_c": "27",
    "opt_d": "1",
-   "final_opt": null,
+   "final_opt": "C",
    "key_authority": "NONE",
    "subject": "Algebra",
    "topic": "Rational Expressions and Identities",
@@ -249,12 +250,13 @@
    "pattern_id": "PATTERN.DIRECT",
    "passage": null,
    "difficulty": "Hard",
-   "explanation": "Concept: The sum $\\frac{1}{532900}+\\frac{p^2}{266450}+\\frac{p^4}{523900}$ must be a whole number.\nStep 1: $532900=2^2\\cdot5^2\\cdot73^2$, $266450=2\\cdot5^2\\cdot73^2$ and $523900=2^2\\cdot5^2\\cdot13^2\\cdot31$.\nStep 2: Checking the four options (729, 243, 27, 1) and all positive integers up to 2,000,000 shows none makes the sum a whole number.\nStep 3: As printed, the question has no valid answer. It should not be released until the official key is traced.\nAnswer: No valid key (excluded from release).",
+   "explanation": "Concept: Put the fractions over a common denominator and look for a perfect square.\nStep 1: $\\frac1{532900}+\\frac{2p^2}{532900}+\\frac{p^4}{532900}=\\frac{(p^2+1)^2}{730^2}$ (since $532900=730^2$ and $266450=\\frac{532900}2$).\nStep 2: This is an integer only if $730=2\\times5\\times73$ divides $p^2+1$. Testing $p=1,\\ldots$: the first value that works is $p=27$ ($27^2+1=730$).\nStep 3: Options $1$ gives $\\frac{4}{730^2}$, not an integer; $243$ and $729$ are larger.\nAnswer: (c) 27",
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:dp_solved",
+    "provenance:adapted_pyq"
    ],
-   "review_flag": "NO_VALID_KEY: as printed (532900, 266450, 523900) no positive integer p, and none of the options, makes the sum an integer. Recommend exclude from release unless the official key is traced."
+   "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): third denominator changed from 523900 to 532900 (likely misprint); minimum p is then 27. Founder to confirm before load."
   },
   {
    "question_id": "CDS_I_2025_MATHS_008",
@@ -1382,7 +1384,7 @@
    "question_id": "CDS_I_2025_MATHS_051",
    "q_num": 51,
    "source_page": 15,
-   "question": "A frustum of a right cone has a top of diameter $2k$, bottom of diameter $2.5k$ and height $k$. What is the whole surface area of the frustum?",
+   "question": "A frustum of a right cone has a top of diameter $2k$, bottom of diameter $2.5k$ and height $k$. What is the approximate whole surface area of the frustum?",
    "opt_a": "$39\\pi k^{2}/8$",
    "opt_b": "$41\\pi k^{2}/8$",
    "opt_c": "$43\\pi k^{2}/8$",
@@ -1400,9 +1402,10 @@
    "explanation": "Concept: Whole surface $=\\pi(r_1^2+r_2^2)+\\pi(r_1+r_2)l$ with $l=\\sqrt{h^2+(r_2-r_1)^2}$.\nStep 1: $r_1=k$, $r_2=1.25k$, $h=k$, so $l=\\sqrt{k^2+0.0625k^2}=\\frac{\\sqrt{17}}4k\\approx1.031k$.\nStep 2: Surface $=\\pi k^2(1+1.5625+2.25\\times1.031)\\approx4.88\\pi k^2$.\nStep 3: $\\frac{39}8=4.875$ is the nearest option.\nNote: the exact value is not any option, so the key is the nearest.\nAnswer: (a) $39\\pi k^2/8$",
    "tags": [
     "format:linked_set",
-    "key:dp_solved"
+    "key:dp_solved",
+    "provenance:adapted_pyq"
    ],
-   "review_flag": "APPROXIMATE_KEY: exact value is about 4.882 pi k^2 (slant height is irrational); option (a) 39 pi k^2/8 = 4.875 is the nearest."
+   "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now says 'approximately' (exact value 4.882πk²; option (a) 4.875πk² is the only close one). Founder to confirm before load."
   },
   {
    "question_id": "CDS_I_2025_MATHS_052",
@@ -1616,7 +1619,7 @@
    "question_id": "CDS_I_2025_MATHS_060",
    "q_num": 60,
    "source_page": 17,
-   "question": "What is the angle made by the line joining the centre of the sphere and any point on the rim of the circular opening with a vertical line passing through the centre?",
+   "question": "What is the angle made by the line joining the centre of the sphere and any point on the rim of the circular opening with the upward vertical line passing through the centre?",
    "opt_a": "$\\pi/3$",
    "opt_b": "$\\pi/4$",
    "opt_c": "$\\pi/6$",
@@ -1634,9 +1637,10 @@
    "explanation": "Concept: From the centre, the rim point is $10\\sqrt3$ cm sideways and 10 cm above.\nStep 1: $\\tan\\phi=\\frac{10\\sqrt3}{10}=\\sqrt3$ with the upward vertical, so $\\phi=60^\\circ=\\frac\\pi3$.\nAnswer: (a) $\\pi/3$",
    "tags": [
     "format:linked_set",
-    "key:dp_solved"
+    "key:dp_solved",
+    "provenance:adapted_pyq"
    ],
-   "review_flag": "ORIENTATION_ASSUMED: angle taken with the upward vertical through the centre (pi/3)."
+   "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now says 'upward' vertical line. Founder to confirm before load."
   },
   {
    "question_id": "CDS_I_2025_MATHS_061",
@@ -2371,7 +2375,7 @@
    "question_id": "CDS_I_2025_MATHS_089",
    "q_num": 89,
    "source_page": 23,
-   "question": "What is the most appropriate graphical representation of the given frequency distribution of X?",
+   "question": "What is the most appropriate graphical representation of the given frequency distribution of the discrete variable X?",
    "opt_a": "Bar diagram",
    "opt_b": "Histogram",
    "opt_c": "Frequency polygon",
@@ -2389,9 +2393,10 @@
    "explanation": "Concept: $X$ takes separate (discrete) values 3, 5, 6, 7, so each value gets its own bar.\nStep 1: Histograms are for continuous class intervals; a pie chart suits parts of a whole.\nStep 2: A bar diagram is the most appropriate.\nAnswer: (a) Bar diagram",
    "tags": [
     "format:linked_set",
-    "key:dp_solved"
+    "key:dp_solved",
+    "provenance:adapted_pyq"
    ],
-   "review_flag": "JUDGEMENT_KEY: discrete variable, so bar diagram chosen; frequency polygon could also be argued."
+   "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now says X is a discrete variable. Founder to confirm before load."
   },
   {
    "question_id": "CDS_I_2025_MATHS_090",
@@ -2449,7 +2454,7 @@
    "question_id": "CDS_I_2025_MATHS_092",
    "q_num": 92,
    "source_page": 25,
-   "question": "What is the number of students who scored more than 50 marks?",
+   "question": "What is the number of students who scored more than 50 marks? (Take the total number of students as 350.)",
    "opt_a": "100",
    "opt_b": "125",
    "opt_c": "200",
@@ -2467,9 +2472,10 @@
    "explanation": "Concept: Students scoring more than 50 $=$ total $-$ (below 50).\nStep 1: Total $=350$ (all below 80). Below 50 $=125$.\nStep 2: $350-125=225$.\nAnswer: (d) 225",
    "tags": [
     "format:linked_set",
-    "key:dp_solved"
+    "key:dp_solved",
+    "provenance:adapted_pyq"
    ],
-   "review_flag": "ASSUMPTION: total of 350 students (all below 80 marks)."
+   "review_flag": "MODIFIED_FROM_PYQ (adapted, not verbatim): stem now fixes the total at 350 students. Founder to confirm before load."
   },
   {
    "question_id": "CDS_I_2025_MATHS_093",
