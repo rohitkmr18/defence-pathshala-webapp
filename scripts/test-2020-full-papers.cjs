@@ -33,3 +33,9 @@ for (const p of cases) {
     assert.equal(isCompletePaper(rows.slice(1)), false);
   });
 }
+
+test("Full Paper discovery links AFCAT to its dedicated player instead of treating it as a CDS/CAPF PYQ paper", () => {
+  assert.match(catalogueSource, /href="\\/afcat"/);
+  assert.match(catalogueSource, /Open AFCAT Full Mock 01/);
+  assert.doesNotMatch(catalogueSource, /exam: "AFCAT"/);
+});
