@@ -1,7 +1,6 @@
-import { backendGET } from "@/lib/backend";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { getExamLabel, getExamDbValue } from "@/lib/exams";
-import { liveDbPaperValues } from "@/lib/exam-registry";
+import { paperTabDbValues } from "@/lib/exam-registry";
 
 export { getExamLabel, getExamDbValue };
 
@@ -34,31 +33,9 @@ export interface QuestionBankPayload {
   topics: { name: string; value: number }[];
 }
 
-export async function getQuestionBankMeta(): Promise<QuestionBankMeta> {
-  // 1. Try FastAPI backend first (handles both authenticated & guest requests)
-  try {
-    const response = await backendGET("/analytics/question-bank/meta");
-    if (response.ok) {
-      const data = (await response.json()) as QuestionBankMeta;
-      if (data?.exams && data.exams.length > 0) {
-        return data;
-      }
-    } else {
-      console.warn(
-        `[QuestionBank] Backend /analytics/question-bank/meta returned HTTP ${response.status}`
-      );
-    }
-  } catch (backendErr: any) {
-    if (backendErr?.digest === "DYNAMIC_SERVER_USAGE") {
-      throw backendErr;
-    }
-    console.warn(
-      "[QuestionBank] Backend unreachable or failed, falling back to direct server-side Supabase query:",
-      backendErr instanceof Error ? backendErr.message : backendErr
-    );
-  }
-
-  // 2. Direct Supabase query fallback (server-side privileged read)
+export async function getQuestionBankMeta(paper?: string | null): Promise<QuestionBankMeta> {
+  // Direct server-side Supabase read, scoped to the active GS / Maths / English tab so that
+  // filters only offer papers that exist in the database.
   try {
     const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
     const key = serviceRoleKey || anonKey;
@@ -72,7 +49,7 @@ export async function getQuestionBankMeta(): Promise<QuestionBankMeta> {
     const supabase = createSupabaseClient(supabaseUrl, key);
     const query = supabase
       .from("v_dp_question_intelligence_v2")
-      .select("exam,year,cycle").eq("content_eligible", true).in("paper", liveDbPaperValues());
+      .select("exam,year,cycle").eq("content_eligible", true).in("paper", paperTabDbValues(paper ?? null));
 
     const pageSize = 1000;
     const rows: any[] = [];

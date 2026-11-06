@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
   ArrowRight,
   Award,
@@ -32,7 +33,12 @@ export default function LearnerDashboardOverview({
   firstName,
   targetExams,
 }: Props) {
-  const [data, setData] = useState<LearnerIntelligence | null>(null);
+  const paperParam = useSearchParams().get("paper");
+  const paperTab = paperParam === "maths" || paperParam === "english" ? paperParam : null;
+  const paperLabel = paperTab === "maths" ? "Elementary Mathematics" : paperTab === "english" ? "English" : "General Studies";
+  const [loaded, setLoaded] = useState<{ paper: string | null; data: LearnerIntelligence } | null>(null);
+  // Never show another paper's numbers while the selected tab is loading.
+  const data = loaded && loaded.paper === paperTab ? loaded.data : null;
   const [error, setError] = useState(false);
   const [activityOpen, setActivityOpen] = useState(true);
   const [showAllSessions, setShowAllSessions] = useState(false);
@@ -43,12 +49,12 @@ export default function LearnerDashboardOverview({
     const load = async () => {
       try {
         setError(false);
-        const response = await fetch("/api/learner-intelligence", {
+        const response = await fetch(`/api/learner-intelligence${paperTab ? `?paper=${paperTab}` : ""}`, {
           cache: "no-store",
         });
         if (!response.ok) throw new Error("Learner intelligence unavailable");
         const next = (await response.json()) as LearnerIntelligence;
-        if (active) setData(next);
+        if (active) setLoaded({ paper: paperTab, data: next });
       } catch {
         if (active) setError(true);
       }
@@ -64,7 +70,7 @@ export default function LearnerDashboardOverview({
       window.removeEventListener("dp_question_attempted", refresh);
       window.removeEventListener("dp_practice_session_updated", refresh);
     };
-  }, []);
+  }, [paperTab]);
 
   if (!data && !error) {
     return (
@@ -115,9 +121,7 @@ export default function LearnerDashboardOverview({
               Your preparation, your path
             </p>
             <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold text-slate-200">
-              {targetExams.length
-                ? targetExams.join(" + ")
-                : "Set your target exam"}
+              {paperTab ? `CDS · ${paperLabel}` : `${targetExams.length ? targetExams.join(" + ") : "Set your target exam"} · ${paperLabel}`}
             </span>
           </div>
 

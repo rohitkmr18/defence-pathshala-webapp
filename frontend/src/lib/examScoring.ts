@@ -27,6 +27,17 @@ export const EXAM_SCORING_PRESETS: Record<string, ExamScoringRule> = {
     penaltyFormatted: "-0.28",
     schemeLabel: "+0.83 / -0.28",
   },
+  CDS_MATHS: {
+    exam: "CDS",
+    totalQuestions: 100,
+    totalMarks: 100,
+    correctMarks: 1,
+    penaltyMarks: 1 / 3, // one-third of the marks assigned to a question
+    recoverableSwingPerQuestion: 4 / 3,
+    correctFormatted: "+1.00",
+    penaltyFormatted: "-0.33",
+    schemeLabel: "+1.00 / -0.33",
+  },
   "CAPF-AC": {
     exam: "CAPF-AC",
     totalQuestions: 125,
@@ -62,8 +73,11 @@ export const EXAM_SCORING_PRESETS: Record<string, ExamScoringRule> = {
   },
 };
 
-export function getScoringRules(examOrPaper?: string): ExamScoringRule {
+export function getScoringRules(examOrPaper?: string, paper?: string | null): ExamScoringRule {
   const norm = (examOrPaper || "").toLowerCase();
+  if (norm.includes("cds") && paper === "Elementary Mathematics") {
+    return EXAM_SCORING_PRESETS.CDS_MATHS!;
+  }
 
   if (norm.includes("cds")) {
     return EXAM_SCORING_PRESETS.CDS!;

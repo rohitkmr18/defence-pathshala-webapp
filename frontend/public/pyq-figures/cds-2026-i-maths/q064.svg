@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 251" font-family="Arial, sans-serif" font-size="13">
+<rect width="340" height="251" fill="#ffffff"/>
+<circle cx="114.3" cy="114.3" r="80.3" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+<line x1="100.4" y1="35.2" x2="306.0" y2="131.1" stroke="#0f172a" stroke-width="2"/>
+<line x1="86.9" y1="189.8" x2="306.0" y2="131.1" stroke="#0f172a" stroke-width="2"/>
+<line x1="183.9" y1="74.2" x2="175.9" y2="166.0" stroke="#1d4ed8" stroke-width="2"/>
+<line x1="100.4" y1="35.2" x2="86.9" y2="189.8" stroke="#059669" stroke-width="2"/>
+<circle cx="100.4" cy="35.2" r="2.5" fill="#0f172a"/>
+<text x="91.4" y="29.5" fill="#0f172a" text-anchor="middle" font-weight="bold">A</text>
+<circle cx="183.9" cy="74.2" r="2.5" fill="#0f172a"/>
+<text x="187.9" y="65.7" fill="#0f172a" text-anchor="middle" font-weight="bold">B</text>
+<circle cx="175.9" cy="166.0" r="2.5" fill="#0f172a"/>
+<text x="177.4" y="184.9" fill="#0f172a" text-anchor="middle" font-weight="bold">C</text>
+<circle cx="86.9" cy="189.8" r="2.5" fill="#0f172a"/>
+<text x="76.2" y="203.8" fill="#0f172a" text-anchor="middle" font-weight="bold">D</text>
+<circle cx="306.0" cy="131.1" r="2.5" fill="#0f172a"/>
+<text x="319.9" y="137.3" fill="#0f172a" text-anchor="middle" font-weight="bold">P</text>
+<text x="170.0" y="243" fill="#475569" text-anchor="middle" font-size="12">AB and DC produced meet at P</text>
+</svg>

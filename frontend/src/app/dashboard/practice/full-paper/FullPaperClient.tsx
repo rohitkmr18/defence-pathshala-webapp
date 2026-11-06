@@ -28,6 +28,7 @@ interface FullPaperClientProps {
   origin?: string;
   resumeSessionId?: string;
   analysis?: boolean;
+  initialPaperTab?: string;
 }
 
 export default function FullPaperClient({
@@ -38,11 +39,14 @@ export default function FullPaperClient({
   origin,
   resumeSessionId,
   analysis = false,
+  initialPaperTab,
 }: FullPaperClientProps) {
+  const paperTab = initialPaperTab === "maths" || initialPaperTab === "english" ? initialPaperTab : null;
+  const tabPapers = AVAILABLE_FULL_PAPERS.filter((p) => (p.paperTab ?? null) === paperTab);
   const router = useRouter();
   // Resolve initial paper based on query params or default to most recent exam (CDS II 2026)
   const initialPaper =
-    AVAILABLE_FULL_PAPERS.find((p) => {
+    tabPapers.find((p) => {
       const examMatches =
         !initialExam ||
         p.exam.toLowerCase() === initialExam.toLowerCase() ||
@@ -51,7 +55,7 @@ export default function FullPaperClient({
       const yearMatches = !initialYear || p.year === parseInt(initialYear, 10);
       const cycleMatches = !initialCycle || p.cycle === initialCycle;
       return examMatches && yearMatches && cycleMatches;
-    }) || AVAILABLE_FULL_PAPERS[0]!;
+    }) || tabPapers[0] || AVAILABLE_FULL_PAPERS[0]!;
 
   const [selectedPaper, setSelectedPaper] = useState<FullPaperDefinition>(initialPaper);
   const [questions, setQuestions] = useState<PracticeQuestion[] | null>(null);
@@ -78,6 +82,14 @@ export default function FullPaperClient({
   const submitting = useRef(false);
   const questionTopRef = useRef<HTMLDivElement | null>(null);
   const [cloudReady, setCloudReady] = useState(false);
+  // In-app browsers can block localStorage, so "cloud ready" is never observed there. An exam clock must not
+  // freeze because of that: after a short grace period the timer starts regardless of the local save state.
+  const [timerGrace, setTimerGrace] = useState(false);
+  useEffect(() => {
+    if (!sessionId) { setTimerGrace(false); return; }
+    const t = window.setTimeout(() => setTimerGrace(true), 4000);
+    return () => window.clearTimeout(t);
+  }, [sessionId]);
   useEffect(() => {
     const refresh = () => {
       const local = getLocalSession();
@@ -124,6 +136,7 @@ export default function FullPaperClient({
           params.set("cycle", paper.cycle);
         }
         params.set("limit", saved ? String(saved.question_ids.length) : "150");
+        if (paper.paperTab && !saved) params.set("paper", paper.paperTab);
         if (saved) params.set("ids", saved.question_ids.join(","));
 
         const res = await fetch(`/api/practice/questions?${params.toString()}`, {
@@ -137,7 +150,7 @@ export default function FullPaperClient({
           if (signal.aborted) return;
           const fetchedQuestions = saved ? restoreQuestionOrder(saved.question_ids, data.questions || []) : data.questions || [];
           const session = saved || await initializeSession({ title: paper.label, mode: "full_paper",
-            filters: { exams: [paper.exam], years: [paper.year], cycles: paper.cycle ? [paper.cycle] : [], returnTo, origin }, questions: fetchedQuestions });
+            filters: { exams: [paper.exam], years: [paper.year], cycles: paper.cycle ? [paper.cycle] : [], returnTo, origin, paper: paper.paperTab }, questions: fetchedQuestions });
           if (saved) {
             saveLocalSession(saved);
             setAnswers(saved.answers);
@@ -270,10 +283,10 @@ export default function FullPaperClient({
 
   // Authentication and session creation must finish before the timer starts.
   useEffect(() => {
-    if (loading || isSubmitted || submissionPending || isSubmitting || !cloudReady || isAuthenticated !== true || !sessionId || !questions?.length || timeRemaining === 0) return;
+    if (loading || isSubmitted || submissionPending || isSubmitting || !(cloudReady || timerGrace) || isAuthenticated !== true || !sessionId || !questions?.length || timeRemaining === 0) return;
     timerRef.current = setInterval(() => setTimeRemaining(prev => Math.max(0, prev - 1)), 1000);
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [loading, isSubmitted, submissionPending, isSubmitting, cloudReady, isAuthenticated, sessionId, questions, timeRemaining]);
+  }, [loading, isSubmitted, submissionPending, isSubmitting, cloudReady, timerGrace, isAuthenticated, sessionId, questions, timeRemaining]);
   useEffect(() => {
     if (timeRemaining !== 0 || isSubmitted || submissionPending) return;
     const timeout = setTimeout(() => { void handleConfirmSubmit(); }, 0);
@@ -303,7 +316,7 @@ export default function FullPaperClient({
   const handleRetake = useCallback(() => {
     if (!questions) return;
     void initializeSession({ title: selectedPaper.label, mode: "full_paper",
-      filters: { exams: [selectedPaper.exam], years: [selectedPaper.year], cycles: selectedPaper.cycle ? [selectedPaper.cycle] : [], returnTo, origin },
+      filters: { exams: [selectedPaper.exam], years: [selectedPaper.year], cycles: selectedPaper.cycle ? [selectedPaper.cycle] : [], returnTo, origin, paper: selectedPaper.paperTab },
       questions }).then(session => {
         setSessionId(session.id);
       });

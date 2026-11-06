@@ -77,7 +77,7 @@ export default function PublicFooter() {
                 </Link>
               </li>
               <li>
-                <Link href="/dashboard/practice" className="text-slate-400 hover:text-white transition">
+                <Link href="/dashboard/practice?paper=gs" className="text-slate-400 hover:text-white transition">
                   Interactive Practice Hub
                 </Link>
               </li>

@@ -5,6 +5,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { authUrl } from "@/lib/auth-redirect";
 import MobileLearningNavigation from "./MobileLearningNavigation";
 import ExamModeSwitcher from "./ExamModeSwitcher";
+import LearnerModeKeeper from "./LearnerModeKeeper";
+import { useActivePaper, withPaper } from "@/lib/learner-mode";
 import { showGlobalMobileNav } from "@/lib/learning-navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
@@ -115,6 +117,7 @@ function DashboardShellContent({
   const showMobileNav = showGlobalMobileNav(pathname);
   const searchParams = useSearchParams();
   const loginHref = authUrl("/auth/login", `${pathname}${searchParams.size ? `?${searchParams}` : ""}`);
+  const activePaper = useActivePaper();
 
   // Fetch auth state client-side
   useEffect(() => {
@@ -188,7 +191,7 @@ function DashboardShellContent({
             </button>
 
             {/* Brand */}
-            <Link href="/dashboard" className="flex items-center gap-2">
+            <Link href={withPaper("/dashboard", activePaper)} className="flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white text-xs font-black shadow-md shadow-blue-600/20">
                 DP
               </div>
@@ -218,7 +221,8 @@ function DashboardShellContent({
         {/* Page content */}
         <div className="w-full">{children}</div>
       </main>
-      <MobileLearningNavigation pathname={pathname} />
+      <MobileLearningNavigation pathname={pathname} paper={activePaper} />
+      <LearnerModeKeeper />
     </div>
   );
 }

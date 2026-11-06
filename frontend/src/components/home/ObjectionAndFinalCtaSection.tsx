@@ -130,14 +130,14 @@ export default function ObjectionAndFinalCtaSection() {
 
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
               <Link
-                href="/dashboard/practice"
+                href="/dashboard/practice?paper=gs"
                 className="inline-flex h-13 w-full items-center justify-center gap-2 rounded-2xl bg-blue-600 px-6 text-sm sm:text-base font-bold text-white shadow-xl shadow-blue-500/25 transition-all duration-200 hover:bg-blue-500 hover:shadow-blue-500/40 active:scale-95 sm:w-52"
               >
                 <span>Attempt PYQs</span>
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                href="/dashboard/question-bank"
+                href="/dashboard/question-bank?paper=gs"
                 className="inline-flex h-13 w-full items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-6 text-sm sm:text-base font-semibold text-white transition hover:bg-white/10 sm:w-52"
               >
                 <span>Explore PYQs</span>

@@ -1,3 +1,4 @@
+
 export interface SubjectAnalyticsData {
   totalQuestions: number;
   difficulty: { name: string; value: number }[];
@@ -27,6 +28,7 @@ export async function getQuestionBank(params?: {
   exams?: string[];
   years?: number[];
   cycles?: string[];
+  paper?: "maths" | "english" | null;
 }): Promise<QuestionBankPayload> {
   const search = new URLSearchParams();
 
@@ -34,6 +36,8 @@ export async function getQuestionBank(params?: {
   if (params?.years?.length) search.set("year", params.years.join(","));
   if (params?.cycles?.length) search.set("cycle", params.cycles.join(","));
 
+  const paperTab = params?.paper ?? null;
+  if (paperTab) search.set("paper", paperTab);
   const res = await fetch(
     `/api/question-bank${search.toString() ? `?${search}` : ""}`,
     {

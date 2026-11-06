@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useActivePaper, withPaper } from "@/lib/learner-mode";
 import { House, RotateCcw, Clock, CheckCircle2, XCircle, MinusCircle } from "lucide-react";
 import type { AnalysisMetrics } from "@/lib/analysis/computeAnalysisMetrics";
 
@@ -17,6 +18,8 @@ export default function MockDebriefHero({
   onRetake,
   isFiltered = false,
 }: MockDebriefHeroProps) {
+  // "Go to Home" returns to the dashboard of the paper this mock belongs to.
+  const homeLink = withPaper("/dashboard", useActivePaper());
   return (
     <div className="rounded-3xl bg-slate-950 p-6 text-white shadow-2xl sm:p-10">
       {/* Top Bar with Badge and Navigation */}
@@ -47,7 +50,7 @@ export default function MockDebriefHero({
             </button>
           )}
           <Link
-            href="/dashboard"
+            href={homeLink}
             className="flex items-center gap-1.5 rounded-xl bg-white px-4 py-2 text-xs font-semibold text-slate-900 transition hover:bg-slate-100"
           >
             <House className="h-3.5 w-3.5" />

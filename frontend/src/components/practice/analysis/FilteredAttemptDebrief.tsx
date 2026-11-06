@@ -14,6 +14,7 @@ import QuestionCard from "@/components/practice/player/QuestionCard";
 import AnswerReveal from "@/components/practice/player/AnswerReveal";
 import { getCorrectKey } from "@/lib/practice-types";
 import Link from "next/link";
+import { useActivePaper, withPaper } from "@/lib/learner-mode";
 import { Eye, House, LogIn } from "lucide-react";
 
 interface FilteredAttemptDebriefProps {
@@ -35,6 +36,8 @@ export default function FilteredAttemptDebrief({
   onRetake,
   guestSaveHref,
 }: FilteredAttemptDebriefProps) {
+  // "Go to Home" returns to the dashboard of the paper this session belongs to.
+  const homeLink = withPaper("/dashboard", useActivePaper());
   const examName = questions[0]?.exam || sessionTitle;
   const metrics = computeAnalysisMetrics(questions, answers, totalTimeSpentSeconds, examName);
   const savedRef = useRef(false);
@@ -196,7 +199,7 @@ export default function FilteredAttemptDebrief({
       <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-xs sm:p-6">
         <div className="flex flex-col gap-3 sm:flex-row">
           <Link
-            href="/dashboard"
+            href={homeLink}
             className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-800 transition hover:bg-slate-50"
           >
             <House className="h-4 w-4" />

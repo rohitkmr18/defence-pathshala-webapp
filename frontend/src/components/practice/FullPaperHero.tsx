@@ -16,9 +16,83 @@ export interface FullPaperDefinition {
   duration: string;
   durationSeconds: number;
   marks: number;
+  /** Paper tab this mock belongs to; absent = GS. */
+  paperTab?: "maths" | "english";
 }
 
 export const AVAILABLE_FULL_PAPERS: FullPaperDefinition[] = [
+  {
+    id: "cds-2026-2-maths",
+    exam: "CDS",
+    year: 2026,
+    cycle: "II",
+    label: "CDS II 2026 · Elementary Mathematics",
+    questions: 100,
+    duration: "2 Hours",
+    durationSeconds: 7200,
+    marks: 100,
+    paperTab: "maths",
+  },
+  {
+    id: "cds-2026-1-maths",
+    exam: "CDS",
+    year: 2026,
+    cycle: "I",
+    label: "CDS I 2026 · Elementary Mathematics",
+    questions: 100,
+    duration: "2 Hours",
+    durationSeconds: 7200,
+    marks: 100,
+    paperTab: "maths",
+  },
+  {
+    id: "cds-2025-2-maths",
+    exam: "CDS",
+    year: 2025,
+    cycle: "II",
+    label: "CDS II 2025 · Elementary Mathematics",
+    questions: 100,
+    duration: "2 Hours",
+    durationSeconds: 7200,
+    marks: 100,
+    paperTab: "maths",
+  },
+  {
+    id: "cds-2025-1-maths",
+    exam: "CDS",
+    year: 2025,
+    cycle: "I",
+    label: "CDS I 2025 · Elementary Mathematics",
+    questions: 100,
+    duration: "2 Hours",
+    durationSeconds: 7200,
+    marks: 100,
+    paperTab: "maths",
+  },
+  {
+    id: "cds-2024-2-maths",
+    exam: "CDS",
+    year: 2024,
+    cycle: "II",
+    label: "CDS II 2024 · Elementary Mathematics",
+    questions: 100,
+    duration: "2 Hours",
+    durationSeconds: 7200,
+    marks: 100,
+    paperTab: "maths",
+  },
+  {
+    id: "cds-2024-1-maths",
+    exam: "CDS",
+    year: 2024,
+    cycle: "I",
+    label: "CDS I 2024 · Elementary Mathematics",
+    questions: 100,
+    duration: "2 Hours",
+    durationSeconds: 7200,
+    marks: 100,
+    paperTab: "maths",
+  },
   {
     id: "cds-2026-2",
     exam: "CDS",
@@ -235,22 +309,26 @@ export interface FullPaperHeroProps {
   onStart: (paper: FullPaperDefinition) => void;
   initialExam?: string;
   initialYear?: number;
+  /** Paper tab whose mocks to list; absent = GS. */
+  paperTab?: "maths" | "english";
 }
 
 export default function FullPaperHero({
   onStart,
   initialExam,
   initialYear,
+  paperTab,
 }: FullPaperHeroProps) {
+  const papers = AVAILABLE_FULL_PAPERS.filter((p) => (p.paperTab ?? null) === (paperTab ?? null));
   // Find initial matching paper or default to CAPF AC 2025
   const initialPaper =
-    AVAILABLE_FULL_PAPERS.find(
+    papers.find(
       (p) =>
         (!initialExam ||
           p.exam.toLowerCase() === initialExam.toLowerCase() ||
           p.label.toLowerCase().includes(initialExam.toLowerCase())) &&
         (!initialYear || p.year === initialYear)
-    ) || AVAILABLE_FULL_PAPERS[0]!;
+    ) || papers[0]!;
 
   const [selectedPaper, setSelectedPaper] =
     useState<FullPaperDefinition>(initialPaper);
@@ -279,7 +357,7 @@ export default function FullPaperHero({
       {/* 3-Step Hierarchical Paper Selector (Exam -> Year -> Cycle) with Live Summary */}
       <div className="mt-7">
         <PaperSelector
-          papers={AVAILABLE_FULL_PAPERS}
+          papers={papers}
           selectedPaper={selectedPaper}
           onSelectPaper={setSelectedPaper}
           initialExam={initialExam}

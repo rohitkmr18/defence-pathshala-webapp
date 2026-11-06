@@ -43,11 +43,14 @@ export interface FilterOverride {
 interface PracticeFiltersProps {
   onFilterChange?: (filters: ActiveFilters) => void;
   filterOverride?: FilterOverride | null;
+  /** Active GS / Maths / English tab. The parent re-mounts this component when it changes. */
+  paper?: "maths" | "english" | null;
 }
 
 export default function PracticeFilters({
   onFilterChange,
   filterOverride,
+  paper = null,
 }: PracticeFiltersProps) {
   const searchParams = useSearchParams();
   const [filters, setFilters] = useState<PracticeFiltersResponse | null>(null);
@@ -64,6 +67,8 @@ export default function PracticeFilters({
 
   // Accordion for advanced secondary filters (Years / Cycles)
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  // On a paper tab (Maths/English) with several years of papers, show the Year & Cycle choice up front.
+  const [yearPanelAutoOpened, setYearPanelAutoOpened] = useState(false);
 
   const applyInitialSelection = (data: PracticeFiltersResponse) => {
     if (typeof window !== "undefined") {
@@ -117,7 +122,7 @@ export default function PracticeFilters({
       setError(null);
 
       try {
-        const response = await fetch("/api/practice/filters", { cache: "no-store" });
+        const response = await fetch(`/api/practice/filters${paper ? `?paper=${paper}` : ""}`, { cache: "no-store" });
         if (!response.ok) {
           throw new Error("Failed to load practice filters");
         }
@@ -140,7 +145,9 @@ export default function PracticeFilters({
 
     void loadFilters();
     return () => { isMounted = false; };
-  }, []);
+    // applyInitialSelection only uses stable state setters.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paper]);
 
   // Contextual taxonomy rows. These are the canonical source for dependent
   // filter availability after exam/year/cycle selections. A facet is shown
@@ -305,6 +312,13 @@ export default function PracticeFilters({
 
     return Array.from(yearsSet).sort((a, b) => b - a);
   }, [filters, selectedExams]);
+
+  useEffect(() => {
+    if (paper && !yearPanelAutoOpened && availableYears.length > 1) {
+      setShowAdvancedFilters(true);
+      setYearPanelAutoOpened(true);
+    }
+  }, [paper, availableYears, yearPanelAutoOpened]);
 
   // Available cycles for selected exams
   const cycleOptions = useMemo(() => {
@@ -532,6 +546,7 @@ export default function PracticeFilters({
       </div>
 
       {/* ── 1. EXAM SELECTOR ─────────────────────────────────────────────── */}
+      {!paper && (
       <div>
         <div className="mb-2 flex items-center justify-between">
           <label className="text-xs font-bold uppercase tracking-wider text-slate-600">
@@ -567,12 +582,13 @@ export default function PracticeFilters({
           })}
         </div>
       </div>
+      )}
 
       {/* ── 2. CANONICAL SUBJECT SELECTOR ─────────────────────────────────── */}
       <div>
         <div className="mb-2 flex items-center justify-between">
           <label className="text-xs font-bold uppercase tracking-wider text-slate-600">
-            2. Subject
+            {paper ? "1" : "2"}. Subject
             {selectedSubjects.length > 0 && (
               <span className="ml-1.5 font-normal text-slate-500">
                 ({selectedSubjects.length} selected)
@@ -617,7 +633,7 @@ export default function PracticeFilters({
             <div className="flex items-center gap-1.5">
               <BookOpen className="h-3.5 w-3.5 text-blue-600" />
               <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                3. Topic in {selectedSubjects.join(", ")}
+                {paper ? 2 : 3}. Topic in {selectedSubjects.join(", ")}
               </label>
             </div>
             <button
@@ -658,7 +674,7 @@ export default function PracticeFilters({
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 <Compass aria-hidden="true" className="h-4 w-4 shrink-0 text-blue-600" />
-                <h3 className="text-sm font-bold text-slate-900">4. Subtopics</h3>
+                <h3 className="text-sm font-bold text-slate-900">{paper ? 3 : 4}. Subtopics</h3>
                 <span className="rounded-full bg-white px-2 py-0.5 text-xs font-medium text-slate-500">
                   Optional
                 </span>
@@ -731,7 +747,7 @@ export default function PracticeFilters({
           className="flex w-full items-center justify-between p-3.5 text-left text-xs font-bold text-slate-700 hover:bg-slate-50 rounded-2xl transition"
         >
           <span className="flex items-center gap-2">
-            <span>📅 Refine by Year & Cycle</span>
+            <span>{paper ? `$4. Year & Cycle` : "📅 Refine by Year & Cycle"}</span>
             {(selectedYears.length > 0 || selectedCycles.length > 0) && (
               <span className="rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-blue-700">
                 Active: {[

@@ -82,7 +82,7 @@ export default function HeroSection() {
         {/* ── CTA Hierarchy ────────────────────────────────────────────── */}
         <div className="mx-auto mt-8 w-full max-w-2xl">
           <Link
-            href="/dashboard/practice"
+            href="/dashboard/practice?paper=gs"
             className="group flex w-full items-center justify-between rounded-2xl bg-blue-600 px-5 py-4 text-left shadow-lg shadow-blue-600/30 transition-all duration-200 hover:bg-blue-500 hover:shadow-blue-600/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 active:scale-[0.99] sm:px-6 sm:py-5"
           >
             <span className="flex min-w-0 items-center gap-3">
@@ -103,7 +103,7 @@ export default function HeroSection() {
 
           <div className="mt-3 grid grid-cols-2 gap-3">
             <Link
-              href="/dashboard/question-bank"
+              href="/dashboard/question-bank?paper=gs"
               className="group flex min-h-[112px] flex-col justify-between rounded-2xl border border-blue-400/20 bg-white/[0.045] p-4 text-left backdrop-blur-sm transition-all duration-200 hover:border-blue-400/40 hover:bg-blue-500/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 active:scale-[0.99] sm:min-h-[118px] sm:p-5"
             >
               <span className="flex items-center justify-between">
@@ -155,7 +155,6 @@ export default function HeroSection() {
                 <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500/10 ring-1 ring-inset ring-blue-400/20">
                   <ClipboardCheck className="h-4.5 w-4.5 text-blue-300" />
                 </span>
-                <span className="rounded-full bg-emerald-400/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-300">Free</span>
               </span>
               <span>
                 <span className="block text-sm font-bold text-white sm:text-base">

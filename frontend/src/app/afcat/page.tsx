@@ -51,11 +51,11 @@ export default function AfcatPage() {
       <AfcatLandingTracker />
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-6">
-          <Link href="/dashboard" className="flex items-center gap-2 text-sm font-bold">
+          <Link href="/afcat/dashboard" className="flex items-center gap-2 text-sm font-bold">
             <span className="rounded-lg bg-blue-600 px-2.5 py-2 text-white">DP</span>
             Defence Pathshala
           </Link>
-          <div className="w-48"><ExamModeSwitcher compact /></div>
+          <div className="flex items-center gap-3"><Link href="/afcat/dashboard" className="text-sm font-bold text-blue-700 hover:underline">My dashboard</Link><ExamModeSwitcher compact /></div>
         </div>
       </header>
 
