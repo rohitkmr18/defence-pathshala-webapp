@@ -82,6 +82,14 @@ export default function FullPaperClient({
   const submitting = useRef(false);
   const questionTopRef = useRef<HTMLDivElement | null>(null);
   const [cloudReady, setCloudReady] = useState(false);
+  // In-app browsers can block localStorage, so "cloud ready" is never observed there. An exam clock must not
+  // freeze because of that: after a short grace period the timer starts regardless of the local save state.
+  const [timerGrace, setTimerGrace] = useState(false);
+  useEffect(() => {
+    if (!sessionId) { setTimerGrace(false); return; }
+    const t = window.setTimeout(() => setTimerGrace(true), 4000);
+    return () => window.clearTimeout(t);
+  }, [sessionId]);
   useEffect(() => {
     const refresh = () => {
       const local = getLocalSession();
@@ -275,10 +283,10 @@ export default function FullPaperClient({
 
   // Authentication and session creation must finish before the timer starts.
   useEffect(() => {
-    if (loading || isSubmitted || submissionPending || isSubmitting || !cloudReady || isAuthenticated !== true || !sessionId || !questions?.length || timeRemaining === 0) return;
+    if (loading || isSubmitted || submissionPending || isSubmitting || !(cloudReady || timerGrace) || isAuthenticated !== true || !sessionId || !questions?.length || timeRemaining === 0) return;
     timerRef.current = setInterval(() => setTimeRemaining(prev => Math.max(0, prev - 1)), 1000);
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [loading, isSubmitted, submissionPending, isSubmitting, cloudReady, isAuthenticated, sessionId, questions, timeRemaining]);
+  }, [loading, isSubmitted, submissionPending, isSubmitting, cloudReady, timerGrace, isAuthenticated, sessionId, questions, timeRemaining]);
   useEffect(() => {
     if (timeRemaining !== 0 || isSubmitted || submissionPending) return;
     const timeout = setTimeout(() => { void handleConfirmSubmit(); }, 0);
