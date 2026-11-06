@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { latestMonthlyCapsule } from "@/lib/monthly-capsules";
 import HeroSection from "@/components/home/HeroSection";
-import HomeMoreTools from "@/components/home/HomeMoreTools";
 import ProductShowcase from "@/components/home/ProductShowcase";
 import FounderCredibility from "@/components/home/FounderCredibility";
 import ObjectionAndFinalCtaSection from "@/components/home/ObjectionAndFinalCtaSection";
@@ -33,14 +32,11 @@ export default function HomePage() {
         </div>
       </nav>
 
-      {/* ── Hero Section (Screen 1: one question, three exam choices) ────────────────────── */}
+      {/* ── Hero Section (Screen 1 - 100% Untouched) ────────────────────── */}
       <HeroSection />
-      <HomeMoreTools />
 
       {/* ── Screen 2: Product Showcase (Visual Difference & Core Value) ─── */}
-      <div id="how-it-works" className="scroll-mt-16">
-        <ProductShowcase />
-      </div>
+      <ProductShowcase />
 
       {/* ── Screen 3: Verified Founder Authority & Trust ────────────────── */}
       <FounderCredibility />
