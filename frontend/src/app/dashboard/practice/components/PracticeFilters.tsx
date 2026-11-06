@@ -10,7 +10,7 @@ import {
   Compass,
 } from "lucide-react";
 import { getExamLabel } from "@/lib/exams";
-import { parseFiltersFromSearchParams, activePaperParam } from "@/lib/question-filters";
+import { parseFiltersFromSearchParams } from "@/lib/question-filters";
 import type { ActiveFilters } from "./PracticePageClient";
 import { useSearchParams } from "next/navigation";
 
@@ -43,11 +43,14 @@ export interface FilterOverride {
 interface PracticeFiltersProps {
   onFilterChange?: (filters: ActiveFilters) => void;
   filterOverride?: FilterOverride | null;
+  /** Active GS / Maths / English tab. The parent re-mounts this component when it changes. */
+  paper?: "maths" | "english" | null;
 }
 
 export default function PracticeFilters({
   onFilterChange,
   filterOverride,
+  paper = null,
 }: PracticeFiltersProps) {
   const searchParams = useSearchParams();
   const [filters, setFilters] = useState<PracticeFiltersResponse | null>(null);
@@ -117,7 +120,7 @@ export default function PracticeFilters({
       setError(null);
 
       try {
-        const response = await fetch(`/api/practice/filters${activePaperParam() ? `?paper=${activePaperParam()}` : ""}`, { cache: "no-store" });
+        const response = await fetch(`/api/practice/filters${paper ? `?paper=${paper}` : ""}`, { cache: "no-store" });
         if (!response.ok) {
           throw new Error("Failed to load practice filters");
         }
@@ -140,7 +143,9 @@ export default function PracticeFilters({
 
     void loadFilters();
     return () => { isMounted = false; };
-  }, []);
+    // applyInitialSelection only uses stable state setters.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paper]);
 
   // Contextual taxonomy rows. These are the canonical source for dependent
   // filter availability after exam/year/cycle selections. A facet is shown
@@ -532,6 +537,7 @@ export default function PracticeFilters({
       </div>
 
       {/* ── 1. EXAM SELECTOR ─────────────────────────────────────────────── */}
+      {!paper && (
       <div>
         <div className="mb-2 flex items-center justify-between">
           <label className="text-xs font-bold uppercase tracking-wider text-slate-600">
@@ -567,12 +573,13 @@ export default function PracticeFilters({
           })}
         </div>
       </div>
+      )}
 
       {/* ── 2. CANONICAL SUBJECT SELECTOR ─────────────────────────────────── */}
       <div>
         <div className="mb-2 flex items-center justify-between">
           <label className="text-xs font-bold uppercase tracking-wider text-slate-600">
-            2. Subject
+            {paper ? "1. Subject" : "2. Subject"}
             {selectedSubjects.length > 0 && (
               <span className="ml-1.5 font-normal text-slate-500">
                 ({selectedSubjects.length} selected)

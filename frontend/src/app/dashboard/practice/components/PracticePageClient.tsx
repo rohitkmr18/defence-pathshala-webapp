@@ -27,7 +27,6 @@ import {
   buildPracticeUrl,
   parseFiltersFromSearchParams,
   serializeFiltersToSearchParams,
-  activePaperParam,
 } from "@/lib/question-filters";
 
 // ─── Active filter shape ───────────────────────────────────────────────────────
@@ -153,7 +152,7 @@ export default function PracticePageClient() {
           topics: activeFilters.topics,
           subtopics: activeFilters.subtopics,
           difficulties: [],
-          paper: activePaperParam() ?? undefined,
+          paper: paperTabParam ?? undefined,
         });
 
         const res = await fetch(
@@ -185,7 +184,7 @@ export default function PracticePageClient() {
     return () => {
       cancelled = true;
     };
-  }, [activeFilters]);
+  }, [activeFilters, paperTabParam]);
 
   // ── External filter override (from chart bar clicks) ───────────────────────
   const [filterOverride, setFilterOverride] = useState<FilterOverride | null>(null);
@@ -273,7 +272,7 @@ export default function PracticePageClient() {
 
   // Filter summary breadcrumbs
   const filterSummary = [
-    activeFilters.exams.join("/"),
+    paperTabParam ? `CDS ${paperTabParam === "maths" ? "Maths" : "English"}` : activeFilters.exams.join("/"),
     activeFilters.subjects.length > 0 ? (activeFilters.subjects.length === 1 ? activeFilters.subjects[0] : `${activeFilters.subjects.length} Subjects`) : "All Subjects",
     activeFilters.topics.length > 0 ? (activeFilters.topics.length === 1 ? activeFilters.topics[0] : `${activeFilters.topics.length} Topics`) : null,
   ].filter(Boolean).join(" › ");
@@ -347,6 +346,8 @@ export default function PracticePageClient() {
           {/* Main Progressive Filter Card */}
           <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
             <PracticeFilters
+              key={paperTabParam ?? "gs"}
+              paper={paperTabParam}
               onFilterChange={handleFilterChange}
               filterOverride={filterOverride}
             />
@@ -459,6 +460,8 @@ export default function PracticePageClient() {
             {showDistribution && (
               <div className="border-t border-slate-100 p-5 sm:p-7">
                 <QuestionDistributionChart
+                  key={paperTabParam ?? "gs"}
+                  paper={paperTabParam}
                   activeFilters={activeFilters}
                   allExamsSelected={activeFilters.allExamsSelected}
                   onBarClick={handleBarClick}

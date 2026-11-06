@@ -36,7 +36,9 @@ export default function LearnerDashboardOverview({
   const paperParam = useSearchParams().get("paper");
   const paperTab = paperParam === "maths" || paperParam === "english" ? paperParam : null;
   const paperLabel = paperTab === "maths" ? "Elementary Mathematics" : paperTab === "english" ? "English" : "General Studies";
-  const [data, setData] = useState<LearnerIntelligence | null>(null);
+  const [loaded, setLoaded] = useState<{ paper: string | null; data: LearnerIntelligence } | null>(null);
+  // Never show another paper's numbers while the selected tab is loading.
+  const data = loaded && loaded.paper === paperTab ? loaded.data : null;
   const [error, setError] = useState(false);
   const [activityOpen, setActivityOpen] = useState(true);
   const [showAllSessions, setShowAllSessions] = useState(false);
@@ -52,7 +54,7 @@ export default function LearnerDashboardOverview({
         });
         if (!response.ok) throw new Error("Learner intelligence unavailable");
         const next = (await response.json()) as LearnerIntelligence;
-        if (active) setData(next);
+        if (active) setLoaded({ paper: paperTab, data: next });
       } catch {
         if (active) setError(true);
       }

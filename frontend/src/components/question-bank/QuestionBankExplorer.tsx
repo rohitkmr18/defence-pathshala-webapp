@@ -37,7 +37,13 @@ type TabView = "all" | "heatmaps" | "difficulty" | "patterns";
 export default function QuestionBankExplorer({ meta }: Props) {
   const searchParams = useSearchParams();
   const context = useMemo(() => parseFiltersFromSearchParams(searchParams), [searchParams]);
-  const selectedExams = context.exams;
+  const paperParam = searchParams.get("paper");
+  const paper: "maths" | "english" | null = paperParam === "maths" || paperParam === "english" ? paperParam : null;
+  // On Maths / English every paper is a CDS paper, so the exam is implied rather than chosen.
+  const selectedExams = useMemo(
+    () => (paper && context.exams.length === 0 ? meta.exams.map((e) => e.value) : context.exams),
+    [paper, context.exams, meta.exams],
+  );
   const selectedYears = context.years;
   const selectedCycles = context.cycles;
   const selectedSubject = context.subjects[0] || null;
@@ -156,6 +162,7 @@ export default function QuestionBankExplorer({ meta }: Props) {
           exams: selectedExams,
           years: activeYears,
           cycles: activeCycles,
+          paper,
         });
 
         if (!cancelled) {
@@ -173,7 +180,7 @@ export default function QuestionBankExplorer({ meta }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [activeCycles, activeYears, selectedExams]);
+  }, [activeCycles, activeYears, selectedExams, paper]);
 
   const selectedExamLabels = selectedExams.map(
     (value) => meta.exams.find((item) => item.value === value)?.label ?? value
@@ -235,6 +242,7 @@ export default function QuestionBankExplorer({ meta }: Props) {
         </div>
 
         {/* ── Quick Select Presets Tab Bar ───────────────────────────────── */}
+        {!paper && (
         <div className="flex items-center gap-2 mb-6 pb-4 border-b border-slate-100 overflow-x-auto">
           <span className="text-xs font-bold text-slate-400 uppercase tracking-wider shrink-0">
             Quick Select:
@@ -259,9 +267,11 @@ export default function QuestionBankExplorer({ meta }: Props) {
             );
           })}
         </div>
+        )}
 
-        <div className="grid gap-6 md:grid-cols-3">
-          {/* Exam Filter */}
+        <div className={`grid gap-6 ${paper ? "md:grid-cols-2" : "md:grid-cols-3"}`}>
+          {/* Exam Filter (hidden on Maths / English: every paper there is CDS) */}
+          {!paper && (
           <div>
             <div className="mb-2 flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-700">
               <span>Target Exam</span>
@@ -310,6 +320,7 @@ export default function QuestionBankExplorer({ meta }: Props) {
               })}
             </div>
           </div>
+          )}
 
           {/* Year Filter — compact multi-select chips */}
           <div>
