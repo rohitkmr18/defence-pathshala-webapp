@@ -89,7 +89,7 @@ export const EXAM_REGISTRY: ExamDefinition[] = [
         id: "cds-english", label: "English", format: "mcq", questions: 120, maxMarks: 100, minutes: 120,
         marking: { correct: 100 / 120, wrong: 100 / 360, correctLabel: "+0.83", wrongLabel: "-0.28" },
         sections: [{ id: "english", label: "English", questions: 120 }],
-        dbPaperValues: ["English"], status: "coming_soon",
+        dbPaperValues: ["English"], status: "live",
       },
       {
         id: "cds-maths", label: "Elementary Mathematics", format: "mcq", questions: 100, maxMarks: 100, minutes: 120,
