@@ -1,0 +1,18 @@
+{
+  "version": "cds-english-maths-v1.1-proposed",
+  "status": "PROPOSED_NOT_APPROVED",
+  "base": "cds_english_maths_v1.json (approved 2026-11-05) is unchanged",
+  "reason": "CDS 2020-2023 English papers contain sections that v1 does not list (found in CDS I 2020 English; recheck against the other 2020-2023 papers before approval).",
+  "cds-english": {
+    "new_topics": [
+      {"subject": "Grammar and Usage", "topic": "Parts of Speech", "subtopics": ["Word Classes", "Verb Forms and Types"]},
+      {"subject": "Grammar and Usage", "topic": "Sentence Combination", "subtopics": ["Joining Sentences"]},
+      {"subject": "Vocabulary", "topic": "Spelling", "subtopics": ["Correct Spelling"]}
+    ],
+    "new_subtopics": [
+      {"subject": "Grammar and Usage", "topic": "Spotting Errors", "add": ["Word Form and Confusables"]},
+      {"subject": "Grammar and Usage", "topic": "Fill in the Blanks", "add": ["Verb Forms and Tenses"]}
+    ],
+    "conditional_topic_decision": "'Active and Passive Voice / Direct and Indirect Speech' (Narration) appears in CDS I 2020 (Q111-120). v1 keeps it only if found in the 2024-2026 papers; that check is still open."
+  }
+}
