@@ -3,6 +3,7 @@
 import { Suspense } from "react";
 import EmailOtpForm from "@/components/auth/EmailOtpForm";
 import { CheckCircle2, Shield } from "lucide-react";
+import DPLogo from "@/components/common/DPLogo";
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -17,9 +18,7 @@ export default function SignupPage() {
 
           {/* Logo */}
           <div className="relative flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-slate-900 text-sm font-black">
-              DP
-            </div>
+            <DPLogo className="h-10 w-auto" />
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-blue-400">
                 Defence Pathshala
@@ -79,9 +78,7 @@ export default function SignupPage() {
         <div className="flex flex-1 flex-col items-center justify-center px-4 py-12 sm:px-8 lg:px-12">
           {/* Mobile logo */}
           <div className="mb-8 flex items-center gap-2.5 lg:hidden">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-white text-sm font-black shadow-md shadow-blue-600/20">
-              DP
-            </div>
+            <DPLogo className="h-9 w-auto" />
             <span className="text-sm font-bold text-slate-900">
               Defence Pathshala
             </span>

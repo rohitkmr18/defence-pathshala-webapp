@@ -23,6 +23,7 @@ import { createClient } from "@/lib/supabase/client";
 import EditTargetModal from "@/components/dashboard/EditTargetModal";
 import ExamModeSwitcher from "./ExamModeSwitcher";
 import { rememberExamMode, useActivePaper, withPaper } from "@/lib/learner-mode";
+import DPLogo from "@/components/common/DPLogo";
 
 const baseItems = [
   {
@@ -120,9 +121,7 @@ export default function DashboardSidebar({
           {!collapsed && (
             <Link href="/" className="group block">
               <div className="flex items-center gap-2.5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-white text-sm font-black shadow-md shadow-blue-600/20 transition group-hover:bg-blue-500">
-                  DP
-                </div>
+                <DPLogo className="h-9 w-auto transition group-hover:opacity-90" />
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
                     Defence Pathshala
@@ -138,9 +137,9 @@ export default function DashboardSidebar({
           {collapsed && !mobile && (
             <Link
               href="/"
-              className="group flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-white text-sm font-black shadow-md shadow-blue-600/20 transition group-hover:bg-blue-500"
+              className="group flex items-center justify-center"
             >
-              DP
+              <DPLogo className="h-9 w-auto transition group-hover:opacity-90" />
             </Link>
           )}
 

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import DPLogo from "@/components/common/DPLogo";
 
 export default function PublicNavbar() {
   return (
@@ -6,9 +7,7 @@ export default function PublicNavbar() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8">
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-white text-sm font-black shadow-md shadow-blue-600/20 group-hover:scale-105 transition-transform">
-              DP
-            </div>
+            <DPLogo className="h-9 w-auto transition-transform group-hover:scale-105" />
             <span className="text-base font-bold text-slate-900 tracking-tight">
               Defence Pathshala
             </span>

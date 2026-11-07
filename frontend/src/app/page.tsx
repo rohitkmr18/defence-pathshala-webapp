@@ -4,6 +4,7 @@ import HeroSection from "@/components/home/HeroSection";
 import ProductShowcase from "@/components/home/ProductShowcase";
 import FounderCredibility from "@/components/home/FounderCredibility";
 import ObjectionAndFinalCtaSection from "@/components/home/ObjectionAndFinalCtaSection";
+import DPLogo from "@/components/common/DPLogo";
 
 export default function HomePage() {
   const capsule = latestMonthlyCapsule();
@@ -13,9 +14,7 @@ export default function HomePage() {
       <nav className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-white text-sm font-black shadow-md shadow-blue-600/20 group-hover:scale-105 transition-transform">
-              DP
-            </div>
+            <DPLogo className="h-9 w-auto transition-transform group-hover:scale-105" />
             <span className="text-base font-bold text-slate-900 tracking-tight">
               Defence Pathshala
             </span>
@@ -48,9 +47,7 @@ export default function HomePage() {
       <footer className="border-t border-slate-200/80 bg-white px-4 py-8 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl flex flex-col items-center justify-between gap-4 text-xs text-slate-500 sm:flex-row">
           <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-600 text-white text-xs font-black shadow-xs">
-              DP
-            </div>
+            <DPLogo className="h-7 w-auto" />
             <span className="font-semibold text-slate-800">
               Defence Pathshala
             </span>
