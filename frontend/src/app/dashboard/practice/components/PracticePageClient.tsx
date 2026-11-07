@@ -476,13 +476,7 @@ export default function PracticePageClient() {
       {/* ═══════════════════════════════════════════════════════════════════════
           MODE 2: FULL PAPER SIMULATION (DECOUPLED FLOW)
           ═══════════════════════════════════════════════════════════════════════ */}
-      {practiceMode === "full-paper" && isPaperTab && paperTabParam === "english" && (
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 text-sm text-slate-600">
-          <p className="font-bold text-slate-900">Timed full-paper mock for this paper is coming soon.</p>
-          <p className="mt-1">Use Targeted Practice to attempt these questions now.</p>
-        </div>
-      )}
-      {practiceMode === "full-paper" && paperTabParam !== "english" && (
+      {practiceMode === "full-paper" && (
         <div className="space-y-6">
           <FullPaperHero
             key={paperTabParam ?? "gs"}

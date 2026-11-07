@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "CDS_ENGLISH_DATA_DIR=./prod_load/ node scripts/load-cds-english-prod.mjs --build-hook && next build",
     "start": "next start",
     "lint": "eslint"
   },
