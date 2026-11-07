@@ -2,55 +2,16 @@
  "code": "CDS_2020_I_ENGLISH_SET_A",
  "booklet_set_code": "PLKI-F-ENG – A",
  "source_paper": "2020 I English paper",
- "key_policy": "DP_SOLVED_PENDING_FOUNDER_APPROVAL",
+ "key_policy": "UPSC_OFFICIAL",
+ "key_source": "UPSC official answer key, CDS-I-2020 Series A English (data/ingestion/official_keys/cds_i_2020_english_set_a.json); model key agreed on 112/120 before correction",
  "status": "REVIEW_FILE_ONLY_NOT_LOADED",
  "source_pdf": "CDS_I_2020_ENGLISH.pdf",
- "taxonomy_extension_required": "cds_english_maths_v1_1_proposed (Parts of Speech, Sentence Combination, Spelling, plus subtopics)",
+ "taxonomy_version": "cds-english-maths-v1.1 (founder-approved 2026-11-07)",
  "review_flags": [
-  {
-   "q": 1,
-   "type": "keyed_with_doubt",
-   "note": "(a) and (c) are both near the passage; (a) follows 'no civilization can become one without passing through agriculture'. Keyed (a)."
-  },
-  {
-   "q": 19,
-   "type": "keyed_with_doubt",
-   "note": "'go for change of job' reads slightly odd (article); keyed (d) No error under standard exam convention."
-  },
-  {
-   "q": 53,
-   "type": "keyed_with_doubt",
-   "note": "'carry through on' is idiomatic; 'carry out/off on' is not. Keyed (a)."
-  },
-  {
-   "q": 54,
-   "type": "keyed_with_doubt",
-   "note": "'keep off politics' = avoid; 'keep out politics' is not idiomatic. Keyed (c)."
-  },
   {
    "q": 81,
    "type": "adapted",
-   "note": "As printed there is no preposition option for 'since'. Option (c) 'Intensifier' was replaced by 'Preposition'. Needs founder approval (adapted_pyq rule). Alternative: exclude."
-  },
-  {
-   "q": 87,
-   "type": "adapted",
-   "note": "'has offered' is both perfect tense and transitive. Printed option (d) 'Transitive verb' replaced by 'Modal verb' so one answer remains. Needs founder approval. Alternative: exclude."
-  },
-  {
-   "q": 88,
-   "type": "keyed_with_doubt",
-   "note": "'is' is a linking verb; no 'linking' option offered. Keyed (b) Intransitive as nearest. Consider adapting option (c)."
-  },
-  {
-   "q": 105,
-   "type": "needs_decision",
-   "note": "(c) and (d) are both defensible. Keyed (d) for tense consistency with 'could not succeed'. Not adapted; founder to choose adapt or exclude."
-  },
-  {
-   "q": 108,
-   "type": "adapted",
-   "note": "Printed option (d) read 'He is so tired that he could not be standing' (malformed). Corrected to '...could not stand' and keyed (d). Needs founder approval."
+   "note": "Founder-approved 2026-11-07. Printed options had no 'Preposition'; (c) 'Intensifier' replaced by 'Preposition' and keyed (c). UPSC's official key for the printed item is (a) Adverb; recorded in official_opt."
   }
  ],
  "passages": [
@@ -88,13 +49,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Use only what the passage says.\nStep 1: The author says 'no civilization can become one without passing through the stage of agriculture', so agriculture is part of every civilization's history.\nStep 2: (b) and (d) contradict this. (c) is wrong because the author says not all agricultural societies become civilizations.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 30,
@@ -128,13 +89,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "C",
    "llm_opt": "C",
-   "official_opt": null,
+   "official_opt": "C",
    "explanation": "Concept: Cause and effect in a passage.\nStep 1: As productivity improves, not all people are needed to produce food, so many are freed for other work.\nStep 2: That means there was enough (sufficient) farm produce.\nAnswer: (c).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 25,
@@ -168,13 +129,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Match the option to the author's condition.\nStep 1: The author says it happens 'only if a society that has transitioned to high-productivity agriculture' finds a way to use the free time fruitfully.\nStep 2: Only (a) states this.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 32,
@@ -208,13 +169,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "B",
    "llm_opt": "B",
-   "official_opt": null,
+   "official_opt": "B",
    "explanation": "Concept: Find the line in the passage.\nStep 1: 'creating new ideologies and new hierarchies or power structures to coerce or otherwise convince large groups of people'.\nStep 2: The reward was 'very little', so (d) is wrong.\nAnswer: (b).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 25,
@@ -248,13 +209,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Vocabulary in context.\nStep 1: A changeover is a move from one state to another. 'Transitioned' means moved or changed from one stage to another.\nStep 2: 'Channel' means direct, 'coerce' means force, 'hierarchies' means ranked orders.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 20,
@@ -288,13 +249,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "D",
    "llm_opt": "D",
-   "official_opt": null,
+   "official_opt": "D",
    "explanation": "Concept: A 'not true' item needs the one statement the passage does not support.\nStep 1: (a), (b), (c) match the passage: preconceptions and expectations shape reading, and readers expect a 'specific piece of information'.\nStep 2: The passage never says readers assume everything will be new.\nAnswer: (d).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 38,
@@ -328,13 +289,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Cause stated in the passage.\nStep 1: Expectations 'blind us to what the article and its author is actually saying'.\nStep 2: So we may fail to get the author's actual ideas.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 28,
@@ -368,13 +329,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "C",
    "llm_opt": "C",
-   "official_opt": null,
+   "official_opt": "C",
    "explanation": "Concept: Find the suggestion in the passage.\nStep 1: The author warns against exposing ourselves to 'the same newspaper, the same magazine' and says we need to 'break out of this routine'.\nStep 2: Only (c) matches this.\nAnswer: (c).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 25,
@@ -408,13 +369,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Main idea of the passage.\nStep 1: The author warns that preconceptions and routine make us miss what the author is saying.\nStep 2: The opposite quality is being objective about the author's ideas.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 30,
@@ -448,13 +409,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "D",
    "llm_opt": "D",
-   "official_opt": null,
+   "official_opt": "D",
    "explanation": "Concept: Vocabulary in context.\nStep 1: 'authors with the same perspectives' means authors with the same viewpoints.\nStep 2: Preconceptions are ideas formed in advance; predispositions are tendencies.\nAnswer: (d).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 18,
@@ -488,13 +449,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "C",
    "llm_opt": "C",
-   "official_opt": null,
+   "official_opt": "C",
    "explanation": "Concept: The action is complete, so the past tense is needed.\nStep 1: 'After expanding for decades, the ice cover started melting' needs 'started', not 'starting'.\nAnswer: (c).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 38,
@@ -518,7 +479,7 @@
    "subject": "Grammar and Usage",
    "topic": "Spotting Errors",
    "subtopic": "Word Form and Confusables",
-   "theme": "Noun used as a modifier",
+   "theme": "Verb form in a passive future",
    "question": "Directions: Find the part of the sentence that has an error. If there is no error, choose (d).\n\n__The auction, conducted by the bank,__ (a) __will be price based__ (b) __using multiple priced method.__ (c)",
    "opt_a": "(a)",
    "opt_b": "(b)",
@@ -526,15 +487,15 @@
    "opt_d": "No error",
    "q_type": "Language",
    "q_pattern": "Single MCQ",
-   "final_opt": "C",
+   "final_opt": "B",
    "llm_opt": "C",
-   "official_opt": null,
-   "explanation": "Concept: A noun modifier stays in its base form.\nStep 1: We say 'multiple price method', not 'priced method'.\nAnswer: (c).",
+   "official_opt": "B",
+   "explanation": "Concept: An auction is not itself 'price based'; the price is decided by a method.\nStep 1: Part (b) should read 'will be priced', so that the sentence says the price will be set using the multiple price method.\nStep 2: UPSC's official key marks (b).\nAnswer: (b).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 38,
@@ -568,13 +529,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Third conditional = If + past perfect, would have + past participle.\nStep 1: 'If the scheme would have been implemented' is wrong. It should be 'If the scheme had been implemented'.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 38,
@@ -608,13 +569,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "B",
    "llm_opt": "B",
-   "official_opt": null,
+   "official_opt": "B",
    "explanation": "Concept: Parallel nouns.\nStep 1: 'safety, liquidity and attractive returns' needs the noun 'returns'. 'returned' is a verb form.\nAnswer: (b).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 38,
@@ -648,13 +609,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: 'Thorough' means complete; 'through' is the preposition.\nStep 1: We scroll 'through' a timeline.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 38,
@@ -688,13 +649,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "B",
    "llm_opt": "B",
-   "official_opt": null,
+   "official_opt": "B",
    "explanation": "Concept: 'Were' is a verb; 'where' introduces a place or situation.\nStep 1: 'a case where traditional belief and modern finance would point the same way'.\nAnswer: (b).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 38,
@@ -728,13 +689,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Subject-verb agreement.\nStep 1: The subject 'Evolutionary biology' is singular, so the verb is 'leaves'.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 38,
@@ -768,13 +729,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "C",
    "llm_opt": "C",
-   "official_opt": null,
+   "official_opt": "C",
    "explanation": "Concept: Passive needs the past participle.\nStep 1: 'things are achieved and delivered'. 'achieve' is the base form.\nAnswer: (c).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 38,
@@ -808,13 +769,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "D",
    "llm_opt": "D",
-   "official_opt": null,
+   "official_opt": "D",
    "explanation": "Concept: Second conditional uses 'If I were' with 'would'.\nStep 1: 'If I were you, I would not go for change of job' follows this pattern. Parts (a), (b) and (c) are acceptable.\nAnswer: (d) No error.",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 35,
@@ -848,13 +809,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "B",
    "llm_opt": "B",
-   "official_opt": null,
+   "official_opt": "B",
    "explanation": "Concept: After 'was', use an adjective.\nStep 1: 'lowed' is not a word here. It should be 'extremely low'.\nAnswer: (b).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 38,
@@ -888,13 +849,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "B",
    "llm_opt": "B",
-   "official_opt": null,
+   "official_opt": "B",
    "explanation": "Concept: Find the subject, then the verb, then the rest.\nStep 1: Join the parts to read: 'Agriculture has been the backbone of India for long and will continue to be the same.'.\nAnswer: (b) SQPR.",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 40,
@@ -928,13 +889,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Find the subject, then the verb, then the rest.\nStep 1: Join the parts to read: 'Public policy making agenda in any country is generally driven by the cry of general public.'.\nAnswer: (a) RQSP.",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 40,
@@ -968,13 +929,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "C",
    "llm_opt": "C",
-   "official_opt": null,
+   "official_opt": "C",
    "explanation": "Concept: Find the subject, then the verb, then the rest.\nStep 1: Join the parts to read: 'The essential power of the government is the power to manage conflict before it starts.'.\nAnswer: (c) RQSP.",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 40,
@@ -1008,13 +969,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Find the subject, then the verb, then the rest.\nStep 1: Join the parts to read: 'The party that received a majority of the vote must take control of the government.'.\nAnswer: (a) QPSR.",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 40,
@@ -1048,13 +1009,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Find the subject, then the verb, then the rest.\nStep 1: Join the parts to read: 'A referendum is a vote in which the electorate can express a view on a particular issue of public policy.'.\nAnswer: (a) SQPR.",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 40,
@@ -1088,13 +1049,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Find the subject, then the verb, then the rest.\nStep 1: Join the parts to read: 'Has class conflict in modern societies been resolved or merely suppressed?'.\nAnswer: (a) RPSQ.",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 40,
@@ -1128,13 +1089,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "D",
    "llm_opt": "D",
-   "official_opt": null,
+   "official_opt": "D",
    "explanation": "Concept: Find the subject, then the verb, then the rest.\nStep 1: Join the parts to read: 'Hybrid varieties of several of our food and vegetable crops are being extensively cultivated.'.\nAnswer: (d) SPRQ.",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 40,
@@ -1168,13 +1129,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "B",
    "llm_opt": "B",
-   "official_opt": null,
+   "official_opt": "B",
    "explanation": "Concept: Find the subject, then the verb, then the rest.\nStep 1: Join the parts to read: 'There should have been reason for the accusation against the officer who was in-charge at that time.'.\nAnswer: (b) RQPS.",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 40,
@@ -1208,13 +1169,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "D",
    "llm_opt": "D",
-   "official_opt": null,
+   "official_opt": "D",
    "explanation": "Concept: Find the subject, then the verb, then the rest.\nStep 1: Join the parts to read: 'Poetry is the spontaneous overflow of powerful feelings and ideas.'.\nAnswer: (d) PSRQ.",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 40,
@@ -1248,13 +1209,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Find the subject, then the verb, then the rest.\nStep 1: Join the parts to read: 'A group of people who share a common culture, historical identity and a common descent is called an ethnic group.'.\nAnswer: (a) QSPR.",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 40,
@@ -1288,13 +1249,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Idiom.\nStep 1: A paper tiger looks threatening but has no real power.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 25,
@@ -1328,13 +1289,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "B",
    "llm_opt": "B",
-   "official_opt": null,
+   "official_opt": "B",
    "explanation": "Concept: Idiom.\nStep 1: Lily-livered means cowardly, so 'not brave'.\nAnswer: (b).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 25,
@@ -1368,13 +1329,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "B",
    "llm_opt": "B",
-   "official_opt": null,
+   "official_opt": "B",
    "explanation": "Concept: Idiom.\nStep 1: Birds eat small amounts, so the idiom means to eat very little.\nAnswer: (b).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 18,
@@ -1408,13 +1369,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "C",
    "llm_opt": "C",
-   "official_opt": null,
+   "official_opt": "C",
    "explanation": "Concept: Idiom.\nStep 1: The dog days are the hottest, most sultry days of summer.\nAnswer: (c).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 25,
@@ -1448,13 +1409,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Idiom.\nStep 1: The term describes a small, poor country with an unstable government that depends on one export.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 25,
@@ -1488,13 +1449,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Idiom.\nStep 1: Pros are advantages and cons are disadvantages.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 18,
@@ -1528,13 +1489,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Idiom.\nStep 1: To prime a pump is to add water so it works. It means to do something that helps a process start and succeed.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 25,
@@ -1568,13 +1529,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "B",
    "llm_opt": "B",
-   "official_opt": null,
+   "official_opt": "B",
    "explanation": "Concept: Idiom.\nStep 1: 'The green-eyed monster' is a phrase for jealousy.\nAnswer: (b).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 18,
@@ -1608,13 +1569,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "C",
    "llm_opt": "C",
-   "official_opt": null,
+   "official_opt": "C",
    "explanation": "Concept: Idiom.\nStep 1: It means to deal successfully with a challenging situation.\nAnswer: (c).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 25,
@@ -1648,13 +1609,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "C",
    "llm_opt": "C",
-   "official_opt": null,
+   "official_opt": "C",
    "explanation": "Concept: Idiom.\nStep 1: To call it a day means to stop doing something for now.\nAnswer: (c).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 25,
@@ -1688,13 +1649,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Find the opening idea, then follow the links (this, then, however).\nStep 1: The life story runs in time order: BA in 1953 and BBC study (S), joined the broadcaster (R), the Civil War (P), then after the War (Q).\nAnswer: (a) SRPQ.",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 48,
@@ -1728,13 +1689,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "C",
    "llm_opt": "C",
-   "official_opt": null,
+   "official_opt": "C",
    "explanation": "Concept: Find the opening idea, then follow the links (this, then, however).\nStep 1: Q introduces the filing cabinet image, R says what it contains, P says what it does, and S (Schumacher) leads into S6 about ideas.\nAnswer: (c) QRPS.",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 55,
@@ -1768,13 +1729,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Find the opening idea, then follow the links (this, then, however).\nStep 1: R introduces the growth of biology, S gives its first feature, P describes the later focus, and Q (Darwin) leads to S6.\nAnswer: (a) RSPQ.",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 55,
@@ -1808,13 +1769,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "D",
    "llm_opt": "D",
-   "official_opt": null,
+   "official_opt": "D",
    "explanation": "Concept: Find the opening idea, then follow the links (this, then, however).\nStep 1: Biology is young (S1), so physics and chemistry progressed faster (S), their applications are more visible (R), 'However' biology has shown its utility (P), with antibiotics as the example (Q), leading to life expectancy (S6).\nAnswer: (d) SRPQ.",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 55,
@@ -1846,19 +1807,19 @@
    "opt_d": "SRQP",
    "q_type": "Language",
    "q_pattern": "Single MCQ",
-   "final_opt": "B",
+   "final_opt": "D",
    "llm_opt": "B",
-   "official_opt": null,
-   "explanation": "Concept: Find the opening idea, then follow the links (this, then, however).\nStep 1: R says individuals have some of what they need, S says nobody has everything, then examples follow: the weaver (P) and the family farm (Q), and S6 gives the teacher.\nAnswer: (b) RSPQ.",
+   "official_opt": "D",
+   "explanation": "Concept: Find the opening idea, then follow the links (this, then, however).\nStep 1: S1 says people need many goods and services. 'In fact' (S) adds that nobody has all of them. R says each person has some. Then the examples run Q (family farm), P (weaver) and S6 (teacher).\nAnswer: (d) SRQP.",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
-   "difficulty_score": 50,
-   "difficulty_category": "Moderate",
+   "difficulty_score": 52,
+   "difficulty_category": "Hard",
    "dataset_version": "DP_PYQ_CDS_2020_I_ENG_v1",
    "source_version": "scan-transcription-v1",
    "content_status": "SOURCE_MATCHED",
@@ -1888,13 +1849,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Find the opening idea, then follow the links (this, then, however).\nStep 1: Changes in farming (Q), these allowed more crops (P), an important achievement (S), but pressure on resources (R), leading to the new ways of S6.\nAnswer: (a) QPSR.",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 48,
@@ -1928,13 +1889,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Find the opening idea, then follow the links (this, then, however).\nStep 1: Political stability (Q), so common laws and currency (P), money widely used by the end of the century (S), 'By then' wages replaced goods (R), leading to S6.\nAnswer: (a) QPSR.",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 50,
@@ -1968,13 +1929,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "D",
    "llm_opt": "D",
-   "official_opt": null,
+   "official_opt": "D",
    "explanation": "Concept: Find the opening idea, then follow the links (this, then, however).\nStep 1: People domesticated plants and animals (R), which led to farming (P), a major turning point (S), caused by the end of the ice age (Q). 'As a result' in S6 then follows Q.\nAnswer: (d) RPSQ.",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 58,
@@ -2008,13 +1969,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Find the opening idea, then follow the links (this, then, however).\nStep 1: Governments claim success and even omniscience (S), 'And yet' governance is choice (Q), choices involve risk (P), nowhere more than in foreign policy (R), then diplomacy (S6).\nAnswer: (a) SQPR.",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 50,
@@ -2048,13 +2009,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "C",
    "llm_opt": "C",
-   "official_opt": null,
+   "official_opt": "C",
    "explanation": "Concept: Find the opening idea, then follow the links (this, then, however).\nStep 1: The spread (S1) was helped by monks (P), many unnamed (Q), Buddhism had reached Sri Lanka earlier (R), and in the 5th century Buddhaghosha went there (S). 'He' in S6 refers to him.\nAnswer: (c) PQRS.",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 58,
@@ -2088,13 +2049,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Phrasal verbs.\nStep 1: 'Call on' means to visit someone.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 22,
@@ -2128,13 +2089,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "B",
    "llm_opt": "B",
-   "official_opt": null,
+   "official_opt": "B",
    "explanation": "Concept: Phrasal verbs.\nStep 1: 'Put out' means to extinguish.\nAnswer: (b).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 15,
@@ -2168,13 +2129,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Phrasal verbs.\nStep 1: 'Carry through on a promise' means to do what you said you would. 'Carry out on' is not used this way.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 38,
@@ -2208,13 +2169,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "C",
    "llm_opt": "C",
-   "official_opt": null,
+   "official_opt": "C",
    "explanation": "Concept: Phrasal verbs.\nStep 1: 'Keep off' a topic means to avoid it.\nAnswer: (c).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 35,
@@ -2248,13 +2209,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Phrasal verbs.\nStep 1: 'Put in' years of service means to spend or complete them.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 22,
@@ -2288,13 +2249,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Phrasal verbs.\nStep 1: 'Running out of time' is the fixed phrase.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 15,
@@ -2328,13 +2289,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "B",
    "llm_opt": "B",
-   "official_opt": null,
+   "official_opt": "B",
    "explanation": "Concept: Second conditional.\nStep 1: A wish or unreal condition uses 'were' for all subjects ('would' in the main clause).\nAnswer: (b).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 22,
@@ -2368,13 +2329,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "D",
    "llm_opt": "D",
-   "official_opt": null,
+   "official_opt": "D",
    "explanation": "Concept: Proverbs.\nStep 1: The proverb is 'Where there is a will, there is a way'.\nAnswer: (d).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 12,
@@ -2408,13 +2369,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "B",
    "llm_opt": "B",
-   "official_opt": null,
+   "official_opt": "B",
    "explanation": "Concept: Phrasal verbs.\nStep 1: 'Come about' means to happen.\nAnswer: (b).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 22,
@@ -2448,13 +2409,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Phrasal verbs.\nStep 1: 'Ran into' means met by chance. The past tense is needed.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 15,
@@ -2488,13 +2449,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Synonym.\nStep 1: 'Implications' here means effects or consequences.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 28,
@@ -2528,13 +2489,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "B",
    "llm_opt": "B",
-   "official_opt": null,
+   "official_opt": "B",
    "explanation": "Concept: Synonym.\nStep 1: 'Contagious' means spreading from one to another, so 'transmittable'.\nAnswer: (b).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 28,
@@ -2568,13 +2529,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "B",
    "llm_opt": "B",
-   "official_opt": null,
+   "official_opt": "B",
    "explanation": "Concept: Synonym.\nStep 1: 'Incorporated' means included as part of, so 'integrated'.\nAnswer: (b).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 28,
@@ -2608,13 +2569,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "C",
    "llm_opt": "C",
-   "official_opt": null,
+   "official_opt": "C",
    "explanation": "Concept: Synonym.\nStep 1: 'Generic' means general or broad. 'Specific' is its opposite.\nAnswer: (c).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 28,
@@ -2648,13 +2609,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Synonym.\nStep 1: 'Stellar' means outstanding.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 25,
@@ -2688,13 +2649,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "B",
    "llm_opt": "B",
-   "official_opt": null,
+   "official_opt": "B",
    "explanation": "Concept: Synonym.\nStep 1: 'Clichéd' means overused and unoriginal, so 'hackneyed'.\nAnswer: (b).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 28,
@@ -2728,13 +2689,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "D",
    "llm_opt": "D",
-   "official_opt": null,
+   "official_opt": "D",
    "explanation": "Concept: Synonym.\nStep 1: 'Vocation' means a profession or occupation.\nAnswer: (d).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 25,
@@ -2768,13 +2729,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "D",
    "llm_opt": "D",
-   "official_opt": null,
+   "official_opt": "D",
    "explanation": "Concept: Synonym.\nStep 1: 'Fatigued' means tired out, so 'exhausted'.\nAnswer: (d).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 22,
@@ -2808,13 +2769,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "D",
    "llm_opt": "D",
-   "official_opt": null,
+   "official_opt": "D",
    "explanation": "Concept: Synonym.\nStep 1: 'Aghast' means shocked or filled with horror.\nAnswer: (d).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 28,
@@ -2848,13 +2809,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Synonym.\nStep 1: 'Ascertained' means found out for certain, i.e. determined.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 28,
@@ -2888,13 +2849,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Antonym.\nStep 1: 'Decay' means to rot or decline. 'Waste away', 'decomposition' and 'spoil' are close to it, so the opposite is 'survival'.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 38,
@@ -2928,13 +2889,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Antonym.\nStep 1: 'Eloquently' means clearly and persuasively. The others are similar; 'confusingly' is the opposite.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 30,
@@ -2968,13 +2929,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "C",
    "llm_opt": "C",
-   "official_opt": null,
+   "official_opt": "C",
    "explanation": "Concept: Antonym.\nStep 1: 'Inertia' means inactivity. The others are synonyms, so 'activity' is the opposite.\nAnswer: (c).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 30,
@@ -3008,13 +2969,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "C",
    "llm_opt": "C",
-   "official_opt": null,
+   "official_opt": "C",
    "explanation": "Concept: Antonym.\nStep 1: 'Philanthropy' means love of humankind shown by giving. 'Nastiness' (unkindness) is the opposite.\nAnswer: (c).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 36,
@@ -3048,13 +3009,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "C",
    "llm_opt": "C",
-   "official_opt": null,
+   "official_opt": "C",
    "explanation": "Concept: Antonym.\nStep 1: 'Compassion' means concern for others' suffering. 'Indifference' is the opposite.\nAnswer: (c).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 25,
@@ -3088,13 +3049,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Antonym.\nStep 1: 'Tempestuous' means stormy or turbulent. 'Relaxed' (calm) is the opposite.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 32,
@@ -3128,13 +3089,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Antonym.\nStep 1: 'Wooing' means trying to win over. 'Encouraging', 'pursuing' and 'persuading' are similar, so 'discouraging' is the opposite.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 36,
@@ -3168,13 +3129,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "B",
    "llm_opt": "B",
-   "official_opt": null,
+   "official_opt": "B",
    "explanation": "Concept: Antonym.\nStep 1: 'Bestowed' means given as an honour. 'Withdrawn' (taken back) is the opposite.\nAnswer: (b).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 30,
@@ -3208,13 +3169,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "C",
    "llm_opt": "C",
-   "official_opt": null,
+   "official_opt": "C",
    "explanation": "Concept: Antonym.\nStep 1: 'Elated' means very happy. 'Depressed' is the opposite.\nAnswer: (c).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 22,
@@ -3248,13 +3209,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "B",
    "llm_opt": "B",
-   "official_opt": null,
+   "official_opt": "B",
    "explanation": "Concept: Antonym.\nStep 1: 'Charitable' means kind and generous. 'Malevolent' (wishing harm) is the opposite.\nAnswer: (b).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 34,
@@ -3288,13 +3249,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "C",
    "llm_opt": "C",
-   "official_opt": null,
-   "explanation": "Concept: Part of speech depends on the job a word does in the sentence.\nStep 1: 'Since' comes before the time word '2002' and links it to the verb, so it is a preposition. (The printed paper listed 'Intensifier' where 'Preposition' appears here; no printed option fit.)\nAnswer: (c).\n\nNote: lightly edited from the printed paper so that exactly one option is correct.",
+   "official_opt": "A",
+   "explanation": "Concept: Part of speech depends on the job a word does in the sentence.\nStep 1: 'Since' comes before the time word '2002' and links it to the verb, so it is a preposition. (The printed paper listed 'Intensifier' where 'Preposition' appears here. UPSC's official key marked (a) Adverb for the printed version; grammatically 'since' before a noun phrase is a preposition.)\nAnswer: (c).\n\nNote: lightly edited from the printed paper so that exactly one option is correct.",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved",
+    "key:dp_adapted",
     "provenance:adapted_pyq"
    ],
    "verified_status": null,
@@ -3329,13 +3290,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "C",
    "llm_opt": "C",
-   "official_opt": null,
+   "official_opt": "C",
    "explanation": "Concept: Part of speech depends on the job a word does in the sentence.\nStep 1: 'Who' refers back to 'the one' and joins a clause to it, so it is a relative pronoun.\nAnswer: (c).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 35,
@@ -3369,13 +3330,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "C",
    "llm_opt": "C",
-   "official_opt": null,
+   "official_opt": "C",
    "explanation": "Concept: Part of speech depends on the job a word does in the sentence.\nStep 1: 'Most' modifies the adjective 'beautiful', so it is an adverb.\nAnswer: (c).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 40,
@@ -3409,13 +3370,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "B",
    "llm_opt": "B",
-   "official_opt": null,
+   "official_opt": "B",
    "explanation": "Concept: Part of speech depends on the job a word does in the sentence.\nStep 1: 'Latest' describes the noun 'news', so it is an adjective.\nAnswer: (b).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 25,
@@ -3449,13 +3410,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Part of speech depends on the job a word does in the sentence.\nStep 1: 'Noticing' is an -ing form that describes the cadets, so it is a (present) participle. It is not a main verb with an auxiliary.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 38,
@@ -3489,13 +3450,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Part of speech depends on the job a word does in the sentence.\nStep 1: 'Had left' = had + past participle, the past perfect.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 28,
@@ -3524,22 +3485,21 @@
    "opt_a": "Intransitive verb",
    "opt_b": "Past tense",
    "opt_c": "Perfect tense",
-   "opt_d": "Modal verb",
+   "opt_d": "Transitive verb",
    "q_type": "Language",
    "q_pattern": "Single MCQ",
-   "final_opt": "C",
+   "final_opt": "D",
    "llm_opt": "C",
-   "official_opt": null,
-   "explanation": "Concept: Part of speech depends on the job a word does in the sentence.\nStep 1: 'Has offered' = has + past participle, the present perfect tense. (The printed paper listed 'Transitive verb' where 'Modal verb' appears here, because 'has offered' is both perfect tense and transitive.)\nAnswer: (c).\n\nNote: lightly edited from the printed paper so that exactly one option is correct.",
+   "official_opt": "D",
+   "explanation": "Concept: Part of speech depends on the job a word does in the sentence.\nStep 1: 'Has offered' takes objects ('her', 'another chance'), so it is a transitive verb. Present perfect is its tense, which describes time, not the kind of verb. UPSC's official key marks (d).\nAnswer: (d).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved",
-    "provenance:adapted_pyq"
+    "key:upsc_official"
    ],
    "verified_status": null,
-   "difficulty_score": 38,
+   "difficulty_score": 45,
    "difficulty_category": "Moderate",
    "dataset_version": "DP_PYQ_CDS_2020_I_ENG_v1",
    "source_version": "scan-transcription-v1",
@@ -3570,13 +3530,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "B",
    "llm_opt": "B",
-   "official_opt": null,
+   "official_opt": "B",
    "explanation": "Concept: Part of speech depends on the job a word does in the sentence.\nStep 1: 'Is' is the main verb here (no other verb follows) and takes no object, so it is not auxiliary. Of the options, intransitive fits (strictly it is a linking verb).\nAnswer: (b).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 42,
@@ -3610,13 +3570,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "D",
    "llm_opt": "D",
-   "official_opt": null,
+   "official_opt": "D",
    "explanation": "Concept: Part of speech depends on the job a word does in the sentence.\nStep 1: 'Hurrah' expresses sudden feeling, so it is an interjection.\nAnswer: (d).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 12,
@@ -3650,13 +3610,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Part of speech depends on the job a word does in the sentence.\nStep 1: 'Because' joins two clauses, so it is a conjunction.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 20,
@@ -3690,13 +3650,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Spelling.\nStep 1: The correct spelling is 'Continuum'.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 12,
@@ -3730,13 +3690,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "D",
    "llm_opt": "D",
-   "official_opt": null,
+   "official_opt": "D",
    "explanation": "Concept: Spelling.\nStep 1: The correct spelling is 'Strategy'.\nAnswer: (d).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 12,
@@ -3770,13 +3730,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "C",
    "llm_opt": "C",
-   "official_opt": null,
+   "official_opt": "C",
    "explanation": "Concept: Spelling.\nStep 1: The correct spelling is 'Commissioner'.\nAnswer: (c).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 12,
@@ -3810,13 +3770,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "B",
    "llm_opt": "B",
-   "official_opt": null,
+   "official_opt": "B",
    "explanation": "Concept: Spelling.\nStep 1: The correct spelling is 'Vacuum'.\nAnswer: (b).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 12,
@@ -3850,13 +3810,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Spelling.\nStep 1: The correct spelling is 'Psephology'.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 12,
@@ -3890,13 +3850,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "B",
    "llm_opt": "B",
-   "official_opt": null,
+   "official_opt": "B",
    "explanation": "Concept: Spelling.\nStep 1: The correct spelling is 'Nephrology'.\nAnswer: (b).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 12,
@@ -3930,13 +3890,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "B",
    "llm_opt": "B",
-   "official_opt": null,
+   "official_opt": "B",
    "explanation": "Concept: Spelling.\nStep 1: The correct spelling is 'Pseudonym'.\nAnswer: (b).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 12,
@@ -3970,13 +3930,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "C",
    "llm_opt": "C",
-   "official_opt": null,
+   "official_opt": "C",
    "explanation": "Concept: Spelling.\nStep 1: The correct spelling is 'Pneumonia'.\nAnswer: (c).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 12,
@@ -4010,13 +3970,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Spelling.\nStep 1: The correct spelling is 'Resilient'.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 12,
@@ -4050,13 +4010,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "B",
    "llm_opt": "B",
-   "official_opt": null,
+   "official_opt": "B",
    "explanation": "Concept: Spelling.\nStep 1: The correct spelling is 'Supplementary'.\nAnswer: (b).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 12,
@@ -4090,13 +4050,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "C",
    "llm_opt": "C",
-   "official_opt": null,
+   "official_opt": "C",
    "explanation": "Concept: Time clause with 'when'.\nStep 1: After 'when' in a future time clause, use the simple present: 'when he returns'.\nAnswer: (c).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 35,
@@ -4130,13 +4090,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Not only ... but also.\nStep 1: 'Not only ... but also' joins the two qualities and keeps the meaning of 'too'.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 22,
@@ -4170,13 +4130,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "D",
    "llm_opt": "D",
-   "official_opt": null,
+   "official_opt": "D",
    "explanation": "Concept: Combining with an infinitive.\nStep 1: Keep the present perfect continuous and the subject 'Parents', and join the purpose with 'to meet'.\nAnswer: (d).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 28,
@@ -4210,13 +4170,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Third conditional.\nStep 1: Third conditional = If + past perfect, would have + past participle.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 32,
@@ -4240,7 +4200,7 @@
    "subject": "Grammar and Usage",
    "topic": "Sentence Combination",
    "subtopic": "Joining Sentences",
-   "theme": "Concession with 'though' and tense consistency",
+   "theme": "Concession with 'though'",
    "question": "Directions: Choose the correct sentence that combines the given sentences.\n\nWhich one of the following is the correct statement combining the two statements using 'though'?\n\nHe has been trying his level best to win. He could not succeed.",
    "opt_a": "Though he is trying his level best to win, he could not succeed.",
    "opt_b": "He is trying his level best to win, though he could not succeed.",
@@ -4248,15 +4208,15 @@
    "opt_d": "Though he had been trying his level best to win, he could not succeed.",
    "q_type": "Language",
    "q_pattern": "Single MCQ",
-   "final_opt": "D",
+   "final_opt": "C",
    "llm_opt": "D",
-   "official_opt": null,
-   "explanation": "Concept: Concession with 'though' and tense consistency.\nStep 1: 'Could not succeed' is past, so the trying that came before it is expressed in the past perfect continuous: 'had been trying'. Option (c) mixes a present-perfect clause with a past result, so it is weaker.\nAnswer: (d).",
+   "official_opt": "C",
+   "explanation": "Concept: Concession with 'though'.\nStep 1: Join with 'though' and keep both verbs as given: 'has been trying' and 'could not succeed'. (a) and (b) change the first verb, and (d) shifts it to the past perfect. UPSC's official key marks (c).\nAnswer: (c).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 48,
@@ -4290,13 +4250,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Relative clause.\nStep 1: A relative clause uses 'who'. Only (a) does this without adding new meaning.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 25,
@@ -4330,13 +4290,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Past perfect for the earlier action.\nStep 1: The bus left first, so it takes the past perfect; Priya's arrival is the simple past.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 35,
@@ -4365,22 +4325,21 @@
    "opt_a": "He is so tired that he could scarcely stand.",
    "opt_b": "He is too tired and cannot stand.",
    "opt_c": "He will not stand and he is very tired.",
-   "opt_d": "He is so tired that he could not stand.",
+   "opt_d": "He is so tired that he could not be standing.",
    "q_type": "Language",
    "q_pattern": "Single MCQ",
-   "final_opt": "D",
+   "final_opt": "A",
    "llm_opt": "D",
-   "official_opt": null,
-   "explanation": "Concept: So ... that.\nStep 1: 'Too tired to stand' becomes 'so tired that he could not stand'. (The printed option read 'could not be standing'.)\nAnswer: (d).\n\nNote: lightly edited from the printed paper so that exactly one option is correct.",
+   "official_opt": "A",
+   "explanation": "Concept: So ... that.\nStep 1: 'Too ... to' becomes 'so ... that he could scarcely / could not stand'. (b) changes the tense, (c) changes the meaning, and (d) 'could not be standing' is not idiomatic. UPSC's official key marks (a).\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved",
-    "provenance:adapted_pyq"
+    "key:upsc_official"
    ],
    "verified_status": null,
-   "difficulty_score": 30,
+   "difficulty_score": 32,
    "difficulty_category": "Moderate",
    "dataset_version": "DP_PYQ_CDS_2020_I_ENG_v1",
    "source_version": "scan-transcription-v1",
@@ -4411,13 +4370,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: No sooner ... than.\nStep 1: The teacher entered first, then the students stopped. 'No sooner did + subject + verb ... than' keeps this order.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 35,
@@ -4451,13 +4410,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Contrast with 'whereas'.\nStep 1: 'Whereas' contrasts the two interests. (a) keeps both facts without adding anything new.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 30,
@@ -4491,13 +4450,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Reported question.\nStep 1: A question is reported with 'asked' and statement word order ('what the way ... was').\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 30,
@@ -4531,13 +4490,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Reported request.\nStep 1: A polite request with 'please' becomes 'requested ... to ...' and 'please' is dropped.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 25,
@@ -4571,13 +4530,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "B",
    "llm_opt": "B",
-   "official_opt": null,
+   "official_opt": "B",
    "explanation": "Concept: Universal truth.\nStep 1: A universal truth keeps the present tense when reported.\nAnswer: (b).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 28,
@@ -4609,18 +4568,18 @@
    "opt_d": "Navanitha exclaimed to her friends that it was a scintillating beauty.",
    "q_type": "Language",
    "q_pattern": "Single MCQ",
-   "final_opt": "B",
+   "final_opt": "D",
    "llm_opt": "B",
-   "official_opt": null,
-   "explanation": "Concept: Reported exclamation.\nStep 1: An exclamation is reported with 'exclaimed' and the 'what a ...' form is kept.\nAnswer: (b).",
+   "official_opt": "D",
+   "explanation": "Concept: Reported exclamation.\nStep 1: An exclamation is reported with 'exclaimed that' and becomes a statement: 'What a scintillating beauty it is!' becomes 'that it was a scintillating beauty'. UPSC's official key marks (d).\nAnswer: (d).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
-   "difficulty_score": 32,
+   "difficulty_score": 34,
    "difficulty_category": "Moderate",
    "dataset_version": "DP_PYQ_CDS_2020_I_ENG_v1",
    "source_version": "scan-transcription-v1",
@@ -4651,13 +4610,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "C",
    "llm_opt": "C",
-   "official_opt": null,
+   "official_opt": "C",
    "explanation": "Concept: Reported command.\nStep 1: A command is reported with 'ordered ... to', and 'today' becomes 'that day'.\nAnswer: (c).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 28,
@@ -4691,13 +4650,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "A",
    "llm_opt": "A",
-   "official_opt": null,
+   "official_opt": "A",
    "explanation": "Concept: Reported question with time change.\nStep 1: 'Were' becomes 'had been', 'last evening' becomes 'the previous evening', and the word order is that of a statement.\nAnswer: (a).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 30,
@@ -4729,18 +4688,18 @@
    "opt_d": "The leader advised her followers that those who sow the seeds the previous season would reap the harvest this season.",
    "q_type": "Language",
    "q_pattern": "Single MCQ",
-   "final_opt": "A",
+   "final_opt": "C",
    "llm_opt": "A",
-   "official_opt": null,
-   "explanation": "Concept: Reported statement.\nStep 1: 'Will' becomes 'would', 'last season' becomes 'the previous season' and 'this season' becomes 'that season'.\nAnswer: (a).",
+   "official_opt": "C",
+   "explanation": "Concept: Reported statement.\nStep 1: Backshift every verb: 'sowed' becomes 'had sown' and 'will' becomes 'would'; 'last season' becomes 'the previous season' and 'this season' becomes 'that season'. Only (c) does all of these. UPSC's official key marks (c).\nAnswer: (c).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
-   "difficulty_score": 35,
+   "difficulty_score": 40,
    "difficulty_category": "Moderate",
    "dataset_version": "DP_PYQ_CDS_2020_I_ENG_v1",
    "source_version": "scan-transcription-v1",
@@ -4771,13 +4730,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "B",
    "llm_opt": "B",
-   "official_opt": null,
+   "official_opt": "B",
    "explanation": "Concept: Reported request.\nStep 1: A polite request becomes 'requested ... to ...', and 'this week' becomes 'that week'.\nAnswer: (b).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 28,
@@ -4811,13 +4770,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "D",
    "llm_opt": "D",
-   "official_opt": null,
+   "official_opt": "D",
    "explanation": "Concept: Reported statements joined.\nStep 1: Pronouns shift ('us' to 'them', 'we' to 'they', 'our' to 'their') and 'will' becomes 'would'.\nAnswer: (d).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 32,
@@ -4851,13 +4810,13 @@
    "q_pattern": "Single MCQ",
    "final_opt": "D",
    "llm_opt": "D",
-   "official_opt": null,
+   "official_opt": "D",
    "explanation": "Concept: Reported blessing.\nStep 1: 'May you ...' is a blessing, reported with 'blessed' (or 'prayed that').\nAnswer: (d).",
    "source": "CDS I 2020 English set A (set code PLKI-F-ENG – A)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
-    "key:dp_solved"
+    "key:upsc_official"
    ],
    "verified_status": null,
    "difficulty_score": 38,
