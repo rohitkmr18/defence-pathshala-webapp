@@ -17,7 +17,7 @@ for (const width of [320, 390, 1440]) {
     await expect(page.getByRole('link', { name: 'English practice →', exact: true })).toHaveAttribute('href', /paper=english&exam=CDS/);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     expect(await page.locator('script[src*="googletagmanager"]').count()).toBe(0);
-    const events = await page.evaluate(() => (window as Window & { dataLayer?: IArguments[] }).dataLayer?.map(item => item[1]));
+    const events = await page.evaluate(() => (window as unknown as { dataLayer?: IArguments[] }).dataLayer?.map(item => item[1]));
     expect(events).toContain('landing_view');
     expect(events).toContain('landing_exam_selection');
     await page.screenshot({ path: `../test-results/landing-${width}.png`, fullPage: true });
