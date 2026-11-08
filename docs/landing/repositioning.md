@@ -44,3 +44,7 @@ Release recommendation: draft review only. Require green CI, READY preview and a
 - Latest acceptance: changed-file ESLint and TypeScript pass; Next.js Webpack production build passes (existing public coverage/sitemap build lookups warn about the environment's placeholder Supabase URL); six regression files pass (practice resume, question learning loop, CA calendar, dashboard states, auth components and auth middleware).
 - Four Chromium tests pass: 320×900, 390×900, 1440×900 and actual daily quiz navigation/anchor. Exact copy, one hero link, three CA destinations, exam/back/reload/keyboard, analytics queue, reduced-motion rendering and no overflow verified.
 - Screenshots: `test-results/landing-refined-{320,390,1440}.png`, generated locally with the isolated upstream fixture. Authenticated end-to-end submissions and production records were not exercised; dashboard/auth unit regressions cover both states. Keep draft pending authenticated acceptance.
+
+## CTA and credential follow-up
+
+CDS and CAPF now expose Practice plus Decode PYQs, both preserving exam/paper/origin URL context. AFCAT retains only Explore AFCAT Mocks. Decode intent uses the existing learner-mode storage and analytics abstraction. Credentials now begin “Built by Rohit” in a bordered blue-tinted panel with emphasized achievements. Latest changed-file lint and TypeScript pass; all four responsive/quiz Chromium checks pass, including explicit CDS/CAPF dual CTA and AFCAT single CTA assertions.

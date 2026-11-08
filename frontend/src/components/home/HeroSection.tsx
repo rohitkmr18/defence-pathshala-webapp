@@ -47,10 +47,17 @@ export default function HeroSection() {
             }}>{item.slug === "capf" ? "CAPF AC" : item.label}</button>)}
           </div>
         </fieldset>
-        <div className="mx-auto mt-4 max-w-sm">
+        <div className="mx-auto mt-4 grid max-w-sm gap-2">
           <Link href={practice} onClick={intent} className={`${linkClass} w-full bg-blue-600 text-white hover:bg-blue-500`}>{afcat ? "Explore AFCAT Mocks" : exam === "capf" ? "Start CAPF AC Practice" : "Start CDS Practice"}</Link>
+          {!afcat && <Link href={`/dashboard/question-bank?${params}`} onClick={() => {
+            rememberExamMode("cds");
+            rememberPaperChoice("gs");
+            trackLearningEvent("home_tile_click", { tile: "decode_pyqs", exam });
+          }} className={`${linkClass} w-full border border-blue-400/50 bg-blue-500/10 text-blue-200 hover:bg-blue-500/20`}>Decode PYQs</Link>}
         </div>
-        <p className="mx-auto mt-4 max-w-sm text-xs leading-relaxed text-slate-300">By Rohit · CAPF AC AIR 163 · IIT Kanpur · CDS ×4</p>
+        <div className="mx-auto mt-4 max-w-md rounded-xl border border-blue-400/30 bg-blue-500/10 px-3 py-3">
+          <p className="text-xs font-semibold leading-relaxed text-slate-200 sm:text-sm">Built by <span className="font-bold text-white">Rohit</span> · <span className="font-bold text-blue-300">CAPF AC AIR 163</span> · <span className="font-bold text-white">IIT Kanpur</span> · <span className="font-bold text-blue-300">CDS ×4</span></p>
+        </div>
       </div>
     </section>
   );

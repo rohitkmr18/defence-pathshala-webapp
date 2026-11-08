@@ -9,14 +9,16 @@ for (const width of [320, 390, 1440]) {
     await capf.focus(); await page.keyboard.press('Enter');
     await expect(capf).toHaveAttribute('aria-pressed', 'true');
     await expect(page.getByRole('link', { name: 'Start CAPF AC Practice' })).toHaveAttribute('href', /exam=CAPF-AC/);
+    await expect(page.getByRole('region', { name: 'Exam preparation' }).getByRole('link', { name: 'Decode PYQs' })).toHaveAttribute('href', /exam=CAPF-AC/);
     await page.reload(); await expect(capf).toHaveAttribute('aria-pressed', 'true');
     await page.getByRole('button', { name: 'AFCAT', exact: true }).click();
     await expect(page.getByRole('link', { name: /Explore AFCAT Mocks/ })).toHaveAttribute('href', '/afcat');
+    await expect(page.getByRole('region', { name: 'Exam preparation' }).getByRole('link')).toHaveCount(1);
     await page.goBack(); await expect(capf).toHaveAttribute('aria-pressed', 'true');
     await page.getByRole('button', { name: 'CDS', exact: true }).click();
     const hero = page.getByRole('region', { name: 'Exam preparation' });
-    await expect(hero.getByRole('link')).toHaveCount(1);
-    await expect(hero.getByText('By Rohit · CAPF AC AIR 163 · IIT Kanpur · CDS ×4')).toBeVisible();
+    await expect(hero.getByRole('link')).toHaveCount(2);
+    await expect(hero.getByText('Built by Rohit · CAPF AC AIR 163 · IIT Kanpur · CDS ×4')).toBeVisible();
     const ca = page.getByRole('region', { name: 'Current Affairs That Actually Matter.' });
     await expect(ca.getByRole('link')).toHaveCount(3);
     await expect(ca.getByRole('link', { name: /Daily Current Affairs/ })).toHaveAttribute('href', '/current-affairs');
