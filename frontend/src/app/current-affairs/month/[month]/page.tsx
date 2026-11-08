@@ -6,6 +6,7 @@ import { getDailyCurrentAffairsList } from "@/lib/current-affairs";
 import { formatMonthLabel, isValidMonthKey, monthKeyOf, summariseMonths } from "@/lib/current-affairs-calendar";
 import MonthlyCapsuleCard from "@/components/current-affairs/MonthlyCapsuleCard";
 import { getMonthlyCapsule } from "@/lib/monthly-capsules";
+import { pageMetadata } from "@/lib/seo-metadata";
 
 export const revalidate = 300;
 
@@ -28,11 +29,11 @@ export async function generateMetadata({ params }: { params: Promise<{ month: st
   const data = await loadMonth(month);
   if (!data) return {};
   const label = formatMonthLabel(month);
-  return {
+  return pageMetadata({
     title: `Current Affairs ${label} for Defence Exams`,
     description: `All ${data.posts.length} daily current affairs editions for ${label}, with exam-focused stories and MCQs for CDS, CAPF, AFCAT and NDA.`,
-    alternates: { canonical: `/current-affairs/month/${month}` },
-  };
+    path: `/current-affairs/month/${month}`,
+  });
 }
 
 export default async function CurrentAffairsMonthPage({ params }: { params: Promise<{ month: string }> }) {

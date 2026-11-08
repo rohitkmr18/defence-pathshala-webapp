@@ -5,6 +5,7 @@ import { indiaToday, relativeDayLabel, summariseMonths, weekdayName } from "@/li
 import CurrentAffairsCalendar from "@/components/current-affairs/CurrentAffairsCalendar";
 import MonthlyCapsuleCard from "@/components/current-affairs/MonthlyCapsuleCard";
 import { latestMonthlyCapsule } from "@/lib/monthly-capsules";
+import PublicExploreLinks from "@/components/public/PublicExploreLinks";
 
 export const revalidate = 300;
 
@@ -124,6 +125,7 @@ export default async function CurrentAffairsPage() {
           </div>
         )}
       </section>
+      <PublicExploreLinks className="border-t border-slate-200" />
     </main>
   );
 }

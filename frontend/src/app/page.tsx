@@ -5,6 +5,7 @@ import ProductShowcase from "@/components/home/ProductShowcase";
 import FounderCredibility from "@/components/home/FounderCredibility";
 import ObjectionAndFinalCtaSection from "@/components/home/ObjectionAndFinalCtaSection";
 import DPLogo from "@/components/common/DPLogo";
+import PublicExploreLinks from "@/components/public/PublicExploreLinks";
 
 export default function HomePage() {
   const capsule = latestMonthlyCapsule();
@@ -42,6 +43,9 @@ export default function HomePage() {
 
       {/* ── Screen 4: FAQs & High-Converting Final CTA ──────────────────── */}
       <ObjectionAndFinalCtaSection />
+
+      {/* ── Crawlable public hubs: exam, subject, mock and current-affairs links ── */}
+      <PublicExploreLinks className="border-t border-slate-200/80 bg-slate-50" />
 
       {/* ── Footer ───────────────────────────────────────────────────────── */}
       <footer className="border-t border-slate-200/80 bg-white px-4 py-8 sm:px-6 lg:px-8">
