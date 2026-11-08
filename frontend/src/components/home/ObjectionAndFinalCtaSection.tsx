@@ -16,14 +16,14 @@ interface FAQItem {
 
 const FAQS: FAQItem[] = [
   {
-    question: "Is Defence Pathshala completely free to use?",
+    question: "Can I try practice for free?",
     answer:
-      "Yes. All official PYQs, topic-wise practice, and syllabus pattern heatmaps are 100% free with no paywalls or hidden charges.",
+      "Targeted PYQ practice is free and accessible without signing in. Sign in to attempt full-paper mocks and save your progress. AFCAT mocks use a dedicated engine.",
   },
   {
     question: "Which exams and years are currently covered?",
     answer:
-      "Currently built for UPSC CDS (I & II) and CAPF AC with 1500+ official questions from 2018 to 2024. NDA and AFCAT are actively being expanded.",
+      "CDS GK, English and Mathematics practice, CAPF AC Paper I practice, and dedicated AFCAT written mocks are available. Full-paper PYQ mocks cover CDS GK and CAPF Paper I. Coverage varies by paper; check the product catalogue.",
   },
   {
     question: "Are these official questions with verified answer keys?",
@@ -38,7 +38,7 @@ const FAQS: FAQItem[] = [
   {
     question: "Can I clear CDS and CAPF through self-study without coaching?",
     answer:
-      "Absolutely. The platform is designed specifically by an AIR-163 Assistant Commandant for self-study aspirants who want to decode the examination directly from primary source patterns.",
+      "The platform is designed specifically by an AIR-163 Assistant Commandant for self-study aspirants who want to decode the examination directly from primary source patterns.",
   },
 ];
 
@@ -114,17 +114,17 @@ export default function ObjectionAndFinalCtaSection() {
           <div className="relative z-10 max-w-2xl mx-auto">
             <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue-500/10 px-4 py-1.5 text-xs font-bold text-blue-300">
               <Sparkles className="h-3.5 w-3.5 text-blue-400" />
-              <span>FREE ACCESS &bull; NO BARRIERS</span>
+              <span>FREE PRACTICE</span>
             </div>
 
             <h2 className="mt-5 text-3xl font-black tracking-tight sm:text-4xl text-white">
-              Start Decoding PYQs Today.
+              Build Your Next Study Session.
             </h2>
 
             <p className="mt-3 text-sm sm:text-base text-slate-300 leading-relaxed">
               Don&apos;t just solve previous year questions blind.
               <span className="block font-medium text-white/90">
-                Turn official UPSC papers into your next revision strategy.
+                Turn practice and mock results into your next revision strategy.
               </span>
             </p>
 
@@ -145,7 +145,7 @@ export default function ObjectionAndFinalCtaSection() {
               </Link>
             </div>
 
-            <p className="mt-4 text-xs font-semibold text-blue-200">100% Free Initiative</p>
+            <p className="mt-4 text-xs font-semibold text-blue-200">Free practice and mock preparation</p>
 
             {/* Small trust line */}
             <p className="mt-5 text-xs text-slate-400 font-medium">

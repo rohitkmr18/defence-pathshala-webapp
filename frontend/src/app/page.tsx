@@ -24,7 +24,7 @@ export default function HomePage() {
           <div className="flex items-center">
             <Link
               href="/auth/login"
-              className="rounded-xl border border-blue-200 bg-blue-50/60 px-4 py-2 text-xs sm:text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
+              className="rounded-xl border border-blue-200 bg-blue-50/60 min-h-11 inline-flex items-center px-4 py-2 text-xs sm:text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
             >
               Login
             </Link>
@@ -32,7 +32,7 @@ export default function HomePage() {
         </div>
       </nav>
 
-      {/* ── Hero Section (Screen 1 - 100% Untouched) ────────────────────── */}
+      {/* ── Exam-aware landing hero ────────────────────── */}
       <HeroSection />
 
       {/* ── Screen 2: Product Showcase (Visual Difference & Core Value) ─── */}
@@ -55,7 +55,7 @@ export default function HomePage() {
             <span className="font-semibold text-slate-800">
               Defence Pathshala
             </span>
-            <span>&bull; India&apos;s First PYQ Intelligence Platform</span>
+            <span>&bull; Practice &amp; PYQ Intelligence</span>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
             <Link href="/pyqs/cds" className="hover:text-blue-600 transition">
