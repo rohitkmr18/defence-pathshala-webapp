@@ -47,7 +47,8 @@ test('resolvePaper maps today\'s stored paper values', () => {
 
 test('live/coming-soon status reflects current content', () => {
   assert.deepEqual(liveExams().map((e) => e.slug).sort(), ['afcat', 'capf', 'cds']);
-  assert.equal(getPaper('cds-english').status, 'coming_soon');
+  assert.equal(getPaper('cds-english').status, 'live');
+  assert.equal(getPaper('cds-maths').status, 'live');
   assert.equal(getPaper('nda-gat').status, 'coming_soon');
 });
 
