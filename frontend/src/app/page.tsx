@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { Suspense } from "react";
+import HomeCurrentAffairs, { CurrentAffairsEntries } from "@/components/home/HomeCurrentAffairs";
 import { latestMonthlyCapsule } from "@/lib/monthly-capsules";
 import HeroSection from "@/components/home/HeroSection";
 import ProductShowcase from "@/components/home/ProductShowcase";
@@ -34,6 +36,7 @@ export default function HomePage() {
 
       {/* ── Exam-aware landing hero ────────────────────── */}
       <HeroSection />
+      <Suspense fallback={<CurrentAffairsEntries />}><HomeCurrentAffairs /></Suspense>
 
       {/* ── Screen 2: Product Showcase (Visual Difference & Core Value) ─── */}
       <ProductShowcase />

@@ -106,7 +106,7 @@ export default async function CurrentAffairsDayPage({ params }: { params: Promis
         </div>
 
         {questions.length > 0 && (
-          <section className="mt-10">
+          <section id="quiz" className="mt-10 scroll-mt-24">
             <div className="mb-4 flex items-center gap-2">
               <BookOpen className="h-5 w-5 text-blue-600" />
               <h2 className="text-2xl font-black text-slate-950">Test today’s Current Affairs</h2>
