@@ -1,209 +1,64 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { motion, useReducedMotion } from "framer-motion";
-import {
-  ArrowRight,
-  BarChart3,
-  BookOpen,
-  ClipboardCheck,
-  Newspaper,
-  Shield,
-  Sparkles,
-  Target,
-} from "lucide-react";
-
 import { trackLearningEvent } from "@/lib/learning-events";
-import { latestMonthlyCapsule } from "@/lib/monthly-capsules";
+import { rememberExamMode, rememberPaperChoice } from "@/lib/learner-mode";
+import { liveExams } from "@/lib/exam-registry";
 
-const tileClass =
-  "group relative flex min-h-[112px] flex-col justify-between overflow-hidden rounded-2xl border border-blue-400/20 bg-white/[0.045] p-4 text-left backdrop-blur-sm transition-all duration-200 hover:border-blue-400/40 hover:bg-blue-500/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 active:scale-[0.99] sm:min-h-[118px] sm:p-5";
+const exams = liveExams().filter((exam) => exam.slug !== "nda");
+const linkClass = "inline-flex min-h-12 items-center justify-center rounded-xl px-5 py-3 font-bold focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-400";
 
 export default function HeroSection() {
-  const capsule = latestMonthlyCapsule();
-  const shouldReduceMotion = useReducedMotion();
-
+  const [exam, setExam] = useState("cds");
+  useEffect(() => {
+    const sync = () => {
+      const value = new URLSearchParams(window.location.search).get("exam");
+      setExam(exams.some((item) => item.slug === value) ? value! : "cds");
+    };
+    sync();
+    window.addEventListener("popstate", sync);
+    trackLearningEvent("landing_view", { surface: "home" });
+    return () => window.removeEventListener("popstate", sync);
+  }, []);
+  const afcat = exam === "afcat";
+  const params = `origin=home&paper=gs&exam=${exam === "capf" ? "CAPF-AC" : "CDS"}`;
+  const practice = afcat ? "/afcat" : `/dashboard/practice?${params}`;
+  function intent() {
+    rememberExamMode(afcat ? "afcat" : "cds");
+    if (!afcat) rememberPaperChoice("gs");
+    trackLearningEvent("landing_practice_intent", { exam, destination: practice });
+  }
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 px-4 pt-14 pb-14 sm:px-6 sm:pt-20 sm:pb-20 lg:px-8 lg:pt-24 lg:pb-24 text-white">
-      {/* Subtle radial ambient glows */}
-      <div className="pointer-events-none absolute left-1/2 top-10 -translate-x-1/2 h-[400px] w-[600px] rounded-full bg-blue-600/15 blur-[130px]" />
-      <div className="pointer-events-none absolute right-1/4 top-1/3 h-[250px] w-[250px] rounded-full bg-indigo-600/10 blur-[100px]" />
-
-      <motion.div
-        className="relative mx-auto max-w-4xl text-center"
-        initial={shouldReduceMotion ? false : { opacity: 0, y: 6 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, ease: "easeOut" }}
-      >
-        {/* ── Top Pill ─────────────────────────────────────────────────── */}
-        <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-500/10 px-4 py-1.5 text-xs font-bold text-blue-300 backdrop-blur-md shadow-xs">
-          <Shield className="h-3.5 w-3.5 text-blue-400" />
-          <span>UPSC CDS &bull; CAPF AC &bull; AFCAT</span>
-        </div>
-
-        {/* ── Headline & Gradient Emphasis (Single H1) ─────────────────── */}
-        <h1 className="mt-6 text-3xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl text-white">
-          <span className="block">Stop Solving PYQs Blindly.</span>
-          <span className="block mt-1 sm:mt-2">
-            <motion.span
-              className="inline-block"
-              style={{
-                background:
-                  "linear-gradient(135deg, #1D4ED8 0%, #2563EB 50%, #3B82F6 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-              initial={
-                shouldReduceMotion
-                  ? { opacity: 1 }
-                  : { opacity: 0, y: 4, filter: "drop-shadow(0 0 16px rgba(37,99,235,0.75))" }
-              }
-              animate={{
-                opacity: 1,
-                y: 0,
-                filter: "drop-shadow(0 0 8px rgba(37,99,235,0.4))",
-              }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-            >
-              Decode
-            </motion.span>{" "}
-            Them.
-          </span>
-          <span className="mt-3.5 block text-xl sm:text-3xl lg:text-4xl font-extrabold tracking-normal bg-gradient-to-r from-blue-400 via-indigo-300 to-blue-200 bg-clip-text text-transparent sm:mt-4">
-            Know exactly what UPSC repeats.
-          </span>
-        </h1>
-
-        {/* ── Supporting Text ──────────────────────────────────────────── */}
-        <p className="mt-5 max-w-2xl mx-auto text-sm sm:text-base lg:text-lg leading-relaxed text-slate-300">
-          Analyse real CDS and CAPF Previous Year Questions from GS and instantly discover recurring topics, practice smarter, and identify exactly where you&apos;re losing marks.
-        </p>
-
-        {/* ── CTA Hierarchy ────────────────────────────────────────────── */}
-        <div className="mx-auto mt-8 w-full max-w-2xl">
-          <Link
-            href="/dashboard/practice?paper=gs"
-            className="group flex w-full items-center justify-between rounded-2xl bg-blue-600 px-5 py-4 text-left shadow-lg shadow-blue-600/30 transition-all duration-200 hover:bg-blue-500 hover:shadow-blue-600/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 active:scale-[0.99] sm:px-6 sm:py-5"
-          >
-            <span className="flex min-w-0 items-center gap-3">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/12">
-                <Target className="h-5 w-5 text-white" />
-              </span>
-              <span className="min-w-0">
-                <span className="block text-base font-extrabold text-white sm:text-lg">
-                  Start Smart Practice
-                </span>
-                <span className="mt-0.5 block text-xs font-medium text-blue-100/85 sm:text-sm">
-                  Authentic PYQs. Personalised practice.
-                </span>
-              </span>
-            </span>
-            <ArrowRight className="h-5 w-5 shrink-0 text-white/85 transition-transform duration-200 group-hover:translate-x-0.5" />
-          </Link>
-
-          <div className="mt-3 grid grid-cols-2 gap-3">
-            <Link
-              href="/dashboard/question-bank?paper=gs"
-              className="group flex min-h-[112px] flex-col justify-between rounded-2xl border border-blue-400/20 bg-white/[0.045] p-4 text-left backdrop-blur-sm transition-all duration-200 hover:border-blue-400/40 hover:bg-blue-500/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 active:scale-[0.99] sm:min-h-[118px] sm:p-5"
-            >
-              <span className="flex items-center justify-between">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500/10 ring-1 ring-inset ring-blue-400/20">
-                  <BarChart3 className="h-4.5 w-4.5 text-blue-300" />
-                </span>
-                <ArrowRight className="h-4 w-4 text-slate-500 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-blue-300" />
-              </span>
-              <span>
-                <span className="block text-sm font-bold text-white sm:text-base">
-                  Decode PYQs
-                </span>
-                <span className="mt-1 block text-[11px] font-medium leading-snug text-slate-400 sm:text-xs">
-                  Trends &amp; weightage
-                </span>
-              </span>
-            </Link>
-
-            <Link
-              href="/current-affairs"
-              className="group relative flex min-h-[112px] flex-col justify-between overflow-hidden rounded-2xl border border-blue-400/20 bg-white/[0.045] p-4 text-left backdrop-blur-sm transition-all duration-200 hover:border-blue-400/40 hover:bg-blue-500/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 active:scale-[0.99] sm:min-h-[118px] sm:p-5"
-            >
-              <span
-                aria-hidden="true"
-                className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-orange-400 via-white to-emerald-500 opacity-80"
-              />
-              <span className="flex items-center justify-between">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500/10 ring-1 ring-inset ring-blue-400/20">
-                  <Newspaper className="h-4.5 w-4.5 text-blue-300" />
-                </span>
-                <ArrowRight className="h-4 w-4 text-slate-500 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-blue-300" />
-              </span>
-              <span>
-                <span className="block text-sm font-bold text-white sm:text-base">
-                  Daily Current Affairs
-                </span>
-                <span className="mt-1 block text-[11px] font-medium leading-snug text-slate-400 sm:text-xs">
-                  Today&apos;s exam briefs
-                </span>
-              </span>
-            </Link>
-
-            <Link
-              href="/afcat"
-              onClick={() => trackLearningEvent("home_tile_click", { tile: "afcat_mocks" })}
-              className={tileClass}
-            >
-              <span className="flex items-center justify-between">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500/10 ring-1 ring-inset ring-blue-400/20">
-                  <ClipboardCheck className="h-4.5 w-4.5 text-blue-300" />
-                </span>
-              </span>
-              <span>
-                <span className="block text-sm font-bold text-white sm:text-base">
-                  AFCAT Full Mocks
-                </span>
-                <span className="mt-1 block text-[11px] font-medium leading-snug text-slate-400 sm:text-xs">
-                  100 Qs &middot; instant analysis
-                </span>
-              </span>
-            </Link>
-
-            {capsule && (
-              <Link
-                href={`/current-affairs/monthly/${capsule.edition}`}
-                onClick={() => trackLearningEvent("home_tile_click", { tile: "monthly_capsule", edition: capsule.edition })}
-                className={tileClass}
-              >
-                <span className="flex items-center justify-between">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500/10 ring-1 ring-inset ring-blue-400/20">
-                    <BookOpen className="h-4.5 w-4.5 text-blue-300" />
-                  </span>
-                  <span className="rounded-full bg-blue-400/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-blue-300">New</span>
-                </span>
-                <span>
-                  <span className="block text-sm font-bold text-white sm:text-base">
-                    {capsule.label} Capsule
-                  </span>
-                  <span className="mt-1 block text-[11px] font-medium leading-snug text-slate-400 sm:text-xs">
-                    Monthly CA &middot; read online
-                  </span>
-                </span>
-              </Link>
-            )}
+    <section aria-label="Exam preparation" className="bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 px-4 py-7 text-white sm:px-6 sm:py-12">
+      <div className="mx-auto max-w-4xl text-center">
+        <p className="text-xs font-bold tracking-widest text-blue-300">CDS · CAPF AC · AFCAT</p>
+        <h1 className="mt-3 text-[1.75rem] font-black leading-tight tracking-tight min-[375px]:text-[2rem] sm:text-5xl lg:text-6xl"><span className="block text-white">Crack the Pattern.</span><span className="block text-blue-400">Master the Exam.</span></h1>
+        <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-slate-300 sm:text-lg">Authentic PYQs, smart practice, exam-style mocks and performance insights — all in one place.</p>
+        <fieldset className="mt-4">
+          <legend className="mx-auto mb-2 text-sm text-slate-300">Choose your exam</legend>
+          <div className="grid grid-cols-3 gap-2 mx-auto max-w-sm">
+            {exams.map((item) => <button key={item.slug} type="button" aria-pressed={exam === item.slug} className={`min-h-12 rounded-xl px-2 py-3 text-sm font-bold focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-400 border ${exam === item.slug ? "border-blue-400 bg-blue-600 text-white" : "border-slate-500 text-slate-200 hover:bg-slate-800"}`} onClick={() => {
+              setExam(item.slug);
+              const url = new URL(window.location.href);
+              url.searchParams.set("exam", item.slug);
+              window.history.pushState(null, "", url);
+              trackLearningEvent("landing_exam_selection", { exam: item.slug });
+            }}>{item.slug === "capf" ? "CAPF AC" : item.label}</button>)}
           </div>
+        </fieldset>
+        <div className="mx-auto mt-4 grid max-w-sm gap-2">
+          <Link href={practice} onClick={intent} className={`${linkClass} w-full bg-blue-600 text-white hover:bg-blue-500`}>{afcat ? "Explore AFCAT Mocks" : exam === "capf" ? "Start CAPF AC Practice" : "Start CDS Practice"}</Link>
+          {!afcat && <Link href={`/dashboard/question-bank?${params}`} onClick={() => {
+            rememberExamMode("cds");
+            rememberPaperChoice("gs");
+            trackLearningEvent("home_tile_click", { tile: "decode_pyqs", exam });
+          }} className={`${linkClass} w-full border border-blue-400/50 bg-blue-500/10 text-blue-200 hover:bg-blue-500/20`}>Decode PYQs</Link>}
         </div>
-
-        {/* ── Free Access Badge over Credentials ───────────────────────── */}
-        <div className="mt-10 sm:mt-12 flex flex-col items-center justify-center gap-3">
-          <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue-500/10 px-4 py-1.5 text-xs font-bold text-blue-300 shadow-2xs">
-            <Sparkles className="h-3.5 w-3.5 text-blue-400" />
-            <span>FREE ACCESS &bull; NO BARRIERS</span>
-          </div>
-
-          {/* Mini Credibility Bar (Trust Line) */}
-          <p className="text-xs sm:text-sm text-slate-400 font-medium">
-            Built by an Assistant Commandant &bull; CAPF AC AIR-163 &bull; IIT Kanpur
-          </p>
+        <div className="mx-auto mt-4 max-w-md rounded-xl border border-blue-400/30 bg-blue-500/10 px-3 py-3">
+          <p className="text-xs font-semibold leading-relaxed text-slate-200 sm:text-sm">Built by <span className="font-bold text-white">Rohit</span> · <span className="font-bold text-blue-300">CAPF AC AIR 163</span> · <span className="font-bold text-white">IIT Kanpur</span> · <span className="font-bold text-blue-300">CDS ×4</span></p>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }
