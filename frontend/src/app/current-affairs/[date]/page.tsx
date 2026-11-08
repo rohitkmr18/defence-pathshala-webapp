@@ -7,6 +7,7 @@ import EditorialMarkdown from "@/components/current-affairs/EditorialMarkdown";
 import { storyDisplayMarkdown } from "@/lib/current-affairs/story-display";
 import CurrentAffairsQuiz from "@/components/current-affairs/CurrentAffairsQuiz";
 import CurrentAffairsEditionTracker from "@/components/current-affairs/CurrentAffairsEditionTracker";
+import { pageMetadata } from "@/lib/seo-metadata";
 
 export const revalidate = 300;
 
@@ -15,13 +16,12 @@ export async function generateMetadata({ params }: { params: Promise<{ date: str
   const post = await getCurrentAffairsByDate(date);
   if (!post) return {};
 
-  return {
+  return pageMetadata({
     title: post.title,
     description: post.summary || `Exam-focused current affairs for ${post.formattedDate} with structured key facts and daily MCQs.`,
-    alternates: {
-      canonical: `/current-affairs/${date}`,
-    },
-  };
+    path: `/current-affairs/${date}`,
+    type: "article",
+  });
 }
 
 export default async function CurrentAffairsDayPage({ params }: { params: Promise<{ date: string }> }) {

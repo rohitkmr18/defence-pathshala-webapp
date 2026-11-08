@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, BookOpen } from "lucide-react";
 import MonthlyCapsuleReader from "@/components/current-affairs/MonthlyCapsuleReader";
 import { MONTHLY_CAPSULES, capsulePageSrc, getMonthlyCapsule } from "@/lib/monthly-capsules";
+import { pageMetadata } from "@/lib/seo-metadata";
 
 export const dynamicParams = false;
 
@@ -15,18 +16,16 @@ export async function generateMetadata({ params }: { params: Promise<{ edition: 
   const { edition } = await params;
   const capsule = getMonthlyCapsule(edition);
   if (!capsule) return {};
-  return {
+  return pageMetadata({
     title: `${capsule.title}: Read Online for AFCAT, CDS, NDA, CAPF`,
     description: capsule.description,
-    alternates: { canonical: `/current-affairs/monthly/${capsule.edition}` },
-    openGraph: {
-      type: "article",
-      title: capsule.title,
-      description: capsule.description,
-      url: `https://www.defencepathshala.in/current-affairs/monthly/${capsule.edition}`,
-      images: [{ url: capsulePageSrc(capsule.edition, 1), width: capsule.pageWidth, height: capsule.pageHeight, alt: capsule.title }],
-    },
-  };
+    path: `/current-affairs/monthly/${capsule.edition}`,
+    type: "article",
+    image: capsulePageSrc(capsule.edition, 1),
+    imageAlt: capsule.title,
+    imageWidth: capsule.pageWidth,
+    imageHeight: capsule.pageHeight,
+  });
 }
 
 export default async function MonthlyCapsulePage({ params }: { params: Promise<{ edition: string }> }) {

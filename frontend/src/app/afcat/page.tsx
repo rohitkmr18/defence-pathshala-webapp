@@ -5,6 +5,7 @@ import AfcatCtaLink from "@/components/afcat/AfcatCtaLink";
 import AfcatLandingTracker from "@/components/afcat/AfcatLandingTracker";
 import { ArrowRight, BarChart3, Brain, Clock3, FileCheck2, Target, Timer } from "lucide-react";
 import DPLogo from "@/components/common/DPLogo";
+import PublicExploreLinks from "@/components/public/PublicExploreLinks";
 
 export const metadata: Metadata = {
   title: "AFCAT Full Mock 01, free",
@@ -129,6 +130,7 @@ export default function AfcatPage() {
           </p>
         </div>
       </div>
+      <PublicExploreLinks className="border-t border-slate-200" heading="More defence exam practice" />
     </main>
   );
 }

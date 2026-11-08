@@ -26,6 +26,12 @@ export default function PublicNavbar() {
             <Link href="/pyqs/capf" className="hover:text-blue-600 transition">
               CAPF PYQs
             </Link>
+            <Link href="/afcat" className="hover:text-blue-600 transition">
+              AFCAT Mocks
+            </Link>
+            <Link href="/current-affairs" className="hover:text-blue-600 transition">
+              Current Affairs
+            </Link>
             <Link href="/about" className="hover:text-blue-600 transition">
               About
             </Link>

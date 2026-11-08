@@ -63,7 +63,7 @@ export const metadata: Metadata = {
 
   twitter: {
     card: "summary_large_image",
-    title: "Defence Pathshala",
+    title: "Defence Pathshala | CDS, CAPF & AFCAT preparation",
     description:
       "CDS & CAPF PYQs • Free AFCAT mocks • Daily current affairs",
     images: ["/og-image.png"],

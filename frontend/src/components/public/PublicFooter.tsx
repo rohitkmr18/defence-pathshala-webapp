@@ -71,6 +71,16 @@ export default function PublicFooter() {
                 </Link>
               </li>
               <li>
+                <Link href="/afcat" className="text-slate-400 hover:text-white transition">
+                  Free AFCAT Mock Test
+                </Link>
+              </li>
+              <li>
+                <Link href="/current-affairs" className="text-slate-400 hover:text-white transition">
+                  Daily Current Affairs
+                </Link>
+              </li>
+              <li>
                 <Link href="/about" className="text-slate-400 hover:text-white transition">
                   About Defence Pathshala
                 </Link>

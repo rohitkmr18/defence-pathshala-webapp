@@ -16,6 +16,7 @@ import {
   Clock,
 } from "lucide-react";
 import { getAboutContent } from "@/lib/aboutContent";
+import PublicExploreLinks from "@/components/public/PublicExploreLinks";
 
 export default async function AboutPage() {
   const content = await getAboutContent();
@@ -358,6 +359,7 @@ export default async function AboutPage() {
           </div>
         </section>
       </div>
+      <PublicExploreLinks className="border-t border-slate-200" />
     </main>
   );
 }
