@@ -3,8 +3,74 @@ import {
   afcatStagingAdmin,
   afcatStagingUser,
 } from "@/lib/afcat/staging-server";
+import { afcatMockLabel } from "@/lib/afcat/mock-labels";
 
 export const dynamic = "force-dynamic";
+
+/** The signed-in learner's AFCAT attempts, newest first, so saved results are always reachable. */
+export async function GET() {
+  try {
+    const user = await afcatStagingUser();
+    if (!user)
+      return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+    const db = afcatStagingAdmin();
+    const { data: sessions, error } = await db
+      .from("afcat_sessions")
+      .select("id,test_id,status,started_at")
+      .eq("user_id", user.id)
+      .order("started_at", { ascending: false })
+      .limit(50);
+    if (error) throw error;
+    const rows = sessions ?? [];
+    if (!rows.length)
+      return NextResponse.json(
+        { attempts: [] },
+        { headers: { "Cache-Control": "private, no-store" } },
+      );
+    const [testsRes, resultsRes] = await Promise.all([
+      db
+        .from("afcat_tests")
+        .select("id,code,title")
+        .in("id", [...new Set(rows.map((r) => r.test_id))]),
+      db
+        .from("afcat_session_results")
+        .select("session_id,score,max_marks")
+        .eq("user_id", user.id)
+        .in("session_id", rows.map((r) => r.id)),
+    ]);
+    if (testsRes.error) throw testsRes.error;
+    if (resultsRes.error) throw resultsRes.error;
+    const tests = new Map((testsRes.data ?? []).map((t) => [t.id, t]));
+    const results = new Map((resultsRes.data ?? []).map((r) => [r.session_id, r]));
+    const attempts = rows.flatMap((r) => {
+      const test = tests.get(r.test_id);
+      if (!test) return [];
+      const result = results.get(r.id);
+      return [
+        {
+          id: r.id,
+          testId: r.test_id,
+          code: test.code,
+          title: afcatMockLabel(test.code, test.title),
+          status: r.status,
+          startedAt: r.started_at,
+          score: result?.score ?? null,
+          maxMarks: result?.max_marks ?? null,
+        },
+      ];
+    });
+    return NextResponse.json(
+      { attempts },
+      { headers: { "Cache-Control": "private, no-store" } },
+    );
+  } catch {
+    return NextResponse.json(
+      { error: "Unable to load your attempts" },
+      { status: 503 },
+    );
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const user = await afcatStagingUser();
