@@ -50,6 +50,9 @@ jobs:
       - name: Verify AFCAT engine invariants
         run: node --test scripts/test-afcat-engine.cjs
 
+      - name: Verify isolated AFCAT PostgreSQL session lifecycle
+        run: node --test scripts/test-afcat-db.cjs
+
       - name: Verify AFCAT visual benchmark interactions
         env:
           DP_CHROMIUM_PATH: /usr/bin/google-chrome
