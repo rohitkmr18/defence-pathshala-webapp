@@ -181,6 +181,13 @@ export default function AfcatLab() {
     update();
     window.addEventListener("online", update);
     window.addEventListener("offline", update);
+    return () => {
+      window.removeEventListener("online", update);
+      window.removeEventListener("offline", update);
+    };
+  }, [load, loadHome]);
+  useEffect(() => {
+    if (paper?.session.status !== "IN_PROGRESS" || result) return;
     const timer = window.setInterval(
       () =>
         setLeft(
@@ -195,12 +202,8 @@ export default function AfcatLab() {
         ),
       1000,
     );
-    return () => {
-      clearInterval(timer);
-      window.removeEventListener("online", update);
-      window.removeEventListener("offline", update);
-    };
-  }, [load, loadHome]);
+    return () => window.clearInterval(timer);
+  }, [paper?.session.status, result]);
   /** Reopen a saved attempt (in-progress or finished) without starting a new one. */
   async function openAttempt(id: string) {
     if (lock.current) return;
@@ -277,9 +280,13 @@ export default function AfcatLab() {
           }
         }
       }
-      await api(`/api/afcat/sessions/${paper.session.id}/submit`, {
+      const submitted = await api(`/api/afcat/sessions/${paper.session.id}/submit`, {
         method: "POST",
       });
+      // Finalization is authoritative even if fetching analysis subsequently fails.
+      const status = submitted.result?.status;
+      if (status === "SUBMITTED" || status === "EXPIRED")
+        setPaper((old) => old ? { ...old, session: { ...old.session, status } } : old);
       const completed = await api(
         `/api/afcat/sessions/${paper.session.id}/result`,
       );
@@ -501,15 +508,15 @@ export default function AfcatLab() {
               className={`shrink-0 rounded-xl border px-3 py-2 ${left <= 300 && !result ? "border-amber-400 text-amber-200" : "border-white/15 bg-white/5"}`}
             >
               <p className="text-[10px] uppercase tracking-wider">
-                {result ? "Test complete" : "Time remaining"}
+                {result || paper.session.status !== "IN_PROGRESS" ? "Test complete" : "Time remaining"}
               </p>
-              <span
+              {paper.session.status === "IN_PROGRESS" && !result && <span
                 role="timer"
                 aria-label={`Time remaining ${time}`}
                 className="font-mono text-lg font-bold tabular-nums sm:text-2xl"
               >
                 {time}
-              </span>
+              </span>}
             </div>
           )}
         </div>

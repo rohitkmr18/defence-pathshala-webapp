@@ -34,7 +34,11 @@ for (const width of [320, 390, 1280]) {
     await page.route("**/api/afcat/**", async (route) => {
       const path = new URL(route.request().url()).pathname;
       let body: unknown;
-      if (path.endsWith("/tests"))
+      if (path.endsWith("/dashboard"))
+        body = { attempts: [{ sessionId: "synthetic-session", testId: "test", testCode: null, title: "QA mock", status,
+          score: 3, maxMarks: 300, correct: 1, incorrect: 0, unanswered: 99, timeSeconds: 0,
+          questionTimeSeconds: 121, completedAt: null }], inProgress: null, bestScore: 3, averageScore: 3, sections: [], weakTopics: [] };
+      else if (path.endsWith("/tests"))
         body = {
           tests: [
             {
@@ -55,7 +59,7 @@ for (const width of [320, 390, 1280]) {
         body = { saved: true };
       } else if (path.endsWith("/submit")) {
         status = "SUBMITTED";
-        body = { result: {} };
+        body = { result: { status } };
       } else if (path.endsWith("/result"))
         body = {
           status,
@@ -90,6 +94,9 @@ for (const width of [320, 390, 1280]) {
     await expect(
       page.getByRole("heading", { name: "Question 1", exact: true }),
     ).toBeVisible();
+    const timer = page.getByRole("timer");
+    const before = await timer.textContent();
+    await expect(timer).not.toHaveText(before ?? "");
     await page.getByRole("radio").first().press("Space");
     await expect(page.getByRole("radio").first()).toBeChecked();
     await expect(page.getByRole("radio").first()).toBeEnabled();
@@ -163,10 +170,17 @@ for (const width of [320, 390, 1280]) {
       page.getByRole("region", { name: "Exam results" }),
     ).toBeVisible();
     await expect(page.getByRole("radio")).toHaveCount(0);
+    await expect(page.getByRole("timer")).toHaveCount(0);
+    await expect(page.getByText("Test complete", { exact: true })).toBeVisible();
     await page.reload();
     await expect(
       page.getByRole("region", { name: "Exam results" }),
     ).toBeVisible();
+    await expect(page.getByRole("timer")).toHaveCount(0);
+    await expect(page.getByText("Test complete", { exact: true })).toBeVisible();
+    await page.goto("/afcat/dashboard");
+    await expect(page.getByText(/Question time: 2 min 1 sec/)).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   });
 }
 test("failed save blocks navigation and never claims saved", async ({
@@ -210,4 +224,30 @@ test("failed save blocks navigation and never claims saved", async ({
     page.getByRole("button", { name: "Save & Next" }),
   ).toBeDisabled();
   await expect(page.getByRole("radio").first()).not.toBeChecked();
+});
+
+test("expiry auto-submits once and removes the timer", async ({ page }) => {
+  let submissions = 0;
+  await page.route("**/api/afcat/**", async (route) => {
+    const path = new URL(route.request().url()).pathname;
+    if (path.endsWith("/submit")) {
+      submissions++;
+      return route.fulfill({ json: { result: { status: "EXPIRED" } } });
+    }
+    if (path.endsWith("/result")) return route.fulfill({ json: {
+      status: "EXPIRED", summary: { score: 0, max_marks: 300, correct_count: 0, incorrect_count: 0, unanswered_count: 100 }, sections: []
+    } });
+    return route.fulfill({ json: {
+      serverNow: new Date().toISOString(),
+      session: { id: "expiry", title: "QA expiry", status: "IN_PROGRESS", deadline: new Date(Date.now() + 2000).toISOString() },
+      questions: [{ id: "q1", number: 1, section: "ENGLISH", stem: { text: "Synthetic expiry" },
+        options: ["A","B","C","D"].map(key => ({ key, content: { text: key } })) }], responses: []
+    } });
+  });
+  await page.goto("/afcat/lab?session=expiry");
+  await expect(page.getByRole("timer")).toBeVisible();
+  await expect(page.getByText("Test complete", { exact: true })).toBeVisible();
+  await expect(page.getByRole("timer")).toHaveCount(0);
+  await page.waitForTimeout(2100);
+  expect(submissions).toBe(1);
 });

@@ -58,6 +58,11 @@ jobs:
           DP_CHROMIUM_PATH: /usr/bin/google-chrome
         run: npm exec --prefix frontend -- playwright test --config frontend/playwright.afcat.config.ts
 
+      - name: Verify AFCAT player completion regressions
+        env:
+          DP_CHROMIUM_PATH: /usr/bin/google-chrome
+        run: npm exec --prefix frontend -- playwright test --config frontend/playwright.afcat-player.config.ts
+
       - name: Verify session resume regressions
         run: >-
           node --experimental-strip-types --test

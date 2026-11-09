@@ -206,3 +206,59 @@ test('AFCAT funnel events are all wired and carry no personal data', () => {
   for (const [event] of wired) assert.ok(funnel.includes(`"${event}"`), `${event} not declared`);
   assert.doesNotMatch(funnel + read('frontend/src/components/afcat/AfcatShareButton.tsx').match(/trackAfcatFunnel\([^)]*\)/g)?.join(''), /email|user_id|userId/i);
 });
+
+const duration = load('frontend/src/lib/afcat/duration.ts');
+test('tracked question time preserves zero, unavailable historical timing and units', () => {
+  for (const [seconds, label] of [[0,'0 sec'],[59,'59 sec'],[61,'1 min 1 sec'],[121,'2 min 1 sec']]) {
+    assert.equal(duration.formatQuestionTime(seconds), 'Question time: '+label);
+  }
+  assert.equal(duration.trackedQuestionSeconds([]), null);
+  assert.equal(duration.trackedQuestionSeconds([null]), null);
+  assert.equal(duration.trackedQuestionSeconds([0]), 0);
+  assert.equal(duration.trackedQuestionSeconds([59,62]), 121);
+  assert.equal(duration.formatQuestionTime(null), 'Question time unavailable');
+  // Expiry does not turn the deadline or late finalization into invented active time.
+  assert.equal(duration.trackedQuestionSeconds([3,0]), 3);
+});
+
+test('dashboard scopes sessions, results and timing to the authenticated owner', async () => {
+  const tables = {
+    afcat_sessions: [
+      { id:'a',test_id:'t',user_id:'A',status:'SUBMITTED',elapsed_seconds:0 },
+      { id:'b',test_id:'t',user_id:'B',status:'EXPIRED',elapsed_seconds:0 },
+    ],
+    afcat_tests: [{id:'t',code:'QA',title:'QA',max_marks:300}],
+    afcat_session_results: [{session_id:'a',user_id:'A',score:2},{session_id:'b',user_id:'B',score:3}],
+    afcat_test_items: [{test_id:'t',question_id:'q',position:1}],
+    afcat_questions: [{id:'q',section:'ENGLISH',correct_option:'A'}],
+    afcat_responses: [
+      {session_id:'a',user_id:'A',question_id:'q',time_spent_seconds:121},
+      {session_id:'b',user_id:'B',question_id:'q',time_spent_seconds:59},
+    ],
+  };
+  let owner = 'A';
+  const db = { from(table) {
+    let rows = tables[table];
+    const query = {
+      select() { return query; },
+      eq(key,value) { rows = rows.filter(row => row[key] === value); return query; },
+      in(key,values) { rows = rows.filter(row => values.includes(row[key])); return query; },
+      order() { return query; }, limit() { return query; },
+      then(resolve) { return Promise.resolve({data:rows,error:null}).then(resolve); }
+    };
+    return query;
+  }};
+  const route = require('./test-support/load-ts.cjs')({
+    'next/server': { NextResponse: { json: (data) => data } },
+    '@/lib/afcat/staging-server': { afcatStagingUser: async () => ({id:owner}), afcatStagingAdmin: () => db },
+  })('frontend/src/app/api/afcat/dashboard/route.ts');
+  let result = await route.GET();
+  assert.equal(result.attempts.length,1);
+  assert.equal(result.attempts[0].sessionId,'a');
+  assert.equal(result.attempts[0].questionTimeSeconds,121);
+  owner = 'B';
+  result = await route.GET();
+  assert.equal(result.attempts.length,1);
+  assert.equal(result.attempts[0].sessionId,'b');
+  assert.equal(result.attempts[0].questionTimeSeconds,59);
+});

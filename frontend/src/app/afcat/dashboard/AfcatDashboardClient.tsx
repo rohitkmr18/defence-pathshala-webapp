@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { formatQuestionTime } from "@/lib/afcat/duration";
 import Link from "next/link";
 import { ArrowRight, BarChart3, Clock3, Target, Trophy } from "lucide-react";
 
 type Attempt = {
   sessionId: string; testId: string; testCode: string | null; title: string; status: string; score: number | null; maxMarks: number;
-  correct: number; incorrect: number; unanswered: number; timeSeconds: number; completedAt: string | null;
+  correct: number; incorrect: number; unanswered: number; timeSeconds: number; questionTimeSeconds?: number | null; completedAt: string | null;
 };
 type Section = { section: string; label: string; total: number; correct: number; incorrect: number; unanswered: number; accuracyPercent: number; marks: number; maximumMarks: number };
 type Topic = { section: string; topic: string; total: number; accuracyPercent: number; marksLost: number };
@@ -16,7 +17,6 @@ type Dashboard = {
   bestScore: number | null; averageScore: number | null; sections: Section[]; weakTopics: Topic[];
 };
 
-const minutes = (s: number) => `${Math.round(s / 60)} min`;
 const date = (v: string | null) => (v ? new Date(v).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—");
 
 export default function AfcatDashboardClient() {
@@ -96,7 +96,7 @@ export default function AfcatDashboardClient() {
                   <li key={a.sessionId} className="flex flex-wrap items-center justify-between gap-2 py-3 text-sm">
                     <div>
                       <p className="font-bold">{a.title}</p>
-                      <p className="text-xs text-slate-500">{date(a.completedAt)} · {minutes(a.timeSeconds)} · {a.correct} correct, {a.incorrect} wrong, {a.unanswered} skipped</p>
+                      <p className="text-xs text-slate-500">{date(a.completedAt)} · {formatQuestionTime(a.questionTimeSeconds)} · {a.correct} correct, {a.incorrect} wrong, {a.unanswered} skipped</p>
                     </div>
                     <div className="flex items-center gap-3">
                       <span className="font-black">{a.score ?? "—"}/{a.maxMarks}</span>
