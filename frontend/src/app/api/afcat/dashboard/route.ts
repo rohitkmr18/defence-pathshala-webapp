@@ -85,7 +85,7 @@ export async function GET() {
       const r = resultBySession.get(s.id);
       const t = testById.get(s.test_id);
       return {
-        sessionId: s.id, title: t ? afcatMockLabel(t.code, t.title) : "AFCAT mock", status: s.status,
+        sessionId: s.id, testId: s.test_id, testCode: t?.code ?? null, title: t ? afcatMockLabel(t.code, t.title) : "AFCAT mock", status: s.status,
         score: r?.score ?? null, maxMarks: r?.max_marks ?? t?.max_marks ?? 300,
         correct: r?.correct_count ?? 0, incorrect: r?.incorrect_count ?? 0, unanswered: r?.unanswered_count ?? 0,
         timeSeconds: s.elapsed_seconds ?? 0, completedAt: r?.completed_at ?? s.finished_at,
