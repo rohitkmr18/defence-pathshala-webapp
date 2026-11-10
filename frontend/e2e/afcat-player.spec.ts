@@ -239,7 +239,7 @@ test("selected landing mock yields exactly one Start CTA and ignores unknown IDs
   await page.getByRole("button", { name: "Start AFCAT Full Mock 02" }).click();
   expect(postedTestId).toBe("mock-two");
   await page.goto("/afcat/lab?testId=unknown-test");
-  await expect(page.getByRole("alert")).toContainText("This mock is not currently published");
+  await expect(page.getByRole("alert").filter({ hasText: "This mock is not currently published" })).toHaveCount(1);
   await expect(page.getByRole("button", { name: /^Start/ })).toHaveCount(0);
   await page.goto("/afcat/lab");
   await expect(page.getByRole("button", { name: /^Start/ })).toHaveCount(3);
