@@ -34,6 +34,12 @@ export default function HeroSection() {
       <div className="mx-auto max-w-4xl text-center">
         <p className="text-xs font-bold tracking-widest text-blue-300">CDS · CAPF AC · AFCAT</p>
         <h1 className="mt-3 text-[1.75rem] font-black leading-tight tracking-tight min-[375px]:text-[2rem] sm:text-5xl lg:text-6xl"><span className="block text-white">Crack the Pattern.</span><span className="block text-blue-400">Master the Exam.</span></h1>
+        <div className="mx-auto mt-4 flex max-w-full justify-center">
+          <p className="inline-flex max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-1 rounded-full border border-emerald-400/70 bg-emerald-950/70 px-3 py-2 text-center text-xs font-semibold leading-relaxed text-emerald-50 sm:px-4 sm:text-sm">
+            <span aria-hidden="true" className="text-base leading-none text-emerald-300">✦</span>
+            <span>Free PYQs, Practice &amp; Learning Resources</span>
+          </p>
+        </div>
         <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-slate-300 sm:text-lg">Authentic PYQs, smart practice, exam-style mocks and performance insights — all in one place.</p>
         <fieldset className="mt-4">
           <legend className="mx-auto mb-2 text-sm text-slate-300">Choose your exam</legend>
