@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, BarChart3, BookOpen, CheckCircle2, Clock3, ListFilter, Target, TrendingUp } from "lucide-react";
+import { ArrowRight, CheckCircle2, Target, TrendingUp } from "lucide-react";
 import type { AfcatPerformanceGroup, AfcatPerformanceV2 } from "@/lib/afcat/performance-v2";
 
 type Tab = "overview" | "subjects" | "topics" | "trends" | "plan";
