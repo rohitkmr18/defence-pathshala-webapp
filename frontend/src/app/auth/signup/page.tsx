@@ -9,8 +9,8 @@ import DPLogo from "@/components/common/DPLogo";
 
 export default function SignupPage() {
   return (
-    <main className="min-h-screen overflow-x-hidden bg-white">
-      <div className="flex min-h-screen flex-col lg:flex-row">
+    <main className="min-h-screen w-full min-w-0 overflow-x-clip bg-white">
+      <div className="flex min-h-screen min-w-0 flex-col lg:flex-row">
         {/* ── Left panel (branding) ─────────────────────────────────────── */}
         <div className="relative hidden overflow-hidden bg-slate-950 lg:flex lg:w-1/2 lg:flex-col lg:items-start lg:justify-between lg:p-12">
           <div className="pointer-events-none absolute -left-24 top-0 h-80 w-80 rounded-full bg-blue-600/20 blur-3xl" />
@@ -75,7 +75,7 @@ export default function SignupPage() {
         </div>
 
         {/* ── Right panel (form) ───────────────────────────────────────── */}
-        <div className="flex flex-1 flex-col items-center justify-center px-4 py-12 sm:px-8 lg:px-12">
+        <div className="flex w-full min-w-0 flex-1 flex-col items-center justify-center px-4 py-12 sm:px-8 lg:w-1/2 lg:px-12">
           {/* Mobile logo */}
           <div className="mb-8 flex items-center gap-2.5 lg:hidden">
             <DPLogo className="h-9 w-auto" />
@@ -84,9 +84,9 @@ export default function SignupPage() {
             </span>
           </div>
 
-          <div className="w-full max-w-md">
+          <div className="w-full min-w-0 max-w-md">
             <div className="mb-8">
-              <h2 className="text-2xl font-black tracking-tight text-slate-900">
+              <h2 className="break-words text-2xl font-black tracking-tight text-slate-900">
                 Create your account
               </h2>
               <p className="mt-1.5 text-sm text-slate-500">
