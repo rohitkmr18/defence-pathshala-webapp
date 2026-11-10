@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, BarChart3, Clock3, Target, Trophy } from "lucide-react";
+import AfcatPerformancePanel from "@/components/afcat/AfcatPerformancePanel";
+import type { AfcatPerformanceV2 } from "@/lib/afcat/performance-v2";
+import { ArrowRight } from "lucide-react";
 
 type Attempt = {
   sessionId: string; title: string; status: string; score: number | null; maxMarks: number;
@@ -14,6 +16,7 @@ type AvailableMock = { id: string; code: string; title: string; duration_seconds
 type Dashboard = {
   attempts: Attempt[]; inProgress: { sessionId: string; title: string } | null;
   bestScore: number | null; averageScore: number | null; sections: Section[]; weakTopics: Topic[];
+  performanceV2?: AfcatPerformanceV2;
 };
 
 const minutes = (s: number) => `${Math.round(s / 60)} min`;
@@ -53,13 +56,6 @@ export default function AfcatDashboardClient() {
   const finishedLiveMock = attempts.some((a) => (mocks ?? []).some((m) => m.title === a.title));
   const ctaLabel = finishedLiveMock ? "Reattempt mock" : "Start mock for free";
   const latest = attempts.find((a) => a.score !== null) ?? null;
-  const cards = [
-    { icon: Target, label: "Latest score", value: latest ? `${latest.score}/${latest.maxMarks}` : "—" },
-    { icon: Trophy, label: "Best score", value: data?.bestScore != null ? `${data.bestScore}` : "—" },
-    { icon: BarChart3, label: "Average score", value: data?.averageScore != null ? `${data.averageScore}` : "—" },
-    { icon: Clock3, label: "Mocks submitted", value: String(attempts.length) },
-  ];
-
   return (
     <div className="space-y-6">
       {/* 1. Primary action: always visible, even if history or the mock list cannot load */}
@@ -110,52 +106,15 @@ export default function AfcatDashboardClient() {
         )}
       </section>
 
-      {/* 2. Performance analytics, same blocks as the CDS dashboard */}
-      {state === "ready" && attempts.length > 0 && data && (
-        <>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {cards.map(({ icon: Icon, label, value }) => (
-              <div key={label} className="rounded-2xl border border-slate-200 bg-white p-4">
-                <Icon className="h-4 w-4 text-blue-600" aria-hidden="true" />
-                <p className="mt-2 text-2xl font-black">{value}</p>
-                <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">{label}</p>
-              </div>
-            ))}
-          </div>
-
-          {data.sections.length > 0 && (
-            <section className="rounded-3xl border border-slate-200 bg-white p-5 sm:p-6">
-              <h2 className="text-sm font-black uppercase tracking-wider text-slate-700">Section accuracy (all mocks)</h2>
-              <ul className="mt-4 space-y-4">
-                {data.sections.map((s) => (
-                  <li key={s.section}>
-                    <div className="flex items-baseline justify-between text-sm">
-                      <span className="font-bold">{s.label}</span>
-                      <span className="text-slate-600">{s.accuracyPercent}% · {s.correct}/{s.total} correct · {s.unanswered} skipped</span>
-                    </div>
-                    <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-slate-100">
-                      <div className="h-full rounded-full bg-blue-600" style={{ width: `${Math.min(100, s.accuracyPercent)}%` }} />
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-
-          {data.weakTopics.length > 0 && (
-            <section className="rounded-3xl border border-slate-200 bg-white p-5 sm:p-6">
-              <h2 className="text-sm font-black uppercase tracking-wider text-slate-700">Topics costing you the most marks</h2>
-              <ul className="mt-4 divide-y divide-slate-100">
-                {data.weakTopics.map((t) => (
-                  <li key={`${t.section}-${t.topic}`} className="flex items-center justify-between py-2.5 text-sm">
-                    <span className="font-semibold">{t.topic}</span>
-                    <span className="text-slate-600">{t.marksLost} marks lost · {t.accuracyPercent}% accuracy</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-        </>
+      {/* B2 learner intelligence: only derived from finalized, user-owned attempts. */}
+      {state === "ready" && data?.performanceV2 && data.performanceV2.overview.completedMocks > 0 && (
+        <AfcatPerformancePanel data={data.performanceV2} latestSessionId={latest?.sessionId ?? null} />
+      )}
+      {state === "ready" && attempts.length === 0 && (
+        <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-6 text-sm text-slate-600">
+          <p className="font-bold text-slate-900">Your performance intelligence starts with a completed mock.</p>
+          <p className="mt-2">Attempt a published AFCAT mock to unlock section, topic and subtopic analysis.</p>
+        </div>
       )}
     </div>
   );
