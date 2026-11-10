@@ -1,3 +1,4 @@
+import { trackedQuestionSeconds } from "@/lib/afcat/duration";
 import { NextResponse } from "next/server";
 import { afcatMockLabel } from "@/lib/afcat/mock-labels";
 import { afcatStagingAdmin, afcatStagingUser } from "@/lib/afcat/staging-server";
@@ -85,10 +86,16 @@ export async function GET() {
       const r = resultBySession.get(s.id);
       const t = testById.get(s.test_id);
       return {
-        sessionId: s.id, title: t ? afcatMockLabel(t.code, t.title) : "AFCAT mock", status: s.status,
+        sessionId: s.id, testId: s.test_id, testCode: t?.code ?? null, title: t ? afcatMockLabel(t.code, t.title) : "AFCAT mock", status: s.status,
         score: r?.score ?? null, maxMarks: r?.max_marks ?? t?.max_marks ?? 300,
         correct: r?.correct_count ?? 0, incorrect: r?.incorrect_count ?? 0, unanswered: r?.unanswered_count ?? 0,
-        timeSeconds: s.elapsed_seconds ?? 0, completedAt: r?.completed_at ?? s.finished_at,
+        timeSeconds: s.elapsed_seconds ?? 0, // Retained for existing API consumers.
+        // Match result analysis: saved time on assigned questions, never wall-clock time.
+        questionTimeSeconds: trackedQuestionSeconds((responses ?? [])
+          .filter((response) => response.session_id === s.id &&
+            (items ?? []).some((i) => i.test_id === s.test_id && i.question_id === response.question_id))
+          .map((response) => response.time_spent_seconds)),
+        completedAt: r?.completed_at ?? s.finished_at,
       };
     });
     const scored = attempts.filter((a) => a.score !== null);
