@@ -63,6 +63,7 @@ const button =
 export default function AfcatLab() {
   const [tests, setTests] = useState<Test[]>([]),
     [paper, setPaper] = useState<Paper | null>(null);
+  const [selectedTestId, setSelectedTestId] = useState<string | null>(null);
   const [index, setIndex] = useState(0),
     [answers, setAnswers] = useState<Record<string, Answer>>({});
   const [visited, setVisited] = useState<number[]>([]),
@@ -142,7 +143,11 @@ export default function AfcatLab() {
     }
   }, []);
   useEffect(() => {
-    const id = new URLSearchParams(window.location.search).get("session");
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("session");
+    // A selected catalogue item is a filter, not an instruction to start a session.
+    // The existing session POST continues to enforce authentication and ownership.
+    setSelectedTestId(id ? null : params.get("testId"));
     (id ? load(id) : api("/api/afcat/tests").then((x) => setTests(x.tests)))
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
@@ -417,6 +422,8 @@ export default function AfcatLab() {
     marked = Object.values(answers).filter((a) => a.markedForReview).length;
   const blocked =
     busy || submitting || saveState.startsWith("Save not confirmed");
+  const chosenTest = selectedTestId ? tests.find((t) => t.id === selectedTestId) : null;
+  const visibleTests = selectedTestId ? (chosenTest ? [chosenTest] : []) : tests;
   const time = `${String(Math.floor(left / 3600)).padStart(2, "0")}:${String(Math.floor((left % 3600) / 60)).padStart(2, "0")}:${String(left % 60).padStart(2, "0")}`;
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900" style={{ overflowX: "clip", overflowY: "visible" }}>
@@ -491,7 +498,7 @@ export default function AfcatLab() {
                 Before you begin
               </p>
               <h2 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl">
-                {tests.length === 1 ? tests[0].title : "AFCAT Full Mocks"}
+                {selectedTestId ? (chosenTest?.title ?? "Selected AFCAT mock unavailable") : tests.length === 1 ? tests[0].title : "AFCAT Full Mocks"}
               </h2>
               <p className="mt-3 leading-7 text-slate-600">
                 Read this once. The timer starts the moment you press Start.
@@ -531,19 +538,27 @@ export default function AfcatLab() {
                 <li>You cannot change answers after you submit. Your analysis appears straight away.</li>
               </ul>
             </div>
+            {selectedTestId && !loading && tests.length > 0 && !chosenTest && (
+              <div role="alert" className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+                This mock is not currently published. <Link href="/afcat#available-mocks" className="font-bold underline">Choose an available mock</Link>.
+              </div>
+            )}
+            {selectedTestId && chosenTest && (
+              <Link href="/afcat#available-mocks" className="inline-flex min-h-11 items-center text-sm font-bold text-blue-700 underline">← Choose a different mock</Link>
+            )}
             {!loading && tests.length === 0 && !error && (
               <p role="status" className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-600">
                 The mock is not available right now. Please try again shortly.
               </p>
             )}
-            {tests.map((t) => (
+            {visibleTests.map((t) => (
               <button
                 key={t.id}
                 disabled={loading}
                 onClick={() => void start(t.id)}
                 className="flex min-h-14 w-full items-center justify-center rounded-2xl bg-blue-600 px-6 text-base font-bold text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-50"
               >
-                {tests.length > 1 ? `Start ${t.title}` : "Start Full Mock"}
+                {selectedTestId ? `Start ${t.title}` : tests.length > 1 ? `Start ${t.title}` : "Start Full Mock"}
               </button>
             ))}
           </section>
