@@ -75,6 +75,7 @@ export default function AfcatLab() {
     [attempts, setAttempts] = useState<Attempt[]>([]),
     [paper, setPaper] = useState<Paper | null>(null);
   const [attemptsError, setAttemptsError] = useState("");
+  const [selectedTestId, setSelectedTestId] = useState<string | null>(null);
   const [attemptsSignedOut, setAttemptsSignedOut] = useState(false);
   const [index, setIndex] = useState(0),
     [answers, setAnswers] = useState<Record<string, Answer>>({});
@@ -173,7 +174,11 @@ export default function AfcatLab() {
     setTests(testsResult.value.tests);
   }, []);
   useEffect(() => {
-    const id = new URLSearchParams(window.location.search).get("session");
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("session");
+    // A catalogue selection is an exact test ID, never an instruction to create a session.
+    // The server still authorizes the resulting Start/Resume request.
+    setSelectedTestId(id ? null : params.get("testId"));
     (id ? load(id) : loadHome())
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
@@ -229,6 +234,7 @@ export default function AfcatLab() {
     setResult(null);
     setReport(null);
     window.history.replaceState(null, "", "/afcat/lab");
+    setSelectedTestId(null);
     window.scrollTo({ top: 0, behavior: "instant" });
     try {
       await loadHome();
@@ -388,6 +394,8 @@ export default function AfcatLab() {
   useEffect(() => {
     if (resultSessionId) trackAfcatFunnel("afcat_result_view", {}, `result:${resultSessionId}`);
   }, [resultSessionId]);
+  const chosenTest = selectedTestId ? tests.find((t) => t.id === selectedTestId) : null;
+  const visibleTests = selectedTestId ? (chosenTest ? [chosenTest] : []) : tests;
   const question = paper?.questions[index];
   const active = paper?.session.status === "IN_PROGRESS" && left > 0 && online;
   // Refs mirror render state for effect cleanups; written after commit, never during render.
@@ -567,7 +575,7 @@ export default function AfcatLab() {
             {attemptsSignedOut && (
               <p className="text-sm text-slate-600">Sign in to view your saved mock attempts.</p>
             )}
-            {attempts.length > 0 && (
+            {!selectedTestId && attempts.length > 0 && (
               <div className="rounded-2xl border border-blue-200 bg-blue-50 p-5 shadow-sm">
                 <h3 className="text-sm font-bold uppercase tracking-[0.14em] text-blue-800">
                   Your saved attempts
@@ -617,7 +625,7 @@ export default function AfcatLab() {
                 Before you begin
               </p>
               <h2 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl">
-                {tests.length === 1 ? tests[0].title : "AFCAT Full Mocks"}
+                {selectedTestId ? (chosenTest?.title ?? "Selected AFCAT mock unavailable") : tests.length === 1 ? tests[0].title : "AFCAT Full Mocks"}
               </h2>
               <p className="mt-3 leading-7 text-slate-600">
                 Read this once. The timer starts the moment you press Start.
@@ -657,12 +665,20 @@ export default function AfcatLab() {
                 <li>You cannot change answers after you submit. Your analysis appears straight away.</li>
               </ul>
             </div>
+            {selectedTestId && !loading && tests.length > 0 && !chosenTest && (
+              <div role="alert" className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+                This mock is not currently published. <Link href="/afcat" className="font-bold underline">Choose an available mock</Link>.
+              </div>
+            )}
+            {selectedTestId && chosenTest && (
+              <Link href="/afcat#available-mocks" className="inline-flex min-h-11 items-center text-sm font-bold text-blue-700 underline">← Choose a different mock</Link>
+            )}
             {!loading && tests.length === 0 && !error && (
               <p role="status" className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-600">
                 The mock is not available right now. Please try again shortly.
               </p>
             )}
-            {tests.map((t) => (
+            {visibleTests.map((t) => (
               <button
                 key={t.id}
                 disabled={loading}
@@ -673,7 +689,7 @@ export default function AfcatLab() {
                   ? `Resume ${t.title}`
                   : attempts.some((a) => a.code === t.code)
                     ? `Attempt ${t.title} again`
-                    : tests.length > 1
+                    : !selectedTestId && tests.length > 1
                       ? `Start ${t.title}`
                       : "Start Full Mock"}
               </button>
