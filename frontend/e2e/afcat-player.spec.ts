@@ -211,3 +211,36 @@ test("failed save blocks navigation and never claims saved", async ({
   ).toBeDisabled();
   await expect(page.getByRole("radio").first()).not.toBeChecked();
 });
+
+test("selected landing mock yields exactly one Start CTA and ignores unknown IDs", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  const tests = [
+    { id: "mock-one", code: "AFCAT-FM02-V1", title: "AFCAT Full Mock 01", expected_questions: 100, duration_seconds: 7200 },
+    { id: "mock-two", code: "AFCAT-FM03-V1", title: "AFCAT Full Mock 02", expected_questions: 100, duration_seconds: 7200 },
+    { id: "mock-three", code: "AFCAT-FM04-V1", title: "AFCAT Full Mock 03", expected_questions: 100, duration_seconds: 7200 },
+  ];
+  let postedTestId: string | null = null;
+  await page.route("**/api/afcat/**", async (route) => {
+    const path = new URL(route.request().url()).pathname;
+    if (path.endsWith("/tests")) {
+      await route.fulfill({ json: { tests } });
+    } else if (path.endsWith("/sessions") && route.request().method() === "POST") {
+      postedTestId = (route.request().postDataJSON() as { testId: string }).testId;
+      await route.fulfill({ status: 401, json: { error: "Sign in required" } });
+    } else {
+      await route.fulfill({ status: 401, json: { error: "Sign in required" } });
+    }
+  });
+  await page.goto("/afcat/lab?testId=mock-two");
+  await expect(page.getByRole("heading", { name: "AFCAT Full Mock 02" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Start AFCAT Full Mock 02" })).toHaveCount(1);
+  await expect(page.getByRole("button", { name: /^Start (?:AFCAT|Full Mock)/ })).toHaveCount(1);
+  await expect(page.getByRole("link", { name: /Choose a different mock/ })).toBeVisible();
+  await page.getByRole("button", { name: "Start AFCAT Full Mock 02" }).click();
+  expect(postedTestId).toBe("mock-two");
+  await page.goto("/afcat/lab?testId=unknown-test");
+  await expect(page.getByRole("alert")).toContainText("This mock is not currently published");
+  await expect(page.getByRole("button", { name: /^Start/ })).toHaveCount(0);
+  await page.goto("/afcat/lab");
+  await expect(page.getByRole("button", { name: /^Start/ })).toHaveCount(3);
+});
