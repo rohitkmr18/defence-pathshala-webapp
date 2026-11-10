@@ -1,121 +1,118 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import { ArrowRight, Clock3, History, RefreshCw, ShieldCheck } from "lucide-react";
 import AfcatPerformancePanel from "@/components/afcat/AfcatPerformancePanel";
 import type { AfcatPerformanceV2 } from "@/lib/afcat/performance-v2";
-import { ArrowRight } from "lucide-react";
 
 type Attempt = {
   sessionId: string; title: string; status: string; score: number | null; maxMarks: number;
-  correct: number; incorrect: number; unanswered: number; timeSeconds: number; questionTimeSeconds?: number | null; completedAt: string | null;
+  correct: number; incorrect: number; unanswered: number; timeSeconds: number;
+  questionTimeSeconds?: number | null; completedAt: string | null;
 };
-type Section = { section: string; label: string; total: number; correct: number; incorrect: number; unanswered: number; accuracyPercent: number; marks: number; maximumMarks: number };
-type Topic = { section: string; topic: string; total: number; accuracyPercent: number; marksLost: number };
 type AvailableMock = { id: string; code: string; title: string; duration_seconds: number; expected_questions: number; max_marks: number };
 type Dashboard = {
   attempts: Attempt[]; inProgress: { sessionId: string; title: string } | null;
-  bestScore: number | null; averageScore: number | null; sections: Section[]; weakTopics: Topic[];
+  bestScore: number | null; averageScore: number | null;
   performanceV2?: AfcatPerformanceV2;
 };
-
-const questionTime = (s: number | null | undefined) => s == null ? "Question time not recorded" : s < 60 ? `Question time ${s}s` : `Question time ${Math.floor(s / 60)}m ${s % 60}s`;
-const date = (v: string | null) => (v ? new Date(v).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—");
+type LoadState = "loading" | "signin" | "error" | "ready";
+const date = (v: string | null) => v ? new Date(v).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "Date unavailable";
+const time = (s: number | null | undefined) => s == null ? "Question time unavailable" : s < 60 ? `${s}s recorded` : `${Math.floor(s / 60)}m ${s % 60}s recorded`;
 
 export default function AfcatDashboardClient() {
   const [data, setData] = useState<Dashboard | null>(null);
   const [mocks, setMocks] = useState<AvailableMock[] | null>(null);
-  const [state, setState] = useState<"loading" | "signin" | "error" | "ready">("loading");
+  const [state, setState] = useState<LoadState>("loading");
+
+  const reload = useCallback(async () => {
+    setState("loading");
+    try {
+      const response = await fetch("/api/afcat/dashboard", { cache: "no-store" });
+      if (response.status === 401) { setData(null); setState("signin"); return; }
+      if (!response.ok) { setState("error"); return; }
+      const next = await response.json() as Dashboard;
+      if (!Array.isArray(next.attempts)) throw new Error("Invalid history payload");
+      setData(next);
+      setState("ready");
+    } catch {
+      setState("error");
+    }
+  }, []);
 
   useEffect(() => {
     let active = true;
-    // The mock list is public and loads independently, so "Attempt a mock" shows immediately.
-    fetch("/api/afcat/tests", { cache: "no-store" })
-      .then(async (res) => (res.ok ? ((await res.json()) as { tests: AvailableMock[] }).tests : []))
-      .then((tests) => active && setMocks(tests))
-      .catch(() => active && setMocks([]));
-    fetch("/api/afcat/dashboard", { cache: "no-store" })
-      .then(async (res) => {
-        if (!active) return;
-        if (res.status === 401) return setState("signin");
-        if (!res.ok) return setState("error");
-        setData((await res.json()) as Dashboard);
-        setState("ready");
-      })
-      .catch(() => active && setState("error"));
+    void fetch("/api/afcat/tests", { cache: "no-store" })
+      .then(async r => r.ok ? (await r.json() as { tests: AvailableMock[] }).tests : [])
+      .then(v => { if (active) setMocks(Array.isArray(v) ? v : []); })
+      .catch(() => { if (active) setMocks([]); });
+    void reload();
     return () => { active = false; };
-  }, []);
+  }, [reload]);
 
   const attempts = data?.attempts ?? [];
-  // Fall back to the published Full Mock 01 details so the primary action never disappears.
-  const mock = mocks?.[0] ?? null;
-  const firstTime = state !== "loading" && (state !== "ready" || attempts.length === 0);
-  // The mock chooser (/afcat/lab) lists every live mock, so this card has one action.
-  // "Reattempt" only when the learner has finished one of the mocks currently on offer;
-  // a finished retired mock does not count.
-  const finishedLiveMock = attempts.some((a) => (mocks ?? []).some((m) => m.title === a.title));
-  const ctaLabel = finishedLiveMock ? "Reattempt mock" : "Start mock for free";
-  const latest = attempts.find((a) => a.score !== null) ?? null;
-  return (
-    <div className="space-y-6">
-      {/* 1. Primary action: always visible, even if history or the mock list cannot load */}
-      {data?.inProgress && (
-        <Link href={`/afcat/lab?session=${data.inProgress.sessionId}`} className="flex items-center justify-between rounded-2xl border border-blue-200 bg-blue-50 p-4 text-sm font-bold text-blue-800">
-          Resume {data.inProgress.title} <ArrowRight className="h-4 w-4" />
-        </Link>
-      )}
-      <section className="rounded-3xl border border-slate-200 bg-white p-5 sm:p-6">
-        <h2 className="text-sm font-black uppercase tracking-wider text-slate-700">{firstTime ? "Start here" : "Attempt a mock"}</h2>
-        <div className="mt-4 rounded-2xl bg-slate-900 p-5 text-white">
-          <p className="text-sm text-slate-300">{mock ? `${mock.expected_questions} questions · ${Math.round(mock.duration_seconds / 60)} min · ${mock.max_marks} marks · +3 / −1 · free` : "Choose from currently published AFCAT mocks. Catalogue details load live."}</p>
-          <Link href="/afcat/lab" className="mt-4 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-blue-500 px-6 text-base font-bold text-white hover:bg-blue-400 sm:w-auto">
-            {ctaLabel} <ArrowRight className="h-5 w-5" />
-          </Link>
-          {firstTime && <p className="mt-3 text-xs text-slate-400">Keep 2 uninterrupted hours. Your score, section accuracy and weak topics appear here the moment you submit.</p>}
-        </div>
+  const hasHistory = state === "ready" && attempts.length > 0;
+  const mostRecent = attempts.find(a => a.score !== null) ?? null;
+  // The catalogue is a separate action, not proof that a learner has never attempted a mock.
+  const publishedMock = mocks?.[0] ?? null;
 
-        {state === "loading" && <div className="mt-5 h-24 animate-pulse rounded-2xl bg-slate-100" />}
-        {state === "signin" && (
-          <p className="mt-5 text-sm text-slate-600">
-            <Link href="/auth/login?next=/afcat/dashboard" className="font-bold text-blue-700 hover:underline">Sign in</Link> to see the mocks you have attempted and your performance analytics.
-          </p>
-        )}
-        {state === "error" && <p className="mt-5 text-sm text-slate-500">Your past attempts could not be loaded right now. You can still start a mock above; refresh to try again.</p>}
-        {state === "ready" && (
-          <div className="mt-5 border-t border-slate-100 pt-4">
-            <h3 className="text-xs font-black uppercase tracking-wider text-slate-500">Your attempted mocks</h3>
-            {attempts.length === 0 ? (
-              <p className="mt-3 text-sm text-slate-600">No mock submitted yet.</p>
-            ) : (
-              <ul className="mt-2 divide-y divide-slate-100">
-                {attempts.map((a) => (
-                  <li key={a.sessionId} className="flex flex-wrap items-center justify-between gap-2 py-3 text-sm">
-                    <div>
-                      <p className="font-bold">{a.title}</p>
-                      <p className="text-xs text-slate-500">{date(a.completedAt)} · {questionTime(a.questionTimeSeconds)} · {a.correct} correct, {a.incorrect} wrong, {a.unanswered} skipped</p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <span className="font-black">{a.score ?? "—"}/{a.maxMarks}</span>
-                      <Link href={`/afcat/lab?session=${a.sessionId}`} className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-bold text-blue-700 hover:border-blue-400">View analysis</Link>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
+  return <div className="min-w-0 space-y-6">
+    {state === "loading" && <section role="status" className="rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-600">
+      Loading your saved AFCAT attempts and performance…
+    </section>}
+
+    {state === "signin" && <section className="rounded-3xl border border-blue-200 bg-blue-50 p-5 sm:p-6">
+      <div className="flex items-center gap-2 text-blue-900"><ShieldCheck aria-hidden="true" className="h-5 w-5"/><h2 className="font-black">Sign in to restore your AFCAT history</h2></div>
+      <p className="mt-2 text-sm leading-6 text-blue-900">Previously submitted mocks, including retired papers, remain saved to the account that attempted them. Sign in with the same account to see its scores and analytics.</p>
+      <Link className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-xl bg-blue-700 px-4 py-2 text-sm font-bold text-white hover:bg-blue-800" href="/auth/login?next=%2Fafcat%2Fdashboard">Sign in to view saved results <ArrowRight className="h-4 w-4"/></Link>
+    </section>}
+
+    {state === "error" && <section role="alert" className="rounded-3xl border border-amber-200 bg-amber-50 p-5 sm:p-6">
+      <h2 className="font-black text-amber-950">Saved AFCAT history could not be loaded</h2>
+      <p className="mt-2 text-sm text-amber-900">This does not mean your attempts were deleted or that you need to attempt another mock. Retry loading your saved results.</p>
+      <button type="button" onClick={() => void reload()} className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-xl bg-amber-900 px-4 py-2 text-sm font-bold text-white"><RefreshCw className="h-4 w-4"/> Retry history</button>
+    </section>}
+
+    {state === "ready" && data?.inProgress && <Link href={`/afcat/lab?session=${encodeURIComponent(data.inProgress.sessionId)}`} className="flex min-h-14 items-center justify-between gap-3 rounded-2xl border border-blue-200 bg-blue-50 p-4 text-sm font-bold text-blue-900">
+      <span>Resume saved attempt: {data.inProgress.title}</span><ArrowRight className="h-4 w-4 shrink-0"/>
+    </Link>}
+
+    {hasHistory && <section aria-label="Saved AFCAT mock history" className="rounded-3xl border border-slate-200 bg-white p-5 sm:p-6">
+      <div className="flex flex-wrap items-center gap-3">
+        <History aria-hidden="true" className="h-5 w-5 text-blue-700"/>
+        <div className="min-w-0"><h2 className="text-xl font-black text-slate-950">Your saved AFCAT results</h2>
+          <p className="mt-1 text-xs text-slate-500">{attempts.length} finalized {attempts.length === 1 ? "attempt" : "attempts"}, including retired mocks where applicable. These are your previous scores, not a fresh start.</p>
+        </div>
+      </div>
+      <ul className="mt-4 divide-y divide-slate-100">
+        {attempts.map(a => <li key={a.sessionId} className="flex min-w-0 flex-wrap items-center justify-between gap-3 py-4">
+          <div className="min-w-0">
+            <p className="break-words font-bold text-slate-950">{a.title}</p>
+            <p className="mt-1 text-xs leading-5 text-slate-500">{date(a.completedAt)} · {a.status === "EXPIRED" ? "Expired attempt" : "Submitted"} · {time(a.questionTimeSeconds)}</p>
+            <p className="mt-1 text-xs text-slate-600">{a.correct} correct · {a.incorrect} wrong · {a.unanswered} skipped</p>
           </div>
-        )}
-      </section>
+          <div className="flex shrink-0 items-center gap-3">
+            <p className="font-black tabular-nums text-slate-900">{a.score ?? "—"}/{a.maxMarks}</p>
+            {a.score !== null && <Link href={`/afcat/lab?session=${encodeURIComponent(a.sessionId)}`} className="inline-flex min-h-11 items-center rounded-xl border border-blue-200 px-3 text-xs font-bold text-blue-700 hover:border-blue-400">View analysis</Link>}
+          </div>
+        </li>)}
+      </ul>
+    </section>}
 
-      {/* B2 learner intelligence: only derived from finalized, user-owned attempts. */}
-      {state === "ready" && data?.performanceV2 && data.performanceV2.overview.completedMocks > 0 && (
-        <AfcatPerformancePanel data={data.performanceV2} latestSessionId={latest?.sessionId ?? null} />
-      )}
-      {state === "ready" && attempts.length === 0 && (
-        <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-6 text-sm text-slate-600">
-          <p className="font-bold text-slate-900">Your performance intelligence starts with a completed mock.</p>
-          <p className="mt-2">Attempt a published AFCAT mock to unlock section, topic and subtopic analysis.</p>
-        </div>
-      )}
-    </div>
-  );
+    {state === "ready" && data?.performanceV2 && data.performanceV2.overview.completedMocks > 0 && <AfcatPerformancePanel data={data.performanceV2} latestSessionId={mostRecent?.sessionId ?? null}/>}
+
+    {state === "ready" && attempts.length === 0 && <section className="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 className="font-black text-slate-900">No finalized AFCAT results for this signed-in account</h2>
+      <p className="mt-2 text-sm leading-6 text-slate-600">If you attempted a mock before, check that you are using the same sign-in account. We do not erase results when the dashboard changes. In-progress attempts can be resumed above.</p>
+    </section>}
+
+    <section aria-label="Choose AFCAT mock" className="rounded-3xl border border-slate-200 bg-white p-5 sm:p-6">
+      <div className="flex items-center gap-2"><Clock3 aria-hidden="true" className="h-4 w-4 text-blue-700"/><h2 className="font-black text-slate-900">{hasHistory ? "Attempt another mock" : "Explore published AFCAT mocks"}</h2></div>
+      <p className="mt-2 text-sm text-slate-600">{publishedMock ? `Available full mocks · ${publishedMock.expected_questions} questions · ${Math.round(publishedMock.duration_seconds / 60)} minutes · +3/−1` : "View currently published mocks and their details."}</p>
+      <Link href="/afcat#available-mocks" className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-xl bg-slate-900 px-4 py-2 text-sm font-bold text-white hover:bg-blue-900">
+        View mock catalogue <ArrowRight className="h-4 w-4"/>
+      </Link>
+    </section>
+  </div>;
 }
