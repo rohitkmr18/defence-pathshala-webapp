@@ -48,7 +48,7 @@ jobs:
         run: npm run verify
 
       - name: Verify AFCAT engine invariants
-        run: node --test scripts/test-afcat-engine.cjs
+        run: node --test scripts/test-afcat-engine.cjs scripts/test-afcat-performance-v2.cjs
 
       - name: Verify AFCAT visual benchmark interactions
         env:
