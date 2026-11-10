@@ -3,132 +3,147 @@ import type { Metadata } from "next";
 import ExamModeSwitcher from "@/components/layout/ExamModeSwitcher";
 import AfcatCtaLink from "@/components/afcat/AfcatCtaLink";
 import AfcatLandingTracker from "@/components/afcat/AfcatLandingTracker";
-import { ArrowRight, BarChart3, Brain, Clock3, FileCheck2, Target, Timer } from "lucide-react";
+import AfcatMockCatalogue from "@/components/afcat/AfcatMockCatalogue";
 import DPLogo from "@/components/common/DPLogo";
 import PublicExploreLinks from "@/components/public/PublicExploreLinks";
+import { ArrowRight, BarChart3, BookOpenCheck, CheckCircle2, Clock3, ShieldCheck, Target } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "AFCAT Full Mock 01, free",
-  description: "A free full-length AFCAT mock: 100 questions, 120 minutes, +3/−1 marking, with a detailed analysis the moment you submit.",
+  title: "AFCAT Mock Tests, Results & Preparation",
+  description: "Prepare for AFCAT with published full-length mock tests, saved attempts, section-wise analysis and clear next steps. Explore live AFCAT mocks on Defence Pathshala.",
   alternates: { canonical: "/afcat" },
   robots: { index: true, follow: true },
   openGraph: {
     type: "website",
     url: "https://www.defencepathshala.in/afcat",
     siteName: "Defence Pathshala",
-    title: "AFCAT Full Mock 01 — free, 100 questions, with analysis",
-    description: "100 questions, 120 minutes, +3/−1 marking. Free full-length AFCAT mock with a detailed analysis the moment you submit.",
-    images: [{ url: "/og/afcat-full-mock-01.png", width: 1200, height: 630, alt: "AFCAT Full Mock 01 — free full-length mock by Defence Pathshala" }],
+    title: "AFCAT Preparation & Full-Length Mock Tests | Defence Pathshala",
+    description: "Attempt published AFCAT mocks, review saved scores and learn from detailed performance analysis.",
+    images: [{ url: "/og/afcat-full-mock-01.png", width: 1200, height: 630, alt: "Defence Pathshala AFCAT mock test preparation" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "AFCAT Full Mock 01 — free full-length mock",
-    description: "100 questions, 120 minutes, +3/−1 marking, instant analysis.",
+    title: "AFCAT Preparation & Full-Length Mock Tests",
+    description: "Explore AFCAT full mocks and review your performance on Defence Pathshala.",
     images: ["/og/afcat-full-mock-01.png"],
   },
 };
 
-const stats = [
-  { value: "100", label: "Questions" },
-  { value: "120", label: "Minutes" },
-  { value: "300", label: "Marks" },
-  { value: "+3 / −1", label: "Marking" },
+const benefits = [
+  { icon: Target, title: "Attempt a realistic mock", description: "Practice with full-length AFCAT-pattern questions and a server-controlled exam timer." },
+  { icon: BarChart3, title: "Understand your performance", description: "Review your score, section accuracy, individual answers and question time after submission." },
+  { icon: BookOpenCheck, title: "Know what to revise", description: "Use your topic-level results to identify which concepts need attention before your next attempt." },
 ];
+
 const sections = [
-  { name: "General Awareness", count: 25, note: "Statement-based and match-the-following: history, geography, polity, economy, science, defence and 2026 current affairs" },
-  { name: "English", count: 30, note: "Comprehension, cloze test, error spotting, vocabulary" },
-  { name: "Numerical Ability", count: 20, note: "Percentages, time and work, interest, mensuration, probability" },
-  { name: "Reasoning & Military Aptitude", count: 25, note: "Coding-decoding, blood relations, syllogisms, series, spatial and military aptitude" },
-];
-const afterwards = [
-  { icon: Target, title: "Your score, the honest way", text: "Marks, accuracy and how many marks wrong guesses cost you." },
-  { icon: BarChart3, title: "Section and topic breakdown", text: "See exactly which sections and topics lost you marks." },
-  { icon: Timer, title: "Where your time went", text: "Time on every question, so you can spot the ones that drained it." },
-  { icon: Brain, title: "Next steps and explanations", text: "Up to three actions drawn from your own numbers, and a worked explanation for every question." },
+  "General Awareness",
+  "English",
+  "Numerical Ability",
+  "Reasoning & Military Aptitude",
 ];
 
 export default function AfcatPage() {
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900">
+    <main className="min-h-screen overflow-x-clip bg-slate-50 text-slate-900">
       <AfcatLandingTracker />
       <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-6">
-          <Link href="/afcat/dashboard" className="flex items-center gap-2 text-sm font-bold">
-            <DPLogo className="h-8 w-auto" />
-            Defence Pathshala
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6 sm:py-4">
+          <Link href="/afcat" className="flex min-w-0 items-center gap-2 text-sm font-extrabold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+            <DPLogo className="h-8 w-auto shrink-0" />
+            <span className="hidden sm:inline">Defence Pathshala</span>
+            <span className="sr-only sm:hidden">Defence Pathshala AFCAT</span>
           </Link>
-          <div className="flex items-center gap-3"><Link href="/afcat/dashboard" className="text-sm font-bold text-blue-700 hover:underline">My dashboard</Link><ExamModeSwitcher compact /></div>
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4">
+            <Link href="/afcat/dashboard" className="inline-flex min-h-11 items-center text-xs font-bold text-blue-700 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 sm:text-sm">My dashboard</Link>
+            <ExamModeSwitcher compact />
+          </div>
         </div>
       </header>
 
-      <section className="bg-[#081b35] text-white" aria-labelledby="afcat-hero">
-        <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-20">
-          <span className="inline-flex items-center rounded-full bg-emerald-400/15 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-emerald-300">
-            Free · No payment needed
-          </span>
-          <h1 id="afcat-hero" className="mt-5 max-w-3xl text-4xl font-black tracking-tight sm:text-6xl">
-            AFCAT Full Mock 01
+      <section className="relative isolate overflow-hidden bg-[#081b35] text-white" aria-labelledby="afcat-hero">
+        <div aria-hidden="true" className="pointer-events-none absolute -right-32 -top-48 h-96 w-96 rounded-full bg-blue-500/20 blur-3xl" />
+        <div aria-hidden="true" className="pointer-events-none absolute -bottom-40 left-1/4 h-72 w-72 rounded-full bg-cyan-500/10 blur-3xl" />
+        <div className="relative mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-20 lg:py-24">
+          <p className="inline-flex items-center gap-2 rounded-full border border-blue-300/20 bg-white/10 px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.14em] text-blue-200">
+            <CheckCircle2 className="h-4 w-4" aria-hidden="true" /> AFCAT preparation
+          </p>
+          <h1 id="afcat-hero" className="mt-5 max-w-4xl text-4xl font-black leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl">
+            Don&apos;t just attempt AFCAT mocks. <span className="text-blue-300">Know what to improve.</span>
           </h1>
-          <p className="mt-5 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
-            A full-length simulation at the tougher 2026 AFCAT level: 100 questions, 120 minutes, four sections. Submit it and you get a detailed analysis straight away.
+          <p className="mt-5 max-w-2xl text-base leading-7 text-slate-200 sm:text-lg">
+            Practice with published AFCAT full-length mock tests, return to your saved attempts, and learn from detailed score and topic analysis.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <AfcatCtaLink href="/afcat/lab" placement="hero"
-              className="inline-flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-blue-500 px-8 text-base font-bold text-white shadow-lg shadow-blue-900/40 transition hover:bg-blue-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
-              Attempt Full Mock for Free <ArrowRight className="h-5 w-5" aria-hidden="true" />
+            <AfcatCtaLink href="#available-mocks" placement="hero_catalogue"
+              className="inline-flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-blue-500 px-6 py-3 text-base font-extrabold text-white shadow-lg shadow-blue-950/30 transition hover:bg-blue-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+              Explore AFCAT mocks <ArrowRight className="h-5 w-5" aria-hidden="true" />
             </AfcatCtaLink>
-            <p className="flex items-center gap-2 text-sm text-slate-400">
-              <Clock3 className="h-4 w-4" aria-hidden="true" /> Keep 2 uninterrupted hours
-            </p>
+            <Link href="/afcat/dashboard" className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-white/20 px-5 py-3 text-sm font-bold text-white hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+              View my performance
+            </Link>
           </div>
-          <dl className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {stats.map((s) => (
-              <div key={s.label} className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                <dd className="text-2xl font-black sm:text-3xl">{s.value}</dd>
-                <dt className="mt-1 text-xs uppercase tracking-wider text-slate-400">{s.label}</dt>
-              </div>
-            ))}
-          </dl>
+          <p className="mt-6 flex max-w-xl items-start gap-2 text-xs leading-5 text-slate-300">
+            <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+            Independent AFCAT-pattern practice, not an official Indian Air Force examination or predicted cut-off.
+          </p>
         </div>
       </section>
 
-      <div className="mx-auto max-w-5xl space-y-12 px-4 py-12 sm:px-6">
-        <section aria-labelledby="afcat-paper">
-          <h2 id="afcat-paper" className="text-2xl font-black tracking-tight">What is in the paper</h2>
-          <ul className="mt-5 grid gap-3 sm:grid-cols-2">
-            {sections.map((s) => (
-              <li key={s.name} className="rounded-2xl border border-slate-200 bg-white p-5">
-                <div className="flex items-baseline justify-between gap-3">
-                  <h3 className="font-bold">{s.name}</h3>
-                  <span className="shrink-0 text-sm font-bold text-blue-700">{s.count} Qs</span>
+      <div className="mx-auto max-w-6xl space-y-16 px-4 py-12 sm:px-6 sm:py-16">
+        <AfcatMockCatalogue />
+
+        <section aria-labelledby="afcat-method-heading">
+          <div className="max-w-2xl">
+            <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-blue-700">A better practice loop</p>
+            <h2 id="afcat-method-heading" className="mt-2 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">Attempt. Analyse. Improve.</h2>
+            <p className="mt-3 text-sm leading-6 text-slate-600">One mock should tell you more than a score. Use evidence from your answers to decide what to study next.</p>
+          </div>
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            {benefits.map(({ icon: Icon, title, description }, index) => (
+              <div key={title} className="rounded-3xl border border-slate-200 bg-white p-6">
+                <div className="flex items-center justify-between">
+                  <span className="rounded-2xl bg-blue-50 p-3 text-blue-700"><Icon className="h-6 w-6" aria-hidden="true" /></span>
+                  <span className="font-mono text-sm font-bold text-slate-400">0{index + 1}</span>
                 </div>
-                <p className="mt-2 text-sm leading-6 text-slate-600">{s.note}</p>
+                <h3 className="mt-5 text-lg font-black tracking-tight">{title}</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-600">{description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section aria-labelledby="afcat-pattern-heading" className="rounded-3xl border border-slate-200 bg-white p-5 sm:p-8">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="max-w-2xl">
+              <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-blue-700">Know the exam</p>
+              <h2 id="afcat-pattern-heading" className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Four areas. One preparation journey.</h2>
+              <p className="mt-3 text-sm leading-6 text-slate-600">Practice across the core AFCAT areas. The live mock cards above show the actual question count, duration and available marks for each published paper.</p>
+            </div>
+            <div className="inline-flex items-center gap-2 rounded-xl bg-slate-100 px-3 py-2 text-sm font-bold text-slate-700">
+              <Clock3 className="h-4 w-4" aria-hidden="true" /> Timed practice
+            </div>
+          </div>
+          <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+            {sections.map((name) => (
+              <li key={name} className="flex min-h-14 items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-bold text-slate-800">
+                <CheckCircle2 className="h-5 w-5 shrink-0 text-blue-700" aria-hidden="true" /> {name}
               </li>
             ))}
           </ul>
         </section>
 
-        <section aria-labelledby="afcat-after">
-          <h2 id="afcat-after" className="text-2xl font-black tracking-tight">What you get after you submit</h2>
-          <ul className="mt-5 grid gap-3 sm:grid-cols-2">
-            {afterwards.map(({ icon: Icon, title, text }) => (
-              <li key={title} className="flex gap-4 rounded-2xl border border-slate-200 bg-white p-5">
-                <span className="h-fit rounded-xl bg-blue-50 p-3 text-blue-700"><Icon className="h-5 w-5" aria-hidden="true" /></span>
-                <div>
-                  <h3 className="font-bold">{title}</h3>
-                  <p className="mt-1 text-sm leading-6 text-slate-600">{text}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
+        <section aria-labelledby="afcat-final-cta" className="rounded-3xl bg-[#0b2444] px-6 py-9 text-white sm:px-10">
+          <h2 id="afcat-final-cta" className="text-2xl font-black tracking-tight sm:text-3xl">Ready to see where you stand?</h2>
+          <p className="mt-3 max-w-xl text-sm leading-6 text-slate-200">Explore the published AFCAT mocks, begin a test when you have time, and review your performance after submission.</p>
+          <AfcatCtaLink href="#available-mocks" placement="footer_catalogue"
+            className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-blue-500 px-6 py-3 text-sm font-bold text-white hover:bg-blue-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+            See available mocks <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </AfcatCtaLink>
         </section>
 
-        <div className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 text-sm leading-6 text-slate-600">
-          <FileCheck2 className="mt-0.5 h-5 w-5 shrink-0 text-blue-700" aria-hidden="true" />
-          <p>
-            Original questions written by Defence Pathshala in the AFCAT pattern. This is practice, not an official paper, and the score does not predict your AFCAT result or cut-off. Your answers save automatically and the timer is kept on the server, so a refresh will not cost you time.
-          </p>
-        </div>
+        <p className="text-xs leading-6 text-slate-500">
+          Defence Pathshala prepares original AFCAT-pattern practice questions. It is not affiliated with the Indian Air Force or the official AFCAT examination. Scores are practice feedback, not exam-result predictions. Your answers and examination deadline are maintained by the server when you start a mock.
+        </p>
       </div>
       <PublicExploreLinks className="border-t border-slate-200" heading="More defence exam practice" />
     </main>
