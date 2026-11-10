@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { buildAfcatPerformanceV2 } from "@/lib/afcat/performance-v2";
 import { afcatMockLabel } from "@/lib/afcat/mock-labels";
 import { afcatStagingAdmin, afcatStagingUser } from "@/lib/afcat/staging-server";
 import {
@@ -55,17 +56,23 @@ export async function GET() {
       ? await db.from("afcat_questions").select("id,section,topic,subtopic,difficulty,correct_option").in("id", questionIds)
       : { data: [], error: null };
     if (ke) throw ke;
-    const { data: responses, error: ae } = doneIds.length
-      ? await db.from("afcat_responses").select("session_id,question_id,selected_option,time_spent_seconds")
-        .in("session_id", doneIds).eq("user_id", user.id)
-      : { data: [], error: null };
-    if (ae) throw ae;
+    // PostgREST may cap each query at 1,000 rows. A 50-mock learner can
+    // have 5,000 responses; batch eight full mocks to avoid silent truncation.
+    const responses: { session_id: string; question_id: string; selected_option: string | null; time_spent_seconds: number | null }[] = [];
+    for (let offset = 0; offset < doneIds.length; offset += 8) {
+      const { data: page, error: ae } = await db.from("afcat_responses")
+        .select("session_id,question_id,selected_option,time_spent_seconds")
+        .in("session_id", doneIds.slice(offset, offset + 8)).eq("user_id", user.id);
+      if (ae) throw ae;
+      responses.push(...(page ?? []));
+    }
 
     const keyById = new Map((keys ?? []).map((k) => [k.id, k]));
     const responseKey = (sessionId: string, questionId: string) => `${sessionId}:${questionId}`;
-    const responseMap = new Map((responses ?? []).map((r) => [responseKey(r.session_id, r.question_id), r]));
+    const responseMap = new Map(responses.map((r) => [responseKey(r.session_id, r.question_id), r]));
     const review: AfcatReviewItem[] = [];
-    for (const session of done) {
+    // Finalized sessions without persisted results are excluded from score analytics.
+    for (const session of done.filter((s) => resultBySession.has(s.id))) {
       for (const item of (items ?? []).filter((i) => i.test_id === session.test_id)) {
         const key = keyById.get(item.question_id);
         if (!key?.section || !key.correct_option) continue;
@@ -88,7 +95,15 @@ export async function GET() {
         sessionId: s.id, title: t ? afcatMockLabel(t.code, t.title) : "AFCAT mock", status: s.status,
         score: r?.score ?? null, maxMarks: r?.max_marks ?? t?.max_marks ?? 300,
         correct: r?.correct_count ?? 0, incorrect: r?.incorrect_count ?? 0, unanswered: r?.unanswered_count ?? 0,
-        timeSeconds: s.elapsed_seconds ?? 0, completedAt: r?.completed_at ?? s.finished_at,
+        timeSeconds: s.elapsed_seconds ?? 0, // Legacy field retained; not reliable as question time.
+        questionTimeSeconds: (() => {
+          const assigned = new Set((items ?? []).filter((i) => i.test_id === s.test_id).map((i) => i.question_id));
+          const times = responses.filter((response) => response.session_id === s.id && assigned.has(response.question_id))
+            .map((response) => response.time_spent_seconds)
+            .filter((seconds): seconds is number => typeof seconds === "number" && Number.isFinite(seconds) && seconds > 0);
+          return times.length ? times.reduce((total, seconds) => total + Math.round(seconds), 0) : null;
+        })(),
+        completedAt: r?.completed_at ?? s.finished_at,
       };
     });
     const scored = attempts.filter((a) => a.score !== null);
@@ -102,6 +117,11 @@ export async function GET() {
       averageScore: scored.length ? Math.round(scored.reduce((s, a) => s + (a.score as number), 0) / scored.length) : null,
       sections: review.length ? summarizeAfcatSections(review) : [],
       weakTopics: topics,
+      performanceV2: buildAfcatPerformanceV2(review, attempts.map((a) => ({
+        sessionId: a.sessionId, title: a.title, status: a.status, completedAt: a.completedAt,
+        score: a.score, maxMarks: a.maxMarks, correct: a.correct,
+        incorrect: a.incorrect, unanswered: a.unanswered,
+      }))),
     }, { headers: { "Cache-Control": "private, no-store" } });
   } catch {
     return NextResponse.json({ error: "AFCAT dashboard unavailable" }, { status: 503 });
