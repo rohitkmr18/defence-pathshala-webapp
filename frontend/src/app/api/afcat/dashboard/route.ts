@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { buildAfcatPerformanceV2 } from "@/lib/afcat/performance-v2";
 import { afcatMockLabel } from "@/lib/afcat/mock-labels";
 import { afcatStagingAdmin, afcatStagingUser } from "@/lib/afcat/staging-server";
 import {
@@ -65,7 +66,8 @@ export async function GET() {
     const responseKey = (sessionId: string, questionId: string) => `${sessionId}:${questionId}`;
     const responseMap = new Map((responses ?? []).map((r) => [responseKey(r.session_id, r.question_id), r]));
     const review: AfcatReviewItem[] = [];
-    for (const session of done) {
+    // Finalized sessions without persisted results are excluded from score analytics.
+    for (const session of done.filter((s) => resultBySession.has(s.id))) {
       for (const item of (items ?? []).filter((i) => i.test_id === session.test_id)) {
         const key = keyById.get(item.question_id);
         if (!key?.section || !key.correct_option) continue;
@@ -102,6 +104,11 @@ export async function GET() {
       averageScore: scored.length ? Math.round(scored.reduce((s, a) => s + (a.score as number), 0) / scored.length) : null,
       sections: review.length ? summarizeAfcatSections(review) : [],
       weakTopics: topics,
+      performanceV2: buildAfcatPerformanceV2(review, attempts.map((a) => ({
+        sessionId: a.sessionId, title: a.title, status: a.status, completedAt: a.completedAt,
+        score: a.score, maxMarks: a.maxMarks, correct: a.correct,
+        incorrect: a.incorrect, unanswered: a.unanswered,
+      }))),
     }, { headers: { "Cache-Control": "private, no-store" } });
   } catch {
     return NextResponse.json({ error: "AFCAT dashboard unavailable" }, { status: 503 });
