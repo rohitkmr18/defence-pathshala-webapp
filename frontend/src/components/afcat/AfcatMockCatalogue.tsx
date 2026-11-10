@@ -113,10 +113,10 @@ export default function AfcatMockCatalogue() {
                   <div><dt className="text-xs text-slate-500">Max marks</dt><dd className="mt-1 font-extrabold tabular-nums text-slate-900">{mock.max_marks}</dd></div>
                 </dl>
               </div>
-              <Link href="/afcat/lab"
+              <Link href={`/afcat/lab?testId=${encodeURIComponent(mock.id)}`}
                 onClick={() => trackAfcatFunnel("afcat_cta_click", { placement: "catalogue", test_code: mock.code })}
                 className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-blue-700 px-5 py-3 text-sm font-bold text-white hover:bg-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
-                Choose this mock in the test player <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                Select this mock <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </li>
           ))}
