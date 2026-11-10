@@ -8,7 +8,7 @@ import { ArrowRight } from "lucide-react";
 
 type Attempt = {
   sessionId: string; title: string; status: string; score: number | null; maxMarks: number;
-  correct: number; incorrect: number; unanswered: number; timeSeconds: number; completedAt: string | null;
+  correct: number; incorrect: number; unanswered: number; timeSeconds: number; questionTimeSeconds?: number | null; completedAt: string | null;
 };
 type Section = { section: string; label: string; total: number; correct: number; incorrect: number; unanswered: number; accuracyPercent: number; marks: number; maximumMarks: number };
 type Topic = { section: string; topic: string; total: number; accuracyPercent: number; marksLost: number };
@@ -19,7 +19,7 @@ type Dashboard = {
   performanceV2?: AfcatPerformanceV2;
 };
 
-const minutes = (s: number) => `${Math.round(s / 60)} min`;
+const questionTime = (s: number | null | undefined) => s == null ? "Question time not recorded" : s < 60 ? `Question time ${s}s` : `Question time ${Math.floor(s / 60)}m ${s % 60}s`;
 const date = (v: string | null) => (v ? new Date(v).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—");
 
 export default function AfcatDashboardClient() {
@@ -48,7 +48,7 @@ export default function AfcatDashboardClient() {
 
   const attempts = data?.attempts ?? [];
   // Fall back to the published Full Mock 01 details so the primary action never disappears.
-  const mock: AvailableMock = mocks?.[0] ?? { id: "fallback", code: "AFCAT-FM02-V1", title: "AFCAT Full Mock 01", duration_seconds: 7200, expected_questions: 100, max_marks: 300 };
+  const mock = mocks?.[0] ?? null;
   const firstTime = state !== "loading" && (state !== "ready" || attempts.length === 0);
   // The mock chooser (/afcat/lab) lists every live mock, so this card has one action.
   // "Reattempt" only when the learner has finished one of the mocks currently on offer;
@@ -67,7 +67,7 @@ export default function AfcatDashboardClient() {
       <section className="rounded-3xl border border-slate-200 bg-white p-5 sm:p-6">
         <h2 className="text-sm font-black uppercase tracking-wider text-slate-700">{firstTime ? "Start here" : "Attempt a mock"}</h2>
         <div className="mt-4 rounded-2xl bg-slate-900 p-5 text-white">
-          <p className="text-sm text-slate-300">{mock.expected_questions} questions · {Math.round(mock.duration_seconds / 60)} min · {mock.max_marks} marks · +3 / −1 · free</p>
+          <p className="text-sm text-slate-300">{mock ? `${mock.expected_questions} questions · ${Math.round(mock.duration_seconds / 60)} min · ${mock.max_marks} marks · +3 / −1 · free` : "Choose from currently published AFCAT mocks. Catalogue details load live."}</p>
           <Link href="/afcat/lab" className="mt-4 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-blue-500 px-6 text-base font-bold text-white hover:bg-blue-400 sm:w-auto">
             {ctaLabel} <ArrowRight className="h-5 w-5" />
           </Link>
@@ -92,7 +92,7 @@ export default function AfcatDashboardClient() {
                   <li key={a.sessionId} className="flex flex-wrap items-center justify-between gap-2 py-3 text-sm">
                     <div>
                       <p className="font-bold">{a.title}</p>
-                      <p className="text-xs text-slate-500">{date(a.completedAt)} · {minutes(a.timeSeconds)} · {a.correct} correct, {a.incorrect} wrong, {a.unanswered} skipped</p>
+                      <p className="text-xs text-slate-500">{date(a.completedAt)} · {questionTime(a.questionTimeSeconds)} · {a.correct} correct, {a.incorrect} wrong, {a.unanswered} skipped</p>
                     </div>
                     <div className="flex items-center gap-3">
                       <span className="font-black">{a.score ?? "—"}/{a.maxMarks}</span>
