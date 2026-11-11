@@ -26,7 +26,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const maxYear = Math.max(...coverage.years.map((y) => y.year));
   const canonicalUrl = `https://www.defencepathshala.in/pyqs/${coverage.slug}`;
   const title = `${coverage.label} Previous Year Questions (${minYear}–${maxYear})`;
-  const description = `Exhaustive archive of UPSC ${coverage.label} previous year questions with year-by-year and subject-wise breakdown. Practice ${coverage.totalQuestions.toLocaleString()}+ real questions.`;
+  const description =
+    coverage.slug === "cds"
+      ? "Practice real UPSC CDS PYQs with subject-wise drills, explanations and performance insights. Built by an IIT Kanpur alumnus and 4-time CDS written qualifier."
+      : coverage.slug === "capf"
+        ? "Practice real UPSC CAPF AC PYQs with subject-wise drills, explanations and performance insights. Built by an IIT Kanpur alumnus and CAPF AC AIR 163."
+        : `Exhaustive archive of UPSC ${coverage.label} previous year questions with year-by-year and subject-wise breakdown. Practice ${coverage.totalQuestions.toLocaleString()}+ real questions.`;
 
   return {
     title,
