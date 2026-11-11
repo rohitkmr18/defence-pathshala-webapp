@@ -1,0 +1,2722 @@
+[
+  {
+    "url": "https://www.defencepathshala.in/",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 66866
+  },
+  {
+    "url": "https://www.defencepathshala.in/afcat",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/afcat",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/afcat",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 62341
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 81394
+  },
+  {
+    "url": "https://www.defencepathshala.in/about",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/about",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/about",
+    "robots": "index, follow",
+    "h1": false,
+    "bytes": 58122
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/monthly/2026-10",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/monthly/2026-10",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/monthly/2026-10",
+    "robots": "index, follow",
+    "h1": false,
+    "bytes": 29001
+  },
+  {
+    "url": "https://www.defencepathshala.in/exams/cds",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/exams/cds",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/exams/cds",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 80505
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 85673
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/history",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/history",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/history",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 2505617
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/science-technology",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/science-technology",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/science-technology",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 3763765
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/international-relations",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/international-relations",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/international-relations",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 293543
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/polity",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/polity",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/polity",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 1776438
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/current-affairs",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/current-affairs",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/current-affairs",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 1522857
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/geography",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/geography",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/geography",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 2137503
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/environment",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/environment",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/environment",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 496114
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/economy",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/economy",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/economy",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 1567184
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/security",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/security",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/security",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 246209
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/history/medieval-history",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/history/medieval-history",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/history/medieval-history",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 256930
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/science-technology/chemistry",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/science-technology/chemistry",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/science-technology/chemistry",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 476090
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/polity/judiciary",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/polity/judiciary",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/polity/judiciary",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 93357
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/science-technology/biology-life-sciences",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/science-technology/biology-life-sciences",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/science-technology/biology-life-sciences",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 478987
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/current-affairs/international-relations",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/current-affairs/international-relations",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/current-affairs/international-relations",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 147248
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/geography/indian-geography",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/geography/indian-geography",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/geography/indian-geography",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 328843
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/current-affairs/culture-heritage",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/current-affairs/culture-heritage",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/current-affairs/culture-heritage",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 90316
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/geography/physical-geography",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/geography/physical-geography",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/geography/physical-geography",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 422424
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/current-affairs/environment-ecology",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/current-affairs/environment-ecology",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/current-affairs/environment-ecology",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 87863
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/current-affairs/sports",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/current-affairs/sports",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/current-affairs/sports",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 120529
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/science-technology/ict-computing",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/science-technology/ict-computing",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/science-technology/ict-computing",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 119270
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/polity/political-theory",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/polity/political-theory",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/polity/political-theory",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 86202
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/geography/world-geography",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/geography/world-geography",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/geography/world-geography",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 115919
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/environment/biodiversity",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/environment/biodiversity",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/environment/biodiversity",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 103993
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/economy/public-finance",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/economy/public-finance",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/economy/public-finance",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 94854
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/science-technology/physics",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/science-technology/physics",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/science-technology/physics",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 484218
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/economy/macroeconomics",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/economy/macroeconomics",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/economy/macroeconomics",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 164755
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/international-relations/international-organisations",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/international-relations/international-organisations",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/international-relations/international-organisations",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 80027
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/polity/rights-liberties",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/polity/rights-liberties",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/polity/rights-liberties",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 103489
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/polity/legislature",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/polity/legislature",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/polity/legislature",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 137750
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/economy/development-welfare",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/economy/development-welfare",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/economy/development-welfare",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 121955
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/polity/constitutional-statutory-bodies",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/polity/constitutional-statutory-bodies",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/polity/constitutional-statutory-bodies",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 93466
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/economy/microeconomics",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/economy/microeconomics",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/economy/microeconomics",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 118698
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/polity/constitutional-framework",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/polity/constitutional-framework",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/polity/constitutional-framework",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 170438
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/history/modern-history",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/history/modern-history",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/history/modern-history",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 434268
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/history/ancient-history",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/history/ancient-history",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/history/ancient-history",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 317780
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/economy/financial-system",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/economy/financial-system",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/economy/financial-system",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 104606
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/polity/governance",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/polity/governance",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/polity/governance",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 99286
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/economy/applied-current-economy",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/economy/applied-current-economy",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/economy/applied-current-economy",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 95177
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/science-technology/space-technology-astronomy",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/science-technology/space-technology-astronomy",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/science-technology/space-technology-astronomy",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 110448
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/geography/human-geography",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/geography/human-geography",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/geography/human-geography",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 119538
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/current-affairs/defence-security",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/current-affairs/defence-security",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/current-affairs/defence-security",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 88507
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/current-affairs/awards-appointments-personalities",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/current-affairs/awards-appointments-personalities",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/current-affairs/awards-appointments-personalities",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 119008
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/history/art-culture",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/history/art-culture",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/history/art-culture",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 130229
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/polity/federalism",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/polity/federalism",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/polity/federalism",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 122426
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/economy/external-sector",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/economy/external-sector",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/economy/external-sector",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 108200
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/science-technology/defence-military-technology",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/science-technology/defence-military-technology",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/science-technology/defence-military-technology",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 87198
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/polity/local-government",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/polity/local-government",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/polity/local-government",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 83596
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/polity/elections",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/polity/elections",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/polity/elections",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 91665
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/current-affairs/science-technology",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/current-affairs/science-technology",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/current-affairs/science-technology",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 90946
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/current-affairs/polity-governance",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/current-affairs/polity-governance",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/current-affairs/polity-governance",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 159568
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/economy/industry-infrastructure",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/economy/industry-infrastructure",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/economy/industry-infrastructure",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 125728
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2023",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2023",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2023",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 64669
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2023/history",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2023/history",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2023/history",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57611
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2023/current-affairs",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2023/current-affairs",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2023/current-affairs",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57869
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2023/economy",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2023/economy",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2023/economy",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57611
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2023/science-technology",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2023/science-technology",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2023/science-technology",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58103
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2023/geography",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2023/geography",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2023/geography",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57655
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2023/polity",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2023/polity",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2023/polity",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57574
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2023/environment",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2023/environment",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2023/environment",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57709
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2023/international-relations",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2023/international-relations",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2023/international-relations",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57359
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2023/security",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2023/security",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2023/security",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 56860
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2025",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2025",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2025",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 64669
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2025/science-technology",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2025/science-technology",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2025/science-technology",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58103
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2025/geography",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2025/geography",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2025/geography",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57655
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2025/economy",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2025/economy",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2025/economy",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57609
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2025/international-relations",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2025/international-relations",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2025/international-relations",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57359
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2025/polity",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2025/polity",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2025/polity",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57574
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2025/history",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2025/history",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2025/history",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57611
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2025/current-affairs",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2025/current-affairs",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2025/current-affairs",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57869
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2025/environment",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2025/environment",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2025/environment",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57709
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2025/security",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2025/security",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2025/security",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 56860
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2021",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2021",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2021",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 64669
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2021/international-relations",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2021/international-relations",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2021/international-relations",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57359
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2021/current-affairs",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2021/current-affairs",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2021/current-affairs",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57867
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2021/history",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2021/history",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2021/history",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57611
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2021/geography",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2021/geography",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2021/geography",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57655
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2021/science-technology",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2021/science-technology",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2021/science-technology",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58103
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2021/economy",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2021/economy",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2021/economy",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57611
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2021/polity",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2021/polity",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2021/polity",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57576
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2021/security",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2021/security",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2021/security",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 56860
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2021/environment",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2021/environment",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2021/environment",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57709
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2026",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2026",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2026",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 64673
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2026/polity",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2026/polity",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2026/polity",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57578
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2026/science-technology",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2026/science-technology",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2026/science-technology",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58105
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2026/geography",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2026/geography",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2026/geography",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57657
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2026/history",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2026/history",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2026/history",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57613
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2026/environment",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2026/environment",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2026/environment",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57715
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2026/current-affairs",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2026/current-affairs",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2026/current-affairs",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57869
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2026/economy",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2026/economy",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2026/economy",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57613
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2026/security",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2026/security",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2026/security",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 56862
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2026/international-relations",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2026/international-relations",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2026/international-relations",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57361
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2020",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2020",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2020",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 62283
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2020/geography",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2020/geography",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2020/geography",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 56632
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2020/current-affairs",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2020/current-affairs",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2020/current-affairs",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 56846
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2020/science-technology",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2020/science-technology",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2020/science-technology",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57080
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2020/history",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2020/history",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2020/history",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 56588
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2020/economy",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2020/economy",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2020/economy",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 56586
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2020/polity",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2020/polity",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2020/polity",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 56553
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2020/environment",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2020/environment",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2020/environment",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 56686
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2020/security",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2020/security",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2020/security",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 55837
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2024",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2024",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2024",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 62392
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2024/science-technology",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2024/science-technology",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2024/science-technology",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57157
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2024/geography",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2024/geography",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2024/geography",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 56709
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2024/environment",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2024/environment",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2024/environment",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 56767
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2024/polity",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2024/polity",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2024/polity",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 56630
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2024/current-affairs",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2024/current-affairs",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2024/current-affairs",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 56923
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2024/history",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2024/history",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2024/history",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 56665
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2024/economy",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2024/economy",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2024/economy",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 56665
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2024/international-relations",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2024/international-relations",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2024/international-relations",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 56413
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2022",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2022",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2022",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 64669
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2022/current-affairs",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2022/current-affairs",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2022/current-affairs",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57867
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2022/economy",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2022/economy",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2022/economy",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57611
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2022/science-technology",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2022/science-technology",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2022/science-technology",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58103
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2022/polity",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2022/polity",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2022/polity",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57576
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2022/history",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2022/history",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2022/history",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57611
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2022/geography",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2022/geography",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2022/geography",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57655
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2022/environment",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2022/environment",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2022/environment",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57709
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2022/international-relations",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2022/international-relations",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2022/international-relations",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57359
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/cds/2022/security",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/cds/2022/security",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/cds/2022/security",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 56860
+  },
+  {
+    "url": "https://www.defencepathshala.in/exams/capf",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/exams/capf",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/exams/capf",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 82644
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 89318
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/history",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/history",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/history",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 1129227
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/general-mental-ability",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/general-mental-ability",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/general-mental-ability",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 977680
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/science-technology",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/science-technology",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/science-technology",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 1771346
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/economy",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/economy",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/economy",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 886520
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/geography",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/geography",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/geography",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 986667
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/environment",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/environment",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/environment",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 406119
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/current-affairs",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/current-affairs",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/current-affairs",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 518483
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/security",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/security",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/security",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 189503
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/international-relations",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/international-relations",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/international-relations",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 154590
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/polity",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/polity",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/polity",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 778614
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/history/ancient-history",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/history/ancient-history",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/history/ancient-history",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 204447
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/general-mental-ability/quantitative-aptitude",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/general-mental-ability/quantitative-aptitude",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/general-mental-ability/quantitative-aptitude",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 375795
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/science-technology/chemistry",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/science-technology/chemistry",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/science-technology/chemistry",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 243975
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/science-technology/physics",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/science-technology/physics",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/science-technology/physics",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 252244
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/science-technology/biology-life-sciences",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/science-technology/biology-life-sciences",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/science-technology/biology-life-sciences",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 258347
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/economy/microeconomics",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/economy/microeconomics",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/economy/microeconomics",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 80739
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/history/medieval-history",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/history/medieval-history",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/history/medieval-history",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 169740
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/geography/indian-geography",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/geography/indian-geography",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/geography/indian-geography",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 141723
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/general-mental-ability/reasoning",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/general-mental-ability/reasoning",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/general-mental-ability/reasoning",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 82931
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/history/modern-history",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/history/modern-history",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/history/modern-history",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 150785
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/science-technology/ict-computing",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/science-technology/ict-computing",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/science-technology/ict-computing",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 86832
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/geography/physical-geography",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/geography/physical-geography",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/geography/physical-geography",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 208943
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/geography/world-geography",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/geography/world-geography",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/geography/world-geography",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 91959
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/economy/macroeconomics",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/economy/macroeconomics",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/economy/macroeconomics",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 93946
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/economy/applied-current-economy",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/economy/applied-current-economy",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/economy/applied-current-economy",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 99784
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/polity/legislature",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/polity/legislature",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/polity/legislature",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 91508
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/history/art-culture",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/history/art-culture",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/history/art-culture",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 90421
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/environment/climate-change",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/environment/climate-change",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/environment/climate-change",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 88798
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/polity/judiciary",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/polity/judiciary",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/polity/judiciary",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 93811
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/economy/public-finance",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/economy/public-finance",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/economy/public-finance",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 103457
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/polity/constitutional-framework",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/polity/constitutional-framework",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/polity/constitutional-framework",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 88801
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/economy/industry-infrastructure",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/economy/industry-infrastructure",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/economy/industry-infrastructure",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 93505
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/current-affairs/international-relations",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/current-affairs/international-relations",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/current-affairs/international-relations",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 96242
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2021",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2021",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2021",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 64796
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2021/history",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2021/history",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2021/history",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57704
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2021/general-mental-ability",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2021/general-mental-ability",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2021/general-mental-ability",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58250
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2021/science-technology",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2021/science-technology",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2021/science-technology",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58222
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2021/economy",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2021/economy",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2021/economy",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57702
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2021/geography",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2021/geography",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2021/geography",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57774
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2021/polity",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2021/polity",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2021/polity",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57676
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2021/environment",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2021/environment",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2021/environment",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57824
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2021/security",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2021/security",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2021/security",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57719
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2021/current-affairs",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2021/current-affairs",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2021/current-affairs",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57974
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2026",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2026",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2026",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 64796
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2026/science-technology",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2026/science-technology",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2026/science-technology",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58222
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2026/general-mental-ability",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2026/general-mental-ability",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2026/general-mental-ability",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58250
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2026/geography",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2026/geography",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2026/geography",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57774
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2026/history",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2026/history",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2026/history",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57704
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2026/current-affairs",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2026/current-affairs",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2026/current-affairs",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57974
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2026/polity",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2026/polity",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2026/polity",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57663
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2026/environment",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2026/environment",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2026/environment",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57824
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2026/economy",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2026/economy",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2026/economy",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57704
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2026/security",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2026/security",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2026/security",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57719
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2024",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2024",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2024",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 67192
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2024/science-technology",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2024/science-technology",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2024/science-technology",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 59247
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2024/environment",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2024/environment",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2024/environment",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58862
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2024/history",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2024/history",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2024/history",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58742
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2024/economy",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2024/economy",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2024/economy",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58742
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2024/geography",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2024/geography",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2024/geography",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58812
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2024/general-mental-ability",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2024/general-mental-ability",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2024/general-mental-ability",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 59275
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2024/current-affairs",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2024/current-affairs",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2024/current-affairs",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 59003
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2024/polity",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2024/polity",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2024/polity",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58695
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2024/security",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2024/security",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2024/security",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58757
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2024/international-relations",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2024/international-relations",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2024/international-relations",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 56211
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2023",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2023",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2023",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 67192
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2023/science-technology",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2023/science-technology",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2023/science-technology",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 59247
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2023/history",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2023/history",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2023/history",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58742
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2023/geography",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2023/geography",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2023/geography",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58812
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2023/security",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2023/security",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2023/security",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58757
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2023/international-relations",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2023/international-relations",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2023/international-relations",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 56211
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2023/polity",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2023/polity",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2023/polity",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58695
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2023/environment",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2023/environment",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2023/environment",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58862
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2023/economy",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2023/economy",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2023/economy",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58740
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2023/current-affairs",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2023/current-affairs",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2023/current-affairs",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 59003
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2023/general-mental-ability",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2023/general-mental-ability",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2023/general-mental-ability",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 59275
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2020",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2020",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2020",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 64796
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2020/science-technology",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2020/science-technology",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2020/science-technology",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58222
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2020/economy",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2020/economy",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2020/economy",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57704
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2020/history",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2020/history",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2020/history",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57704
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2020/environment",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2020/environment",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2020/environment",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57824
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2020/geography",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2020/geography",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2020/geography",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57774
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2020/current-affairs",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2020/current-affairs",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2020/current-affairs",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57974
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2020/security",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2020/security",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2020/security",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57719
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2020/polity",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2020/polity",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2020/polity",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57676
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2020/general-mental-ability",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2020/general-mental-ability",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2020/general-mental-ability",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58250
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2022",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2022",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2022",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 67192
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2022/science-technology",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2022/science-technology",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2022/science-technology",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 59247
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2022/general-mental-ability",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2022/general-mental-ability",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2022/general-mental-ability",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 59275
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2022/geography",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2022/geography",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2022/geography",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58799
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2022/environment",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2022/environment",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2022/environment",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58849
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2022/economy",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2022/economy",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2022/economy",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58727
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2022/security",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2022/security",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2022/security",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58744
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2022/history",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2022/history",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2022/history",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58729
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2022/current-affairs",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2022/current-affairs",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2022/current-affairs",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58999
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2022/polity",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2022/polity",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2022/polity",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58699
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2022/international-relations",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2022/international-relations",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2022/international-relations",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 56198
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2025",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2025",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2025",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 64796
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2025/geography",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2025/geography",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2025/geography",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57787
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2025/science-technology",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2025/science-technology",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2025/science-technology",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58222
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2025/history",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2025/history",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2025/history",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57717
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2025/general-mental-ability",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2025/general-mental-ability",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2025/general-mental-ability",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 58250
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2025/economy",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2025/economy",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2025/economy",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57717
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2025/current-affairs",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2025/current-affairs",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2025/current-affairs",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57978
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2025/security",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2025/security",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2025/security",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57732
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2025/polity",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2025/polity",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2025/polity",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57670
+  },
+  {
+    "url": "https://www.defencepathshala.in/pyqs/capf/2025/environment",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/pyqs/capf/2025/environment",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/pyqs/capf/2025/environment",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 57837
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/month/2026-11",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/month/2026-11",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/month/2026-11",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 82065
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/month/2026-10",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/month/2026-10",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/month/2026-10",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 133654
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-11-11",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-11-11",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-11-11",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 62634
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-11-10",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-11-10",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-11-10",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 136903
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-11-09",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-11-09",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-11-09",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 115077
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-11-08",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-11-08",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-11-08",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 100911
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-11-07",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-11-07",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-11-07",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 138393
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-11-06",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-11-06",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-11-06",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 117453
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-11-05",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-11-05",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-11-05",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 134003
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-11-04",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-11-04",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-11-04",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 123658
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-11-03",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-11-03",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-11-03",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 123643
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-11-02",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-11-02",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-11-02",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 141241
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-11-01",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-11-01",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-11-01",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 131177
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-10-31",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-10-31",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-10-31",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 140355
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-10-30",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-10-30",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-10-30",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 138479
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-10-29",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-10-29",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-10-29",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 129699
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-10-28",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-10-28",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-10-28",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 125638
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-10-27",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-10-27",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-10-27",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 142869
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-10-26",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-10-26",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-10-26",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 96418
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-10-25",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-10-25",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-10-25",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 120841
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-10-24",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-10-24",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-10-24",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 120869
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-10-23",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-10-23",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-10-23",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 114593
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-10-22",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-10-22",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-10-22",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 134962
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-10-21",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-10-21",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-10-21",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 129944
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-10-20",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-10-20",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-10-20",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 131770
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-10-19",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-10-19",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-10-19",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 113946
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-10-18",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-10-18",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-10-18",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 113623
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-10-17",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-10-17",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-10-17",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 142764
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-10-16",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-10-16",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-10-16",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 146572
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-10-15",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-10-15",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-10-15",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 142491
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-10-14",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-10-14",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-10-14",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 146756
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-10-13",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-10-13",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-10-13",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 149400
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-10-12",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-10-12",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-10-12",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 109470
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-10-11",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-10-11",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-10-11",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 131144
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-10-10",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-10-10",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-10-10",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 122438
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-10-09",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-10-09",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-10-09",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 84584
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-10-08",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-10-08",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-10-08",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 106340
+  },
+  {
+    "url": "https://www.defencepathshala.in/current-affairs/2026-10-07",
+    "status": 200,
+    "final": "https://www.defencepathshala.in/current-affairs/2026-10-07",
+    "redirects": 0,
+    "canonical": "https://www.defencepathshala.in/current-affairs/2026-10-07",
+    "robots": "index, follow",
+    "h1": true,
+    "bytes": 109067
+  }
+]

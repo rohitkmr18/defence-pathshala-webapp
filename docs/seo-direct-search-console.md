@@ -109,3 +109,16 @@ Do not enable scheduled monitoring until all of these pass in Preview:
 5. No credential is returned in any API response or log.
 
 After that gate, add a low-frequency daily monitor and persist only normalized indexing/performance snapshots.
+
+## Query and device reporting (SEO foundation branch)
+
+The existing authenticated `performance` action now accepts:
+
+- `dimensions=query,page,device` (unique values from query/page/device/country/date; default page).
+- `page_equals=https://www.defencepathshala.in/pyqs/cds` (takes precedence over page_contains).
+- `start_date=2026-10-01&end_date=2026-10-28` (paired valid inclusive dates).
+- `start_row=0`, then 1000, 2000 etc. until fewer than 1000 rows return.
+
+Repeat with `/pyqs/capf`. Fetch page totals separately from query rows: anonymised queries and API top-row limits mean query rows cannot reconstruct totals. Dates use Google's Pacific Time reporting calendar. The default ends three days ago and requests final data; this is a conservative reporting window, not a guarantee that every recent day is settled.
+
+Compare exact singular and plural queries within each page filter. Neither a page's average position nor its total impressions establishes a ranking for an individual query. URL Inspection reads Google's index state; it does not request indexing. Request Indexing is a manual Search Console action.

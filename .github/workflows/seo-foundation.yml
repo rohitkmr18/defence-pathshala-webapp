@@ -1,0 +1,49 @@
+name: SEO foundation acceptance
+on:
+  push:
+    branches: [feat/seo-foundation-cds-capf]
+  pull_request:
+    paths:
+      - 'frontend/src/lib/seo*'
+      - 'frontend/src/app/pyqs/**'
+      - 'frontend/src/app/sitemap.ts'
+      - 'frontend/src/lib/search-console-options.ts'
+      - 'frontend/src/components/public/PublicNavbar.tsx'
+      - 'frontend/e2e/seo-foundation.spec.ts'
+      - 'scripts/test-seo-foundation.cjs'
+      - '.github/workflows/seo-foundation.yml'
+permissions:
+  contents: read
+jobs:
+  isolated-seo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:4557
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: synthetic-anon
+      SUPABASE_SERVICE_ROLE_KEY: synthetic-service
+      NEXT_TELEMETRY_DISABLED: '1'
+      DP_CHROMIUM_PATH: /usr/bin/google-chrome
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci --prefix frontend --ignore-scripts
+      - run: node --test scripts/test-seo-foundation.cjs
+      - run: npx --prefix frontend tsc --noEmit --project frontend/tsconfig.json
+      - working-directory: frontend
+        run: npx eslint 'src/app/pyqs/[exam]/page.tsx' src/app/sitemap.ts src/components/public/PublicNavbar.tsx src/lib/seo-data.ts src/lib/current-affairs-sitemap.ts src/lib/search-console-options.ts src/lib/google-search-console.ts src/app/api/admin/seo/search-console/route.ts e2e/seo-foundation.spec.ts playwright.seo.config.ts
+      - run: |
+          node scripts/test-support/seo-upstream.cjs &
+          FIXTURE_PID=$!
+          trap 'kill "$FIXTURE_PID"' EXIT
+          npm run build --prefix frontend
+      - run: npm exec --prefix frontend -- playwright test --config frontend/playwright.seo.config.ts
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: seo-browser-evidence
+          path: test-results/seo

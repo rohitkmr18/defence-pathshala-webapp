@@ -20,7 +20,7 @@ export const getPublishedCurrentAffairsEditions = unstable_cache(
     const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
     if (!key) {
       console.error("[Sitemap] No Supabase key available for Current Affairs editions.");
-      return [];
+      throw new Error("Current Affairs sitemap unavailable");
     }
     const client = createClient(supabaseUrl, key, { auth: { persistSession: false } });
     const { data, error } = await client
@@ -31,7 +31,7 @@ export const getPublishedCurrentAffairsEditions = unstable_cache(
 
     if (error) {
       console.error("[Sitemap] Current Affairs query error:", error);
-      return [];
+      throw new Error("Current Affairs sitemap unavailable");
     }
 
     return (data ?? [])

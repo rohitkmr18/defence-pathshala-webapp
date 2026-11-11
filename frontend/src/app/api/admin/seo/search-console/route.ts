@@ -1,3 +1,4 @@
+import { searchConsoleOptions } from "@/lib/search-console-options";
 import { timingSafeEqual } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import {
@@ -91,16 +92,17 @@ export async function GET(request: NextRequest) {
       }
 
       case "performance": {
-        const pageContains =
-          request.nextUrl.searchParams.get("page_contains") || "/pyqs/";
+        let options;
+        try {
+          options = searchConsoleOptions(request.nextUrl.searchParams);
+        } catch {
+          return NextResponse.json({ error: "Invalid reporting parameters: check dimensions, canonical page URL, paired dates and start_row" }, { status: 400 });
+        }
         return NextResponse.json({
           siteUrl: DEFAULT_SEARCH_CONSOLE_SITE,
-          pageContains,
-          result: await querySearchConsolePerformance({
-            dimensions: ["page"],
-            pageContains,
-            rowLimit: 1000,
-          }),
+          filters: options,
+          note: "Query rows omit anonymised searches; do not sum them as page totals. Dates use Google's Pacific Time reporting calendar. Pagination does not guarantee every row.",
+          result: await querySearchConsolePerformance(options),
         });
       }
 
