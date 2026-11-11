@@ -11,6 +11,8 @@ import {
   topicToSlug,
 } from "@/lib/seo-data";
 import Breadcrumbs from "@/components/public/Breadcrumbs";
+import { pageMetadata } from "@/lib/seo-metadata";
+import { buildSubjectAnalysis } from "@/lib/seo-subject-analysis";
 import {
   Calendar,
   ChevronRight,
@@ -86,27 +88,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const maxYear = Math.max(...archive.years.map((y) => y.year));
     const yearSpanText = minYear === maxYear ? `${minYear}` : `${minYear}–${maxYear}`;
 
-    const canonicalUrl = `https://www.defencepathshala.in/pyqs/${archive.examSlug}/${archive.subjectSlug}`;
-    const title = `${archive.exam} ${archive.subject} Previous Year Questions (${yearSpanText})`;
-    const description = `Practice ${archive.totalQuestions} ${archive.exam} ${archive.subject} previous year questions from ${yearSpanText} with answers, explanations, topic-wise analysis and year-wise trends.`;
+    // "PYQs" is the term aspirants search; the layout template appends " | Defence Pathshala".
+    const title = `${archive.exam} ${archive.subject} PYQs (${yearSpanText}), Topic-wise`;
+    const description = `${archive.totalQuestions} ${archive.exam} ${archive.subject} previous year questions (PYQs) from ${yearSpanText}, with answers, explanations, topic-wise weightage and year-wise counts.`;
 
     return {
-      title,
-      description,
-      alternates: {
-        canonical: canonicalUrl,
-      },
+      ...pageMetadata({
+        title,
+        description,
+        path: `/pyqs/${archive.examSlug}/${archive.subjectSlug}`,
+      }),
       robots: {
         index: true,
         follow: true,
-      },
-      openGraph: {
-        title,
-        description,
-        url: canonicalUrl,
-        siteName: "Defence Pathshala",
-        images: ["/og-image.png"],
-        type: "website",
       },
     };
   }
@@ -307,6 +301,8 @@ async function SubjectPageView({
   const maxYear = Math.max(...archive.years.map((y) => y.year));
   const yearSpanText = minYear === maxYear ? `${minYear}` : `${minYear}–${maxYear}`;
 
+  const analysis = buildSubjectAnalysis(archive, yearSpanText);
+
   const otherSubjects = examCoverage.subjects.filter(
     (s) => s.subject.toLowerCase() !== archive.subject.toLowerCase()
   );
@@ -325,18 +321,12 @@ async function SubjectPageView({
       {
         "@type": "ListItem",
         position: 2,
-        name: "PYQs",
+        name: `${archive.exam} PYQs`,
         item: `https://www.defencepathshala.in/pyqs/${archive.examSlug}`,
       },
       {
         "@type": "ListItem",
         position: 3,
-        name: archive.exam,
-        item: `https://www.defencepathshala.in/pyqs/${archive.examSlug}`,
-      },
-      {
-        "@type": "ListItem",
-        position: 4,
         name: archive.subject,
         item: `https://www.defencepathshala.in/pyqs/${archive.examSlug}/${archive.subjectSlug}`,
       },
@@ -367,11 +357,16 @@ async function SubjectPageView({
           UPSC {archive.exam} • Subject Question Archive
         </div>
         <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
-          {archive.exam} {archive.subject} Previous Year Questions
+          {archive.exam} {archive.subject} PYQs: Previous Year Questions
         </h1>
         <p className="mt-3 text-base text-slate-600 sm:text-lg max-w-3xl leading-relaxed">
           Practice {archive.totalQuestions} official {archive.exam} {archive.subject} previous year questions from {yearSpanText}. Explore comprehensive year-by-year question distribution, topic patterns, verified answers, and detailed explanations.
         </p>
+        {analysis && (
+          <p className="mt-3 text-sm text-slate-600 max-w-3xl leading-relaxed" data-testid="subject-analysis">
+            {analysis}
+          </p>
+        )}
 
         {/* Coverage Summary Metrics */}
         <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
