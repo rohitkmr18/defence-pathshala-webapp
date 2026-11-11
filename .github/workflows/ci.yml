@@ -63,7 +63,7 @@ jobs:
       - name: Verify session resume regressions
         run: >-
           node --experimental-strip-types --test
-          frontend/src/__tests__/practice_resume.test.mjs frontend/src/__tests__/question_learning_loop.test.mjs frontend/src/__tests__/exam_registry.test.mjs frontend/src/__tests__/current_affairs_calendar.test.mjs frontend/src/__tests__/monthly_capsules.test.mjs frontend/src/__tests__/cds_english_maths_taxonomy.test.mjs frontend/src/__tests__/paper_scope.test.mjs
+          frontend/src/__tests__/practice_resume.test.mjs frontend/src/__tests__/question_learning_loop.test.mjs frontend/src/__tests__/exam_registry.test.mjs frontend/src/__tests__/current_affairs_calendar.test.mjs frontend/src/__tests__/monthly_capsules.test.mjs frontend/src/__tests__/cds_english_maths_taxonomy.test.mjs frontend/src/__tests__/paper_scope.test.mjs frontend/src/__tests__/seo_subject_analysis.test.mjs
           scripts/test-learning-continuity.cjs scripts/test-learner-intelligence.cjs scripts/test-dashboard-mode.cjs
 
       - name: Verify auth state and atomic onboarding regressions
