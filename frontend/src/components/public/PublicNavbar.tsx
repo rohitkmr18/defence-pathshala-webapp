@@ -21,10 +21,10 @@ export default function PublicNavbar() {
               CAPF Exam
             </Link>
             <Link href="/pyqs/cds" className="hover:text-blue-600 transition">
-              CDS PYQs
+              CDS PYQ & PYQs
             </Link>
             <Link href="/pyqs/capf" className="hover:text-blue-600 transition">
-              CAPF PYQs
+              CAPF AC PYQ & PYQs
             </Link>
             <Link href="/afcat" className="hover:text-blue-600 transition">
               AFCAT Mocks
