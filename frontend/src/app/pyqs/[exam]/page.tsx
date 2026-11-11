@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const minYear = Math.min(...coverage.years.map((y) => y.year));
   const maxYear = Math.max(...coverage.years.map((y) => y.year));
   const canonicalUrl = `https://www.defencepathshala.in/pyqs/${coverage.slug}`;
-  const title = `${coverage.label} Previous Year Questions (${minYear}–${maxYear})`;
+  const title = `${coverage.label} PYQ (${minYear}–${maxYear}) - Previous Year Questions & PYQs`;
   const description =
     coverage.slug === "cds"
       ? "Practice real UPSC CDS PYQs with subject-wise drills, explanations and performance insights. Built by an IIT Kanpur alumnus and 4-time CDS written qualifier."
@@ -82,10 +82,10 @@ export default async function ExamPyqArchivePage({ params }: PageProps) {
           Official UPSC Archive
         </div>
         <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
-          {coverage.label} Previous Year Questions Archive
+          {coverage.label} PYQ - Previous Year Questions Archive
         </h1>
         <p className="mt-3 text-base text-slate-600 sm:text-lg max-w-3xl leading-relaxed">
-          Access verified {coverage.fullTitle} previous year questions structured chronologically by exam cycle and organized by syllabus discipline.
+          Explore {coverage.fullTitle} PYQ (previous year question) papers and PYQs by year and subject. Browse verified questions, then start a targeted practice drill to review answers and track performance.
         </p>
       </div>
 
