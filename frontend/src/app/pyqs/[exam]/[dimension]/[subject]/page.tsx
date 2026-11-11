@@ -13,6 +13,7 @@ import {
   MIN_INDEXABLE_TOPIC_QUESTIONS,
 } from "@/lib/seo-data";
 import Breadcrumbs from "@/components/public/Breadcrumbs";
+import SeoTopicLandingTracker from "@/components/seo/SeoTopicLandingTracker";
 import { BookOpen, Calendar, ArrowRight, Layers } from "lucide-react";
 
 interface PageProps {
@@ -345,6 +346,12 @@ async function ExamSubjectTopicPyqPage({
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <SeoTopicLandingTracker
+        exam={examCoverage.label}
+        subject={archive.subject}
+        topic={archive.topic}
+        questionCount={archive.totalQuestions}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
@@ -390,7 +397,7 @@ async function ExamSubjectTopicPyqPage({
 
         <div className="mt-8 flex flex-wrap gap-4">
           <Link
-            href={`/dashboard/practice?exam=${encodeURIComponent(examDb)}&subject=${encodeURIComponent(archive.subject)}&topic=${encodeURIComponent(archive.topic)}`}
+            href={`/dashboard/practice?exam=${encodeURIComponent(examDb)}&subject=${encodeURIComponent(archive.subject)}&topic=${encodeURIComponent(archive.topic)}&origin=seo_topic`}
             className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-md shadow-blue-600/20 transition hover:bg-blue-500 active:scale-95"
           >
             Practice {archive.topic} PYQs
