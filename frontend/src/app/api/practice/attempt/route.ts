@@ -100,8 +100,12 @@ export async function POST(request: NextRequest) {
     }
     if (session_id) {
       const { data: ownedSession } = await supabase.from("practice_sessions")
-        .select("id, question_ids").eq("id", session_id).eq("user_id", userId).maybeSingle();
+        .select("id, question_ids, is_completed").eq("id", session_id).eq("user_id", userId).maybeSingle();
       if (!ownedSession) return NextResponse.json({ error: "Session not found" }, { status: 404 });
+      // Submitted sessions are final: late or replayed writes must not alter scored attempts.
+      if (ownedSession.is_completed === true) {
+        return NextResponse.json({ error: "This session has already been submitted", code: "SESSION_COMPLETED" }, { status: 409 });
+      }
       if (!ownedSession.question_ids.includes(question_id)) return NextResponse.json({ error: "Question is outside this session" }, { status: 400 });
     }
     const scoredCorrect = selected === authoritativeAnswer;

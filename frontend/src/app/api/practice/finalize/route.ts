@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
     const [sessionResult, questionsResult] = await Promise.all([
       supabase
         .from("practice_sessions")
-        .select("id,user_id,question_ids,filters,mode,total_questions")
+        .select("id,user_id,question_ids,filters,mode,total_questions,is_completed,correct_count,incorrect_count,time_spent_seconds")
         .eq("id", sessionId)
         .eq("user_id", userId)
         .maybeSingle(),
@@ -106,6 +106,24 @@ export async function POST(request: NextRequest) {
     }
 
     const ownedSession = sessionResult.data;
+    // A submitted session is final. Replaying finalization (e.g. a retry after a lost
+    // response) returns the stored result unchanged; it must never rewrite answers,
+    // scores or completed_at with a different answer set.
+    if (ownedSession.is_completed === true) {
+      return NextResponse.json({
+        success: true,
+        persisted: true,
+        already_completed: true,
+        session: {
+          id: ownedSession.id,
+          is_completed: true,
+          correct_count: ownedSession.correct_count,
+          incorrect_count: ownedSession.incorrect_count,
+          time_spent_seconds: ownedSession.time_spent_seconds,
+        },
+        attempts_persisted: 0,
+      });
+    }
     const allowed = new Set<string>(ownedSession.question_ids || []);
     if (questionIds.some((id) => !allowed.has(id))) {
       return NextResponse.json({ error: "Answer set contains a question outside this session" }, { status: 400 });
@@ -174,10 +192,28 @@ export async function POST(request: NextRequest) {
       })
       .eq("id", sessionId)
       .eq("user_id", userId)
+      // Only the first submission may complete the session.
+      .eq("is_completed", false)
       .select("id,is_completed,correct_count,incorrect_count,time_spent_seconds")
       .single();
 
     if (completionError || !completed) {
+      // A concurrent submission may have completed the session first.
+      const { data: current } = await supabase
+        .from("practice_sessions")
+        .select("id,is_completed,correct_count,incorrect_count,time_spent_seconds")
+        .eq("id", sessionId)
+        .eq("user_id", userId)
+        .maybeSingle();
+      if (current?.is_completed === true) {
+        return NextResponse.json({
+          success: true,
+          persisted: true,
+          already_completed: true,
+          session: current,
+          attempts_persisted: 0,
+        });
+      }
       console.error("Session completion finalization failed:", completionError);
       return NextResponse.json({ error: "Session completion could not be saved" }, { status: 503 });
     }
