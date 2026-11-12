@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ...pageMetadata({
       title: `${label} PYQs – Previous Year Questions & Practice`,
       description: coverage.slug === "cds"
-        ? "Browse UPSC CDS GK previous year questions by year and subject, with available answers and explanations. Choose a topic and continue to PYQ practice."
+        ? "Explore UPSC CDS PYQs: General Knowledge archives plus available English and Elementary Mathematics practice. Select your paper and start practising."
         : "Browse UPSC CAPF AC Paper I previous year questions by year and subject, with available answers and explanations. Continue to targeted PYQ practice.",
       path: `/pyqs/${coverage.slug}`,
     }),
