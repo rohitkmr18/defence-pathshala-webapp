@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   // The plural /pyqs routes are canonical. Singular aliases must never become separate indexable pages.
   async redirects() {
     return [
-      { source: "/pyq/:path*", destination: "/pyqs/:path*", permanent: true },
+      { source: "/pyq/:path*", destination: "/pyqs/:path*", statusCode: 301 },
     ];
   },
   turbopack: {
