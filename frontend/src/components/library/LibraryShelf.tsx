@@ -2,10 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { trackLearningEvent } from "@/lib/learning-events";
-import { LIBRARY_EXAMS, type LibraryBook, type LibraryExam } from "@/lib/library/books";
+import type { LibraryBook } from "@/lib/library/books";
 import LibraryBookCard from "./LibraryBookCard";
-
-const EXAM_LABELS: Record<LibraryExam, string> = { CDS: "CDS", CAPF: "CAPF (AC)", NDA: "NDA", AFCAT: "AFCAT", UPSC: "UPSC" };
 
 function Chip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
@@ -23,10 +21,9 @@ function Chip({ active, onClick, children }: { active: boolean; onClick: () => v
 }
 
 export default function LibraryShelf({ books }: { books: LibraryBook[] }) {
-  const [exam, setExam] = useState<LibraryExam | null>(null);
   const [subject, setSubject] = useState<string | null>(null);
   const subjects = useMemo(() => [...new Set(books.map((b) => b.subject))].sort(), [books]);
-  const shown = books.filter((b) => (!exam || b.exams.includes(exam)) && (!subject || b.subject === subject));
+  const shown = books.filter((b) => (!subject || b.subject === subject));
 
   useEffect(() => {
     trackLearningEvent("library_hub_view", { books: books.length }, "library_hub");
@@ -35,12 +32,6 @@ export default function LibraryShelf({ books }: { books: LibraryBook[] }) {
   return (
     <div>
       <div className="space-y-3">
-        <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by exam">
-          <Chip active={!exam} onClick={() => setExam(null)}>All exams</Chip>
-          {LIBRARY_EXAMS.map((e) => (
-            <Chip key={e} active={exam === e} onClick={() => setExam(e)}>{EXAM_LABELS[e]}</Chip>
-          ))}
-        </div>
         {subjects.length > 1 && (
           <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by subject">
             <Chip active={!subject} onClick={() => setSubject(null)}>All subjects</Chip>

@@ -38,7 +38,6 @@ export default async function LibraryBookPage({ params }: { params: Promise<{ sl
   const quiz = getLibraryQuiz(slug);
   if (!book || !quiz) notFound();
 
-  const chapters = book.sections.filter((s) => s.detail);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -74,24 +73,6 @@ export default async function LibraryBookPage({ params }: { params: Promise<{ sl
             </a>
           </div>
         </header>
-
-        <nav aria-label={`What's inside ${book.title}`} className="mt-8 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-          <h2 className="text-base font-bold text-slate-950">What&apos;s inside</h2>
-          <ol className="mt-3 grid gap-x-6 gap-y-1 sm:grid-cols-2">
-            {chapters.map((s) => (
-              <li key={s.title}>
-                <a href={s.page === 0 ? `#${LIBRARY_QUIZ_ANCHOR}` : `#page-${s.page}`}
-                  className="flex items-start justify-between gap-3 border-b border-slate-100 py-2 text-sm hover:text-blue-700">
-                  <span>
-                    <span className="font-semibold text-slate-800">{s.title}</span>
-                    <span className="block text-xs leading-5 text-slate-500">{s.detail}</span>
-                  </span>
-                  <span className="shrink-0 pt-0.5 font-mono text-xs text-slate-500">{s.page === 0 ? "MCQs" : `p. ${s.page}`}</span>
-                </a>
-              </li>
-            ))}
-          </ol>
-        </nav>
 
         <div className="mt-8">
           <EbookPageReader
