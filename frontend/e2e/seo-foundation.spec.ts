@@ -13,16 +13,20 @@ for (const width of [320, 390, 1440]) {
       await expect(page.locator("h1")).toContainText(exam === "cds" ? "CDS PYQs" : "CAPF AC PYQs");
       await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", `https://www.defencepathshala.in/pyqs/${exam}`);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-      if (width < 1280) {
-        await page.getByText("Explore exams and PYQs", { exact: true }).click();
-        await expect(page.locator('details a[href="/pyqs/cds"]')).toBeVisible();
-        await expect(page.locator('details a[href="/pyqs/capf"]')).toBeVisible();
-      }
+      const hamburger = page.getByRole("button", { name: "Open menu" });
+      await expect(hamburger).toBeVisible();
+      await hamburger.click();
+      await expect(page.getByRole("navigation", { name: "Site menu" })).toBeVisible();
+      await expect(page.getByRole("navigation", { name: "Site menu" }).getByRole("link", { name: "CDS PYQs" })).toBeVisible();
+      await expect(page.getByRole("navigation", { name: "Site menu" }).getByRole("link", { name: "CAPF PYQs" })).toBeVisible();
+      await page.keyboard.press("Escape");
+      await expect(page.getByRole("navigation", { name: "Site menu" })).toHaveCount(0);
       const schemas = await page.locator('script[type="application/ld+json"]').allTextContents();
       const breadcrumb = schemas.map(s => JSON.parse(s)).find(s => s["@type"] === "BreadcrumbList");
       expect(breadcrumb.itemListElement[1].item).toBe(`https://www.defencepathshala.in/pyqs/${exam}`);
       if (exam === "cds") {
         await expect(page.getByRole("heading", { name: "Choose your CDS paper" })).toBeVisible();
+        await expect(page.getByText("Currently eligible questions")).toHaveCount(0);
         await expect(page.getByRole("link", { name: "Practice English" })).toHaveAttribute("href", /paper=english/);
         await expect(page.getByRole("link", { name: "Practice English" })).toHaveAttribute("href", /origin=seo_cds_english/);
         await expect(page.getByText("No eligible questions yet")).toBeVisible();
