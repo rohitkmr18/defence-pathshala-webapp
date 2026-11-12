@@ -81,6 +81,27 @@ Withdrawing an active pointer removes the item from the current published view;
 previously approved revisions remain approved in revision history. Full editorial
 revocation/rejection/adjudication workflows are deferred to a separate reviewed phase.
 
+## Editorial identity and regression-gate limitations
+
+B1 review records contain reviewer **labels**, review stages, notes and content hashes.
+They are immutable database records, **not cryptographically signed approvals** and
+not evidence that a reviewer authenticated through a trusted editorial identity.
+The publication trigger checks stage, content hash, source evidence and distinct
+reviewer strings; trusted database-owner operations must still be protected from
+spoofed reviewer labels. Before any hosted publication, require authenticated
+reviewer identity derived server-side, a least-privilege editorial workflow,
+audit evidence, and independent approval testing. Do not describe this B1
+mechanism as a completed signed-review system.
+
+The CAPF branch bypasses the ordinary CI job because that job is configured with
+hosted credentials and build workflows that require additional isolation review.
+The dedicated offline CI job now includes CAPF SQL/API and importer tests, type
+checking, build and smoke tests, AFCAT engine tests, plus selected exam-registry,
+practice, dashboard, learning-loop and content regressions. This broader subset
+still does **not** equal the full standard CI/Playwright matrix or hosted acceptance.
+Restore a credential-free full regression job as a separate tested change once
+the build hook and broader suite have been audited for side effects.
+
 ## Local commands
 
 Run from the repository root with Python 3 and the locked frontend dependencies:
