@@ -144,8 +144,7 @@ export const getCdsPaperAvailability = unstable_cache(
         .from("v_dp_question_intelligence_v2")
         .select("id", { count: "exact", head: true })
         .eq("exam", "CDS")
-        .eq("content_eligible", true)
-        .in("paper", values);
+        .eq("content_eligible", true).in("paper", paperTabDbValues(tab));
       if (error || count === null) throw new Error("CDS paper inventory query failed");
       return count;
     };
