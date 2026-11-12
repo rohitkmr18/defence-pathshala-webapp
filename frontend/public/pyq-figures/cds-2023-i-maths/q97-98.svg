@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 270" font-family="Arial, sans-serif" font-size="13">
+<rect width="340" height="270" fill="#ffffff"/>
+<circle cx="170" cy="125" r="95" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+<line x1="87.7" y1="77.5" x2="252.3" y2="77.5" stroke="#0f172a" stroke-width="2"/>
+<line x1="252.3" y1="77.5" x2="252.3" y2="172.5" stroke="#0f172a" stroke-width="2"/>
+<line x1="252.3" y1="172.5" x2="87.7" y2="172.5" stroke="#0f172a" stroke-width="2"/>
+<line x1="87.7" y1="172.5" x2="87.7" y2="77.5" stroke="#0f172a" stroke-width="2"/>
+<line x1="87.7" y1="77.5" x2="252.3" y2="172.5" stroke="#1d4ed8" stroke-width="2" stroke-dasharray="7 4"/>
+<line x1="87.7" y1="77.5" x2="142.6" y2="172.5" stroke="#dc2626" stroke-width="2"/>
+<circle cx="87.7" cy="77.5" r="2.5" fill="#0f172a"/>
+<text x="77.7" y="71.5" fill="#0f172a" text-anchor="middle" font-weight="bold">A</text>
+<circle cx="252.3" cy="77.5" r="2.5" fill="#0f172a"/>
+<text x="262.3" y="71.5" fill="#0f172a" text-anchor="middle" font-weight="bold">B</text>
+<circle cx="252.3" cy="172.5" r="2.5" fill="#0f172a"/>
+<text x="264.3" y="188.5" fill="#0f172a" text-anchor="middle" font-weight="bold">C</text>
+<circle cx="87.7" cy="172.5" r="2.5" fill="#0f172a"/>
+<text x="75.7" y="188.5" fill="#0f172a" text-anchor="middle" font-weight="bold">D</text>
+<circle cx="142.6" cy="172.5" r="2.5" fill="#0f172a"/>
+<text x="142.6" y="190.5" fill="#0f172a" text-anchor="middle" font-weight="bold">E</text>
+<text x="124.6" y="166.5" fill="#dc2626" text-anchor="middle" font-size="12">30°</text>
+<text x="216.3" y="167.5" fill="#1d4ed8" text-anchor="middle" font-size="12">30°</text>
+<text x="170.0" y="262.0" fill="#475569" text-anchor="middle" font-size="12">Rectangle ABCD inscribed in a circle of radius r; E lies on DC</text>
+</svg>

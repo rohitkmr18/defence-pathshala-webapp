@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 250" font-family="Arial, sans-serif" font-size="13">
+<rect width="340" height="250" fill="#ffffff"/>
+<path d="M 60.0 70.4 A 129.6 129.6 0 0 1 189.6 200.0" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+<line x1="60.0" y1="38.0" x2="60.0" y2="200.0" stroke="#0f172a" stroke-width="2"/>
+<line x1="60.0" y1="200.0" x2="276.0" y2="200.0" stroke="#0f172a" stroke-width="2"/>
+<line x1="60.0" y1="38.0" x2="276.0" y2="200.0" stroke="#0f172a" stroke-width="2"/>
+<line x1="60.0" y1="200.0" x2="137.8" y2="96.3" stroke="#1d4ed8" stroke-width="2" stroke-dasharray="7 4"/>
+<polyline points="60.0,189.0 71.0,189.0 71.0,200.0" fill="none" stroke="#475569" stroke-width="1.5"/>
+<polyline points="131.2,105.1 122.4,98.5 129.0,89.7" fill="none" stroke="#1d4ed8" stroke-width="1.5"/>
+<circle cx="60.0" cy="38.0" r="2.5" fill="#0f172a"/>
+<text x="48.0" y="42.0" fill="#0f172a" text-anchor="middle" font-weight="bold">A</text>
+<circle cx="60.0" cy="200.0" r="2.5" fill="#0f172a"/>
+<text x="48.0" y="214.0" fill="#0f172a" text-anchor="middle" font-weight="bold">B</text>
+<circle cx="276.0" cy="200.0" r="2.5" fill="#0f172a"/>
+<text x="288.0" y="214.0" fill="#0f172a" text-anchor="middle" font-weight="bold">C</text>
+<circle cx="137.8" cy="96.3" r="2.5" fill="#0f172a"/>
+<text x="151.8" y="90.3" fill="#0f172a" text-anchor="middle" font-weight="bold">D</text>
+<circle cx="60.0" cy="70.4" r="2.5" fill="#0f172a"/>
+<text x="48.0" y="74.4" fill="#0f172a" text-anchor="middle" font-weight="bold">P</text>
+<circle cx="189.6" cy="200.0" r="2.5" fill="#0f172a"/>
+<text x="191.6" y="216.0" fill="#0f172a" text-anchor="middle" font-weight="bold">Q</text>
+<text x="170.0" y="240.0" fill="#475569" text-anchor="middle" font-size="12">Right angle at B; BD ⟂ AC; circle has centre B and radius BD</text>
+</svg>
