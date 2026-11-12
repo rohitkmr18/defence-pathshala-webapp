@@ -3,7 +3,7 @@ const http = require('node:http');
 const rows = ['CDS','CAPF-AC'].flatMap(exam => Array.from({length:12},(_,i)=>({
  id:`${exam}-${i}`, question_id:`${exam}_${i}`, exam,year:2026,subject:'History',topic:'Modern History',paper:exam==='CDS'?'General Knowledge':'Paper I',
  content_eligible:true, question:`Synthetic question ${i+1}?`,opt_a:'One',opt_b:'Two',opt_c:'Three',opt_d:'Four',final_opt:'B',explanation:'Synthetic explanation.',q_num:i+1,
-})));
+}))).concat(Array.from({length:3},(_,i)=>({id:`CDS-EN-${i}`,question_id:`CDS_EN_${i}`,exam:'CDS',year:2026,subject:'English',topic:'Grammar',paper:'English',content_eligible:true,question:`English sample ${i+1}?`,opt_a:'One',opt_b:'Two',opt_c:'Three',opt_d:'Four',final_opt:'B',q_num:i+1})));
 http.createServer((req,res)=>{
  res.setHeader('Content-Type','application/json');
  res.setHeader('Access-Control-Allow-Origin','*');
@@ -15,6 +15,11 @@ http.createServer((req,res)=>{
  for(const [key,value] of url.searchParams){
   if(value.startsWith('eq.'))result=result.filter(r=>String(r[key])===value.slice(3));
   if(value.startsWith('ilike.'))result=result.filter(r=>String(r[key]).toLowerCase()===value.slice(6).toLowerCase());
+  if(value.startsWith('in.(')) { const values=value.slice(4,-1).split(',').map(v=>v.replace(/^\"|\"$/g,'')); result=result.filter(r=>values.includes(String(r[key]))); }
+ }
+ if(req.method==='HEAD' || req.headers.prefer?.includes('count=exact')){
+  res.setHeader('Content-Range',result.length ? `0-${result.length-1}/${result.length}` : '*/0');
+  if(req.method==='HEAD') return res.end();
  }
  res.end(JSON.stringify(result));
 }).listen(4557,'127.0.0.1');
