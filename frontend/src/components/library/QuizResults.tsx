@@ -94,13 +94,20 @@ export default function QuizResults({ quiz, result, responses, durationMs, pract
               return <> — wrong answers cost you <span className="font-mono font-bold text-red-700">{lost}</span> {lost === 1 ? "mark" : "marks"}.</>;
             })()}
           </li>
-          <li>
-            <span className="font-semibold text-slate-900">Real UPSC PYQs:</span>{" "}
-            <span className="font-mono font-bold">{result.bySource.pyq.correct}/{result.bySource.pyq.total}</span>
-            {" · "}
-            <span className="font-semibold text-slate-900">DP Originals:</span>{" "}
-            <span className="font-mono font-bold">{result.bySource.original.correct}/{result.bySource.original.total}</span>
-          </li>
+          {result.bySource.pyq.total > 0 ? (
+            <li>
+              <span className="font-semibold text-slate-900">Real UPSC PYQs:</span>{" "}
+              <span className="font-mono font-bold">{result.bySource.pyq.correct}/{result.bySource.pyq.total}</span>
+              {" · "}
+              <span className="font-semibold text-slate-900">DP Originals:</span>{" "}
+              <span className="font-mono font-bold">{result.bySource.original.correct}/{result.bySource.original.total}</span>
+            </li>
+          ) : (
+            <li>
+              <span className="font-semibold text-slate-900">DP Originals:</span>{" "}
+              <span className="font-mono font-bold">{result.bySource.original.correct}/{result.bySource.original.total}</span>
+            </li>
+          )}
           {result.trapsHit > 0 && (
             <li className="flex gap-2 text-amber-900">
               <AlertTriangle className="mt-1 h-4 w-4 shrink-0 text-amber-600" aria-hidden="true" />

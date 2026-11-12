@@ -7,11 +7,12 @@ import { LIBRARY_BOOKS, getLibraryBook, libraryPageSrc, libraryOgSrc, booksForEx
 import { LIBRARY_HOTSPOTS } from '../lib/library/hotspots.ts';
 import { scoreQuiz, validateQuiz, verdictFor, NEGATIVE_MARK } from '../lib/library/quiz.ts';
 import { BIOLOGY_DECODED_QUIZ } from '../lib/library/quiz-biology-decoded.ts';
+import { VOCAB_DECODED_QUIZ } from '../lib/library/quiz-vocab-decoded.ts';
 import { POLITY_DECODED_QUIZ } from '../lib/library/quiz-polity-decoded.ts';
 import { CHEMISTRY_DECODED_QUIZ } from '../lib/library/quiz-chemistry-decoded.ts';
 
 const publicDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../public');
-const QUIZZES = { 'biology-decoded': BIOLOGY_DECODED_QUIZ, 'polity-decoded': POLITY_DECODED_QUIZ, 'chemistry-decoded': CHEMISTRY_DECODED_QUIZ };
+const QUIZZES = { 'biology-decoded': BIOLOGY_DECODED_QUIZ, 'polity-decoded': POLITY_DECODED_QUIZ, 'chemistry-decoded': CHEMISTRY_DECODED_QUIZ, 'vocab-decoded': VOCAB_DECODED_QUIZ };
 
 test('every reader page image exists and nothing extra is shipped (no PDF, no answer-key pages)', () => {
   for (const b of LIBRARY_BOOKS) {

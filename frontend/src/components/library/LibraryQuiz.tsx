@@ -152,7 +152,7 @@ export default function LibraryQuiz({ quiz, bookTitle, pyqCount, practice, ancho
             Test yourself on {bookTitle}
           </h2>
           <p className="mt-3 text-sm leading-6 text-slate-300">
-            {total} questions — {pyqCount} real UPSC PYQs and {total - pyqCount} DP Originals. Answer at your pace, then get a score card,
+            {total} questions — {pyqCount > 0 ? `${pyqCount} real UPSC PYQs and ${total - pyqCount} DP Originals.` : "all DP Originals, written in the 2026 CDS English mix."} Answer at your pace, then get a score card,
             topic-wise analysis and the answer key with traps.
           </p>
           <ul className="mt-4 flex flex-wrap gap-2 text-xs font-semibold">
