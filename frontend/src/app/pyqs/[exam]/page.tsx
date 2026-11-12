@@ -100,8 +100,9 @@ export default async function ExamPyqArchivePage({ params }: PageProps) {
               <div key={paper.key} className="flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <div>
                   <h3 className="font-bold text-slate-900">{paper.name}</h3>
-                  <p className="mt-2 text-2xl font-extrabold text-blue-700">{paper.count.toLocaleString()}</p>
-                  <p className="text-xs text-slate-500">Currently eligible questions</p>
+                  <p className="mt-2 text-sm text-slate-600">
+                    {paper.count > 0 ? "Explore available questions and practice" : "Practice not yet available"}
+                  </p>
                 </div>
                 {paper.count > 0 ? (
                   <Link href={paper.href} className="mt-5 inline-flex min-h-11 items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-blue-700">
