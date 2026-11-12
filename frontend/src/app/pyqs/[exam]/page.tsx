@@ -81,11 +81,6 @@ export default async function ExamPyqArchivePage({ params }: PageProps) {
         <p className="mt-3 text-base text-slate-600 sm:text-lg max-w-3xl leading-relaxed">
           {coverage.slug === "cds" ? "Choose General Knowledge, English or Elementary Mathematics first. Then browse available questions or begin practice." : "Browse Paper I questions by year or subject, review available answers and explanations, and start focused practice."}
         </p>
-        <p className="mt-3 text-sm text-slate-600">
-          {coverage.totalQuestions.toLocaleString()} questions across {coverage.years.length} available years
-          ({coverage.years.map((y) => y.year).join(", ")}). Counts describe this archive, not complete paper coverage.
-          {coverage.slug === "cds" && " These counts cover GK only; English and Mathematics are shown separately below."}
-        </p>
         <div className="mt-5 flex flex-wrap items-center gap-4">
           <Link href={coverage.slug === "cds" ? "#choose-cds-paper" : practiceHref} className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white">{coverage.slug === "cds" ? "Choose CDS paper" : `Start ${label} PYQ practice`}</Link>
           <Link href={`/exams/${coverage.slug}`} className="text-sm font-semibold text-blue-700">Read the {label} exam guide</Link>
