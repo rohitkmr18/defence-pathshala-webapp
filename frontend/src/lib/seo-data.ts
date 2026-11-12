@@ -130,6 +130,32 @@ export const getCachedQuestionsMeta = unstable_cache(
   { revalidate: 3600 }
 );
 
+// CDS English and Elementary Mathematics live in separate paper partitions.
+// Do not infer their availability from the GS-only SEO archive.
+export const getCdsPaperAvailability = unstable_cache(
+  async (): Promise<{ english: number; maths: number }> => {
+    const key = serviceRoleKey || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (!key) throw new Error("CDS paper inventory unavailable");
+    const client = createClient(supabaseUrl, key);
+    const countFor = async (tab: "english" | "maths"): Promise<number> => {
+      const values = paperTabDbValues(tab);
+      if (!values.length) return 0;
+      const { count, error } = await client
+        .from("v_dp_question_intelligence_v2")
+        .select("id", { count: "exact", head: true })
+        .eq("exam", "CDS")
+        .eq("content_eligible", true)
+        .in("paper", values);
+      if (error || count === null) throw new Error("CDS paper inventory query failed");
+      return count;
+    };
+    const [english, maths] = await Promise.all([countFor("english"), countFor("maths")]);
+    return { english, maths };
+  },
+  ["seo-cds-paper-availability-v1"],
+  { revalidate: 3600 }
+);
+
 // ─── Public SEO Data-Access API ───────────────────────────────────────────────
 
 export interface SubjectStat {
