@@ -251,7 +251,7 @@
     "final_opt": "A",
     "llm_opt": "A",
     "official_opt": null,
-    "explanation": "Concept: when interest is compounded quarterly, the rate per quarter is one-fourth of the yearly rate, and 9 months is 3 quarters.\n\nStep 1: Rate per quarter $= \\dfrac{12}{4} = 3\\%$. Number of quarters $= 3$.\n\nStep 2: Amount $= 10000 \\times (1.03)^3 = 10000 \\times 1.092727 = ₹10{,}927.27$.\n\nStep 3: Interest $= 10927.27 - 10000 = ₹927.27$.\n\nAnswer: (a) ₹ 927.27",
+    "explanation": "Concept: when interest is compounded quarterly, the rate per quarter is one-fourth of the yearly rate, and 9 months is 3 quarters.\n\nStep 1: Rate per quarter $= \\dfrac{12}{4} = 3\\%$. Number of quarters $= 3$.\n\nStep 2: Amount $= 10000 \\times (1.03)^3 = 10000 \\times 1.092727 = \\text{₹}10{,}927.27$.\n\nStep 3: Interest $= 10927.27 - 10000 = \\text{₹}927.27$.\n\nAnswer: (a) ₹ 927.27",
     "source": "CDS II 2023 Elementary Mathematics set A (English side)",
     "is_negative": false,
     "tags": [
@@ -1852,7 +1852,7 @@
     "final_opt": "B",
     "llm_opt": "B",
     "official_opt": null,
-    "explanation": "Concept: bill $= \\alpha m + \\beta n$, where $m$ is the number of rooms and $n$ the number of units. Find $\\alpha$ and $\\beta$ from the two data points.\n\nStep 1: $8\\alpha + 240\\beta = 400$, which gives $\\alpha + 30\\beta = 50$.\n\nStep 2: $6\\alpha + 200\\beta = 320$, which gives $3\\alpha + 100\\beta = 160$.\n\nStep 3: From step 1, $\\alpha = 50 - 30\\beta$. Put in step 2: $150 - 90\\beta + 100\\beta = 160 \\Rightarrow \\beta = 1$ and $\\alpha = 20$.\n\nStep 4: Bill $= ₹(20m + n)$.\n\nAnswer: (b) ₹ $(20m + n)$",
+    "explanation": "Concept: bill $= \\alpha m + \\beta n$, where $m$ is the number of rooms and $n$ the number of units. Find $\\alpha$ and $\\beta$ from the two data points.\n\nStep 1: $8\\alpha + 240\\beta = 400$, which gives $\\alpha + 30\\beta = 50$.\n\nStep 2: $6\\alpha + 200\\beta = 320$, which gives $3\\alpha + 100\\beta = 160$.\n\nStep 3: From step 1, $\\alpha = 50 - 30\\beta$. Put in step 2: $150 - 90\\beta + 100\\beta = 160 \\Rightarrow \\beta = 1$ and $\\alpha = 20$.\n\nStep 4: Bill $= \\text{₹}(20m + n)$.\n\nAnswer: (b) ₹ $(20m + n)$",
     "source": "CDS II 2023 Elementary Mathematics set A (English side)",
     "is_negative": false,
     "tags": [

@@ -541,7 +541,7 @@
     "final_opt": "C",
     "llm_opt": "C",
     "official_opt": null,
-    "explanation": "Concept: assume a convenient number of bananas so the percentages become easy.\n\nStep 1: Let the vendor buy 100 bananas for ₹100 (₹1 each).\n12% are lost, so 88 bananas are left to sell.\n\nStep 2: Profit is 4% on the whole cost of ₹100, so total selling money $= ₹104$.\nSelling price per banana $= \\dfrac{104}{88}$.\n\nStep 3: If he had sold all 100 bananas at this price:\n$$\\text{Money} = 100 \\times \\frac{104}{88} = \\frac{10400}{88} = 118\\frac{2}{11}$$\n\nStep 4: Profit $= 118\\frac{2}{11} - 100 = 18\\frac{2}{11}$ on a cost of 100, so the profit is $18\\frac{2}{11}\\%$.\n\nAnswer: (c) $18\\frac{2}{11}\\%$",
+    "explanation": "Concept: assume a convenient number of bananas so the percentages become easy.\n\nStep 1: Let the vendor buy 100 bananas for ₹100 (₹1 each).\n12% are lost, so 88 bananas are left to sell.\n\nStep 2: Profit is 4% on the whole cost of ₹100, so total selling money $= \\text{₹}104$.\nSelling price per banana $= \\dfrac{104}{88}$.\n\nStep 3: If he had sold all 100 bananas at this price:\n$$\\text{Money} = 100 \\times \\frac{104}{88} = \\frac{10400}{88} = 118\\frac{2}{11}$$\n\nStep 4: Profit $= 118\\frac{2}{11} - 100 = 18\\frac{2}{11}$ on a cost of 100, so the profit is $18\\frac{2}{11}\\%$.\n\nAnswer: (c) $18\\frac{2}{11}\\%$",
     "source": "CDS I 2023 Elementary Mathematics set A (English side)",
     "is_negative": false,
     "tags": [
@@ -782,7 +782,7 @@
     "final_opt": "C",
     "llm_opt": "C",
     "official_opt": null,
-    "explanation": "Concept: money due in the future is worth less today. Present worth $= \\dfrac{\\text{Amount}}{1 + \\frac{R \\times T}{100}}$.\n\nStep 1: A owes ₹20,000 after 5 years at 5% SI.\n$$1 + \\frac{5 \\times 5}{100} = 1.25 \\Rightarrow \\text{present worth} = \\frac{20000}{1.25} = ₹16{,}000$$\n\nStep 2: B owes ₹12,000 after 4 years.\n$$1 + \\frac{5 \\times 4}{100} = 1.2 \\Rightarrow \\text{present worth} = \\frac{12000}{1.2} = ₹10{,}000$$\n\nStep 3: Settle the two dues. A should pay ₹16,000 and should receive ₹10,000, so A pays the difference:\n$$16000 - 10000 = ₹6{,}000$$\n\nA gives ₹6,000 to B.\n\nAnswer: (c) A gives ₹6,000 to B",
+    "explanation": "Concept: money due in the future is worth less today. Present worth $= \\dfrac{\\text{Amount}}{1 + \\frac{R \\times T}{100}}$.\n\nStep 1: A owes ₹20,000 after 5 years at 5% SI.\n$$1 + \\frac{5 \\times 5}{100} = 1.25 \\Rightarrow \\text{present worth} = \\frac{20000}{1.25} = \\text{₹}16{,}000$$\n\nStep 2: B owes ₹12,000 after 4 years.\n$$1 + \\frac{5 \\times 4}{100} = 1.2 \\Rightarrow \\text{present worth} = \\frac{12000}{1.2} = \\text{₹}10{,}000$$\n\nStep 3: Settle the two dues. A should pay ₹16,000 and should receive ₹10,000, so A pays the difference:\n$$16000 - 10000 = \\text{₹}6{,}000$$\n\nA gives ₹6,000 to B.\n\nAnswer: (c) A gives ₹6,000 to B",
     "source": "CDS I 2023 Elementary Mathematics set A (English side)",
     "is_negative": false,
     "tags": [
@@ -1665,7 +1665,7 @@
     "final_opt": "C",
     "llm_opt": "C",
     "official_opt": null,
-    "explanation": "Concept: with half-yearly compounding, the rate is halved and the number of periods is doubled.\n\nStep 1: Rate per half-year $= 20\\% \\div 2 = 10\\%$. Number of half-years in 2 years $= 4$.\n\nStep 2: Compound amount.\n$$10000 \\times (1.1)^4 = 10000 \\times 1.4641 = ₹14{,}641$$\nCompound interest $= 14641 - 10000 = ₹4{,}641$.\n\nStep 3: Simple interest for 2 years at 20% $= \\dfrac{10000 \\times 20 \\times 2}{100} = ₹4{,}000$.\n\nStep 4: Difference $= 4641 - 4000 = ₹641$.\n\nAnswer: (c) ₹641",
+    "explanation": "Concept: with half-yearly compounding, the rate is halved and the number of periods is doubled.\n\nStep 1: Rate per half-year $= 20\\% \\div 2 = 10\\%$. Number of half-years in 2 years $= 4$.\n\nStep 2: Compound amount.\n$$10000 \\times (1.1)^4 = 10000 \\times 1.4641 = \\text{₹}14{,}641$$\nCompound interest $= 14641 - 10000 = \\text{₹}4{,}641$.\n\nStep 3: Simple interest for 2 years at 20% $= \\dfrac{10000 \\times 20 \\times 2}{100} = \\text{₹}4{,}000$.\n\nStep 4: Difference $= 4641 - 4000 = \\text{₹}641$.\n\nAnswer: (c) ₹641",
     "source": "CDS I 2023 Elementary Mathematics set A (English side)",
     "is_negative": false,
     "tags": [
