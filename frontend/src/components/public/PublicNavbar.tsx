@@ -32,6 +32,9 @@ export default function PublicNavbar() {
             <Link href="/current-affairs" className="hover:text-blue-600 transition">
               Current Affairs
             </Link>
+            <Link href="/library" className="hover:text-blue-600 transition">
+              Free Library
+            </Link>
             <Link href="/about" className="hover:text-blue-600 transition">
               About
             </Link>

@@ -3,6 +3,7 @@ import { getAllEligibleSeoRoutes } from "@/lib/seo-data";
 import { getPublishedCurrentAffairsEditions, toLastModified } from "@/lib/current-affairs-sitemap";
 import { summariseMonths } from "@/lib/current-affairs-calendar";
 import { MONTHLY_CAPSULES } from "@/lib/monthly-capsules";
+import { LIBRARY_BOOKS } from "@/lib/library/books";
 
 const base = "https://www.defencepathshala.in";
 
@@ -12,6 +13,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/afcat`, changeFrequency: "weekly", priority: 0.9 },
     { url: `${base}/current-affairs`, changeFrequency: "daily", priority: 0.9 },
     { url: `${base}/about`, changeFrequency: "monthly", priority: 0.6 },
+    {
+      url: `${base}/library`,
+      lastModified: new Date(`${LIBRARY_BOOKS.map((b) => b.publishedOn).sort().at(-1)}T00:00:00Z`),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    ...LIBRARY_BOOKS.map((b) => ({
+      url: `${base}/library/${b.slug}`,
+      lastModified: new Date(`${b.publishedOn}T00:00:00Z`),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    })),
     ...MONTHLY_CAPSULES.map((c) => ({
       url: `${base}/current-affairs/monthly/${c.edition}`,
       lastModified: new Date(`${c.publishedOn}T00:00:00Z`),
