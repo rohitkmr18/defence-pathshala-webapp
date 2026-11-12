@@ -1,72 +1,28 @@
 import Link from "next/link";
 import DPLogo from "@/components/common/DPLogo";
+import HomeNavMenu from "@/components/home/HomeNavMenu";
 
+/** Share the same visible hamburger and mobile navigation as the homepage. */
 export default function PublicNavbar() {
   return (
-    <nav className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur-md">
-      <div className="mx-auto flex max-w-7xl flex-wrap gap-3 items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <DPLogo className="h-9 w-auto transition-transform group-hover:scale-105" />
-            <span className="text-base font-bold text-slate-900 tracking-tight">
-              Defence Pathshala
-            </span>
-          </Link>
-
-          <div className="hidden xl:flex items-center gap-6 text-sm font-medium text-slate-600">
-            <Link href="/exams/cds" className="hover:text-blue-600 transition">
-              CDS Exam
-            </Link>
-            <Link href="/exams/capf" className="hover:text-blue-600 transition">
-              CAPF Exam
-            </Link>
-            <Link href="/pyqs/cds" className="hover:text-blue-600 transition">
-              CDS PYQs
-            </Link>
-            <Link href="/pyqs/capf" className="hover:text-blue-600 transition">
-              CAPF PYQs
-            </Link>
-            <Link href="/afcat" className="hover:text-blue-600 transition">
-              AFCAT Mocks
-            </Link>
-            <Link href="/current-affairs" className="hover:text-blue-600 transition">
-              Current Affairs
-            </Link>
-            <Link href="/library" className="hover:text-blue-600 transition">
-              Free Library
-            </Link>
-            <Link href="/about" className="hover:text-blue-600 transition">
-              About
-            </Link>
-          </div>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-3">
+    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-md">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3.5 sm:px-6 lg:px-8">
+        <Link href="/" className="group flex min-w-0 items-center gap-2.5">
+          <DPLogo className="h-9 w-auto shrink-0 transition-transform group-hover:scale-105" />
+          <span className="truncate text-base font-bold tracking-tight text-slate-900">
+            Defence Pathshala
+          </span>
+        </Link>
+        <div className="flex shrink-0 items-center gap-2">
           <Link
             href="/auth/login"
-            className="rounded-xl border border-blue-200 bg-blue-50/60 px-4 py-2 text-xs sm:text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
+            className="inline-flex min-h-11 items-center rounded-xl border border-blue-200 bg-blue-50/60 px-4 py-2 text-xs font-semibold text-blue-700 transition hover:bg-blue-100 sm:text-sm"
           >
             Login
           </Link>
-          <Link
-            href="/dashboard/practice?paper=gs"
-            className="rounded-xl bg-blue-600 px-4 py-2 text-xs sm:text-sm font-bold text-white shadow-md shadow-blue-600/20 transition hover:bg-blue-500 active:scale-95"
-          >
-            Start Practicing Free
-          </Link>
+          <HomeNavMenu />
         </div>
-        <details className="w-full xl:hidden">
-          <summary className="cursor-pointer rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold">Explore exams and PYQs</summary>
-          <div className="grid grid-cols-2 gap-2 py-3 text-sm">
-            {[["/exams/cds", "CDS exam guide"], ["/exams/capf", "CAPF exam guide"],
-              ["/pyqs/cds", "CDS PYQs"], ["/pyqs/capf", "CAPF AC PYQs"],
-              ["/afcat", "AFCAT mocks"], ["/current-affairs", "Current Affairs"], ["/about", "About"]].map(([href, label]) => (
-              <Link key={href} href={href} className="rounded-lg px-3 py-2 hover:bg-blue-50">{label}</Link>
-            ))}
-          </div>
-        </details>
       </div>
-    </nav>
+    </header>
   );
 }
-
