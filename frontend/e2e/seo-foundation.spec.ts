@@ -77,6 +77,14 @@ test("singular PYQ aliases 301 redirect to canonical plural routes", async ({ re
       + new URL(location, "http://127.0.0.1:4558").search, alias).toBe(canonical);
   }
 
+  // /pyq/[questionId] is an existing exact-question player route, not an SEO alias.
+  // A broad /pyq/:path* redirect would break login, question recovery and answer flows.
+  for (const exactQuestionPath of ["/pyq/MISSING", "/pyq/CDS_II_2026_GK_011"]) {
+    const response = await request.get(exactQuestionPath, { maxRedirects: 0 });
+    expect(response.status(), exactQuestionPath).not.toBe(301);
+    expect(response.headers()["location"] ?? "", exactQuestionPath).not.toContain("/pyqs/");
+  }
+
   const sitemapResponse = await request.get("/sitemap.xml");
   expect(sitemapResponse.status()).toBe(200);
   const sitemap = await sitemapResponse.text();
