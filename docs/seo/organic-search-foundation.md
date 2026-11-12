@@ -157,3 +157,11 @@ Use GA4 organic source/medium plus the landing page and archive origin. A cross-
 5. **AFCAT/later exams:** wait for the separate release gates and real inventory. Do not label mocks as PYQs or invent years/questions.
 
 Sources: [Google sitemap guidance](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap), [Search Analytics query API](https://developers.google.com/webmaster-tools/v1/searchanalytics/query), bundled Next.js 16.4.1 metadata/sitemap/cache documentation. Implementation retains current architecture; no Cache Components migration.
+
+## Preview acceptance follow-up
+
+Initial candidate `df712df783152f68ade9d5227fb694387574a6c9` deployed to https://defence-pathshala-webapp-9tuo8ixv2-rohitkmr18.vercel.app (READY, Preview, not production). HTTP checks: both archives 200, new titles/H1, production canonical URLs, origin-preserving CTAs and native menu; invalid routes 404; admin API 401. Preview sends X-Robots-Tag: noindex. Shared Chrome desktop rendering inspected successfully.
+
+Preview sitemap has 267 URLs versus the 272 production baseline. Missing entries are exclusively Current Affairs 2026-11-07 through 2026-11-11; all PYQ URLs match. Treat this as an unresolved preview data/cache parity check until the backing source is verified; do not silently accept missing editions or write production data to make the test pass.
+
+Initial CI failures were test-harness defects: URL matching assumed query parameter order, and the general editorial runner collected SEO tests against its unrelated fixture. Repair checks the semantic pathname/exam/origin and isolates the SEO spec to its own runner. Existing application code was not changed for these failures. All six initial viewport cases passed the overflow, mobile-menu, H1, canonical and breadcrumb assertions before the navigation assertion where failures occurred; complete cases still require the corrected rerun.

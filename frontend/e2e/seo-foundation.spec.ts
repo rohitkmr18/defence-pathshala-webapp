@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 for (const width of [320, 390, 1440]) {
   for (const exam of ["cds", "capf"]) {
-    test(`${exam} archive at ${width}px: SSR, navigation, canonical and practice entry`, async ({ page, request }) => {
+    test(`${exam} archive at ${width}px: SSR, navigation, canonical and practice entry`, async ({ page, request }, testInfo) => {
       await page.setViewportSize({ width, height: 900 });
       await page.route(/google-analytics|googletagmanager|posthog/, route => route.abort());
       const response = await request.get(`/pyqs/${exam}`);
@@ -23,9 +23,11 @@ for (const width of [320, 390, 1440]) {
       expect(breadcrumb.itemListElement[1].item).toBe(`https://www.defencepathshala.in/pyqs/${exam}`);
       const cta = page.getByRole("link", { name: `Start ${exam === "cds" ? "CDS" : "CAPF AC"} PYQ practice`, exact: true });
       await expect(cta).toHaveAttribute("href", new RegExp(`origin=seo_${exam}_archive`));
-      await page.screenshot({ path: `../test-results/seo/${exam}-${width}.png`, fullPage: true });
+      await page.screenshot({ path: testInfo.outputPath(`${exam}-${width}.png`), fullPage: true });
       await cta.click();
-      await expect(page).toHaveURL(new RegExp(`/dashboard/practice\\?exam=${exam === "cds" ? "CDS" : "CAPF-AC"}`));
+      await expect(page).toHaveURL(url => url.pathname === "/dashboard/practice"
+        && url.searchParams.get("exam") === (exam === "cds" ? "CDS" : "CAPF-AC")
+        && url.searchParams.get("origin") === `seo_${exam}_archive`);
       await expect(page.getByRole("heading", { name: "Choose Your Practice Workflow" })).toBeVisible();
     });
   }

@@ -1,6 +1,7 @@
 import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
+  testIgnore: "seo-foundation.spec.ts", // Uses its own read-only upstream and production-build config.
   testDir: "./e2e", workers: 1, timeout: 60000,
   outputDir: "../test-results/issue-47",
   use: { baseURL: "http://127.0.0.1:4548", viewport: { width: 390, height: 844 },
