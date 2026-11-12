@@ -57,3 +57,38 @@ test("invalid routes, sitemap membership and admin protection", async ({ request
   expect(xml).not.toContain("/dashboard/");
   expect((await request.get("/api/admin/seo/search-console?action=performance")).status()).toBe(401);
 });
+
+
+test("singular PYQ aliases 301 redirect to canonical plural routes", async ({ request }) => {
+  const aliases = [
+    ["/pyq/cds", "/pyqs/cds"],
+    ["/pyq/capf", "/pyqs/capf"],
+    ["/pyq/cds/2024", "/pyqs/cds/2024"],
+    ["/pyq/capf/2025", "/pyqs/capf/2025"],
+    ["/pyq/cds/2024/history", "/pyqs/cds/2024/history"],
+    ["/pyq/cds?origin=seo", "/pyqs/cds?origin=seo"],
+  ] as const;
+
+  for (const [alias, canonical] of aliases) {
+    const result = await request.get(alias, { maxRedirects: 0 });
+    expect(result.status(), alias).toBe(301);
+    const location = result.headers()["location"];
+    expect(new URL(location, "http://127.0.0.1:4558").pathname
+      + new URL(location, "http://127.0.0.1:4558").search, alias).toBe(canonical);
+  }
+
+  // /pyq/[questionId] is an existing exact-question player route, not an SEO alias.
+  // A broad /pyq/:path* redirect would break login, question recovery and answer flows.
+  for (const exactQuestionPath of ["/pyq/MISSING", "/pyq/CDS_II_2026_GK_011"]) {
+    const response = await request.get(exactQuestionPath, { maxRedirects: 0 });
+    expect(response.status(), exactQuestionPath).not.toBe(301);
+    expect(response.headers()["location"] ?? "", exactQuestionPath).not.toContain("/pyqs/");
+  }
+
+  const sitemapResponse = await request.get("/sitemap.xml");
+  expect(sitemapResponse.status()).toBe(200);
+  const sitemap = await sitemapResponse.text();
+  expect(sitemap).not.toMatch(/<loc>https:\/\/www\.defencepathshala\.in\/pyq\//);
+  expect(sitemap).toContain("<loc>https://www.defencepathshala.in/pyqs/cds</loc>");
+  expect(sitemap).toContain("<loc>https://www.defencepathshala.in/pyqs/capf</loc>");
+});
