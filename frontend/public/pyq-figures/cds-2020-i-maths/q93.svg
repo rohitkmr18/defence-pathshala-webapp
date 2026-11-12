@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" font-family="Arial, sans-serif" font-size="13">
+<rect width="320" height="200" fill="#ffffff"/>
+<line x1="30.0" y1="170.0" x2="290.0" y2="170.0" stroke="#0f172a" stroke-width="2"/>
+<line x1="150.0" y1="170.0" x2="29.3" y2="137.6" stroke="#0f172a" stroke-width="2"/>
+<line x1="150.0" y1="170.0" x2="182.4" y2="49.3" stroke="#0f172a" stroke-width="2"/>
+<path d="M106.0,170.0 A44,44 0 0 1 107.5,158.6" fill="none" stroke="#1d4ed8" stroke-width="1.6"/>
+<text x="97.5" y="167.1" fill="#1d4ed8" text-anchor="middle" font-size="12">x</text>
+<path d="M117.2,161.2 A34,34 0 0 1 158.8,137.2" fill="none" stroke="#1d4ed8" stroke-width="1.6"/>
+<text x="128.5" y="136.8" fill="#1d4ed8" text-anchor="middle" font-size="12">y</text>
+<path d="M161.4,127.5 A44,44 0 0 1 194.0,170.0" fill="none" stroke="#1d4ed8" stroke-width="1.6"/>
+<text x="192.0" y="141.7" fill="#1d4ed8" text-anchor="middle" font-size="12">z</text>
+
+</svg>

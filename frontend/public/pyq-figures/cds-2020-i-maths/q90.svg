@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 260" font-family="Arial, sans-serif" font-size="13">
+<rect width="340" height="260" fill="#ffffff"/>
+<defs><pattern id="h" patternUnits="userSpaceOnUse" width="7" height="7" patternTransform="rotate(45)"><rect width="7" height="7" fill="#dbeafe"/><line x1="0" y1="0" x2="0" y2="7" stroke="#1d4ed8" stroke-width="1.6"/></pattern></defs>
+<circle cx="170.0" cy="140.0" r="95.0" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+<path d="M75,140 A95,95 0 0 1 265,140 A63.33,63.33 0 0 0 138.3,140 Z" fill="url(#h)" stroke="#0f172a" stroke-width="2"/>
+<path d="M138.3,140 A63.33,63.33 0 0 1 265,140" fill="none" stroke="#0f172a" stroke-width="2"/>
+<line x1="75.0" y1="140.0" x2="265.0" y2="140.0" stroke="#0f172a" stroke-width="2"/>
+<circle cx="75.0" cy="140.0" r="2.5" fill="#0f172a"/>
+<text x="63.0" y="144.0" fill="#0f172a" text-anchor="middle" font-weight="bold">P</text>
+<circle cx="138.3" cy="140.0" r="2.5" fill="#0f172a"/>
+<text x="138.3" y="158.0" fill="#0f172a" text-anchor="middle" font-weight="bold">Q</text>
+<circle cx="201.7" cy="140.0" r="2.5" fill="#0f172a"/>
+<text x="201.7" y="158.0" fill="#0f172a" text-anchor="middle" font-weight="bold">R</text>
+<circle cx="265.0" cy="140.0" r="2.5" fill="#0f172a"/>
+<text x="277.0" y="144.0" fill="#0f172a" text-anchor="middle" font-weight="bold">S</text>
+
+</svg>
