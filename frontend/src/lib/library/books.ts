@@ -156,6 +156,11 @@ export function libraryPageBase(slug: string): string {
   return `/library/${slug}`;
 }
 
+/** 1200×630 JPEG link-preview card (WhatsApp, Facebook, Slack). Kept outside the book folder. */
+export function libraryOgSrc(slug: string): string {
+  return `/library/og/${slug}.jpg`;
+}
+
 export function libraryPageSrc(slug: string, page: number): string {
   return `${libraryPageBase(slug)}/page-${String(page).padStart(2, "0")}.webp`;
 }

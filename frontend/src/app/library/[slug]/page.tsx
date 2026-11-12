@@ -5,7 +5,7 @@ import { ArrowRight, BookOpen, ClipboardCheck } from "lucide-react";
 import Breadcrumbs from "@/components/public/Breadcrumbs";
 import EbookPageReader from "@/components/library/EbookPageReader";
 import LibraryQuiz from "@/components/library/LibraryQuiz";
-import { LIBRARY_BOOKS, LIBRARY_QUIZ_ANCHOR, getLibraryBook, libraryPageBase, libraryPageSrc } from "@/lib/library/books";
+import { LIBRARY_BOOKS, LIBRARY_QUIZ_ANCHOR, getLibraryBook, libraryOgSrc, libraryPageBase } from "@/lib/library/books";
 import { LIBRARY_HOTSPOTS } from "@/lib/library/hotspots";
 import { getLibraryQuiz } from "@/lib/library/quizzes";
 import { SITE_URL, pageMetadata } from "@/lib/seo-metadata";
@@ -25,10 +25,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description: book.seoDescription,
     path: `/library/${book.slug}`,
     type: "article",
-    image: libraryPageSrc(book.slug, 1),
+    image: `${SITE_URL}${libraryOgSrc(book.slug)}`,
     imageAlt: `${book.title} cover`,
-    imageWidth: book.pageWidth,
-    imageHeight: book.pageHeight,
+    imageWidth: 1200,
+    imageHeight: 630,
   });
 }
 
