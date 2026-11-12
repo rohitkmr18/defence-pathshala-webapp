@@ -34,7 +34,7 @@ const Backdrop: React.FC<{ fr: number }> = ({ fr }) => (
 
 export const S6Challenge: React.FC = () => {
   const fr = useCurrentFrame();
-  const tq = at(43.37), qIn = at(44.98), q2 = at(K.climate.on - 0.55);
+  const tq = at(43.37), qIn = at(44.98), q2 = at(K.earth.on);
   const optAt = [at(K.climate.end + 0.05), at(K.affect.end + 0.15), at(K.affect.end + 0.75)];
   const cdA = at(49.1), cdB = at(51.6);
   const cmt = at(51.69);

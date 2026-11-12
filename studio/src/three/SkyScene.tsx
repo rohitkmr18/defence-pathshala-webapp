@@ -31,7 +31,7 @@ const Inner: React.FC<SkySceneProps & { model: THREE.Group | null }> = ({ t, hei
   return (
     <>
       <CameraRig position={camera.position} target={camera.target} fov={camera.fov} roll={camera.roll ?? 0} near={mode === "ground" ? 50 : 0.5} far={80000} />
-      <SkyDome mode={mode} time={t} sunDir={sun} zenith={sky.zenith ?? (mode === "ground" ? "#1c5ad6" : "#041a52")} horizon={sky.horizon ?? (mode === "ground" ? "#a9d0f7" : "#6fa3e0")} cirrus={sky.cirrus ?? 0.12} exposure={sky.exposure ?? 1} />
+      <SkyDome mode={mode} time={t} sunDir={sun} zenith={sky.zenith ?? (mode === "ground" ? "#7fb6ea" : "#041a52")} horizon={sky.horizon ?? (mode === "ground" ? "#d2e8f8" : "#6fa3e0")} cirrus={sky.cirrus ?? 0.12} exposure={sky.exposure ?? 1} />
       <hemisphereLight args={["#bcd6ff", "#f2f5fb", 1.1]} />
       <directionalLight position={[sun[0] * 1000, sun[1] * 1000, sun[2] * 1000]} intensity={3.2} color="#fff6ea" />
       {flights.map((fl, i) => {

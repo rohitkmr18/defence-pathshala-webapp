@@ -90,11 +90,11 @@ const Plume: React.FC<{ t: number; h: number; cold: number; mix: number }> = ({ 
             size = (0.3 + d * 0.09) * (1.7 + aB.w * 1.4);
           } else {
             // ambient −40 °C air streaming past and being entrained into the jet
-            float R = 2.5 + aA.z * 6.0;
-            float pull = smoothstep(2.0, 10.0, d);
-            float r = mix(R, 0.6 + d * 0.08, pull * 0.9);
-            p = uNoz + vec3(5.0 - d * 1.2, cos(ang) * r, sin(ang) * r);
-            col = vec4(0.62, 0.84, 1.0, uCold * 0.9 * smoothstep(0.0, 2.0, d) * (1.0 - smoothstep(9.0, 13.0, d)));
+            float R = 1.4 + aA.z * 2.4;                              // thin sheath of ambient air around the jet
+            float pull = smoothstep(1.0, 9.0, d);
+            float r = mix(R, 0.5 + d * 0.08, pull * 0.9);
+            p = uNoz + vec3(-0.5 - d * 1.1, cos(ang) * r, sin(ang) * r);
+            col = vec4(0.62, 0.84, 1.0, uCold * 0.85 * smoothstep(0.5, 2.5, d) * (1.0 - smoothstep(8.0, 12.0, d)));
             size = 0.12 + aB.w * 0.08; vStreak = 1.0;
           }
           col.a *= smoothstep(0.0, 0.6, uT - aA.x);

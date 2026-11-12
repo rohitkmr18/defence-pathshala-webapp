@@ -2,6 +2,7 @@ import { AbsoluteFill, Sequence, useCurrentFrame, useVideoConfig, interpolate, E
 import { SkyScene } from "../three/SkyScene";
 import { Chip } from "../components/Chip";
 import { DP } from "../branding/brand";
+import { projectToScreen } from "../three/project";
 import { K, SCENES, f } from "../projects/contrails/timeline";
 
 const SPLIT_AT = 12.35; // reel s, pause before "Kabhi ye kuch seconds mein..."
@@ -13,15 +14,28 @@ const groundCam = (elev: number, fov: number, az = 0) => ({
 });
 
 /** Two jets overhead: only the higher one (colder air) leaves a trail. */
+const TWO_CAM = { ...groundCam(68, 11), roll: 0.0 };
+const TWO = [
+  { p0: [-560, 10600, -4100] as [number, number, number], heading: 0.12, scale: 1.8, trail: { r0: 3, grow: 2.2, opacity: 0.32, spacing: 3.5 } },
+  { p0: [520, 9200, -3900] as [number, number, number], heading: Math.PI + 0.2, scale: 1.8, trail: null },
+];
+const planeAt = (i: number, t: number): [number, number, number] => {
+  const fl = TWO[i]; const v = 230;
+  return [fl.p0[0] + Math.cos(fl.heading) * v * t, fl.p0[1], fl.p0[2] - Math.sin(fl.heading) * v * t];
+};
 const TwoPlanes: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps, width, height } = useVideoConfig();
   const t = frame / fps;
+  const s0 = SCENES.contradiction.from;
+  const [ax, ay] = projectToScreen(planeAt(0, t), TWO_CAM, width, height);
+  const [bx, by] = projectToScreen(planeAt(1, t), TWO_CAM, width, height);
   return (
-    <SkyScene t={t} width={width} height={height} mode="ground" camera={{ ...groundCam(68, 11), roll: 0.0 }} flights={[
-      { p0: [-560, 10600, -4100], heading: 0.12, scale: 1.8, trail: { r0: 3, grow: 2.2, opacity: 0.32, spacing: 3.5 } },
-      { p0: [520, 9200, -3900], heading: Math.PI + 0.2, scale: 1.8, trail: null },
-    ]} />
+    <AbsoluteFill>
+      <SkyScene t={t} width={width} height={height} mode="ground" camera={TWO_CAM} flights={TWO} />
+      <Chip at={f(9.3 - s0)} x={ax - 40} y={ay - 90} text="TRAIL" color={DP.blue} size={34} />
+      <Chip at={f(K.nahiDikhti.on - s0)} x={bx + 10} y={by + 95} text="NO TRAIL?" color={DP.red} size={34} />
+    </AbsoluteFill>
   );
 };
 
@@ -64,8 +78,6 @@ export const S2Contradiction: React.FC = () => {
     <AbsoluteFill>
       <Sequence durationInFrames={f(SPLIT_AT - s0)}>
         <TwoPlanes />
-        <Chip at={f(9.3 - s0)} x={300} y={640} text="TRAIL" color={DP.blue} size={34} />
-        <Chip at={f(K.nahiDikhti.on - s0)} x={760} y={900} text="NO TRAIL?" color={DP.red} size={34} />
       </Sequence>
       <Sequence from={f(SPLIT_AT - s0)}>
         <Split />

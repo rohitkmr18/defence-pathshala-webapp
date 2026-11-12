@@ -100,7 +100,7 @@ const Diagram: React.FC = () => {
 const Pane: React.FC<{ wet: boolean; t: number }> = ({ wet, t }) => {
   const { height } = useVideoConfig();
   return (
-    <SkyScene t={t} width={540} height={height} mode="ground" camera={groundCam(64, 13, 0)} sky={{ cirrus: wet ? 0.24 : 0.04, zenith: wet ? "#1d55c0" : "#1c5ad6" }} flights={[
+    <SkyScene t={t} width={540} height={height} mode="ground" camera={groundCam(64, 13, 0)} sky={{ cirrus: wet ? 0.24 : 0.04, zenith: wet ? "#78acdf" : "#7fb6ea" }} flights={[
       { p0: [-70, 10500, -4400], heading: Math.PI / 2 + 0.035, scale: 1.7, trail: wet
         ? { r0: 2.6, grow: 1.6, spread: 0.3, tau: 1e6, ageScale: 8, gapAge: 2.0, sink: 0.5, opacity: 0.27, spacing: 3, wind: [2, 0, 0], tStart: -60 }
         : { r0: 2.6, grow: 1.8, tau: 0.55, gapAge: 0.25, sink: 2, opacity: 0.36, spacing: 3, tStart: -20 } },
