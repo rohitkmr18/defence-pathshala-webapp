@@ -1,3 +1,4 @@
+import LibraryBookPromo from "@/components/library/LibraryBookPromo";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -433,6 +434,8 @@ async function SubjectPageView({
           </Link>
         </div>
       </div>
+
+      <LibraryBookPromo archivePath={`/pyqs/${archive.examSlug}/${archive.subjectSlug}`} />
 
       {/* Year-Wise Subject Matrix Section (Reverse Internal Link Path) */}
       <section className="mb-10">

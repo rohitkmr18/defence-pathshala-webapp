@@ -1,3 +1,4 @@
+import LibraryBookPromo from "@/components/library/LibraryBookPromo";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -404,6 +405,8 @@ async function ExamSubjectTopicPyqPage({
           </Link>
         </div>
       </div>
+
+      <LibraryBookPromo archivePath={`/pyqs/${archive.examSlug}/${archive.subjectSlug}/${archive.topicSlug}`} />
 
       <section className="mb-10 rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
         <h2 className="text-xl font-bold text-slate-900">Year-wise {archive.topic} frequency</h2>

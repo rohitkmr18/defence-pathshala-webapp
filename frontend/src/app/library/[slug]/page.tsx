@@ -8,6 +8,7 @@ import LibraryQuiz from "@/components/library/LibraryQuiz";
 import { LIBRARY_BOOKS, LIBRARY_QUIZ_ANCHOR, getLibraryBook, libraryOgSrc, libraryPageBase } from "@/lib/library/books";
 import { LIBRARY_HOTSPOTS } from "@/lib/library/hotspots";
 import { getLibraryQuiz } from "@/lib/library/quizzes";
+import { LIBRARY_AUTHOR, libraryBookJsonLd, libraryFaqs, listExams } from "@/lib/library/seo";
 import { SITE_URL, pageMetadata } from "@/lib/seo-metadata";
 
 export const dynamicParams = false;
@@ -38,7 +39,9 @@ export default async function LibraryBookPage({ params }: { params: Promise<{ sl
   const quiz = getLibraryQuiz(slug);
   if (!book || !quiz) notFound();
 
-  const jsonLd = {
+  const chapters = book.sections.filter((s) => s.page > 0 && s.page !== book.contentsPage);
+  const faqs = libraryFaqs(book);
+  const breadcrumbLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
@@ -50,7 +53,7 @@ export default async function LibraryBookPage({ params }: { params: Promise<{ sl
 
   return (
     <main className="min-h-screen bg-slate-50">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([breadcrumbLd, ...libraryBookJsonLd(book)]) }} />
       <section className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:py-12">
         <Breadcrumbs items={[{ label: "Free Library", href: "/library" }, { label: book.title }]} />
 
@@ -63,7 +66,7 @@ export default async function LibraryBookPage({ params }: { params: Promise<{ sl
               <li key={h} className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">{h}</li>
             ))}
           </ul>
-          <p className="mt-3 text-xs font-semibold text-slate-500">For {book.exams.join(" · ")} · {book.edition}</p>
+          <p className="mt-3 text-xs font-semibold text-slate-500">For {book.exams.join(" · ")} · {book.edition} · By {LIBRARY_AUTHOR}</p>
           <div className="mt-5 flex flex-wrap gap-2">
             <a href={`#page-1`} className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-blue-600 px-4 text-sm font-bold text-white hover:bg-blue-500">
               <BookOpen className="h-4 w-4" aria-hidden="true" /> Start reading
@@ -116,6 +119,44 @@ export default async function LibraryBookPage({ params }: { params: Promise<{ sl
             </Link>
           </div>
         </nav>
+
+        <section aria-labelledby="inside-title" className="mx-auto mt-10 max-w-3xl">
+          <h2 id="inside-title" className="text-lg font-black tracking-tight text-slate-950">What&rsquo;s inside {book.title}</h2>
+          <p className="mt-1 text-sm text-slate-600">
+            {`${book.subject} notes for ${listExams(book)} in ${book.pageCount} pages, ending with ${book.mcqCount} practice MCQs.`}
+          </p>
+          <ol className="mt-4 divide-y divide-slate-100 rounded-2xl border border-slate-200 bg-white">
+            {chapters.map((s) => (
+              <li key={s.title}>
+                <a href={`#page-${s.page}`} className="flex items-baseline justify-between gap-4 px-4 py-3 hover:bg-blue-50/40">
+                  <span>
+                    <span className="block text-sm font-bold text-slate-900">{s.title}</span>
+                    {s.detail && <span className="block text-xs leading-5 text-slate-600">{s.detail}</span>}
+                  </span>
+                  <span className="shrink-0 text-xs font-semibold text-slate-400">p. {s.page}</span>
+                </a>
+              </li>
+            ))}
+            <li>
+              <a href={`#${LIBRARY_QUIZ_ANCHOR}`} className="flex items-baseline justify-between gap-4 px-4 py-3 hover:bg-blue-50/40">
+                <span className="block text-sm font-bold text-slate-900">{book.mcqCount} practice MCQs with score card</span>
+                <span className="shrink-0 text-xs font-semibold text-slate-400">online</span>
+              </a>
+            </li>
+          </ol>
+        </section>
+
+        <section aria-labelledby="faq-title" className="mx-auto mt-10 max-w-3xl">
+          <h2 id="faq-title" className="text-lg font-black tracking-tight text-slate-950">Questions about {book.title}</h2>
+          <div className="mt-4 space-y-2">
+            {faqs.map((f) => (
+              <details key={f.q} className="group rounded-2xl border border-slate-200 bg-white px-4 py-3">
+                <summary className="cursor-pointer list-none text-sm font-bold text-slate-900">{f.q}</summary>
+                <p className="mt-2 text-sm leading-6 text-slate-600">{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </section>
       </section>
     </main>
   );
