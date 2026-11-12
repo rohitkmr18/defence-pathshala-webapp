@@ -38,7 +38,7 @@ export const EXAM_NAMES: Record<string, { label: string; fullTitle: string; desc
 
 export function slugToExam(slug: string): string | null {
   const cleaned = slug.toLowerCase().trim();
-  return EXAM_SLUG_TO_DB[cleaned] || null;
+  return Object.hasOwn(EXAM_SLUG_TO_DB, cleaned) ? EXAM_SLUG_TO_DB[cleaned] : null;
 }
 
 export function examToSlug(exam: string): string {
@@ -90,7 +90,7 @@ export const getCachedQuestionsMeta = unstable_cache(
     const key = serviceRoleKey || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
     if (!key) {
       console.error("[SEO] No Supabase key available for server-side queries.");
-      return [];
+      throw new Error("SEO inventory unavailable");
     }
 
     const client = createClient(supabaseUrl, key);
@@ -102,11 +102,10 @@ export const getCachedQuestionsMeta = unstable_cache(
       const { data, error } = await client
         .from("v_dp_question_intelligence_v2")
         .select("exam,year,subject,topic").eq("content_eligible", true).in("paper", paperTabDbValues(null))
-        .range(start, start + pageSize - 1);
+        .order("id", { ascending: true }).range(start, start + pageSize - 1);
 
       if (error) {
-        console.error("[SEO] Supabase query error:", error);
-        break;
+        throw new Error("SEO inventory query failed");
       }
       if (!data || data.length === 0) break;
 
@@ -128,6 +127,31 @@ export const getCachedQuestionsMeta = unstable_cache(
     return rows;
   },
   ["seo-questions-metadata-v1"],
+  { revalidate: 3600 }
+);
+
+// CDS English and Elementary Mathematics live in separate paper partitions.
+// Do not infer their availability from the GS-only SEO archive.
+export const getCdsPaperAvailability = unstable_cache(
+  async (): Promise<{ english: number; maths: number }> => {
+    const key = serviceRoleKey || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (!key) throw new Error("CDS paper inventory unavailable");
+    const client = createClient(supabaseUrl, key);
+    const countFor = async (tab: "english" | "maths"): Promise<number> => {
+      const values = paperTabDbValues(tab);
+      if (!values.length) return 0;
+      const { count, error } = await client
+        .from("v_dp_question_intelligence_v2")
+        .select("id", { count: "exact", head: true })
+        .eq("exam", "CDS")
+        .eq("content_eligible", true).in("paper", paperTabDbValues(tab));
+      if (error || count === null) throw new Error("CDS paper inventory query failed");
+      return count;
+    };
+    const [english, maths] = await Promise.all([countFor("english"), countFor("maths")]);
+    return { english, maths };
+  },
+  ["seo-cds-paper-availability-v1"],
   { revalidate: 3600 }
 );
 
@@ -430,8 +454,7 @@ export async function getSubjectArchive(
     async (exam: string, subj: string): Promise<SubjectArchive | null> => {
       const key = serviceRoleKey || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
       if (!key) {
-        console.error("[SEO] No Supabase key available for subject archive.");
-        return null;
+        throw new Error("SEO archive unavailable");
       }
 
       const client = createClient(supabaseUrl, key);
@@ -449,11 +472,11 @@ export async function getSubjectArchive(
           .ilike("subject", subj)
           .order("year", { ascending: false })
           .order("q_num", { ascending: true })
+          .order("id", { ascending: true })
           .range(start, start + pageSize - 1);
 
         if (error) {
-          console.error("[SEO] Error fetching subject questions:", error);
-          break;
+          throw new Error("SEO archive query failed");
         }
         if (!data || data.length === 0) break;
         allRows.push(...data);
@@ -576,11 +599,19 @@ export interface EligibleRoute {
  */
 export async function getAllEligibleSeoRoutes(): Promise<EligibleRoute[]> {
   const rows = await getCachedQuestionsMeta();
+  return eligibleSeoRoutesFromRows(rows);
+}
+
+export function eligibleSeoRoutesFromRows(rows: QuestionMetaRow[]): EligibleRoute[] {
   const routes: EligibleRoute[] = [];
 
   // 1. Group rows by exam
   const examMap = new Map<string, QuestionMetaRow[]>();
   for (const r of rows) {
+    // Only canonical DB values accepted by the public route loaders.
+    if (!Object.values(EXAM_SLUG_TO_DB).includes(r.exam) || !Number.isInteger(r.year)
+      || !/^\d{4}$/.test(String(r.year)) || !subjectToSlug(r.subject)
+      || /^\d+$/.test(subjectToSlug(r.subject))) continue;
     if (!examMap.has(r.exam)) examMap.set(r.exam, []);
     examMap.get(r.exam)!.push(r);
   }
@@ -632,7 +663,7 @@ export async function getAllEligibleSeoRoutes(): Promise<EligibleRoute[]> {
       });
     }
     for (const { subject, topic, count } of topicCounts.values()) {
-      if (count >= MIN_INDEXABLE_TOPIC_QUESTIONS) {
+      if (count >= MIN_INDEXABLE_TOPIC_QUESTIONS && topicToSlug(topic)) {
         routes.push({
           path: `/pyqs/${examSlug}/${subjectToSlug(subject)}/${topicToSlug(topic)}`,
           priority: 0.75,
@@ -673,5 +704,5 @@ export async function getAllEligibleSeoRoutes(): Promise<EligibleRoute[]> {
     }
   }
 
-  return routes;
+  return Array.from(new Map(routes.map((route) => [route.path, route])).values());
 }

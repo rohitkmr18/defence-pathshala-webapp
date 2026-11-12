@@ -5,6 +5,8 @@ import { summariseMonths } from "@/lib/current-affairs-calendar";
 import { MONTHLY_CAPSULES } from "@/lib/monthly-capsules";
 import { LIBRARY_BOOKS } from "@/lib/library/books";
 
+export const dynamic = "force-dynamic";
+
 const base = "https://www.defencepathshala.in";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -37,11 +39,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getAllEligibleSeoRoutes()
       .then((routes): MetadataRoute.Sitemap =>
         routes.map((r) => ({ url: `${base}${r.path}`, changeFrequency: "weekly", priority: r.priority }))
-      )
-      .catch((err) => {
-        console.error("[Sitemap] Failed to generate PYQ routes:", err);
-        return [];
-      }),
+      ),
     getPublishedCurrentAffairsEditions()
       .then((editions): MetadataRoute.Sitemap => {
         const newest = editions[0];
@@ -59,10 +57,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           priority: 0.6,
         }));
         return [...monthEntries, ...editionEntries];
-      })
-      .catch((err) => {
-        console.error("[Sitemap] Failed to generate Current Affairs routes:", err);
-        return [];
       }),
   ]);
 
