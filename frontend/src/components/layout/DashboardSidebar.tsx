@@ -17,6 +17,7 @@ import {
   X,
   RefreshCw,
   Target,
+  Library,
 } from "lucide-react";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
@@ -45,6 +46,11 @@ const baseItems = [
     name: "Practice",
     href: "/dashboard/practice",
     icon: Pencil,
+  },
+  {
+    name: "Free Library",
+    href: "/library",
+    icon: Library,
   },
 ];
 

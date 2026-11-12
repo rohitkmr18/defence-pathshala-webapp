@@ -81,6 +81,11 @@ export default function PublicFooter() {
                 </Link>
               </li>
               <li>
+                <Link href="/library" className="text-slate-400 hover:text-white transition">
+                  Free Library: Revision eBooks
+                </Link>
+              </li>
+              <li>
                 <Link href="/about" className="text-slate-400 hover:text-white transition">
                   About Defence Pathshala
                 </Link>
