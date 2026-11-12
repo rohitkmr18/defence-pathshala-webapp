@@ -7,6 +7,8 @@ import ProductShowcase from "@/components/home/ProductShowcase";
 import FounderCredibility from "@/components/home/FounderCredibility";
 import ObjectionAndFinalCtaSection from "@/components/home/ObjectionAndFinalCtaSection";
 import DPLogo from "@/components/common/DPLogo";
+import HomeNavMenu from "@/components/home/HomeNavMenu";
+import HomeFreeLibrary from "@/components/home/HomeFreeLibrary";
 import PublicExploreLinks from "@/components/public/PublicExploreLinks";
 
 export default function HomePage() {
@@ -23,13 +25,14 @@ export default function HomePage() {
             </span>
           </Link>
 
-          <div className="flex items-center">
+          <div className="flex items-center gap-2">
             <Link
               href="/auth/login"
               className="rounded-xl border border-blue-200 bg-blue-50/60 min-h-11 inline-flex items-center px-4 py-2 text-xs sm:text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
             >
               Login
             </Link>
+            <HomeNavMenu />
           </div>
         </div>
       </nav>
@@ -37,6 +40,9 @@ export default function HomePage() {
       {/* ── Exam-aware landing hero ────────────────────── */}
       <HeroSection />
       <Suspense fallback={<CurrentAffairsEntries />}><HomeCurrentAffairs /></Suspense>
+
+      {/* ── Free Library: free revision eBooks with interactive MCQs ── */}
+      <HomeFreeLibrary />
 
       {/* ── Screen 2: Product Showcase (Visual Difference & Core Value) ─── */}
       <ProductShowcase />
