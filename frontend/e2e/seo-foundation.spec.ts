@@ -21,7 +21,16 @@ for (const width of [320, 390, 1440]) {
       const schemas = await page.locator('script[type="application/ld+json"]').allTextContents();
       const breadcrumb = schemas.map(s => JSON.parse(s)).find(s => s["@type"] === "BreadcrumbList");
       expect(breadcrumb.itemListElement[1].item).toBe(`https://www.defencepathshala.in/pyqs/${exam}`);
-      const cta = page.getByRole("link", { name: `Start ${exam === "cds" ? "CDS" : "CAPF AC"} PYQ practice`, exact: true });
+      if (exam === "cds") {
+        await expect(page.getByRole("heading", { name: "Choose your CDS paper" })).toBeVisible();
+        await expect(page.getByRole("link", { name: "Practice English" })).toHaveAttribute("href", /paper=english/);
+        await expect(page.getByRole("link", { name: "Practice English" })).toHaveAttribute("href", /origin=seo_cds_english/);
+        await expect(page.getByText("No eligible questions yet")).toBeVisible();
+        await expect(page.getByRole("link", { name: "Choose CDS paper" })).toHaveAttribute("href", "#choose-cds-paper");
+      }
+      const cta = exam === "cds"
+        ? page.getByRole("link", { name: "Start General Knowledge (GK) practice" })
+        : page.getByRole("link", { name: "Start CAPF AC PYQ practice", exact: true });
       await expect(cta).toHaveAttribute("href", new RegExp(`origin=seo_${exam}_archive`));
       await page.screenshot({ path: testInfo.outputPath(`${exam}-${width}.png`), fullPage: true });
       await cta.click();
