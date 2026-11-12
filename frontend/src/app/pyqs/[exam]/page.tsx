@@ -5,6 +5,7 @@ import {
   slugToExam,
   getExamCoverage,
 } from "@/lib/seo-data";
+import { pageMetadata } from "@/lib/seo-metadata";
 import Breadcrumbs from "@/components/public/Breadcrumbs";
 import { Calendar, ChevronRight, FileText, ArrowRight, Layers } from "lucide-react";
 
@@ -22,35 +23,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const coverage = await getExamCoverage(examDb);
   if (!coverage) return {};
 
-  const minYear = Math.min(...coverage.years.map((y) => y.year));
-  const maxYear = Math.max(...coverage.years.map((y) => y.year));
-  const canonicalUrl = `https://www.defencepathshala.in/pyqs/${coverage.slug}`;
-  const title = `${coverage.label} Previous Year Questions (${minYear}–${maxYear})`;
-  const description =
-    coverage.slug === "cds"
-      ? "Practice real UPSC CDS PYQs with subject-wise drills, explanations and performance insights. Built by an IIT Kanpur alumnus and 4-time CDS written qualifier."
-      : coverage.slug === "capf"
-        ? "Practice real UPSC CAPF AC PYQs with subject-wise drills, explanations and performance insights. Built by an IIT Kanpur alumnus and CAPF AC AIR 163."
-        : `Exhaustive archive of UPSC ${coverage.label} previous year questions with year-by-year and subject-wise breakdown. Practice ${coverage.totalQuestions.toLocaleString()}+ real questions.`;
-
+  const label = coverage.slug === "capf" ? "CAPF AC" : "CDS";
   return {
-    title,
-    description,
-    alternates: {
-      canonical: canonicalUrl,
-    },
-    robots: {
-      index: true,
-      follow: true,
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonicalUrl,
-      siteName: "Defence Pathshala",
-      images: ["/og-image.png"],
-      type: "website",
-    },
+    ...pageMetadata({
+      title: `${label} PYQs – Previous Year Questions & Practice`,
+      description: coverage.slug === "cds"
+        ? "Browse UPSC CDS GK previous year questions by year and subject, with available answers and explanations. Choose a topic and continue to PYQ practice."
+        : "Browse UPSC CAPF AC Paper I previous year questions by year and subject, with available answers and explanations. Continue to targeted PYQ practice.",
+      path: `/pyqs/${coverage.slug}`,
+    }),
+    robots: { index: true, follow: true },
   };
 }
 
@@ -66,12 +48,22 @@ export default async function ExamPyqArchivePage({ params }: PageProps) {
     notFound();
   }
 
+  const label = coverage.slug === "capf" ? "CAPF AC" : "CDS";
+  const paperScope = coverage.slug === "cds" ? "General Knowledge (GK)" : "Paper I";
+  const practiceHref = `/dashboard/practice?exam=${encodeURIComponent(coverage.exam)}&paper=gs&origin=seo_${coverage.slug}_archive`;
+  const breadcrumb = {
+    "@context": "https://schema.org", "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.defencepathshala.in/" },
+      { "@type": "ListItem", position: 2, name: `${label} PYQs`, item: `https://www.defencepathshala.in/pyqs/${coverage.slug}` },
+    ],
+  };
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb).replace(/</g, "\\u003c") }} />
       <Breadcrumbs
         items={[
-          { label: "PYQs" },
-          { label: coverage.label },
+          { label: `${label} PYQs` },
         ]}
       />
 
@@ -79,14 +71,24 @@ export default async function ExamPyqArchivePage({ params }: PageProps) {
       <div className="mb-8">
         <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 ring-1 ring-inset ring-blue-700/10 mb-3">
           <FileText className="h-3.5 w-3.5" />
-          Official UPSC Archive
+          UPSC previous year questions
         </div>
         <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
-          {coverage.label} Previous Year Questions Archive
+          {label} PYQs – Previous Year Questions
         </h1>
         <p className="mt-3 text-base text-slate-600 sm:text-lg max-w-3xl leading-relaxed">
-          Access verified {coverage.fullTitle} previous year questions structured chronologically by exam cycle and organized by syllabus discipline.
+          Build your {label} PYQ practice around {paperScope}: browse by year or subject,
+          read available answers and explanations, then work on a focused practice drill.
         </p>
+        <p className="mt-3 text-sm text-slate-600">
+          {coverage.totalQuestions.toLocaleString()} questions across {coverage.years.length} available years
+          ({coverage.years.map((y) => y.year).join(", ")}). Counts describe this archive, not complete paper coverage.
+          {coverage.slug === "cds" && " English and Mathematics are separate practice papers and are not included in these archive counts."}
+        </p>
+        <div className="mt-5 flex flex-wrap items-center gap-4">
+          <Link href={practiceHref} className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white">Start {label} PYQ practice</Link>
+          <Link href={`/exams/${coverage.slug}`} className="text-sm font-semibold text-blue-700">Read the {label} exam guide</Link>
+        </div>
       </div>
 
       {/* Years section */}
@@ -118,7 +120,7 @@ export default async function ExamPyqArchivePage({ params }: PageProps) {
                   </span>
                 </div>
                 <p className="mt-3 text-sm text-slate-600">
-                  <strong className="text-slate-900">{y.count.toLocaleString()}</strong> official questions
+                  <strong className="text-slate-900">{y.count.toLocaleString()}</strong> questions
                 </p>
               </div>
 
@@ -139,7 +141,7 @@ export default async function ExamPyqArchivePage({ params }: PageProps) {
             Subject-Wise Question Overview
           </h2>
           <p className="text-sm text-slate-500 mt-1">
-            Browse all subjects tested in {coverage.label} across the full archive.
+            Browse the {paperScope} subjects currently available in this archive.
           </p>
         </div>
 
@@ -178,7 +180,7 @@ export default async function ExamPyqArchivePage({ params }: PageProps) {
                   View All {sub.subject} PYQs <ChevronRight className="h-3.5 w-3.5" />
                 </Link>
                 <Link
-                  href={`/dashboard/practice?exam=${encodeURIComponent(coverage.exam)}&subject=${encodeURIComponent(sub.subject)}`}
+                  href={`${practiceHref}&subject=${encodeURIComponent(sub.subject)}`}
                   className="font-semibold text-slate-500 hover:text-blue-600 flex items-center gap-0.5"
                 >
                   Practice drill <ArrowRight className="h-3 w-3" />
@@ -189,18 +191,44 @@ export default async function ExamPyqArchivePage({ params }: PageProps) {
         </div>
       </section>
 
+      <section className="mb-10 space-y-4" aria-labelledby="archive-help">
+        <h2 id="archive-help" className="text-xl font-bold text-slate-900">How to use these {label} PYQs</h2>
+        <p className="max-w-3xl text-sm leading-relaxed text-slate-600">
+          Use year-wise browsing for paper context and subject pages to compare questions on the same area.
+          Read an answer after attempting the question yourself; explanations are shown where available.
+          The archive links directly to practice with your exam and subject selected.
+        </p>
+        <p className="max-w-3xl text-sm leading-relaxed text-slate-600">
+          Built by Rohit Kumar, an IIT Kanpur alumnus and {coverage.slug === "cds" ? "four-time CDS written examination qualifier" : "UPSC CAPF AC AIR 163 rank holder"}.
+          Defence Pathshala is an independent learning platform, not affiliated with or endorsed by UPSC or IIT Kanpur.
+          {" "}<Link href="/about" className="font-semibold text-blue-700">About Defence Pathshala</Link>
+        </p>
+        <details className="rounded-xl border border-slate-200 bg-white p-4">
+          <summary className="cursor-pointer font-semibold">Which papers and years are included?</summary>
+          <p className="mt-2 text-sm text-slate-600">This archive covers {paperScope}. The year and subject cards show current inventory; a listed year does not mean every paper or question is available.</p>
+        </details>
+        <details className="rounded-xl border border-slate-200 bg-white p-4">
+          <summary className="cursor-pointer font-semibold">Are all answers official UPSC answer keys?</summary>
+          <p className="mt-2 text-sm text-slate-600">No blanket official-key claim is made. Check the answer, explanation and source information shown with each question; availability and verification status can vary.</p>
+        </details>
+        <details className="rounded-xl border border-slate-200 bg-white p-4">
+          <summary className="cursor-pointer font-semibold">Can I browse before signing in?</summary>
+          <p className="mt-2 text-sm text-slate-600">Yes. Year and subject archives are public. Practice links take you into the application, which may ask you to sign in before continuing.</p>
+        </details>
+      </section>
+
       {/* Practice CTA */}
       <div className="rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
         <div>
           <h3 className="text-lg font-bold text-slate-900 sm:text-xl">
-            Want to simulate a real {coverage.label} examination?
+            Turn your {label} revision into practice
           </h3>
           <p className="text-sm text-slate-600 mt-1">
-            Launch our timed Full Paper Attempt mode or filter by custom subject combinations.
+            Choose your exam and subject filters, then start a focused session. Sign in when prompted to continue.
           </p>
         </div>
         <Link
-          href={`/dashboard/practice?exam=${encodeURIComponent(coverage.exam)}`}
+          href={practiceHref}
           className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-md shadow-blue-600/20 hover:bg-blue-500 transition active:scale-95 shrink-0"
         >
           Start Practice Drill

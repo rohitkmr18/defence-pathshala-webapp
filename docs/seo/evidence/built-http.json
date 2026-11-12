@@ -1,0 +1,26 @@
+[
+  {
+    "path": "/pyqs/cds",
+    "status": 200,
+    "title": "CDS PYQs – Previous Year Questions &amp; Practice | Defence Pathshala",
+    "bytes": 53433
+  },
+  {
+    "path": "/pyqs/capf",
+    "status": 200,
+    "title": "CAPF AC PYQs – Previous Year Questions &amp; Practice | Defence Pathshala",
+    "bytes": 53254
+  },
+  {
+    "path": "/pyqs/unsupported",
+    "status": 404
+  },
+  {
+    "path": "/pyqs/cds/9999",
+    "status": 404
+  },
+  {
+    "path": "/pyqs/cds/not-a-subject",
+    "status": 404
+  }
+]

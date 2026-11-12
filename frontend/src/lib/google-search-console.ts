@@ -263,6 +263,8 @@ export async function querySearchConsolePerformance(args?: {
   endDate?: string;
   dimensions?: Array<"query" | "page" | "country" | "device" | "date">;
   pageContains?: string;
+  pageEquals?: string;
+  startRow?: number;
   rowLimit?: number;
 }) {
   const siteUrl = args?.siteUrl || DEFAULT_SEARCH_CONSOLE_SITE;
@@ -284,17 +286,19 @@ export async function querySearchConsolePerformance(args?: {
     dimensions: args?.dimensions || ["page"],
     rowLimit: Math.min(Math.max(args?.rowLimit || 500, 1), 25_000),
     dataState: "final",
+    startRow: args?.startRow || 0,
+    type: "web",
   };
 
-  if (args?.pageContains) {
+  if (args?.pageEquals || args?.pageContains) {
     body.dimensionFilterGroups = [
       {
         groupType: "and",
         filters: [
           {
             dimension: "page",
-            operator: "contains",
-            expression: args.pageContains,
+            operator: args.pageEquals ? "equals" : "contains",
+            expression: args.pageEquals || args.pageContains,
           },
         ],
       },
