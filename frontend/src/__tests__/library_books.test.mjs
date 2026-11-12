@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readdirSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import { LIBRARY_BOOKS, getLibraryBook, libraryPageSrc, booksForExam } from '../lib/library/books.ts';
+import { LIBRARY_BOOKS, getLibraryBook, libraryPageSrc, libraryOgSrc, booksForExam } from '../lib/library/books.ts';
 import { LIBRARY_HOTSPOTS } from '../lib/library/hotspots.ts';
 import { scoreQuiz, validateQuiz, verdictFor, NEGATIVE_MARK } from '../lib/library/quiz.ts';
 import { BIOLOGY_DECODED_QUIZ } from '../lib/library/quiz-biology-decoded.ts';
@@ -119,4 +119,14 @@ test('lookups and exam filter', () => {
   assert.equal(getLibraryBook('nope'), null);
   assert.equal(booksForExam('AFCAT').length, 2);
   assert.equal(booksForExam(null).length, LIBRARY_BOOKS.length);
+});
+
+test('each book has a 1200x630 JPEG link-preview card outside its page folder', () => {
+  for (const b of LIBRARY_BOOKS) {
+    const file = path.join(publicDir, libraryOgSrc(b.slug));
+    assert.ok(existsSync(file), `missing link preview for ${b.slug}`);
+    const bytes = readFileSync(file);
+    assert.equal(bytes[0], 0xff, 'preview must be JPEG');
+    assert.equal(bytes[1], 0xd8, 'preview must be JPEG');
+  }
 });
