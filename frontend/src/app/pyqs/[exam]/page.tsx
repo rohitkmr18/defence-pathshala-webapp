@@ -4,6 +4,7 @@ import Link from "next/link";
 import {
   slugToExam,
   getExamCoverage,
+  getCdsPaperAvailability,
 } from "@/lib/seo-data";
 import { pageMetadata } from "@/lib/seo-metadata";
 import Breadcrumbs from "@/components/public/Breadcrumbs";
@@ -50,6 +51,7 @@ export default async function ExamPyqArchivePage({ params }: PageProps) {
 
   const label = coverage.slug === "capf" ? "CAPF AC" : "CDS";
   const paperScope = coverage.slug === "cds" ? "General Knowledge (GK)" : "Paper I";
+  const cdsPapers = coverage.slug === "cds" ? await getCdsPaperAvailability() : null;
   const practiceHref = `/dashboard/practice?exam=${encodeURIComponent(coverage.exam)}&paper=gs&origin=seo_${coverage.slug}_archive`;
   const breadcrumb = {
     "@context": "https://schema.org", "@type": "BreadcrumbList",
@@ -77,26 +79,61 @@ export default async function ExamPyqArchivePage({ params }: PageProps) {
           {label} PYQs – Previous Year Questions
         </h1>
         <p className="mt-3 text-base text-slate-600 sm:text-lg max-w-3xl leading-relaxed">
-          Build your {label} PYQ practice around {paperScope}: browse by year or subject,
-          read available answers and explanations, then work on a focused practice drill.
+          {coverage.slug === "cds" ? "Choose General Knowledge, English or Elementary Mathematics first. Then browse available questions or begin practice." : "Browse Paper I questions by year or subject, review available answers and explanations, and start focused practice."}
         </p>
         <p className="mt-3 text-sm text-slate-600">
           {coverage.totalQuestions.toLocaleString()} questions across {coverage.years.length} available years
           ({coverage.years.map((y) => y.year).join(", ")}). Counts describe this archive, not complete paper coverage.
-          {coverage.slug === "cds" && " English and Mathematics are separate practice papers and are not included in these archive counts."}
+          {coverage.slug === "cds" && " These counts cover GK only; English and Mathematics are shown separately below."}
         </p>
         <div className="mt-5 flex flex-wrap items-center gap-4">
-          <Link href={practiceHref} className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white">Start {label} PYQ practice</Link>
+          <Link href={coverage.slug === "cds" ? "#choose-cds-paper" : practiceHref} className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white">{coverage.slug === "cds" ? "Choose CDS paper" : `Start ${label} PYQ practice`}</Link>
           <Link href={`/exams/${coverage.slug}`} className="text-sm font-semibold text-blue-700">Read the {label} exam guide</Link>
         </div>
       </div>
 
+      {coverage.slug === "cds" && cdsPapers && (
+        <section id="choose-cds-paper" className="mb-10 scroll-mt-24" aria-labelledby="cds-paper-heading">
+          <h2 id="cds-paper-heading" className="text-xl font-bold text-slate-900 sm:text-2xl">Choose your CDS paper</h2>
+          <p className="mb-4 mt-1 text-sm text-slate-600">Choose a paper directly. The year and subject archive below covers GK only.</p>
+          <div className="grid gap-3 sm:grid-cols-3">
+            {[
+              { key: "gs", name: "General Knowledge", count: coverage.totalQuestions, href: "#archive-years" },
+              { key: "english", name: "English", count: cdsPapers.english, href: "/dashboard/practice?exam=CDS&paper=english&origin=seo_cds_english" },
+              { key: "maths", name: "Elementary Mathematics", count: cdsPapers.maths, href: "/dashboard/practice?exam=CDS&paper=maths&origin=seo_cds_maths" },
+            ].map((paper) => (
+              <div key={paper.key} className="flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div>
+                  <h3 className="font-bold text-slate-900">{paper.name}</h3>
+                  <p className="mt-2 text-2xl font-extrabold text-blue-700">{paper.count.toLocaleString()}</p>
+                  <p className="text-xs text-slate-500">Currently eligible questions</p>
+                </div>
+                {paper.count > 0 ? (
+                  <Link href={paper.href} className="mt-5 inline-flex min-h-11 items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-blue-700">
+                    {paper.key === "gs" ? "Browse GK PYQs" : "Practice " + paper.name}
+                  </Link>
+                ) : (
+                  <span className="mt-5 inline-flex min-h-11 items-center justify-center rounded-xl bg-slate-100 px-4 py-2.5 text-sm font-semibold text-slate-600">No eligible questions yet</span>
+                )}
+              </div>
+            ))}
+          </div>
+          <p className="mt-3 text-xs text-slate-500">Counts reflect eligible database questions, not complete paper coverage.</p>
+        </section>
+      )}
+
+      <nav aria-label="Quick archive navigation" className="mb-8 flex flex-wrap gap-2">
+        <a href="#archive-years" className="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-blue-700 hover:bg-blue-50">Browse by year</a>
+        <a href="#archive-subjects" className="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-blue-700 hover:bg-blue-50">Browse by subject</a>
+        <Link href={practiceHref} className="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-blue-700 hover:bg-blue-50">Start {paperScope} practice</Link>
+      </nav>
+
       {/* Years section */}
-      <section className="mb-12">
+      <section id="archive-years" className="mb-12 scroll-mt-24">
         <div className="mb-5 flex items-center justify-between">
           <h2 className="text-xl font-bold text-slate-900 sm:text-2xl flex items-center gap-2">
             <Calendar className="h-5 w-5 text-blue-600" />
-            Select Examination Year
+            {coverage.slug === "cds" ? "Browse GK by examination year" : "Select Examination Year"}
           </h2>
           <span className="text-xs font-semibold text-slate-500">
             {coverage.years.length} Years Available
@@ -134,7 +171,7 @@ export default async function ExamPyqArchivePage({ params }: PageProps) {
       </section>
 
       {/* Subject Distribution */}
-      <section className="mb-12">
+      <section id="archive-subjects" className="mb-12 scroll-mt-24">
         <div className="mb-5">
           <h2 className="text-xl font-bold text-slate-900 sm:text-2xl flex items-center gap-2">
             <Layers className="h-5 w-5 text-blue-600" />
