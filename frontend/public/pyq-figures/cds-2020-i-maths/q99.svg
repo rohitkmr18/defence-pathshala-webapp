@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 270" font-family="Arial, sans-serif" font-size="13">
+<rect width="340" height="270" fill="#ffffff"/>
+<defs><pattern id="h" patternUnits="userSpaceOnUse" width="7" height="7" patternTransform="rotate(45)"><rect width="7" height="7" fill="#dbeafe"/><line x1="0" y1="0" x2="0" y2="7" stroke="#1d4ed8" stroke-width="1.6"/></pattern></defs>
+<path d="M70,135 a100,100 0 1 0 200,0 a100,100 0 1 0 -200,0 Z M90,75 h160 v120 h-160 Z" fill="url(#h)" stroke="none" stroke-width="2" fill-rule="evenodd"/>
+<circle cx="170.0" cy="135.0" r="100.0" fill="none" stroke="#0f172a" stroke-width="2"/>
+<path d="M90,75 h160 v120 h-160 Z" fill="none" stroke="#0f172a" stroke-width="2"/>
+<text x="170.0" y="95.0" fill="#0f172a" text-anchor="middle">8 cm</text>
+<text x="170.0" y="185.0" fill="#0f172a" text-anchor="middle">8 cm</text>
+<text x="110.0" y="139.0" fill="#0f172a" text-anchor="middle">6 cm</text>
+<text x="230.0" y="139.0" fill="#0f172a" text-anchor="middle">6 cm</text>
+
+</svg>

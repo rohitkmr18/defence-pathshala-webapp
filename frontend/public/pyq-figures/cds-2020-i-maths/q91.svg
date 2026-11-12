@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 280" font-family="Arial, sans-serif" font-size="13">
+<rect width="340" height="280" fill="#ffffff"/>
+<defs><pattern id="h" patternUnits="userSpaceOnUse" width="7" height="7" patternTransform="rotate(45)"><rect width="7" height="7" fill="#dbeafe"/><line x1="0" y1="0" x2="0" y2="7" stroke="#1d4ed8" stroke-width="1.6"/></pattern></defs>
+<circle cx="115.0" cy="70.0" r="55.0" fill="none" stroke="#0f172a" stroke-width="2"/>
+<circle cx="225.0" cy="70.0" r="55.0" fill="none" stroke="#0f172a" stroke-width="2"/>
+<circle cx="170.0" cy="165.3" r="55.0" fill="none" stroke="#0f172a" stroke-width="2"/>
+<line x1="115.0" y1="70.0" x2="225.0" y2="70.0" stroke="#0f172a" stroke-width="2"/>
+<line x1="225.0" y1="70.0" x2="170.0" y2="165.3" stroke="#0f172a" stroke-width="2"/>
+<line x1="170.0" y1="165.3" x2="115.0" y2="70.0" stroke="#0f172a" stroke-width="2"/>
+<path d="M170.0,70.0 A55,55 0 0 0 197.5,117.6 A55,55 0 0 0 142.5,117.6 A55,55 0 0 0 170.0,70.0 Z" fill="url(#h)" stroke="#0f172a" stroke-width="1.5"/>
+<circle cx="115.0" cy="70.0" r="2.5" fill="#0f172a"/>
+<text x="105.0" y="62.0" fill="#0f172a" text-anchor="middle" font-weight="bold">A</text>
+<circle cx="225.0" cy="70.0" r="2.5" fill="#0f172a"/>
+<text x="235.0" y="62.0" fill="#0f172a" text-anchor="middle" font-weight="bold">B</text>
+<circle cx="170.0" cy="165.3" r="2.5" fill="#0f172a"/>
+<text x="170.0" y="185.3" fill="#0f172a" text-anchor="middle" font-weight="bold">C</text>
+
+</svg>
