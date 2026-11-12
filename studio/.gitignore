@@ -25,3 +25,10 @@
 node_modules/
 dist/
 .cache/
+# generated working files / derived public assets (rebuilt by scripts)
+/work/
+/public/fonts/
+/public/brand/
+/public/audio/
+/public/models/
+/public/renders/

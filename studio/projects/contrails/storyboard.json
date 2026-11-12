@@ -1,79 +1,24 @@
 {
   "project": "contrails",
-  "status": "draft",
-  "format": {
-    "width": 1080,
-    "height": 1920,
-    "fps": 30,
-    "targetDurationSeconds": 45
-  },
-  "branding": {
-    "logo": "official logo file required",
-    "position": "top-right",
-    "navy": "#020617",
-    "blue": "#2563EB",
-    "red": "#EF4444"
+  "status": "produced — timings derived from the recorded narration (see src/projects/contrails/timeline.ts)",
+  "format": { "width": 1080, "height": 1920, "fps": 30, "durationSeconds": 59.0 },
+  "branding": { "logo": "assets/logo/dp_logo_original.png (official, unaltered)", "position": "top-right on white plate", "bg": "#020617", "navy": "#0B1A3A", "blue": "#2563EB", "red": "#EF4444" },
+  "narration": {
+    "files": ["assets/audio/source/vo_A_231505.m4a", "assets/audio/source/vo_B_231511.m4a"],
+    "order": "A (main, recorded 23:15:05) then B (CTA outro, 23:15:11)",
+    "edits": "lead-in silence and two non-lexical hums removed; no words cut or time-stretched"
   },
   "shots": [
-    {
-      "id": "01",
-      "start": 0,
-      "end": 5,
-      "title": "White trail mystery",
-      "onScreenText": "SMOKE OR SCIENCE?",
-      "visual": "Jet with white contrail; strong camera hook"
-    },
-    {
-      "id": "02",
-      "start": 5,
-      "end": 13,
-      "title": "Contrail persistence",
-      "onScreenText": "WHY DO SOME TRAILS LAST?",
-      "visual": "Side by side fading and persistent trails"
-    },
-    {
-      "id": "03",
-      "start": 13,
-      "end": 21,
-      "title": "Hot versus cold",
-      "onScreenText": "HOT EXHAUST + COLD AIR",
-      "visual": "Illustrated jet exhaust mixing with cold upper atmosphere"
-    },
-    {
-      "id": "04",
-      "start": 21,
-      "end": 27,
-      "title": "Ice crystals",
-      "onScreenText": "ICE CRYSTALS",
-      "visual": "Water vapour condenses then freezes into tiny ice crystals"
-    },
-    {
-      "id": "05",
-      "start": 27,
-      "end": 35,
-      "title": "Atmosphere comparison",
-      "onScreenText": "HUMIDITY CHANGES EVERYTHING",
-      "visual": "Dry versus ice-supersaturated upper atmosphere"
-    },
-    {
-      "id": "06",
-      "start": 35,
-      "end": 45,
-      "title": "Tricky interactive CTA",
-      "onScreenText": "ENGINE OFF? A / B / C",
-      "visual": "Quiz slate with no answer reveal"
-    }
+    { "id": "01", "start": 0.0, "end": 8.2, "title": "The mystery", "vo": "Kabhi aasman mein aeroplane ke peeche ye lambi white line dekhi hai? Kya plane aasman mein dhuaan chhod raha hai? Ya phir kuch aur?", "onScreenText": "SMOKE? / OR SCIENCE?", "visual": "3D air-to-air tracking shot at cruise; contrail forms ~1 aircraft length behind engines; push onto the trail at 'white line'", "tech": "Three.js + Blender GLB + postprocessing" },
+    { "id": "02a", "start": 8.2, "end": 12.35, "title": "Not every plane", "vo": "Interesting baat ye hai ki ye line har aeroplane ke peeche nahi dikhti.", "onScreenText": "TRAIL / NO TRAIL?", "visual": "Ground-view telephoto: higher (colder) jet leaves a trail, lower jet does not" },
+    { "id": "02b", "start": 12.35, "end": 17.05, "title": "Seconds vs hours", "vo": "Kabhi ye kuch seconds mein gayab ho jaati hai… aur kabhi ghanton tak aasman mein bani rehti hai!", "onScreenText": "DISAPPEARS IN SECONDS | PERSISTS FOR HOURS (TIME-LAPSE)", "visual": "Vertical split: short-lived trail vs persistent spreading trail" },
+    { "id": "03a", "start": 17.05, "end": 21.05, "title": "Name reveal", "vo": "Actually, ise kehte hain Contrail — yaani Condensation Trail!", "onScreenText": "CONTRAIL → CONdensation TRAIL", "visual": "Kinetic typographic etymology over abstract trail" },
+    { "id": "03b", "start": 21.05, "end": 26.85, "title": "Engine physics", "vo": "Jab jet engine se nikli garam, water-vapour wali exhaust bahut thandi hawa se milti hai,", "onScreenText": "HOT EXHAUST (+H₂O, invisible) / COLD AIR ≈ −40°C", "visual": "Cycles-rendered turbofan + Three.js particles in Blender's exported camera: invisible hot plume, entrained cold air, white trail forms after mixing" },
+    { "id": "04", "start": 26.85, "end": 32.35, "title": "Ice crystals", "vo": "toh tiny ice crystals ban jaate hain. Aur wahi humein aasman mein white line ki tarah dikhte hain.", "onScreenText": "VAPOUR → DROPLET → ICE / TINY ICE CRYSTALS (≈ µm) / WHITE LINE = billions of tiny ice crystals", "visual": "Macro: vapour condenses on soot nuclei, droplets freeze into hexagonal plates; pull back into the sky trail" },
+    { "id": "05a", "start": 32.35, "end": 35.6, "title": "Twist", "vo": "Lekin twist ye hai — contrail kitni der rahegi,", "onScreenText": "TWIST / KITNI DER RAHEGI?", "visual": "Spreading persistent trail + stopwatch" },
+    { "id": "05b", "start": 35.6, "end": 39.3, "title": "Upper atmosphere", "vo": "ye mainly depend karta hai upper atmosphere ki humidity par.", "onScreenText": "UPPER ATMOSPHERE (10–12 km, −40 to −60°C) / HUMIDITY (RHi)", "visual": "Altitude cross-section with cruise band and ice-relative humidity gauge" },
+    { "id": "05c", "start": 39.3, "end": 43.2, "title": "Dry vs ice-supersaturated", "vo": "Dry air mein jaldi gayab, aur humid air mein kaafi der tak reh sakti hai!", "onScreenText": "DRY AIR (RHi<100%) | ICE-SUPERSATURATED (RHi>100%) / HUMIDITY CHANGES EVERYTHING", "visual": "Split-screen, same flight in two atmospheres" },
+    { "id": "06", "start": 43.2, "end": 59.0, "title": "Climate challenge + CTA", "vo": "Ab ek tricky question! Kya aeroplane ki white contrails Earth ke climate ko affect kar sakti hain? Answer comment mein batayein. A, B ya C comment karo aur Defence Pathshala ko follow karna mat bhoolna!", "onScreenText": "TRICKY QUESTION! / A HAAN, CLIMATE PAR ASAR PADTA HAI · B NAHI, YE SIRF PAANI HAI · C SIRF BAARISH WALE DIN / COMMENT A, B YA C / FOLLOW DEFENCE PATHSHALA", "visual": "Premium MCQ cards, think-time bar, end card held ≥5 s", "answer": "A (not revealed on screen)" }
   ],
-  "audio": {
-    "voiceover": "pending",
-    "music": "licensed audio pending"
-  },
-  "qa": [
-    "Check scientific correctness",
-    "Use approved logo file",
-    "Check caption/UI safe areas",
-    "Confirm license for footage and music",
-    "Confirm 1080x1920 30fps output",
-    "No false claims of successful renders"
-  ]
+  "audio": { "voiceover": "user recording, mastered (HPF, light NR, EQ, de-ess, 3:1 comp, loudness)", "music": "original procedural score", "sfx": "original procedural SFX", "deliveryLoudness": "-14 LUFS integrated, ≤ -1 dBTP" }
 }
