@@ -1,14 +1,6 @@
 [
 {
 "page": 3,
-"target": 4,
-"left": 6.68,
-"top": 18.08,
-"width": 86.73,
-"height": 4.1
-},
-{
-"page": 3,
 "target": 5,
 "left": 6.68,
 "top": 22.63,
@@ -132,6 +124,14 @@
 "target": 0,
 "left": 6.68,
 "top": 90.42,
+"width": 86.73,
+"height": 4.1
+},
+{
+"page": 3,
+"target": 4,
+"left": 6.68,
+"top": 18.08,
 "width": 86.73,
 "height": 4.1
 },

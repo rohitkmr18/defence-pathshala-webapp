@@ -56,7 +56,6 @@ export const LIBRARY_HOTSPOTS: Record<string, LibraryHotspot[]> = {
     { page: 38, target: 3, left: 76.0, top: 0.3, width: 21.0, height: 3.6 },
   ],
   "polity-decoded": [
-    { page: 3, target: 4, left: 6.68, top: 18.08, width: 86.73, height: 4.1 },
     { page: 3, target: 5, left: 6.68, top: 22.63, width: 86.73, height: 4.1 },
     { page: 3, target: 6, left: 6.68, top: 27.17, width: 86.73, height: 4.01 },
     { page: 3, target: 11, left: 6.68, top: 31.62, width: 86.73, height: 4.1 },
@@ -73,6 +72,7 @@ export const LIBRARY_HOTSPOTS: Record<string, LibraryHotspot[]> = {
     { page: 3, target: 50, left: 6.68, top: 81.33, width: 86.73, height: 4.1 },
     { page: 3, target: 0, left: 6.68, top: 85.88, width: 86.73, height: 4.1 },
     { page: 3, target: 0, left: 6.68, top: 90.42, width: 86.73, height: 4.1 },
+    { page: 3, target: 4, left: 6.68, top: 18.08, width: 86.73, height: 4.1 },
     { page: 4, target: 3, left: 76.0, top: 0.3, width: 21.0, height: 3.6 },
     { page: 5, target: 3, left: 76.0, top: 0.3, width: 21.0, height: 3.6 },
     { page: 6, target: 3, left: 76.0, top: 0.3, width: 21.0, height: 3.6 },

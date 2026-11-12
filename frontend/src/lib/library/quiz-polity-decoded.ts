@@ -181,19 +181,21 @@ export const POLITY_DECODED_QUIZ: LibraryQuiz = {
       page: 22,
     },
     {
+      // Replaces the eBook's original Q10 (Governor's pardon of a death sentence), withdrawn by the
+      // founder on 12 Nov 2026 because of the 2021 State of Haryana v. Raj Kumar reporting.
       n: 10,
       source: { kind: "original" },
       format: "2-STATEMENT",
-      stem: "Consider the following statements about the Governor's pardoning power under Article 161:",
+      stem: "Consider the following statements about the President's ordinance-making power under Article 123:",
       statements: [
-        "The Governor can pardon a death sentence.",
-        "The Governor can grant pardon to a person sentenced by a court-martial.",
+        "The President can promulgate an ordinance only when both Houses of Parliament are not in session.",
+        "An ordinance must be laid before both Houses of Parliament and ceases to operate six weeks after Parliament reassembles.",
       ],
       prompt: "Which of the statements given above is/are correct?",
       options: { ...STATEMENT_OPTIONS },
-      answer: "D",
-      explanation: "Both wrong. A Governor can suspend, remit or commute a death sentence but cannot pardon it, and has no power over court-martial sentences.",
-      trap: "Article 161 covers only offences against state laws.",
+      answer: "B",
+      explanation: "Article 123 allows an ordinance whenever either House is not in session — both need not be in recess. It must be laid before both Houses and lapses six weeks after Parliament reassembles (earlier if both Houses disapprove it).",
+      trap: "“Both Houses not in session” sounds stricter and safer — but one House in recess is enough.",
       keySource: "dp-original",
       topic: "executive",
       page: 21,

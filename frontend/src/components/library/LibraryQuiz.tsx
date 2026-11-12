@@ -139,8 +139,8 @@ export default function LibraryQuiz({ quiz, bookTitle, pyqCount, practice, ancho
   }
 
   return (
-    <section id={anchorId} aria-labelledby={`${anchorId}-title`} className="mx-auto mt-10 max-w-3xl scroll-mt-20 lg:scroll-mt-6">
-      <div ref={topRef} className="scroll-mt-20 lg:scroll-mt-6" />
+    <section id={anchorId} aria-labelledby={`${anchorId}-title`} className="mx-auto mt-10 max-w-3xl scroll-mt-4">
+      <div ref={topRef} className="scroll-mt-4" />
 
       {/* ── Intro ─────────────────────────────────────────────────────── */}
       {!inProgress && !result && (

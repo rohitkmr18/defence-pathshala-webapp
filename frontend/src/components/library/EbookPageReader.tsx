@@ -76,6 +76,13 @@ export default function EbookPageReader({
   const last = pages[pages.length - 1] ?? 1;
   const [current, setCurrent] = useState(first);
   const [contentsOpen, setContentsOpen] = useState(false);
+  // The app shell sets overflow-x:hidden, which disables position:sticky for this bar. So once the
+  // bar would scroll off-screen it is pinned with position:fixed over the reading column instead.
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const barSlotRef = useRef<HTMLDivElement>(null);
+  const barRef = useRef<HTMLDivElement>(null);
+  const [pinned, setPinned] = useState<{ left: number; width: number } | null>(null);
+  const [barHeight, setBarHeight] = useState(0);
   const pageRefs = useRef<Map<number, HTMLElement>>(new Map());
   const seen = useRef<Set<number>>(new Set());
   const milestones = useRef<Set<number>>(new Set());
@@ -163,12 +170,45 @@ export default function EbookPageReader({
     return () => window.removeEventListener("keydown", onKey);
   }, [step]);
 
+  useEffect(() => {
+    let frame = 0;
+    function update() {
+      frame = 0;
+      const slot = barSlotRef.current?.getBoundingClientRect();
+      const wrap = wrapRef.current?.getBoundingClientRect();
+      const bar = barRef.current;
+      if (!slot || !wrap || !bar) return;
+      const h = bar.offsetHeight;
+      const shouldPin = slot.top < 0 && wrap.bottom > h + 24;
+      setBarHeight(h);
+      setPinned((prev) => {
+        if (!shouldPin) return null;
+        const next = { left: Math.round(slot.left), width: Math.round(slot.width) };
+        return prev && prev.left === next.left && prev.width === next.width ? prev : next;
+      });
+    }
+    const schedule = () => { if (!frame) frame = window.requestAnimationFrame(update); };
+    update();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, []);
+
   const section = sectionAt(sections, current);
   const discourageSave = (e: React.SyntheticEvent) => e.preventDefault();
 
   return (
-    <div className="relative">
-      <div className="sticky top-0 z-20 -mx-4 border-b border-slate-200 bg-white/95 px-4 py-3 backdrop-blur-nav sm:mx-0 sm:rounded-2xl sm:border">
+    <div ref={wrapRef} className="relative">
+      <div ref={barSlotRef} className="-mx-4 sm:mx-0" style={pinned ? { height: barHeight } : undefined}>
+      <div
+        ref={barRef}
+        className={`z-40 border-b border-slate-200 bg-white/95 px-4 py-3 backdrop-blur-nav sm:rounded-2xl sm:border ${pinned ? "fixed top-0 shadow-md sm:top-2" : "relative"}`}
+        style={pinned ? { left: pinned.left, width: pinned.width } : undefined}
+      >
         <div className="flex items-center gap-2">
           <button
             type="button"
@@ -212,6 +252,8 @@ export default function EbookPageReader({
         )}
       </div>
 
+      </div>
+
       <div className="mx-auto mt-4 flex max-w-3xl flex-col gap-4 select-none" onContextMenu={discourageSave}>
         {pages.map((page) => {
           const pageSection = sectionAt(sections, page);
@@ -222,7 +264,7 @@ export default function EbookPageReader({
               data-page={page}
               ref={(el) => { if (el) pageRefs.current.set(page, el); else pageRefs.current.delete(page); }}
               aria-label={`Page ${page} of ${last}`}
-              className={`relative ${pageAnchors ? "scroll-mt-36 lg:scroll-mt-24" : "scroll-mt-24"} overflow-hidden rounded-xl bg-slate-900 shadow-sm ring-1 ring-slate-200`}
+              className={`relative scroll-mt-24 overflow-hidden rounded-xl bg-slate-900 shadow-sm ring-1 ring-slate-200`}
               style={{ aspectRatio: `${pageWidth} / ${pageHeight}` }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element -- static pre-rendered page; next/image would expose an optimiser URL per size */}

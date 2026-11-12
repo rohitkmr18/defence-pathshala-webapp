@@ -70,7 +70,7 @@ test('quizzes are valid, match book metadata and revise-links land on reader pag
 
 test('answer keys are pinned (guards against accidental edits)', () => {
   assert.equal(BIOLOGY_DECODED_QUIZ.questions.map((q) => q.answer).join(''), 'BBCDCCCAAADCDCABCCAC');
-  assert.equal(POLITY_DECODED_QUIZ.questions.map((q) => q.answer).join(''), 'CAABBCCDCDCDBCBBCDCCACABBAAABB');
+  assert.equal(POLITY_DECODED_QUIZ.questions.map((q) => q.answer).join(''), 'CAABBCCDCBCDBCBBCDCCACABBAAABB');
 });
 
 test('scoring: all correct, all wrong, partial and empty attempts', () => {
