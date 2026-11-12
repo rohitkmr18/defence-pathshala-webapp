@@ -3847,7 +3847,7 @@
     "topic": "Data and Graphical Representation",
     "subtopic": "Bar Chart and Pie Chart",
     "theme": "Increase in a head when total budget grows",
-    "question": "Consider the following for the two (02) items that follow:\n\nThe budget allocations represented in a pie diagram under five different heads $A$, $B$, $C$, $D$ and $E$ are respectively 40%, 18%, 9%, 25% and 8%. The total budget allocation is ₹300·4 lakhs.\n\nHow much amount will be increased on $A$ if the total budget is increased by three times?",
+    "question": "Consider the following for the two (02) items that follow:\n\nThe budget allocations represented in a pie diagram under five different heads $A$, $B$, $C$, $D$ and $E$ are respectively 40%, 18%, 9%, 25% and 8%. The total budget allocation is ₹300·4 lakhs.\n\nHow much amount will be increased on $A$ if the total budget is increased by three times its present value?",
     "opt_a": "₹360·48 lakhs",
     "opt_b": "₹300·36 lakhs",
     "opt_c": "₹240·32 lakhs",
@@ -3857,12 +3857,15 @@
     "final_opt": "A",
     "llm_opt": "A",
     "official_opt": null,
-    "explanation": "Concept: $A$ gets 40% of the total budget.\n\nStep 1: Present amount for $A=40\\%$ of $300.4=120.16$ lakhs.\n\nStep 2: \"Increased by three times\" means the increase is three times the present amount (the budget becomes four times). Increase on $A=3\\times120.16=360.48$ lakhs.\n\n(If the budget were read as \"becoming three times\", the increase would be $2\\times120.16=240.32$ lakhs; the wording is taken as stated.)\n\nAnswer: (a) ₹360·48 lakhs",
+    "explanation": "Note on this question: \"increased by three times\" can be misread as \"becomes three times\". The words \"its present value\" have been added to make clear that the increase itself is three times the present budget (the budget becomes four times). The numbers and options are as printed.\n\nConcept: $A$ gets 40% of the total budget.\n\nStep 1: Present amount for $A=40\\%$ of $300.4=120.16$ lakhs.\n\nStep 2: \"Increased by three times\" means the increase is three times the present amount (the budget becomes four times). Increase on $A=3\\times120.16=360.48$ lakhs.\n\nCommon trap: if the budget only became three times, the increase would be $2\\times120.16=240.32$ lakhs, which is option (c).\n\nAnswer: (a) ₹360·48 lakhs",
     "source": "CDS I 2022 Elementary Mathematics set A (English side)",
     "is_negative": false,
     "tags": [
      "format:linked_set",
-     "key:dp_solved"
+     "key:dp_solved",
+     "provenance:adapted_pyq",
+     "display:inline_in_paper",
+     "display:edit_note_in_explanation"
     ],
     "verified_status": null,
     "difficulty_score": 42.25,

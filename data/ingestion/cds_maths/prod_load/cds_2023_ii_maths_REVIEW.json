@@ -571,7 +571,7 @@
     "final_opt": "D",
     "llm_opt": "D",
     "official_opt": null,
-    "explanation": "Concept: if $H$ is the HCF of two natural numbers, then both numbers are multiples of $H$, so their LCM is also a multiple of $H$. That means $\\dfrac{L}{H}$ must be a whole number.\n\nStep 1: Here $L : H = 3 : 2$, so $\\dfrac{L}{H} = \\dfrac{3}{2}$, which is not a whole number.\n\nStep 2: So no pair of natural numbers can have LCM and HCF in the ratio $3 : 2$. The given conditions cannot be matched by any pair, so the product cannot be fixed using the data given. (If we only used $ab = L \\times H = 6k^2$ with an unknown $k$, the sum 45 alone would not fix $k$ either.)\n\nStep 3: The only option consistent with this is that the product cannot be determined from the data.\n\nNote: this question has a flawed premise as printed. The answer (d) follows from the reasoning above; it should be checked against the official key when it is available.\n\nAnswer: (d) Cannot be determined due to insufficient data",
+    "explanation": "Concept: if $H$ is the HCF of two natural numbers, then both numbers are multiples of $H$, so their LCM is also a multiple of $H$. That means $\\dfrac{L}{H}$ must be a whole number.\n\nStep 1: Here $L : H = 3 : 2$, so $\\dfrac{L}{H} = \\dfrac{3}{2}$, which is not a whole number.\n\nStep 2: So no pair of natural numbers can have LCM and HCF in the ratio $3 : 2$. The given conditions cannot be matched by any pair, so the product cannot be fixed using the data given. (If we only used $ab = L \\times H = 6k^2$ with an unknown $k$, the sum 45 alone would not fix $k$ either.)\n\nStep 3: The only option consistent with this is that the product cannot be determined from the data.\n\nKey idea to remember: the LCM of two numbers is always a whole-number multiple of their HCF, so a ratio like $3:2$ is impossible.\n\nAnswer: (d) Cannot be determined due to insufficient data",
     "source": "CDS II 2023 Elementary Mathematics set A (English side)",
     "is_negative": false,
     "tags": [
@@ -851,7 +851,7 @@
     "final_opt": "C",
     "llm_opt": "C",
     "official_opt": null,
-    "explanation": "Concept: the divisor $x^2 + abyz - bzx - axy$ factorises as a product of two linear factors.\n\nStep 1: $x^2 - axy - bxz + abyz = (x - ay)(x - bz)$.\n\nStep 2: If $x^n - py^n + qz^n$ is divisible by $(x - ay)(x - bz)$, then it must vanish where both factors are zero, that is when $x = ay = bz$. Then $y = \\dfrac{x}{a}$ and $z = \\dfrac{x}{b}$.\n\nStep 3: Substitute: $x^n - p\\dfrac{x^n}{a^n} + q\\dfrac{x^n}{b^n} = 0$. Divide by $x^n$: $1 - \\dfrac{p}{a^n} + \\dfrac{q}{b^n} = 0$.\n\nStep 4: Rearranging, $\\dfrac{p}{a^n} - \\dfrac{q}{b^n} = 1$.\n\nNote: this uses the condition that must hold for divisibility; the question as printed is loosely worded. The result 1 matches option (c).\n\nAnswer: (c) 1",
+    "explanation": "Concept: the divisor $x^2 + abyz - bzx - axy$ factorises as a product of two linear factors.\n\nStep 1: $x^2 - axy - bxz + abyz = (x - ay)(x - bz)$.\n\nStep 2: If $x^n - py^n + qz^n$ is divisible by $(x - ay)(x - bz)$, then it must vanish where both factors are zero, that is when $x = ay = bz$. Then $y = \\dfrac{x}{a}$ and $z = \\dfrac{x}{b}$.\n\nStep 3: Substitute: $x^n - p\\dfrac{x^n}{a^n} + q\\dfrac{x^n}{b^n} = 0$. Divide by $x^n$: $1 - \\dfrac{p}{a^n} + \\dfrac{q}{b^n} = 0$.\n\nStep 4: Rearranging, $\\dfrac{p}{a^n} - \\dfrac{q}{b^n} = 1$.\n\nAnswer: (c) 1",
     "source": "CDS II 2023 Elementary Mathematics set A (English side)",
     "is_negative": false,
     "tags": [
@@ -3323,7 +3323,7 @@
     "topic": "Circles",
     "subtopic": "Cyclic Quadrilaterals",
     "theme": "Truth of two circle-geometry statements",
-    "question": "Consider the following statements:\n1. The angle in a sector greater than a semi-circle is less than a right angle.\n2. If two sides of a pair of opposite sides of a cyclic quadrilateral are equal, then its diagonals are also equal.\nWhich of the statements given above is/are correct?",
+    "question": "Consider the following statements:\n1. The angle in a segment greater than a semi-circle is less than a right angle.\n2. If two sides of a pair of opposite sides of a cyclic quadrilateral are equal, then its diagonals are also equal.\nWhich of the statements given above is/are correct?",
     "opt_a": "1 only",
     "opt_b": "2 only",
     "opt_c": "Both 1 and 2",
@@ -3333,13 +3333,16 @@
     "final_opt": "C",
     "llm_opt": "C",
     "official_opt": null,
-    "explanation": "Concept: check each statement as a circle-geometry fact.\n\nStatement 1: the angle in a segment of a circle that is greater than a semicircle (the major segment) is acute, i.e. less than a right angle. The angle in a semicircle is exactly $90^\\circ$ and in a smaller segment it is obtuse. The statement is meant in this sense (the printed word \"sector\" is a misprint for \"segment\"), so it is correct.\n\nStatement 2: in a cyclic quadrilateral, if one pair of opposite sides is equal, the equal chords subtend equal arcs, so the figure is an isosceles trapezium and its diagonals are equal. Correct.\n\nBoth statements are correct (read as intended).\n\nAnswer: (c) Both 1 and 2",
+    "explanation": "Note on this question: the printed paper says \"sector\"; the statement is about the angle in a segment of a circle, so the word has been corrected to \"segment\". The rest is as printed.\n\nConcept: check each statement as a circle-geometry fact.\n\nStatement 1: the angle in a segment of a circle that is greater than a semicircle (the major segment) is acute, i.e. less than a right angle. The angle in a semicircle is exactly $90^\\circ$ and in a smaller segment it is obtuse. So it is correct.\n\nStatement 2: in a cyclic quadrilateral, if one pair of opposite sides is equal, the equal chords subtend equal arcs, so the figure is an isosceles trapezium and its diagonals are equal. Correct.\n\nBoth statements are correct.\n\nAnswer: (c) Both 1 and 2",
     "source": "CDS II 2023 Elementary Mathematics set A (English side)",
     "is_negative": false,
     "tags": [
      "format:single_mcq",
      "key:dp_solved",
-     "statement_based"
+     "statement_based",
+     "provenance:adapted_pyq",
+     "display:inline_in_paper",
+     "display:edit_note_in_explanation"
     ],
     "verified_status": null,
     "difficulty_score": 42.25,
