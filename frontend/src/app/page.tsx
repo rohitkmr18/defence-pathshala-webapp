@@ -10,6 +10,7 @@ import DPLogo from "@/components/common/DPLogo";
 import HomeNavMenu from "@/components/home/HomeNavMenu";
 import HomeFreeLibrary from "@/components/home/HomeFreeLibrary";
 import PublicExploreLinks from "@/components/public/PublicExploreLinks";
+import SocialLinks from "@/components/public/SocialLinks";
 
 export default function HomePage() {
   const capsule = latestMonthlyCapsule();
@@ -102,6 +103,10 @@ export default function HomePage() {
             <Link href="/auth/login" className="hover:text-blue-600 transition">
               Login
             </Link>
+          </div>
+          <div className="w-full border-t border-slate-200 pt-4 sm:pt-5">
+            <p className="mb-3 text-sm font-semibold text-slate-700">Connect with Defence Pathshala</p>
+            <SocialLinks />
           </div>
         </div>
       </footer>
