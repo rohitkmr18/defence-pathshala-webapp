@@ -128,7 +128,7 @@ export default function PracticePageClient() {
     const gate = authGateRef.current;
     if (!gate) return;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    gate.scrollIntoView({ behavior: reduceMotion ? "instant" : "smooth", block: "center" });
+    gate.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
     gate.focus({ preventScroll: true });
   }, []);
 
