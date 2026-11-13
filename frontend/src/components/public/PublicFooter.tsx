@@ -1,5 +1,6 @@
 import Link from "next/link";
 import DPLogo from "@/components/common/DPLogo";
+import SocialLinks from "@/components/public/SocialLinks";
 
 export default function PublicFooter() {
   const currentYear = new Date().getFullYear();
@@ -104,7 +105,12 @@ export default function PublicFooter() {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-slate-800 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+        <div className="mt-10 border-t border-slate-800 pt-6">
+          <h3 className="mb-3 text-sm font-semibold text-white">Connect with Defence Pathshala</h3>
+          <SocialLinks theme="dark" />
+        </div>
+
+        <div className="mt-8 border-t border-slate-800 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
           <p>© {currentYear} Defence Pathshala. All rights reserved.</p>
           <p>Built for serious defence service aspirants.</p>
         </div>
