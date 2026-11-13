@@ -120,7 +120,7 @@ test('verdict bands', () => {
 test('lookups and exam filter', () => {
   assert.equal(getLibraryBook('polity-decoded').subject, 'Polity');
   assert.equal(getLibraryBook('nope'), null);
-  assert.equal(booksForExam('AFCAT').length, 3);
+  assert.equal(booksForExam('AFCAT').length, 4);
   assert.equal(booksForExam(null).length, LIBRARY_BOOKS.length);
 });
 
