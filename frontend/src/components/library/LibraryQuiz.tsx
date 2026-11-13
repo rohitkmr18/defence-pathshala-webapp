@@ -278,12 +278,10 @@ export default function LibraryQuiz({ quiz, bookTitle, pyqCount, practice, ancho
                   {picked ? "Next" : "Skip"} <ChevronRight className="h-4 w-4" aria-hidden="true" />
                 </button>
               ) : null}
-              {(state.index === total - 1 || answeredCount === total) && (
-                <button type="button" onClick={submit}
-                  className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-emerald-600 px-4 text-sm font-bold text-white hover:bg-emerald-500">
-                  <CheckCircle2 className="h-4 w-4" aria-hidden="true" /> {confirmSubmit ? "Submit anyway" : "Submit"}
-                </button>
-              )}
+              <button type="button" onClick={submit}
+                className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-emerald-600 px-4 text-sm font-bold text-white hover:bg-emerald-500">
+                <CheckCircle2 className="h-4 w-4" aria-hidden="true" /> {confirmSubmit ? "Submit anyway" : "Submit"}
+              </button>
             </div>
             {confirmSubmit && (
               <p role="alert" className="w-full rounded-xl bg-amber-50 px-3 py-2 text-sm text-amber-900">
