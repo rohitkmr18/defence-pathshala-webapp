@@ -20,7 +20,7 @@ export interface FullPaperDefinition {
   paperTab?: "maths" | "english";
 }
 
-export const AVAILABLE_FULL_PAPERS: FullPaperDefinition[] = [
+const CURATED_FULL_PAPERS: FullPaperDefinition[] = [
   {
     id: "cds-2026-2-maths",
     exam: "CDS",
@@ -352,6 +352,50 @@ export const AVAILABLE_FULL_PAPERS: FullPaperDefinition[] = [
     marks: 250,
   },
 ];
+
+// Verified against production v_dp_question_intelligence_v2 on 2026-11-13.
+// Retain curated exceptions/withheld-item notes above; add legacy papers not yet catalogued.
+const ADDITIONAL_VERIFIED_PAPERS: FullPaperDefinition[] = [
+  ...(["english", "maths"] as const).flatMap((paperTab) =>
+    Array.from({ length: paperTab === "english" ? 5 : 4 }, (_, index) => 2020 + index)
+      .flatMap((year) => (["I", "II"] as const).map((cycle) => ({
+        id: `cds-${year}-${cycle === "I" ? 1 : 2}-${paperTab}`,
+        exam: "CDS",
+        year,
+        cycle,
+        label: `CDS ${cycle} ${year} · ${paperTab === "english" ? "English" : "Elementary Mathematics"}`,
+        questions: paperTab === "english" ? 120 : 100,
+        duration: "2 Hours",
+        durationSeconds: 7200,
+        marks: 100,
+        paperTab,
+      })))
+  ),
+  ...(["I", "II"] as const).map((cycle) => ({
+    id: `cds-2020-${cycle === "I" ? 1 : 2}`,
+    exam: "CDS",
+    year: 2020,
+    cycle,
+    label: `CDS ${cycle} 2020`,
+    questions: 120,
+    duration: "2 Hours",
+    durationSeconds: 7200,
+    marks: 100,
+  })),
+  {
+    id: "capf-2020",
+    exam: "CAPF-AC",
+    year: 2020,
+    cycle: "I",
+    label: "CAPF 2020",
+    questions: 125,
+    duration: "2 Hours",
+    durationSeconds: 7200,
+    marks: 250,
+  },
+];
+
+export const AVAILABLE_FULL_PAPERS: FullPaperDefinition[] = [...CURATED_FULL_PAPERS, ...ADDITIONAL_VERIFIED_PAPERS];
 
 export interface FullPaperHeroProps {
   onStart: (paper: FullPaperDefinition) => void;
