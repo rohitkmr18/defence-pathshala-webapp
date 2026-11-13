@@ -3,6 +3,7 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "katex/dist/katex.min.css";
+import { SOCIAL_CHANNELS } from "@/lib/social-links";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -140,10 +141,7 @@ export default function RootLayout({
               description:
                 "Preparation platform for Indian defence exams: official CDS and CAPF previous year questions, AFCAT mocks and daily current affairs.",
               slogan: "Learn | Prepare | Serve",
-              sameAs: [
-                "https://www.instagram.com/defencepathshala_",
-                "https://www.youtube.com/@defencepathshala3471",
-              ],
+              sameAs: SOCIAL_CHANNELS.map((channel) => channel.href),
               knowsAbout: [
                 "CDS Preparation",
                 "CAPF AC Preparation",
