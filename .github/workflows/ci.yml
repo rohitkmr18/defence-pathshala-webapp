@@ -66,6 +66,9 @@ jobs:
           frontend/src/__tests__/practice_resume.test.mjs frontend/src/__tests__/question_learning_loop.test.mjs frontend/src/__tests__/exam_registry.test.mjs frontend/src/__tests__/current_affairs_calendar.test.mjs frontend/src/__tests__/monthly_capsules.test.mjs frontend/src/__tests__/library_books.test.mjs frontend/src/__tests__/cds_english_maths_taxonomy.test.mjs frontend/src/__tests__/paper_scope.test.mjs
           scripts/test-learning-continuity.cjs scripts/test-learner-intelligence.cjs scripts/test-dashboard-mode.cjs
 
+      - name: Verify unresolved citation filtering
+        run: node --test scripts/test-seo-citation-display.cjs
+
       - name: Verify auth state and atomic onboarding regressions
         run: >-
           node --experimental-strip-types --test --experimental-test-isolation=none

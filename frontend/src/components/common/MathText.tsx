@@ -2,6 +2,7 @@
 
 import React, { useMemo } from "react";
 import katex from "katex";
+import { stripUnresolvedCitations } from "@/lib/strip-unresolved-citations";
 
 interface MathTextProps {
   text: string | null | undefined;
@@ -47,9 +48,7 @@ const MATH_REGEX =
 
 export function cleanMathText(raw: string): string {
   if (!raw) return "";
-  return raw
-    // Clean AI citation artifacts like [cite: 2] or [cite: 2, 3]
-    .replace(/\[cite:\s*[^\]]+\]/gi, "")
+  return stripUnresolvedCitations(raw)
     // Normalize escaped line endings
     .replace(/\\r\\n/g, "\n")
     .replace(/\\n/g, "\n")
