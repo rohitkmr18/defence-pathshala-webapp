@@ -48,7 +48,7 @@ export default function SocialLinks({
   const dark = theme === "dark";
 
   return (
-    <div aria-label="Defence Pathshala social channels" className="flex flex-wrap items-center gap-2">
+    <div aria-label="Defence Pathshala social channels" className="flex flex-nowrap items-center gap-1.5 sm:gap-2">
       {SOCIAL_CHANNELS.map((channel, index) => {
         const Logo = LOGOS[index];
         return (
@@ -59,14 +59,14 @@ export default function SocialLinks({
             rel="noopener noreferrer"
             aria-label={`Visit Defence Pathshala on ${channel.name} (opens in a new tab)`}
             title={channel.name}
-            className={`inline-flex min-h-11 items-center gap-2 rounded-lg border px-3 py-2 text-xs font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 ${
+            className={`inline-flex min-h-11 shrink-0 items-center gap-1 sm:gap-2 whitespace-nowrap rounded-lg border px-2 sm:px-3 py-2 text-[11px] sm:text-xs font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 ${
               dark
                 ? "border-slate-700 text-slate-200 hover:border-blue-400 hover:text-white"
                 : "border-slate-200 text-slate-600 hover:border-blue-300 hover:text-blue-700"
             }`}
           >
             <Logo />
-            <span>{channel.name}</span>
+            <span>{channel.name === "WhatsApp Channel" ? "WhatsApp" : channel.name}</span>
           </a>
         );
       })}
