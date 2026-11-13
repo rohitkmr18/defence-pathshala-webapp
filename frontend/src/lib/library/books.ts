@@ -53,6 +53,53 @@ const range = (from: number, to: number) => Array.from({ length: to - from + 1 }
 
 export const LIBRARY_BOOKS: LibraryBook[] = [
   {
+    slug: "chemistry-decoded",
+    title: "Chemistry Decoded",
+    subject: "Chemistry",
+    kicker: "General Science · Rapid Revision",
+    edition: "Edition 1 · Nov 2026",
+    description:
+      "Matter to metallurgy, acids to everyday chemicals — revised the way CDS and CAPF (AC) actually ask them, with diagrams, traps and real previous-year questions.",
+    seoTitle: "Chemistry Decoded: Free Chemistry Revision eBook for CDS, CAPF, NDA, AFCAT",
+    seoDescription:
+      "Free Chemistry (General Science) revision eBook for CDS, CAPF (AC), NDA and AFCAT: atoms, periodic table, reactions, acids and salts, metals, carbon and industrial chemistry, with 30 practice MCQs you can attempt online.",
+    exams: ["CDS", "CAPF", "NDA", "AFCAT", "UPSC"],
+    highlights: ["9 sections", "61 diagrams & tables", "30 MCQs · instant score card", "82 last-minute one-liners"],
+    publishedOn: "2026-11-13",
+    pageCount: 56,
+    readerPages: range(1, 45),
+    pageWidth: 1215,
+    pageHeight: 1720,
+    contentsPage: 3,
+    sections: [
+      { title: "Contents", page: 3 },
+      { title: "What UPSC asks in Chemistry", detail: "Weightage by section, format shift", page: 4 },
+      { title: "Chemistry at a glance", detail: "Nine sections and ten numbers on one page", page: 5 },
+      { title: "Matter & its Nature", detail: "Classification, states, separation, colloids", page: 6 },
+      { title: "Atomic Structure", detail: "Models, particles, iso-family, configuration", page: 10 },
+      { title: "The Periodic Table", detail: "Blocks, trends, history, group families", page: 13 },
+      { title: "Bonding, Mole & Solutions", detail: "Ionic/covalent, Lewis acids, mole, concentration", page: 16 },
+      { title: "Chemical Reactions", detail: "Types, energetics, redox, lime cycle", page: 18 },
+      { title: "Acids, Bases & Salts", detail: "pH, natural acids, famous salts, hard water", page: 22 },
+      { title: "Metals, Non-metals & Metallurgy", detail: "Reactivity series, oxides, extraction, alloys", page: 27 },
+      { title: "Carbon & Organic Chemistry", detail: "Allotropes, hydrocarbons, soaps, polymers", page: 32 },
+      { title: "Chemistry in Industry & Everyday Life", detail: "Fuels, cement, glass, paints, fertilisers, gases", page: 36 },
+      { title: "High-potential watch-list", detail: "What could be asked in 2026–27", page: 41 },
+      { title: "Last-minute one-liners", detail: "82 facts for the night before the exam", page: 43 },
+      { title: "MCQ practice", detail: "30 questions — attempt online, get a score card", page: 0 },
+    ],
+    mcqCount: 30,
+    pyqCount: 14,
+    practice: {
+      label: "Practise Chemistry PYQs",
+      href: "/dashboard/practice?paper=gs&subject=Science+%26+Technology&topic=Chemistry&origin=library",
+    },
+    archives: [
+      { label: "CDS Chemistry PYQs", href: "/pyqs/cds/science-technology/chemistry" },
+      { label: "CAPF (AC) Chemistry PYQs", href: "/pyqs/capf/science-technology/chemistry" },
+    ],
+  },
+  {
     slug: "polity-decoded",
     title: "Polity Decoded",
     subject: "Polity",
