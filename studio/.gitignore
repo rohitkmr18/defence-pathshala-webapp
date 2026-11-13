@@ -1,0 +1,34 @@
+# Media, voiceovers, generated models and exports belong to local/approved asset storage.
+/renders/
+/assets/models/*
+!/assets/models/.gitkeep
+/assets/footage/*
+!/assets/footage/.gitkeep
+/assets/audio/*
+!/assets/audio/.gitkeep
+/assets/logo/*
+!/assets/logo/.gitkeep
+*.mp4
+*.mov
+*.webm
+*.wav
+*.mp3
+*.glb
+*.gltf
+*.blend
+*.exr
+*.png
+*.jpg
+*.jpeg
+.env
+.env.*
+node_modules/
+dist/
+.cache/
+# generated working files / derived public assets (rebuilt by scripts)
+/work/
+/public/fonts/
+/public/brand/
+/public/audio/
+/public/models/
+/public/renders/
