@@ -122,6 +122,19 @@ export default function PracticePageClient() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [showAuthGate, setShowAuthGate] = useState(false);
   const [pendingPaperUrl, setPendingPaperUrl] = useState("/dashboard/practice/full-paper");
+  const authGateRef = useRef<HTMLDivElement>(null);
+
+  const revealAuthGate = useCallback(() => {
+    const gate = authGateRef.current;
+    if (!gate) return;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    gate.scrollIntoView({ behavior: reduceMotion ? "instant" : "smooth", block: "center" });
+    gate.focus({ preventScroll: true });
+  }, []);
+
+  useEffect(() => {
+    if (showAuthGate) revealAuthGate();
+  }, [showAuthGate, revealAuthGate]);
 
   useEffect(() => {
     const supabase = createClient();
@@ -233,6 +246,8 @@ export default function PracticePageClient() {
     if (isAuthenticated !== true) {
       setPendingPaperUrl(navigateTo);
       setShowAuthGate(true);
+      // Repeated clicks should still reveal the existing prompt.
+      if (showAuthGate) revealAuthGate();
       return;
     }
     router.push(navigateTo);
@@ -335,7 +350,9 @@ export default function PracticePageClient() {
 
       {/* ── Auth Gate Banner ─────────────────────────────────────────────── */}
       {showAuthGate && (
-        <AuthGateBanner nextUrl={pendingPaperUrl} />
+        <div ref={authGateRef} tabIndex={-1} className="scroll-mt-24 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-blue-500" role="region" aria-label="Full Paper sign-in required">
+          <AuthGateBanner nextUrl={pendingPaperUrl} />
+        </div>
       )}
 
       {/* ═══════════════════════════════════════════════════════════════════════
