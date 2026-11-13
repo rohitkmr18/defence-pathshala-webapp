@@ -69,6 +69,16 @@ BOOKS: dict[str, dict] = {
             "Every question carries a label: <b>PYQ</b> (with exam, year and number) or <b>DP Original</b>. Traps are flagged in orange.",
         ],
     ),
+    "economy-decoded": dict(
+        dot="#22B573",
+        footer_right="For CDS · CAPF (AC) · AFCAT · NDA",
+        study_copy_strip=True,
+        bullets=[
+            "All 280 Economy previous-year questions in the Defence Pathshala bank (CDS 182, CAPF (AC) 98, 2020–2026) were read one by one; this book teaches the fact each one turns on.",
+            "Facts are checked against official sources (Budget, RBI, Economic Survey, Finance Commission) and marked “as of” where they change; a coverage audit and an independent review back the claim.",
+            "Every question carries a label: <b>PYQ</b> (exam, year, number) or <b>DP Original</b>. Traps are flagged in orange.",
+        ],
+    ),
     "chemistry-decoded": dict(
         dot="#06B6D4",
         footer_right="For CDS · CAPF (AC) · AFCAT · NDA",
