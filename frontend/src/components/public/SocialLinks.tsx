@@ -1,7 +1,7 @@
-import { Instagram, MessageCircle, Youtube } from "lucide-react";
+import { Camera, MessageCircle, Play } from "lucide-react";
 import { SOCIAL_CHANNELS } from "@/lib/social-links";
 
-const ICONS = [Instagram, Youtube, MessageCircle] as const;
+const ICONS = [Camera, Play, MessageCircle] as const;
 
 export default function SocialLinks({
   theme = "light",
