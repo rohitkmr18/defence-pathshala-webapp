@@ -4,10 +4,10 @@ import { ArrowRight, BookOpen, Library } from "lucide-react";
 import LibraryShelf from "@/components/library/LibraryShelf";
 import { booksForExam } from "@/lib/library/books";
 import { MONTHLY_CAPSULES, capsulePageSrc } from "@/lib/monthly-capsules";
-import { pageMetadata } from "@/lib/seo-metadata";
+import { SITE_URL, pageMetadata } from "@/lib/seo-metadata";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Free Library: Revision eBooks for CDS, CAPF, NDA, AFCAT",
+  title: "Free Revision eBooks for CDS, CAPF, NDA & AFCAT",
   description:
     "Free subject-wise revision eBooks for CDS, CAPF (AC), NDA and AFCAT — Polity and Biology mapped to UPSC previous-year questions, with practice MCQs and an instant score card. Read online, no sign-in.",
   path: "/library",
@@ -17,8 +17,26 @@ export default function LibraryPage() {
   const books = booksForExam(null);
   const capsules = [...MONTHLY_CAPSULES].sort((a, b) => (a.edition < b.edition ? 1 : -1));
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Defence Pathshala Free Library",
+    url: `${SITE_URL}/library`,
+    isAccessibleForFree: true,
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: books.map((b, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        url: `${SITE_URL}/library/${b.slug}`,
+        name: b.title,
+      })),
+    },
+  };
+
   return (
     <main className="min-h-screen bg-slate-50">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <section className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:py-12">
         <header>
           <p className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.18em] text-blue-600">

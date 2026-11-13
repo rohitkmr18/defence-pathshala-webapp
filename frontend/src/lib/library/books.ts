@@ -107,11 +107,11 @@ export const LIBRARY_BOOKS: LibraryBook[] = [
     edition: "Edition 1 · Nov 2026",
     description:
       "The Constitution, Parliament, courts, federalism and the bodies that run India — revised the way CDS and CAPF (AC) actually ask them, with diagrams, traps and real previous-year questions.",
-    seoTitle: "Polity Decoded: Free Indian Polity Revision eBook for CDS, CAPF, NDA, AFCAT",
+    seoTitle: "Polity Notes for CDS & CAPF: Free Revision eBook",
     seoDescription:
-      "Free Indian Polity revision eBook for CDS, CAPF (AC), NDA and AFCAT: Constitution, Parliament, judiciary, federalism, bodies and amendments, with 30 practice MCQs you can attempt online.",
+      "Polity Decoded: free Polity notes for CDS, CAPF (AC), NDA and AFCAT, built from UPSC PYQs. Constitution, Parliament, courts, amendments, traps and 30 MCQs.",
     exams: ["CDS", "CAPF", "NDA", "AFCAT", "UPSC"],
-    highlights: ["11 sections", "53 diagrams & tables", "30 MCQs · instant score card", "100 last-minute one-liners"],
+    highlights: ["11 sections", "53 diagrams & tables", "30 MCQs · instant score card", "80 last-minute one-liners"],
     publishedOn: "2026-11-12",
     pageCount: 64,
     readerPages: range(1, 51),
@@ -134,7 +134,7 @@ export const LIBRARY_BOOKS: LibraryBook[] = [
       { title: "Amendments & Basic Structure", detail: "Article 368, key amendments, Kesavananda line", page: 43 },
       { title: "Political Theory & Governance", detail: "Concepts, thinkers, public administration, symbols", page: 46 },
       { title: "High-potential watch-list", detail: "What could be asked in 2026–27", page: 49 },
-      { title: "Last-minute one-liners", detail: "100 facts for the night before the exam", page: 50 },
+      { title: "Last-minute one-liners", detail: "80 facts for the night before the exam", page: 50 },
       { title: "MCQ practice", detail: "30 questions — attempt online, get a score card", page: 0 },
     ],
     mcqCount: 30,
@@ -156,9 +156,9 @@ export const LIBRARY_BOOKS: LibraryBook[] = [
     edition: "Edition 1 · Nov 2026",
     description:
       "Every concept UPSC asks from Biology — cell to biotechnology — in exam language, with diagrams, traps and real previous-year questions.",
-    seoTitle: "Biology Decoded: Free Biology Revision eBook for CDS, CAPF, NDA, AFCAT",
+    seoTitle: "Biology Notes for CDS & CAPF: Free Revision eBook",
     seoDescription:
-      "Free Biology (General Science) revision eBook for CDS, CAPF (AC), NDA and AFCAT: cell, physiology, genetics, health and biotechnology, with 20 practice MCQs you can attempt online.",
+      "Biology Decoded: free Biology notes for CDS, CAPF (AC), NDA and AFCAT, built from UPSC PYQs. Cell, physiology, genetics, health, biotech, traps and 20 MCQs.",
     exams: ["CDS", "CAPF", "NDA", "AFCAT", "UPSC"],
     highlights: ["9 sections", "13 diagrams", "20 MCQs · instant score card", "60 last-minute one-liners"],
     publishedOn: "2026-11-12",
@@ -220,3 +220,8 @@ export function booksForExam(exam: LibraryExam | null): LibraryBook[] {
 }
 
 export const LIBRARY_QUIZ_ANCHOR = "practice";
+
+/** The book whose "archives" links include this PYQ archive path, e.g. "/pyqs/cds/polity". */
+export function bookForArchivePath(path: string): LibraryBook | null {
+  return LIBRARY_BOOKS.find((b) => b.archives.some((a) => a.href === path)) ?? null;
+}
