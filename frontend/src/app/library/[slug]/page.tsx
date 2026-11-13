@@ -20,16 +20,24 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const book = getLibraryBook(slug);
   if (!book) return {};
-  return pageMetadata({
+  const isEconomy = book.slug === "economy-decoded";
+  const socialTitle = "Economy Decoded | Free Indian Economy Ebook – Defence Pathshala";
+  const metadata = pageMetadata({
     title: book.seoTitle,
     description: book.seoDescription,
     path: `/library/${book.slug}`,
-    type: "article",
+    type: isEconomy ? "website" : "article",
     image: `${SITE_URL}${libraryOgSrc(book.slug)}`,
-    imageAlt: `${book.title} cover`,
-    imageWidth: 1200,
-    imageHeight: 630,
+    imageAlt: isEconomy ? "Economy Decoded — free Indian Economy ebook by Defence Pathshala for CDS, CAPF AC, AFCAT and NDA" : `${book.title} cover`,
+    imageWidth: isEconomy ? 1536 : 1200,
+    imageHeight: isEconomy ? 864 : 630,
   });
+  if (isEconomy) {
+    metadata.title = { absolute: socialTitle };
+    metadata.openGraph = { ...metadata.openGraph, title: socialTitle };
+    metadata.twitter = { ...metadata.twitter, title: socialTitle };
+  }
+  return metadata;
 }
 
 export default async function LibraryBookPage({ params }: { params: Promise<{ slug: string }> }) {
