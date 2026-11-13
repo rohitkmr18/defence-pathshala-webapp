@@ -89,6 +89,16 @@ BOOKS: dict[str, dict] = {
             "Every question carries a label: <b>PYQ</b> (exam, year, number) or <b>DP Original</b>. Traps are flagged in orange.",
         ],
     ),
+    "physics-decoded": dict(
+        dot="#06B6D4",
+        footer_right="For CDS · CAPF (AC) · AFCAT · NDA",
+        study_copy_strip=True,
+        bullets=[
+            "All 201 Physics previous-year questions in the Defence Pathshala bank (CDS GK 135, CAPF (AC) Paper I 66, 2020–2026) were read one by one; this book teaches the fact each one turns on.",
+            "Facts are checked against NCERT-level standards and official sources, not copied from coaching notes; a coverage audit and an independent review back the claim.",
+            "Every question carries a label: <b>PYQ</b> (exam, year, number) or <b>DP Original</b>. Traps are flagged in orange.",
+        ],
+    ),
 }
 
 AUTHOR_CSS = """
