@@ -11,9 +11,10 @@ import { VOCAB_DECODED_QUIZ } from '../lib/library/quiz-vocab-decoded.ts';
 import { POLITY_DECODED_QUIZ } from '../lib/library/quiz-polity-decoded.ts';
 import { CHEMISTRY_DECODED_QUIZ } from '../lib/library/quiz-chemistry-decoded.ts';
 import { ECONOMY_DECODED_QUIZ } from '../lib/library/quiz-economy-decoded.ts';
+import { PHYSICS_DECODED_QUIZ } from '../lib/library/quiz-physics-decoded.ts';
 
 const publicDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../public');
-const QUIZZES = { 'biology-decoded': BIOLOGY_DECODED_QUIZ, 'polity-decoded': POLITY_DECODED_QUIZ, 'chemistry-decoded': CHEMISTRY_DECODED_QUIZ, 'vocab-decoded': VOCAB_DECODED_QUIZ, 'economy-decoded': ECONOMY_DECODED_QUIZ };
+const QUIZZES = { 'biology-decoded': BIOLOGY_DECODED_QUIZ, 'polity-decoded': POLITY_DECODED_QUIZ, 'chemistry-decoded': CHEMISTRY_DECODED_QUIZ, 'vocab-decoded': VOCAB_DECODED_QUIZ, 'economy-decoded': ECONOMY_DECODED_QUIZ, 'physics-decoded': PHYSICS_DECODED_QUIZ };
 
 test('every reader page image exists and nothing extra is shipped (no PDF, no answer-key pages)', () => {
   for (const b of LIBRARY_BOOKS) {
@@ -122,7 +123,7 @@ test('verdict bands', () => {
 test('lookups and exam filter', () => {
   assert.equal(getLibraryBook('polity-decoded').subject, 'Polity');
   assert.equal(getLibraryBook('nope'), null);
-  assert.equal(booksForExam('AFCAT').length, 5);
+  assert.equal(booksForExam('AFCAT').length, 6);
   assert.equal(booksForExam(null).length, LIBRARY_BOOKS.length);
 });
 
