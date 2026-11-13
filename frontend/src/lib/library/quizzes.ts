@@ -2,6 +2,7 @@ import type { LibraryQuiz } from "./quiz";
 import { BIOLOGY_DECODED_QUIZ } from "./quiz-biology-decoded";
 import { CHEMISTRY_DECODED_QUIZ } from "./quiz-chemistry-decoded";
 import { VOCAB_DECODED_QUIZ } from "./quiz-vocab-decoded";
+import { ECONOMY_DECODED_QUIZ } from "./quiz-economy-decoded";
 import { POLITY_DECODED_QUIZ } from "./quiz-polity-decoded";
 
 export const LIBRARY_QUIZZES: Record<string, LibraryQuiz> = {
@@ -9,6 +10,7 @@ export const LIBRARY_QUIZZES: Record<string, LibraryQuiz> = {
   [POLITY_DECODED_QUIZ.slug]: POLITY_DECODED_QUIZ,
   [CHEMISTRY_DECODED_QUIZ.slug]: CHEMISTRY_DECODED_QUIZ,
   [VOCAB_DECODED_QUIZ.slug]: VOCAB_DECODED_QUIZ,
+  [ECONOMY_DECODED_QUIZ.slug]: ECONOMY_DECODED_QUIZ,
 };
 
 export function getLibraryQuiz(slug: string): LibraryQuiz | null {

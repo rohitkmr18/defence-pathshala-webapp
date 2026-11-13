@@ -14,6 +14,8 @@ export interface ReaderHotspot {
   page: number;
   /** Page to jump to; 0 jumps to `anchorTarget`. */
   target: number;
+  /** Site-relative link (e.g. a PYQ page). When set, `target` is ignored. */
+  href?: string;
   label?: string;
   left: number;
   top: number;
@@ -279,16 +281,28 @@ export default function EbookPageReader({
                 onDragStart={discourageSave}
                 className="pointer-events-none h-full w-full object-contain"
               />
-              {(hotspotsByPage.get(page) ?? []).map((h) => (
-                <button
-                  key={`${h.page}-${h.target}-${h.top}`}
-                  type="button"
-                  onClick={() => goTo(h.target)}
-                  aria-label={h.label ?? (h.target === 0 ? "Go to MCQ practice" : h.target === sections[0]?.page ? "Back to contents" : `Go to page ${h.target}`)}
-                  className="absolute rounded-lg transition hover:bg-blue-400/15 focus-visible:bg-blue-400/20"
-                  style={{ left: `${h.left}%`, top: `${h.top}%`, width: `${h.width}%`, height: `${h.height}%` }}
-                />
-              ))}
+              {(hotspotsByPage.get(page) ?? []).map((h) =>
+                h.href ? (
+                  <a
+                    key={`${h.page}-${h.href}-${h.top}-${h.left}`}
+                    href={h.href}
+                    target="_blank"
+                    rel="noopener"
+                    aria-label={h.label ?? "Open this previous-year question"}
+                    className="absolute rounded-md transition hover:bg-blue-400/20 focus-visible:bg-blue-400/25"
+                    style={{ left: `${h.left}%`, top: `${h.top}%`, width: `${h.width}%`, height: `${h.height}%` }}
+                  />
+                ) : (
+                  <button
+                    key={`${h.page}-${h.target}-${h.top}`}
+                    type="button"
+                    onClick={() => goTo(h.target)}
+                    aria-label={h.label ?? (h.target === 0 ? "Go to MCQ practice" : h.target === sections[0]?.page ? "Back to contents" : `Go to page ${h.target}`)}
+                    className="absolute rounded-lg transition hover:bg-blue-400/15 focus-visible:bg-blue-400/20"
+                    style={{ left: `${h.left}%`, top: `${h.top}%`, width: `${h.width}%`, height: `${h.height}%` }}
+                  />
+                ),
+              )}
             </section>
           );
         })}
