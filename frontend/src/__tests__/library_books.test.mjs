@@ -8,9 +8,10 @@ import { LIBRARY_HOTSPOTS } from '../lib/library/hotspots.ts';
 import { scoreQuiz, validateQuiz, verdictFor, NEGATIVE_MARK } from '../lib/library/quiz.ts';
 import { BIOLOGY_DECODED_QUIZ } from '../lib/library/quiz-biology-decoded.ts';
 import { POLITY_DECODED_QUIZ } from '../lib/library/quiz-polity-decoded.ts';
+import { CHEMISTRY_DECODED_QUIZ } from '../lib/library/quiz-chemistry-decoded.ts';
 
 const publicDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../public');
-const QUIZZES = { 'biology-decoded': BIOLOGY_DECODED_QUIZ, 'polity-decoded': POLITY_DECODED_QUIZ };
+const QUIZZES = { 'biology-decoded': BIOLOGY_DECODED_QUIZ, 'polity-decoded': POLITY_DECODED_QUIZ, 'chemistry-decoded': CHEMISTRY_DECODED_QUIZ };
 
 test('every reader page image exists and nothing extra is shipped (no PDF, no answer-key pages)', () => {
   for (const b of LIBRARY_BOOKS) {
@@ -71,6 +72,7 @@ test('quizzes are valid, match book metadata and revise-links land on reader pag
 test('answer keys are pinned (guards against accidental edits)', () => {
   assert.equal(BIOLOGY_DECODED_QUIZ.questions.map((q) => q.answer).join(''), 'BBCDCCCAAADCDCABCCAC');
   assert.equal(POLITY_DECODED_QUIZ.questions.map((q) => q.answer).join(''), 'CAABBCCDCBCDBCBBCDCCACABBAAABB');
+  assert.equal(CHEMISTRY_DECODED_QUIZ.questions.map((q) => q.answer).join(''), 'ABAACDAABAAABBDDBDCADDDADCAAAA');
 });
 
 test('scoring: all correct, all wrong, partial and empty attempts', () => {
@@ -117,7 +119,7 @@ test('verdict bands', () => {
 test('lookups and exam filter', () => {
   assert.equal(getLibraryBook('polity-decoded').subject, 'Polity');
   assert.equal(getLibraryBook('nope'), null);
-  assert.equal(booksForExam('AFCAT').length, 2);
+  assert.equal(booksForExam('AFCAT').length, 3);
   assert.equal(booksForExam(null).length, LIBRARY_BOOKS.length);
 });
 
