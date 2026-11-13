@@ -20,8 +20,12 @@ WIDTH = 1215
 
 
 def span(text):
-    a, b = (int(x) for x in text.split("-"))
-    return list(range(a, b + 1))
+    """"1-38" or a comma list such as "1-60,69"."""
+    out = []
+    for part in text.split(","):
+        a, _, b = part.partition("-")
+        out += list(range(int(a), int(b or a) + 1))
+    return out
 
 
 def convert(slug, pdf, reader, quiz):
