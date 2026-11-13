@@ -107,9 +107,9 @@ export const LIBRARY_BOOKS: LibraryBook[] = [
     edition: "Edition 1 · Nov 2026",
     description:
       "Growth, money, banking, the Budget, trade, industry, agriculture and schemes — revised the way CDS and CAPF (AC) actually ask them, with diagrams, traps and real previous-year questions.",
-    seoTitle: "Economy Decoded: Free Indian Economy Revision eBook for CDS, CAPF, NDA, AFCAT",
+    seoTitle: "Economy Decoded | Free Indian Economy Ebook",
     seoDescription:
-      "Free Indian Economy revision eBook for CDS, CAPF (AC), NDA and AFCAT: national income, inflation, RBI, banking, Budget, external sector, industry and schemes, with 35 practice MCQs you can attempt online.",
+      "Read Economy Decoded, a free Indian Economy revision ebook for CDS, CAPF AC, AFCAT and NDA aspirants. Learn key concepts with diagrams, MCQs and PYQ-focused revision.",
     exams: ["CDS", "CAPF", "NDA", "AFCAT", "UPSC"],
     highlights: ["10 sections", "67 diagrams & tables", "35 MCQs · instant score card", "55 last-minute one-liners"],
     publishedOn: "2026-11-13", // update on the day it is actually published
@@ -294,7 +294,7 @@ export function libraryPageBase(slug: string): string {
   return `/library/${slug}`;
 }
 
-/** 1200×630 JPEG link-preview card (WhatsApp, Facebook, Slack). Kept outside the book folder. */
+/** JPEG link-preview card (WhatsApp, Facebook, Slack). Kept outside the book folder. */
 export function libraryOgSrc(slug: string): string {
   return `/library/og/${slug}.jpg`;
 }
