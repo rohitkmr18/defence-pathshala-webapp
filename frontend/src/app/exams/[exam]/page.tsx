@@ -24,8 +24,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!coverage) return {};
 
   const canonicalUrl = `https://www.defencepathshala.in/exams/${coverage.slug}`;
-  const title = `${coverage.fullTitle} PYQs & Exam Analysis`;
-  const description = `${coverage.description} Access ${coverage.totalQuestions.toLocaleString()} verified previous year questions across ${coverage.years.length} exam cycles with topic-wise breakdown.`;
+  const title = `${coverage.fullTitle} | Exam Overview & Preparation Resources`;
+  const description = `${coverage.description} Understand the available year and subject coverage, explore the separate PYQ archive, or start focused practice on Defence Pathshala.`;
 
   return {
     title,
@@ -91,7 +91,7 @@ export default async function ExamPublicPage({ params }: PageProps) {
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div className="rounded-xl border border-slate-100 bg-slate-50/80 p-5">
             <span className="text-xs font-medium uppercase tracking-wider text-slate-500">
-              Verified PYQ Pool
+              Available PYQ Inventory
             </span>
             <div className="mt-2 flex items-baseline gap-2">
               <span className="text-3xl font-bold text-slate-900">
@@ -99,7 +99,7 @@ export default async function ExamPublicPage({ params }: PageProps) {
               </span>
               <span className="text-xs text-slate-500">Questions</span>
             </div>
-            <p className="mt-1 text-xs text-slate-500">Exhaustive real exam papers</p>
+            <p className="mt-1 text-xs text-slate-500">Eligible questions in the current archive; not complete paper coverage</p>
           </div>
 
           <div className="rounded-xl border border-slate-100 bg-slate-50/80 p-5">
@@ -112,7 +112,7 @@ export default async function ExamPublicPage({ params }: PageProps) {
               </span>
             </div>
             <p className="mt-1 text-xs text-slate-500">
-              {coverage.years.length} active examination cycles
+              {coverage.years.length} years with available questions
             </p>
           </div>
 
@@ -148,6 +148,20 @@ export default async function ExamPublicPage({ params }: PageProps) {
           </Link>
         </div>
       </div>
+
+      <section aria-labelledby="exam-overview-vs-pyq" className="mb-8 rounded-2xl border border-blue-100 bg-blue-50 p-5 sm:p-7">
+        <h2 id="exam-overview-vs-pyq" className="text-xl font-bold text-slate-900">
+          Exam overview or previous year questions?
+        </h2>
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-700">
+          This page summarises the {coverage.label} preparation resources and currently available question coverage.
+          To browse individual papers, years, subjects and questions, visit the dedicated {" "}
+          <Link href={`/pyqs/${coverage.slug}`} className="font-semibold text-blue-800 underline underline-offset-2">
+            {coverage.label} previous year question (PYQ) archive
+          </Link>.
+          A listed year does not imply that a complete official paper or answer key is available.
+        </p>
+      </section>
 
       {/* Year-by-Year Archive Grid */}
       <section className="mb-10">
@@ -199,7 +213,7 @@ export default async function ExamPublicPage({ params }: PageProps) {
             Subject-Wise Question Distribution
           </h2>
           <p className="text-sm text-slate-500 mt-1">
-            Real questions analyzed across {coverage.label} examination syllabus disciplines.
+            Subjects represented in the currently available {coverage.label} question archive.
           </p>
         </div>
 
@@ -220,7 +234,7 @@ export default async function ExamPublicPage({ params }: PageProps) {
                   </span>
                 </div>
                 <p className="mt-2 text-xs text-slate-500">
-                  Covered across all {coverage.years.length} active test years
+                  Question availability varies by year and subject
                 </p>
               </div>
               <div className="mt-4 flex items-center text-xs font-semibold text-blue-600 group-hover:translate-x-0.5 transition-transform">
@@ -238,7 +252,7 @@ export default async function ExamPublicPage({ params }: PageProps) {
             Ready to test your knowledge on {coverage.label}?
           </h2>
           <p className="mt-2 text-sm text-blue-200 max-w-xl">
-            Take timed mocks or instant-feedback topic drills with official questions, performance analytics, and precision accuracy tracking.
+            Browse the available previous-year questions, choose a topic drill and review your performance. Answer and explanation verification may vary by question.
           </p>
         </div>
         <Link
