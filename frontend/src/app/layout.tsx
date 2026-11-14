@@ -41,10 +41,6 @@ export const metadata: Metadata = {
     "PYQ Analysis",
   ],
 
-  alternates: {
-    canonical: "/",
-  },
-
   openGraph: {
     type: "website",
     url: "https://www.defencepathshala.in",
@@ -134,6 +130,7 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "EducationalOrganization",
+              "@id": "https://www.defencepathshala.in/#organization",
               name: "Defence Pathshala",
               url: "https://www.defencepathshala.in",
               logo: "https://www.defencepathshala.in/logo.png",
@@ -158,6 +155,8 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
+              "@id": "https://www.defencepathshala.in/#website",
+              publisher: { "@id": "https://www.defencepathshala.in/#organization" },
               name: "Defence Pathshala",
               url: "https://www.defencepathshala.in",
             }),

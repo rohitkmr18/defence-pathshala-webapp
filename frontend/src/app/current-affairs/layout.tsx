@@ -14,5 +14,5 @@ export default function CurrentAffairsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <DashboardShell>{children}</DashboardShell>;
+  return <DashboardShell publicContent>{children}</DashboardShell>;
 }

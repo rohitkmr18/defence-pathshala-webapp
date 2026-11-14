@@ -53,3 +53,25 @@ test('reporting supports exact page/query/device and rejects malformed filters',
 test('prototype names are not supported exam routes',()=>{
  const api=setup();for(const value of ['__proto__','constructor','toString','nda'])assert.equal(api.slugToExam(value),null);
 });
+
+test('article identity links to publisher and safely serializes editorial input',()=>{
+ const {articleSchema,serializeJsonLd,ORGANIZATION_ID}=createLoader()('frontend/src/lib/seo-schema.ts');
+ const schema=articleSchema({path:'/current-affairs/2026-11-06',headline:'Test </script><script>alert(1)</script>',citations:['https://example.org/source','https://example.org/source','javascript:alert(1)']});
+ assert.equal(schema.publisher['@id'],ORGANIZATION_ID);
+ assert.equal(schema.mainEntityOfPage,'https://www.defencepathshala.in/current-affairs/2026-11-06');
+ assert.equal(schema.citation.length,1);
+ assert.ok(!serializeJsonLd(schema).includes('</script>'));
+ assert.equal(JSON.parse(serializeJsonLd(schema)).headline,schema.headline);
+ assert.equal(schema.datePublished,undefined); // Edition date is not a verified publication timestamp.
+});
+test('ebook schema uses catalogue facts without inventing personal authorship',()=>{
+ const {bookSchema}=createLoader()('frontend/src/lib/seo-schema.ts');
+ const schema=bookSchema({slug:'economy-decoded',title:'Economy Decoded',description:'Revision',publishedOn:'2026-11-12',pageCount:50});
+ assert.equal(schema['@type'],'Book');assert.equal(schema.numberOfPages,50);
+ assert.equal(schema.url,'https://www.defencepathshala.in/library/economy-decoded');
+ assert.equal(schema.author,undefined);assert.equal(schema.isAccessibleForFree,true);
+});
+test('Current Affairs source failure cannot publish a truncated sitemap',async()=>{
+ const load=createLoader({'@/lib/seo-data':{getAllEligibleSeoRoutes:async()=>[]},'@/lib/current-affairs-sitemap':{getPublishedCurrentAffairsEditions:async()=>{throw Error('CA unavailable')},toLastModified:()=>undefined}});
+ await assert.rejects(load('frontend/src/app/sitemap.ts').default(),/CA unavailable/);
+});

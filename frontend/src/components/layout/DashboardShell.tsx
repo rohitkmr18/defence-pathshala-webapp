@@ -226,6 +226,8 @@ function DashboardShellContent({
   );
 }
 
-export default function DashboardShell({ children }: { children: React.ReactNode }) {
-  return <Suspense><DashboardShellContent>{children}</DashboardShellContent></Suspense>;
+export default function DashboardShell({ children, publicContent = false }: { children: React.ReactNode; publicContent?: boolean }) {
+  // Static public pages must expose their educational content before hydration.
+  // Private dashboard routes keep the existing empty fallback.
+  return <Suspense fallback={publicContent ? children : null}><DashboardShellContent>{children}</DashboardShellContent></Suspense>;
 }

@@ -3,7 +3,9 @@ Allow: /
 Disallow: /api/
 Disallow: /auth/
 Disallow: /onboarding
+Disallow: /dashboard$
 Disallow: /dashboard/
+Disallow: /admin$
 Disallow: /admin/
 Disallow: /afcat/lab
 Disallow: /afcat/visual-preview

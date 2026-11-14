@@ -92,3 +92,41 @@ test("singular PYQ aliases 301 redirect to canonical plural routes", async ({ re
   expect(sitemap).toContain("<loc>https://www.defencepathshala.in/pyqs/cds</loc>");
   expect(sitemap).toContain("<loc>https://www.defencepathshala.in/pyqs/capf</loc>");
 });
+
+test("public identity and internal crawl controls", async ({ request }) => {
+  for (const path of ["/", "/afcat", "/library", "/library/economy-decoded", "/about", "/exams/cds", "/pyqs/cds/history"]) {
+    const response = await request.get(path);
+    expect(response.status(), path).toBe(200);
+    const html = await response.text();
+    expect(html, path).toContain(`rel="canonical" href="https://www.defencepathshala.in${path === "/" ? "" : path}"`);
+    if (path !== "/") expect(html, path).not.toContain('rel="canonical" href="https://www.defencepathshala.in"');
+    expect(html, path).toContain('name="twitter:title"');
+    expect(html.replace(/<script[\s\S]*?<\/script>/g, ""), path).toMatch(/<h1[ >]/);
+  }
+  for (const path of ["/afcat/lab", "/afcat/visual-preview"]) {
+    const html = await (await request.get(path)).text();
+    expect(html, path).toContain('name="robots" content="noindex, nofollow"');
+    expect(html, path).not.toContain('rel="canonical" href="https://www.defencepathshala.in"');
+  }
+  const html = await (await request.get("/library/economy-decoded")).text();
+  expect(html).toContain('"@type":"Book"');
+  expect(html).toContain('https://www.defencepathshala.in/#organization');
+  const robots = await (await request.get("/robots.txt")).text();
+  expect(robots).toContain("Disallow: /dashboard$");
+  expect(robots).toContain("Sitemap: https://www.defencepathshala.in/sitemap.xml");
+});
+
+for (const width of [320, 390, 1440]) {
+  test(`public library and AFCAT journey at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.route(/google-analytics|googletagmanager|posthog/, route => route.abort());
+    for (const path of ["/library", "/library/economy-decoded", "/afcat"]) {
+      await page.goto(path);
+      await expect(page.locator("h1")).toBeVisible();
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), path).toBe(true);
+      await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", `https://www.defencepathshala.in${path}`);
+    }
+    await page.getByRole("link", { name: "Explore AFCAT mocks", exact: true }).click();
+    await expect(page).toHaveURL(/#available-mocks$/);
+  });
+}
