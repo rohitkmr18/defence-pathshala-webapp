@@ -224,6 +224,25 @@ export default async function ExamPyqArchivePage({ params }: PageProps) {
         </div>
       </section>
 
+      <section className="mb-10 rounded-2xl border border-slate-200 bg-white p-5 sm:p-7" aria-labelledby="archive-search-guide">
+        <h2 id="archive-search-guide" className="text-xl font-bold text-slate-900">
+          {coverage.slug === "cds" ? "How to practise CDS PYQ questions topic-wise" : "How to practise CAPF AC Paper I PYQs"}
+        </h2>
+        <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-700">
+          {coverage.slug === "cds"
+            ? "For CDS GK previous year questions, select a year to review paper context or a subject to compare related concepts. English and Elementary Mathematics are available as separate practice options when questions are present in the library."
+            : "For CAPF AC previous year questions, start with the available Paper I year archives, or choose a subject to practise related questions together. This archive does not claim to cover the descriptive Paper II examination."}
+        </p>
+        <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-6 text-slate-700">
+          <li>Choose an available year or subject from the archive above.</li>
+          <li>Try each question before checking the available answer and explanation.</li>
+          <li>Use the practice link to continue with that exam and subject selected; sign in if prompted.</li>
+        </ol>
+        <p className="mt-3 text-sm leading-6 text-slate-600">
+          The counts and filters reflect currently eligible questions, not a guarantee of complete official question-paper coverage.
+        </p>
+      </section>
+
       <section className="mb-10 space-y-4" aria-labelledby="archive-help">
         <h2 id="archive-help" className="text-xl font-bold text-slate-900">How to use these {label} PYQs</h2>
         <p className="max-w-3xl text-sm leading-relaxed text-slate-600">
@@ -243,6 +262,14 @@ export default async function ExamPyqArchivePage({ params }: PageProps) {
         <details className="rounded-xl border border-slate-200 bg-white p-4">
           <summary className="cursor-pointer font-semibold">Are all answers official UPSC answer keys?</summary>
           <p className="mt-2 text-sm text-slate-600">No blanket official-key claim is made. Check the answer, explanation and source information shown with each question; availability and verification status can vary.</p>
+        </details>
+        <details className="rounded-xl border border-slate-200 bg-white p-4">
+          <summary className="cursor-pointer font-semibold">{coverage.slug === "cds" ? "Is CDS PYQ different from CDS PYQs?" : "Is this the CAPF AC Paper I question archive?"}</summary>
+          <p className="mt-2 text-sm text-slate-600">
+            {coverage.slug === "cds"
+              ? "Both terms refer to previous year questions. Browse the same canonical CDS PYQ archive here by year or topic; there is no separate question inventory for the singular spelling."
+              : "Yes. The currently listed year and subject coverage applies to Paper I objective questions. Paper II descriptive content is not represented by these question counts."}
+          </p>
         </details>
         <details className="rounded-xl border border-slate-200 bg-white p-4">
           <summary className="cursor-pointer font-semibold">Can I browse before signing in?</summary>
