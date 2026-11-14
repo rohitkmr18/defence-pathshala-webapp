@@ -115,3 +115,18 @@ test("public identity and internal crawl controls", async ({ request }) => {
   expect(robots).toContain("Disallow: /dashboard$");
   expect(robots).toContain("Sitemap: https://www.defencepathshala.in/sitemap.xml");
 });
+
+for (const width of [320, 390, 1440]) {
+  test(`public library and AFCAT journey at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.route(/google-analytics|googletagmanager|posthog/, route => route.abort());
+    for (const path of ["/library", "/library/economy-decoded", "/afcat"]) {
+      await page.goto(path);
+      await expect(page.locator("h1")).toBeVisible();
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), path).toBe(true);
+      await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", `https://www.defencepathshala.in${path}`);
+    }
+    await page.getByRole("link", { name: "Explore AFCAT mocks", exact: true }).click();
+    await expect(page).toHaveURL(/#available-mocks$/);
+  });
+}
