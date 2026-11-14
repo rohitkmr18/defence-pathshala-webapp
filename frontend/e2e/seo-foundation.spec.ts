@@ -92,3 +92,26 @@ test("singular PYQ aliases 301 redirect to canonical plural routes", async ({ re
   expect(sitemap).toContain("<loc>https://www.defencepathshala.in/pyqs/cds</loc>");
   expect(sitemap).toContain("<loc>https://www.defencepathshala.in/pyqs/capf</loc>");
 });
+
+test("public identity and internal crawl controls", async ({ request }) => {
+  for (const path of ["/", "/afcat", "/library", "/library/economy-decoded", "/about", "/exams/cds", "/pyqs/cds/history"]) {
+    const response = await request.get(path);
+    expect(response.status(), path).toBe(200);
+    const html = await response.text();
+    expect(html, path).toContain(`rel="canonical" href="https://www.defencepathshala.in${path === "/" ? "" : path}"`);
+    if (path !== "/") expect(html, path).not.toContain('rel="canonical" href="https://www.defencepathshala.in"');
+    expect(html, path).toContain('name="twitter:title"');
+    expect(html.replace(/<script[\s\S]*?<\/script>/g, ""), path).toMatch(/<h1[ >]/);
+  }
+  for (const path of ["/afcat/lab", "/afcat/visual-preview"]) {
+    const html = await (await request.get(path)).text();
+    expect(html, path).toContain('name="robots" content="noindex, nofollow"');
+    expect(html, path).not.toContain('rel="canonical" href="https://www.defencepathshala.in"');
+  }
+  const html = await (await request.get("/library/economy-decoded")).text();
+  expect(html).toContain('"@type":"Book"');
+  expect(html).toContain('https://www.defencepathshala.in/#organization');
+  const robots = await (await request.get("/robots.txt")).text();
+  expect(robots).toContain("Disallow: /dashboard$");
+  expect(robots).toContain("Sitemap: https://www.defencepathshala.in/sitemap.xml");
+});

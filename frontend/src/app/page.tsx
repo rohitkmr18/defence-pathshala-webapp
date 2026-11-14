@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import HomeCurrentAffairs, { CurrentAffairsEntries } from "@/components/home/HomeCurrentAffairs";
@@ -11,6 +12,8 @@ import HomeNavMenu from "@/components/home/HomeNavMenu";
 import HomeFreeLibrary from "@/components/home/HomeFreeLibrary";
 import PublicExploreLinks from "@/components/public/PublicExploreLinks";
 import SocialLinks from "@/components/public/SocialLinks";
+
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 export default function HomePage() {
   const capsule = latestMonthlyCapsule();

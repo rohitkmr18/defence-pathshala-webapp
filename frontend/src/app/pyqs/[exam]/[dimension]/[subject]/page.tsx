@@ -68,6 +68,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       alternates: { canonical: canonicalUrl },
       robots: { index: true, follow: true },
+      twitter: { card: "summary_large_image", title, description, images: ["/og-image.png"] },
       openGraph: {
         title,
         description,
@@ -105,6 +106,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       index: true,
       follow: true,
     },
+    twitter: { card: "summary_large_image", title, description, images: ["/og-image.png"] },
     openGraph: {
       title,
       description,

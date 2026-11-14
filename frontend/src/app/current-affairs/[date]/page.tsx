@@ -1,3 +1,4 @@
+import { articleSchema, serializeJsonLd } from "@/lib/seo-schema";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -46,6 +47,10 @@ export default async function CurrentAffairsDayPage({ params }: { params: Promis
 
   return (
     <main className="min-h-screen bg-slate-50">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(articleSchema({
+        path: `/current-affairs/${post.date}`, headline: post.title, description: post.summary,
+        citations: post.stories.flatMap((story) => story.sourceUrl ? [story.sourceUrl] : []),
+      })) }} />
       <article className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:py-12">
         <CurrentAffairsEditionTracker date={post.date} storyCount={post.storyCount} quizCount={questions.length} />
         <Link href="/current-affairs" className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-blue-700">

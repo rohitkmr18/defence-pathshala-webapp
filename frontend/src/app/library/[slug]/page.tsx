@@ -1,3 +1,4 @@
+import { bookSchema, serializeJsonLd } from "@/lib/seo-schema";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -50,7 +51,8 @@ export default async function LibraryBookPage({ params }: { params: Promise<{ sl
 
   return (
     <main className="min-h-screen bg-slate-50">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(bookSchema(book)) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
       <section className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:py-12">
         <Breadcrumbs items={[{ label: "Free Library", href: "/library" }, { label: book.title }]} />
 

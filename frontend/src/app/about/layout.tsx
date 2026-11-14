@@ -14,5 +14,5 @@ export default function AboutLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <DashboardShell>{children}</DashboardShell>;
+  return <DashboardShell publicContent>{children}</DashboardShell>;
 }
