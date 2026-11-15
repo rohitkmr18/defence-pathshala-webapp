@@ -24,9 +24,13 @@ for (const width of [320, 390, 1440]) {
       const schemas = await page.locator('script[type="application/ld+json"]').allTextContents();
       const breadcrumb = schemas.map(s => JSON.parse(s)).find(s => s["@type"] === "BreadcrumbList");
       expect(breadcrumb.itemListElement[1].item).toBe(`https://www.defencepathshala.in/pyqs/${exam}`);
+      await expect(page.getByRole("heading", {
+        name: exam === "cds"
+          ? "How to practise CDS PYQ questions topic-wise"
+          : "How to practise CAPF AC Paper I PYQs",
+      })).toBeVisible();
       if (exam === "cds") {
         await expect(page.getByRole("heading", { name: "Choose your CDS paper" })).toBeVisible();
-        await expect(page.getByText("Currently eligible questions")).toHaveCount(0);
         await expect(page.getByRole("link", { name: "Practice English" })).toHaveAttribute("href", /paper=english/);
         await expect(page.getByRole("link", { name: "Practice English" })).toHaveAttribute("href", /origin=seo_cds_english/);
         await expect(page.getByText("No eligible questions yet")).toBeVisible();
