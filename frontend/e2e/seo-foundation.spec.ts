@@ -172,7 +172,7 @@ for (const width of [320, 390, 1440]) {
     await page.route(/google-analytics|googletagmanager|posthog/, route => route.abort());
     await page.goto("/library/economy-decoded");
     await expect(page.getByRole("heading", { name: "What does Economy Decoded cover?" })).toBeVisible();
-    const chapter = page.locator("#ebook-learning-outline a[href^='#page-']").first();
+    const chapter = page.locator("section[aria-labelledby='ebook-learning-outline'] a[href^='#page-']").first();
     await expect(chapter).toBeVisible();
     const href = await chapter.getAttribute("href");
     expect(href).toMatch(/^#page-\\d+$/);
