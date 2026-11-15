@@ -125,6 +125,22 @@ export default async function CurrentAffairsPage() {
           </div>
         )}
       </section>
+      <section aria-labelledby="ca-study-method" className="mx-auto max-w-6xl px-4 pb-10 sm:px-6">
+        <div className="rounded-3xl border border-slate-200 bg-white p-5 sm:p-8">
+          <h2 id="ca-study-method" className="text-xl font-bold text-slate-950">
+            How to revise daily current affairs for defence exams
+          </h2>
+          <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-600">
+            Start with a dated edition and identify what happened, why the development matters,
+            and which static concepts it connects to. Then attempt the edition&apos;s MCQs.
+            Use the monthly archive to revisit earlier dates instead of relying on a single day&apos;s reading.
+          </p>
+          <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-600">
+            These editions are designed for CDS, CAPF AC, AFCAT and NDA preparation.
+            They are a revision aid, not a substitute for the official examination syllabus or source documents.
+          </p>
+        </div>
+      </section>
       <PublicExploreLinks className="border-t border-slate-200" />
     </main>
   );
