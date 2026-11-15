@@ -5,6 +5,8 @@ import { VOCAB_DECODED_QUIZ } from "./quiz-vocab-decoded";
 import { ECONOMY_DECODED_QUIZ } from "./quiz-economy-decoded";
 import { POLITY_DECODED_QUIZ } from "./quiz-polity-decoded";
 import { PHYSICS_DECODED_QUIZ } from "./quiz-physics-decoded";
+import { ANCIENT_MEDIEVAL_HISTORY_DECODED_QUIZ } from "./quiz-ancient-medieval-history-decoded";
+import { MODERN_HISTORY_DECODED_QUIZ } from "./quiz-modern-history-decoded";
 
 export const LIBRARY_QUIZZES: Record<string, LibraryQuiz> = {
   [BIOLOGY_DECODED_QUIZ.slug]: BIOLOGY_DECODED_QUIZ,
@@ -13,6 +15,8 @@ export const LIBRARY_QUIZZES: Record<string, LibraryQuiz> = {
   [VOCAB_DECODED_QUIZ.slug]: VOCAB_DECODED_QUIZ,
   [ECONOMY_DECODED_QUIZ.slug]: ECONOMY_DECODED_QUIZ,
   [PHYSICS_DECODED_QUIZ.slug]: PHYSICS_DECODED_QUIZ,
+  [ANCIENT_MEDIEVAL_HISTORY_DECODED_QUIZ.slug]: ANCIENT_MEDIEVAL_HISTORY_DECODED_QUIZ,
+  [MODERN_HISTORY_DECODED_QUIZ.slug]: MODERN_HISTORY_DECODED_QUIZ,
 };
 
 export function getLibraryQuiz(slug: string): LibraryQuiz | null {
