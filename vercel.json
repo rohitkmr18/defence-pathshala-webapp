@@ -2,7 +2,8 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "git": {
     "deploymentEnabled": {
-      "feat/auth-onboarding-state-model": false
+      "feat/auth-onboarding-state-model": false,
+      "feature/capf-paper2-b1-foundation": false
     }
   }
 }

@@ -10,6 +10,8 @@ concurrency:
 
 jobs:
   ci:
+    # B1 uses the offline job below, never the legacy build hook or hosted secrets.
+    if: github.ref_name != 'feature/capf-paper2-b1-foundation' && github.head_ref != 'feature/capf-paper2-b1-foundation'
     name: Build & Verify
     runs-on: ubuntu-latest
 
@@ -110,3 +112,46 @@ jobs:
           name: issue-47-browser-evidence
           path: test-results/issue-47
           if-no-files-found: ignore
+
+  capf-b1-local:
+    if: github.ref_name == 'feature/capf-paper2-b1-foundation' || github.head_ref == 'feature/capf-paper2-b1-foundation'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      CDS_ENGLISH_PROD_LOAD: '0'
+      NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:1
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: offline-anon
+      SUPABASE_URL: http://127.0.0.1:1
+      SUPABASE_SERVICE_ROLE_KEY: ''
+      DATABASE_URL: ''
+      CAPF_P2_LOCAL_READS: '0'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci --prefix frontend --ignore-scripts --no-audit --no-fund
+      - run: node scripts/capf-p2/check.mjs test
+      - run: python scripts/capf-p2/test_prepare.py
+      - run: node scripts/capf-p2/check.mjs types
+      - run: node scripts/capf-p2/check.mjs build
+      - run: node scripts/capf-p2/smoke.mjs
+      - run: node --test scripts/test-afcat-engine.cjs scripts/test-afcat-performance-v2.cjs
+      - name: Offline learning-loop and exam-registry regressions
+        run: >-
+          node --experimental-strip-types --test
+          frontend/src/__tests__/practice_resume.test.mjs
+          frontend/src/__tests__/question_learning_loop.test.mjs
+          frontend/src/__tests__/exam_registry.test.mjs
+          frontend/src/__tests__/paper_scope.test.mjs
+          scripts/test-learning-continuity.cjs
+          scripts/test-learner-intelligence.cjs
+          scripts/test-dashboard-mode.cjs
+      - name: Offline corpus-content and dashboard regressions
+        run: >-
+          node --test
+          scripts/test-content-integrity.cjs
+          scripts/test-approved-editorial.cjs
