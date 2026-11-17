@@ -4,7 +4,7 @@ import { getPublishedCurrentAffairsEditions, toLastModified } from "@/lib/curren
 import { summariseMonths } from "@/lib/current-affairs-calendar";
 import { MONTHLY_CAPSULES } from "@/lib/monthly-capsules";
 import { LIBRARY_BOOKS } from "@/lib/library/books";
-import { getPublishedKnowledgeArticles } from "@/lib/knowledge-hub";
+import { getPublishedKnowledgeInventory } from "@/lib/knowledge-hub";
 
 export const dynamic = "force-dynamic";
 
@@ -60,7 +60,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         }));
         return [...monthEntries, ...editionEntries];
       }),
-    getPublishedKnowledgeArticles().then((articles): MetadataRoute.Sitemap =>
+    getPublishedKnowledgeInventory().then((articles): MetadataRoute.Sitemap =>
       articles.map((article) => ({
         url: `${base}/learn/${article.slug}`,
         lastModified: toLastModified(article.updated_at) ?? toLastModified(article.published_at),
