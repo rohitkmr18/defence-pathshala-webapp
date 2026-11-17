@@ -182,3 +182,49 @@ for (const width of [320, 390, 1440]) {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   });
 }
+
+for (const width of [320, 390, 1440]) {
+  test(`Knowledge Hub listing and article at ${width}px: SSR, SEO, accessibility and navigation`, async ({ page, request }, testInfo) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.route(/google-analytics|googletagmanager|posthog/, route => route.abort());
+    const listing = await request.get("/learn");
+    expect(listing.status()).toBe(200);
+    const listingHtml = await listing.text();
+    expect(listingHtml).toContain("Synthetic CDS PYQ Revision Guide");
+    expect(listingHtml).toContain('href="/learn/qa-cds-pyq-guide"');
+    await page.goto("/learn");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Understand the concept. Practise the exam.");
+    await expect(page.getByRole("link", { name: "Synthetic CDS PYQ Revision Guide" })).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.screenshot({ path: testInfo.outputPath(`knowledge-list-${width}.png`), fullPage: true });
+
+    await page.getByRole("link", { name: "Synthetic CDS PYQ Revision Guide" }).click();
+    await expect(page).toHaveURL(/\/learn\/qa-cds-pyq-guide$/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Synthetic CDS PYQ Revision Guide");
+    await expect(page.getByRole("heading", { name: "How to diagnose a CDS PYQ mistake" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Start relevant practice" })).toHaveAttribute("href", "/pyqs/cds");
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://www.defencepathshala.in/learn/qa-cds-pyq-guide");
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    const jsonLd = (await page.locator('script[type="application/ld+json"]').allTextContents()).map(s => JSON.parse(s));
+    expect(jsonLd.some(s => s["@type"] === "Article" && s.headline === "Synthetic CDS PYQ Revision Guide")).toBe(true);
+    expect(jsonLd.some(s => s["@type"] === "BreadcrumbList")).toBe(true);
+    await page.screenshot({ path: testInfo.outputPath(`knowledge-article-${width}.png`), fullPage: true });
+
+    const raw = await request.get("/learn/qa-cds-pyq-guide");
+    expect(raw.status()).toBe(200);
+    expect(await raw.text()).toContain("How to diagnose a CDS PYQ mistake");
+  });
+}
+
+test("Knowledge Hub: published-only sitemap and invalid article routes", async ({ request }) => {
+  const sitemap = await request.get("/sitemap.xml");
+  expect(sitemap.status()).toBe(200);
+  const xml = await sitemap.text();
+  expect(xml).toContain("<loc>https://www.defencepathshala.in/learn</loc>");
+  expect(xml).toContain("<loc>https://www.defencepathshala.in/learn/qa-cds-pyq-guide</loc>");
+  for (const url of ["/learn/this-does-not-exist", "/learn/%3Cscript%3E"]) {
+    const response = await request.get(url);
+    expect(response.status()).toBe(404);
+    expect(await response.text()).toContain("noindex");
+  }
+});
