@@ -76,6 +76,34 @@ export default async function LibraryBookPage({ params }: { params: Promise<{ sl
           </div>
         </header>
 
+        <section aria-labelledby="ebook-learning-outline" className="mt-8 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+          <h2 id="ebook-learning-outline" className="text-xl font-bold text-slate-950">
+            What does {book.title} cover?
+          </h2>
+          <p className="mt-2 text-sm leading-6 text-slate-600">
+            This free {book.subject} revision guide is organised by topic. Open a chapter below to read
+            the corresponding illustrated pages, then use the interactive MCQs to check your understanding.
+            The chapter list describes the published book; it is not a claim about the official exam syllabus.
+          </p>
+          <ol className="mt-5 grid gap-3 sm:grid-cols-2">
+            {book.sections
+              .filter((section) => section.page > 0 && section.title !== "Contents")
+              .map((section) => (
+                <li key={`${section.page}-${section.title}`}>
+                  <a href={`#page-${section.page}`} className="block rounded-xl border border-slate-200 p-3 transition hover:border-blue-300 hover:bg-blue-50">
+                    <span className="text-sm font-semibold text-blue-800">{section.title}</span>
+                    {section.detail && <span className="mt-1 block text-xs leading-5 text-slate-600">{section.detail}</span>}
+                  </a>
+                </li>
+              ))}
+          </ol>
+          <p className="mt-5 text-sm leading-6 text-slate-600">
+            After reading, <a href={`#${LIBRARY_QUIZ_ANCHOR}`} className="font-semibold text-blue-700 underline underline-offset-2">
+              attempt the {book.mcqCount} interactive questions
+            </a>. For past-paper preparation, use the linked CDS and CAPF PYQ archives below.
+          </p>
+        </section>
+
         <div className="mt-8">
           <EbookPageReader
             title={book.title}

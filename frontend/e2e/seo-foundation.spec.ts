@@ -134,3 +134,51 @@ for (const width of [320, 390, 1440]) {
     await expect(page).toHaveURL(/#available-mocks$/);
   });
 }
+
+test("Batch 2: chapter summaries are present in initial HTML for six free ebooks", async ({ request }) => {
+  const books = [
+    "physics-decoded",
+    "chemistry-decoded",
+    "economy-decoded",
+    "polity-decoded",
+    "biology-decoded",
+    "vocab-decoded",
+  ];
+  for (const slug of books) {
+    const path = `/library/${slug}`;
+    const response = await request.get(path);
+    expect(response.status(), path).toBe(200);
+    const html = await response.text();
+    expect(html, path).toContain('id="ebook-learning-outline"');
+    expect(html, path).toContain('href="#page-');
+    expect(html, path).toContain('href="#practice"');
+    expect(html, path).toContain('rel="canonical" href="https://www.defencepathshala.in');
+    expect(html, path).toContain('"@type":"Book"');
+  }
+});
+
+test("Batch 2: current affairs guidance is server-rendered and retains canonical", async ({ request }) => {
+  const response = await request.get("/current-affairs");
+  expect(response.status()).toBe(200);
+  const html = await response.text();
+  expect(html).toContain('id="ca-study-method"');
+  expect(html).toContain("How to revise daily current affairs for defence exams");
+  expect(html).toContain('rel="canonical" href="https://www.defencepathshala.in/current-affairs"');
+});
+
+for (const width of [320, 390, 1440]) {
+  test(`Batch 2: ebook chapter links target actual reader anchors at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.route(/google-analytics|googletagmanager|posthog/, route => route.abort());
+    await page.goto("/library/economy-decoded");
+    await expect(page.getByRole("heading", { name: "What does Economy Decoded cover?" })).toBeVisible();
+    const chapter = page.locator("section[aria-labelledby='ebook-learning-outline'] a[href^='#page-']").first();
+    await expect(chapter).toBeVisible();
+    const href = await chapter.getAttribute("href");
+    expect(href).toMatch(/^#page-\d+$/);
+    await expect(page.locator(href!)).toHaveCount(1);
+    await chapter.click();
+    await expect(page).toHaveURL(new RegExp(`${href}$`));
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  });
+}
