@@ -2,6 +2,8 @@ import Link from "next/link";
 import { pageMetadata } from "@/lib/seo-metadata";
 import { getPublishedKnowledgeArticles } from "@/lib/knowledge-hub";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = pageMetadata({
   title: "Defence Exam Guides, Concepts and PYQ Intelligence",
   description: "Explore reliable CDS, CAPF AC, NDA and AFCAT preparation guides, exam concepts and PYQ analysis from Defence Pathshala.",
