@@ -5,6 +5,8 @@ import { getPublishedKnowledgeArticle, safePracticePath, safeSourceUrl } from "@
 import { pageMetadata, SITE_URL } from "@/lib/seo-metadata";
 import { serializeJsonLd } from "@/lib/seo-schema";
 
+export const dynamic = "force-dynamic";
+
 type Props = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
