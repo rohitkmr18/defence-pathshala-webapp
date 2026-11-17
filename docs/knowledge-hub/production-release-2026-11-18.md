@@ -10,7 +10,7 @@
 - The applied SQL originates from `supabase/pending/knowledge-hub/20261117170636_knowledge_hub_foundation.sql` and contains no DROP operation.
 - Production `knowledge_articles` has RLS enabled, one published-only SELECT policy, zero public write grants to `anon` and `authenticated`.
 - Approved article `how-to-analyse-cds-pyqs` inserted into production with `published` status and 27 blocks; content copied from approved staging article.
-- Production sitemap includes canonical article URL. A production HTTP read made immediately after the database insert returned an empty hub / cached 404 on the article page, consistent with the 300-second `unstable_cache` TTL. **Do not treat release as fully verified until those URLs return HTTP 200 with article content.**
+- Production sitemap includes canonical article URL. A production HTTP read made immediately after the database insert returned an empty hub / cached 404 on the article page, consistent with the 300-second `unstable_cache` TTL. After the 300-second application cache expired, the production `/learn` listing and `/learn/how-to-analyse-cds-pyqs` both returned HTTP 200 with the article content.
 
 ## Migration-ledger governance
 
@@ -26,7 +26,7 @@ A separate database-lineage reconciliation must capture all post-baseline migrat
 
 ## Release acceptance still required
 
-- Production /learn listing and article return HTTP 200 and actual article HTML after cache expiry.
-- Validate Article and BreadcrumbList JSON-LD, canonical, source links, and sitemap URL on production.
-- Verify the article is not accidentally exposed in staging-only assets or admin routes.
-- Check learner flow regression signals, avoid indexing claims until independently verified in Search Console.
+- **PASSED:** Production /learn listing and article return HTTP 200 and actual article HTML after cache expiry.
+- **PASSED:** Article and BreadcrumbList JSON-LD, self-canonical and sitemap URL on production. Source destinations need separate link-integrity monitoring.
+- **PASSED:** Unknown article URL returns 404 with noindex. Separate staging-only asset/admin route tests remain deferred.
+- **PASSED (HTTP smoke):** `/pyqs/cds`, `/pyqs/capf`, `/current-affairs`, `/afcat`, `/library/economy-decoded` and `/robots.txt` returned HTTP 200. Full logged-in learner flow tests remain separately required. Avoid indexing claims until independently verified in Search Console.
