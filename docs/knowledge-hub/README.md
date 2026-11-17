@@ -3,8 +3,8 @@
 This branch implements proposed public /learn and /learn/[slug] pages, a typed read-only article model, safe structured data and article-to-practice links.
 
 ## Release blockers
-1. Convert schema-proposal.sql to a Supabase CLI-generated timestamped migration; run it on **staging only** first. Do not deploy frontend before table exists.
-2. Validate RLS under anon and authenticated tokens: drafts, future-scheduled posts and unpublished rows must be unreadable; users cannot write; service-role may manage editorial records server-side.
+1. Staging database migration `20261117170636_knowledge_hub_foundation` was applied successfully to **pxfstrzceyxnweeaydvz** and its SQL is checked in. Production migration remains blocked pending acceptance. Verify migration parity against the repository migration ledger before deployment.
+2. RLS role-switch testing on staging passed with disposable draft, published and future-dated rows in a rolled-back transaction: anon/authenticated saw only published, neither could write; zero QA records remained. Still required: real HTTP/RPC tests with anon and authenticated credentials against staging before signoff.
 3. Add real reviewed content (the schema has deliberately no fabricated seed articles).
 4. Verify preview public HTML contains H1, text, Article and BreadcrumbList JSON-LD, canonical and social tags at 320/390/desktop widths.
 5. Check /learn sitemap membership and published articles only. Fail closed if inventory query fails; do not publish a truncated sitemap.
