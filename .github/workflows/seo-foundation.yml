@@ -22,6 +22,11 @@ on:
       - 'frontend/src/components/public/PublicNavbar.tsx'
       - 'frontend/e2e/seo-foundation.spec.ts'
       - 'scripts/test-seo-foundation.cjs'
+      - 'scripts/test-knowledge-hub-schema.cjs'
+      - 'frontend/src/app/learn/**'
+      - 'frontend/src/lib/knowledge-hub.ts'
+      - 'supabase/pending/knowledge-hub/**'
+      - 'docs/knowledge-hub/**'
       - '.github/workflows/seo-foundation.yml'
 permissions:
   contents: read
@@ -43,10 +48,10 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci --prefix frontend --ignore-scripts
-      - run: node --test scripts/test-seo-foundation.cjs
+      - run: node --test scripts/test-seo-foundation.cjs scripts/test-knowledge-hub-schema.cjs
       - run: npx --prefix frontend tsc --noEmit --project frontend/tsconfig.json
       - working-directory: frontend
-        run: npx eslint 'src/app/pyqs/[exam]/page.tsx' src/app/sitemap.ts src/components/public/PublicNavbar.tsx src/lib/seo-data.ts src/lib/current-affairs-sitemap.ts src/lib/search-console-options.ts src/lib/google-search-console.ts src/app/api/admin/seo/search-console/route.ts e2e/seo-foundation.spec.ts playwright.seo.config.ts
+        run: npx eslint 'src/app/pyqs/[exam]/page.tsx' src/app/sitemap.ts src/components/public/PublicNavbar.tsx src/lib/seo-data.ts src/lib/current-affairs-sitemap.ts src/lib/search-console-options.ts src/lib/google-search-console.ts src/app/api/admin/seo/search-console/route.ts src/app/learn src/lib/knowledge-hub.ts e2e/seo-foundation.spec.ts playwright.seo.config.ts
       - run: |
           node scripts/test-support/seo-upstream.cjs &
           FIXTURE_PID=$!
