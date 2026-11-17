@@ -33,7 +33,7 @@ test('subject archive cannot publish a partial successful page',async()=>{
   await assert.rejects(setup({rows:Array.from({length:1000},()=>row()),failAt:1}).getSubjectArchive('CDS','History'),/query failed/);
 });
 test('sitemap propagates PYQ failure instead of publishing static-only success',async()=>{
- const load=createLoader({'@/lib/seo-data':{getAllEligibleSeoRoutes:async()=>{throw Error('unavailable')}},'@/lib/current-affairs-sitemap':{getPublishedCurrentAffairsEditions:async()=>[],toLastModified:()=>undefined}});
+ const load=createLoader({'@/lib/seo-data':{getAllEligibleSeoRoutes:async()=>{throw Error('unavailable')}},'@/lib/knowledge-hub':{getPublishedKnowledgeArticles:async()=>[]},'@/lib/current-affairs-sitemap':{getPublishedCurrentAffairsEditions:async()=>[],toLastModified:()=>undefined}});
  await assert.rejects(load('frontend/src/app/sitemap.ts').default(),/unavailable/);
 });
 test('page metadata gives matching canonical and social identity',()=>{
@@ -72,6 +72,17 @@ test('ebook schema uses catalogue facts without inventing personal authorship',(
  assert.equal(schema.author,undefined);assert.equal(schema.isAccessibleForFree,true);
 });
 test('Current Affairs source failure cannot publish a truncated sitemap',async()=>{
- const load=createLoader({'@/lib/seo-data':{getAllEligibleSeoRoutes:async()=>[]},'@/lib/current-affairs-sitemap':{getPublishedCurrentAffairsEditions:async()=>{throw Error('CA unavailable')},toLastModified:()=>undefined}});
+ const load=createLoader({'@/lib/seo-data':{getAllEligibleSeoRoutes:async()=>[]},'@/lib/knowledge-hub':{getPublishedKnowledgeArticles:async()=>[]},'@/lib/current-affairs-sitemap':{getPublishedCurrentAffairsEditions:async()=>{throw Error('CA unavailable')},toLastModified:()=>undefined}});
  await assert.rejects(load('frontend/src/app/sitemap.ts').default(),/CA unavailable/);
+});
+
+test('Knowledge Hub public listing is included in sitemap only with published inventory',async()=>{
+ const load=createLoader({'@/lib/seo-data':{getAllEligibleSeoRoutes:async()=>[]},'@/lib/knowledge-hub':{getPublishedKnowledgeArticles:async()=>[{slug:'cds-strategy',published_at:'2026-11-17T00:00:00Z',updated_at:null}]},'@/lib/current-affairs-sitemap':{getPublishedCurrentAffairsEditions:async()=>[],toLastModified:value=>value?new Date(value):undefined}});
+ const entries=await load('frontend/src/app/sitemap.ts').default();
+ assert.ok(entries.some(row=>row.url==='https://www.defencepathshala.in/learn'));
+ assert.ok(entries.some(row=>row.url==='https://www.defencepathshala.in/learn/cds-strategy'));
+});
+test('Knowledge Hub outage fails sitemap closed',async()=>{
+ const load=createLoader({'@/lib/seo-data':{getAllEligibleSeoRoutes:async()=>[]},'@/lib/knowledge-hub':{getPublishedKnowledgeArticles:async()=>{throw Error('knowledge upstream unavailable')}},'@/lib/current-affairs-sitemap':{getPublishedCurrentAffairsEditions:async()=>[],toLastModified:()=>undefined}});
+ await assert.rejects(load('frontend/src/app/sitemap.ts').default(),/knowledge upstream unavailable/);
 });
