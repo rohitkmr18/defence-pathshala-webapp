@@ -31,6 +31,30 @@ export const getPublishedKnowledgeArticles = unstable_cache(async (): Promise<Kn
   return (data ?? []) as unknown as KnowledgeArticle[];
 }, ["knowledge-hub-published-v1"], { revalidate: 300 });
 
+/** Exhaustive sitemap inventory. Never silently stop after the first hundred articles. */
+export const getPublishedKnowledgeInventory = unstable_cache(async (): Promise<
+  Pick<KnowledgeArticle, "slug" | "published_at" | "updated_at">[]
+> => {
+  const db = client();
+  const pageSize = 500;
+  const rows: Pick<KnowledgeArticle, "slug" | "published_at" | "updated_at">[] = [];
+  let offset = 0;
+  for (;;) {
+    const { data, error } = await db.from("knowledge_articles")
+      .select("slug,published_at,updated_at")
+      .eq("status", "published").not("published_at", "is", null)
+      .lte("published_at", new Date().toISOString())
+      .order("published_at", { ascending: false }).order("slug", { ascending: true })
+      .range(offset, offset + pageSize - 1);
+    if (error) throw new Error("Knowledge Hub sitemap inventory unavailable");
+    const batch = (data ?? []) as Pick<KnowledgeArticle, "slug" | "published_at" | "updated_at">[];
+    rows.push(...batch);
+    if (batch.length < pageSize) break;
+    offset += batch.length;
+  }
+  return rows;
+}, ["knowledge-hub-sitemap-v1"], { revalidate: 300 });
+
 export const getPublishedKnowledgeArticle = unstable_cache(async (slug: string): Promise<KnowledgeArticle | null> => {
   if (!isValidArticleSlug(slug)) return null;
   const { data, error } = await client().from("knowledge_articles").select(columns)
