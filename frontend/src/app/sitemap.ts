@@ -4,6 +4,7 @@ import { getPublishedCurrentAffairsEditions, toLastModified } from "@/lib/curren
 import { summariseMonths } from "@/lib/current-affairs-calendar";
 import { MONTHLY_CAPSULES } from "@/lib/monthly-capsules";
 import { LIBRARY_BOOKS } from "@/lib/library/books";
+import { getPublishedKnowledgeArticles } from "@/lib/knowledge-hub";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +16,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/afcat`, changeFrequency: "weekly", priority: 0.9 },
     { url: `${base}/current-affairs`, changeFrequency: "daily", priority: 0.9 },
     { url: `${base}/about`, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${base}/learn`, changeFrequency: "weekly", priority: 0.7 },
     {
       url: `${base}/library`,
       lastModified: new Date(`${LIBRARY_BOOKS.map((b) => b.publishedOn).sort().at(-1)}T00:00:00Z`),
@@ -35,7 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
-  const [pyqEntries, currentAffairsEntries] = await Promise.all([
+  const [pyqEntries, currentAffairsEntries, knowledgeEntries] = await Promise.all([
     getAllEligibleSeoRoutes()
       .then((routes): MetadataRoute.Sitemap =>
         routes.map((r) => ({ url: `${base}${r.path}`, changeFrequency: "weekly", priority: r.priority }))
@@ -58,7 +60,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         }));
         return [...monthEntries, ...editionEntries];
       }),
+    getPublishedKnowledgeArticles().then((articles): MetadataRoute.Sitemap =>
+      articles.map((article) => ({
+        url: `${base}/learn/${article.slug}`,
+        lastModified: toLastModified(article.updated_at) ?? toLastModified(article.published_at),
+        changeFrequency: "monthly",
+        priority: 0.6,
+      }))
+    ),
   ]);
 
-  return [...staticEntries, ...pyqEntries, ...currentAffairsEntries];
+  return [...staticEntries, ...pyqEntries, ...currentAffairsEntries, ...knowledgeEntries];
 }
