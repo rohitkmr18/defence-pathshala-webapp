@@ -11,14 +11,11 @@ It calls the existing server-only Google Search Console client using the service
 
 ## Authorization
 
-The page requires `supabase.auth.getUser()` to verify the current user's session, **and** one of these trusted authorization sources:
+The page requires `supabase.auth.getUser()` to verify the current user's session **and** the server-controlled `auth.users.raw_app_meta_data.role = admin`.
 
-- `auth.users.raw_app_meta_data.role = admin`; or
-- the authenticated user's own `public.profiles.role = admin`, read through existing RLS.
+**Do not use `public.profiles.role` for this privileged access.** The current production RLS policy permits owners to update their own `profiles` row, including `role`; this is not a trusted authorization source. Likewise, `raw_user_meta_data` and email-only shortcuts are explicitly rejected. Unauthorized callers receive 404 without calling Google. The existing admin API and its protections remain unchanged.
 
-No email-only shortcut or user-editable `raw_user_meta_data` role qualifies. Unauthorized callers receive a 404, without a Google request. Existing admin API endpoint and its protections remain unchanged.
-
-If a legitimate admin cannot view the page, verify their *existing* trusted admin role through normal authorized Supabase administration rather than loosening this guard. Do not change permissions as part of this PR.
+If a legitimate admin cannot view the page, an authorized Supabase Auth administrator must verify/provision the trusted `app_metadata.role` through the established secure admin process. This PR deliberately does not grant or change roles.
 
 ## Available diagnostics
 
