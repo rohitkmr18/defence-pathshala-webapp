@@ -228,3 +228,13 @@ test("Knowledge Hub: published-only sitemap and invalid article routes", async (
     expect(await response.text()).toContain("noindex");
   }
 });
+
+test("GSC server diagnostics reject anonymous requests without contacting Google", async ({ request }) => {
+  for (const action of ["sites", "sitemaps", "inspect", "performance"]) {
+    const response = await request.get(`/admin/seo/search-console?action=${action}`);
+    expect(response.status(), action).toBe(404);
+    const html = await response.text();
+    expect(html).not.toContain("sc-domain:defencepathshala.in");
+    expect(html).not.toContain("Google diagnostic failed");
+  }
+});
