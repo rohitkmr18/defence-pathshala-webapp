@@ -156,7 +156,6 @@ export default function MockPlayer({ sessionId }: { sessionId: string }) {
   const answered = Object.values(answers).filter((a) => a.selected !== null).length;
   const marked = Object.values(answers).filter((a) => a.markedForReview).length;
   const blocked = busy || submitting || saveState.startsWith("Save not confirmed");
-  const subjects = paper ? [...new Set(paper.questions.map((q) => q.subject))] : [];
   const time = `${String(Math.floor(left / 3600)).padStart(2, "0")}:${String(Math.floor((left % 3600) / 60)).padStart(2, "0")}:${String(left % 60).padStart(2, "0")}`;
   const current = question ? answers[question.id] : undefined;
   const m = paper?.session.marking;
@@ -206,24 +205,11 @@ export default function MockPlayer({ sessionId }: { sessionId: string }) {
                 {palette ? "Close palette" : "Question palette"}
               </button>
             </div>
-            <nav aria-label="Subjects" className="mb-4 flex gap-2 overflow-x-auto pb-1">
-              {subjects.map((s) => {
-                const rows = paper.questions.filter((q) => q.subject === s);
-                return (
-                  <button key={s} disabled={blocked} aria-current={question.subject === s ? "true" : undefined}
-                    onClick={() => navigate(paper.questions.findIndex((q) => q.subject === s))}
-                    className={`min-h-11 shrink-0 rounded-xl border px-3 text-left text-xs ${question.subject === s ? "border-blue-600 bg-blue-50 text-blue-900" : "border-slate-200 bg-white"}`}>
-                    <strong className="block">{s}</strong>
-                    <span>{rows.filter((q) => answers[q.id]?.selected).length}/{rows.length}</span>
-                  </button>
-                );
-              })}
-            </nav>
             <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_290px]">
               <div className="min-w-0 space-y-4">
                 <div ref={title} tabIndex={-1} className="outline-none">
                   <div className="mb-3 flex justify-between text-xs font-semibold text-slate-500">
-                    <span>QUESTION {index + 1} / {total} · {question.subject}</span>
+                    <span>QUESTION {index + 1} / {total}</span>
                     <span>{markLabel}</span>
                   </div>
                   <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400">DP practice question</p>
@@ -286,17 +272,6 @@ export default function MockPlayer({ sessionId }: { sessionId: string }) {
             <dialog ref={confirmation} aria-labelledby="submit-title" className="fixed inset-0 m-auto w-[calc(100%-2rem)] max-w-md rounded-2xl p-6 text-slate-900 shadow-xl backdrop:bg-slate-950/60">
               <h2 id="submit-title" className="text-xl font-bold">Submit your test?</h2>
               <p className="mt-3 text-sm text-slate-600">{answered} answered · {total - answered} unanswered · {marked} marked for review.</p>
-              <ul className="mt-3 max-h-48 space-y-1 overflow-y-auto text-sm">
-                {subjects.map((s) => {
-                  const open = paper.questions.filter((q) => q.subject === s && !answers[q.id]?.selected).length;
-                  return (
-                    <li key={s} className="flex justify-between gap-3">
-                      <span>{s}</span>
-                      <span className={open ? "font-semibold text-amber-700" : "text-emerald-700"}>{open ? `${open} unanswered` : "All answered"}</span>
-                    </li>
-                  );
-                })}
-              </ul>
               <p className="mt-3 text-sm">Time left: <strong className="tabular-nums">{time}</strong>. Marked answers are scored normally. You cannot change responses after submission.</p>
               <div className="mt-6 flex gap-3">
                 <button autoFocus className={button} onClick={() => confirmation.current?.close()}>Keep reviewing</button>
