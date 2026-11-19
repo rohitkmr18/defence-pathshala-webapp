@@ -148,13 +148,13 @@ export default async function SearchConsoleDiagnostics({
         </p>
       </header>
       <nav aria-label="Search Console diagnostics" className="flex flex-wrap gap-3 text-sm font-semibold">
-        <Link className="rounded-lg border p-3" href={url("sites")}>1. Verify property</Link>
-        <Link className="rounded-lg border p-3" href={url("sitemaps")}>2. Check sitemaps</Link>
-        <Link className="rounded-lg border p-3" href={url("inspect")}>3. Inspect CDS</Link>
-        <Link className="rounded-lg border p-3" href={url("performance", 28, "page")}>4. Pages — 28 days</Link>
-        <Link className="rounded-lg border p-3" href={url("performance", 28, "query,page")}>5. Queries + pages — 28 days</Link>
-        <Link className="rounded-lg border p-3" href={url("performance", 90, "page")}>6. Pages — 90 days</Link>
-        <Link className="rounded-lg border p-3" href={url("performance", 90, "query,page")}>7. Queries + pages — 90 days</Link>
+        <Link prefetch={false} className="rounded-lg border p-3" href={url("sites")}>1. Verify property</Link>
+        <Link prefetch={false} className="rounded-lg border p-3" href={url("sitemaps")}>2. Check sitemaps</Link>
+        <Link prefetch={false} className="rounded-lg border p-3" href={url("inspect")}>3. Inspect CDS</Link>
+        <Link prefetch={false} className="rounded-lg border p-3" href={url("performance", 28, "page")}>4. Pages — 28 days</Link>
+        <Link prefetch={false} className="rounded-lg border p-3" href={url("performance", 28, "query,page")}>5. Queries + pages — 28 days</Link>
+        <Link prefetch={false} className="rounded-lg border p-3" href={url("performance", 90, "page")}>6. Pages — 90 days</Link>
+        <Link prefetch={false} className="rounded-lg border p-3" href={url("performance", 90, "query,page")}>7. Queries + pages — 90 days</Link>
       </nav>
       {action && (
         <section className="rounded-xl border bg-white p-5" aria-label="Diagnostic result">
@@ -163,7 +163,7 @@ export default async function SearchConsoleDiagnostics({
             ? <p role="alert" className="mt-3 text-red-700">{error}</p>
             : <pre className="mt-4 max-h-[65vh] overflow-auto whitespace-pre-wrap break-words rounded-lg bg-slate-50 p-4 text-xs text-slate-800">{JSON.stringify(output, null, 2)}</pre>}
           {action === "performance" && !error && (
-            <Link className="mt-4 inline-block rounded-lg border p-3 text-sm font-semibold" href={url(action, period, dimensions, startRow + 1000)}>
+            <Link prefetch={false} className="mt-4 inline-block rounded-lg border p-3 text-sm font-semibold" href={url(action, period, dimensions, startRow + 1000)}>
               Next 1000 rows (if available)
             </Link>
           )}
