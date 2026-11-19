@@ -1,0 +1,43 @@
+import { NextRequest, NextResponse } from "next/server";
+import { mockAdmin, mockUser } from "@/lib/mock/server";
+import { isMockUuid, MOCK_PAPER_CDS_GK } from "@/lib/mock/engine";
+
+export const dynamic = "force-dynamic";
+const NO_STORE = { "Cache-Control": "no-store" };
+
+export async function POST(request: NextRequest) {
+  try {
+    const user = await mockUser();
+    if (!user) return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+    let body: unknown;
+    try { body = await request.json(); } catch { body = null; }
+    const testId = body && typeof body === "object" ? (body as Record<string, unknown>).testId : undefined;
+    if (!isMockUuid(testId)) return NextResponse.json({ error: "Invalid test ID" }, { status: 400 });
+    const db = mockAdmin();
+    const { data: test, error: testError } = await db.from("mock_tests")
+      .select("id,status,release_version").eq("id", testId).eq("status", "PUBLISHED")
+      .eq("paper_id", MOCK_PAPER_CDS_GK).maybeSingle();
+    if (testError) throw testError;
+    if (!test) return NextResponse.json({ error: "Test unavailable" }, { status: 404 });
+    // Reuse an in-progress attempt instead of creating a duplicate on refresh.
+    const { data: existing, error: lookupError } = await db.from("mock_sessions")
+      .select("id").eq("user_id", user.id).eq("test_id", test.id).eq("status", "IN_PROGRESS")
+      .order("started_at", { ascending: false }).limit(1);
+    if (lookupError) throw lookupError;
+    if (existing?.length) return NextResponse.json({ sessionId: existing[0].id, resumed: true }, { headers: NO_STORE });
+    const { data: created, error } = await db.from("mock_sessions")
+      .insert({ user_id: user.id, test_id: test.id, test_release_version: test.release_version })
+      .select("id").single();
+    if (error?.code === "23505") {
+      // Concurrent start: the partial unique index picked a winner; return that row.
+      const { data: winner, error: winnerError } = await db.from("mock_sessions")
+        .select("id").eq("user_id", user.id).eq("test_id", test.id).eq("status", "IN_PROGRESS").single();
+      if (winnerError) throw winnerError;
+      return NextResponse.json({ sessionId: winner.id, resumed: true }, { headers: NO_STORE });
+    }
+    if (error) throw error;
+    return NextResponse.json({ sessionId: created.id, resumed: false }, { status: 201, headers: NO_STORE });
+  } catch {
+    return NextResponse.json({ error: "Unable to start mock test" }, { status: 503 });
+  }
+}

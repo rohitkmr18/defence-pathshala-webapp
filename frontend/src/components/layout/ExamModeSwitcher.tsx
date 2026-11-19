@@ -33,6 +33,13 @@ export default function ExamModeSwitcher({ compact = false }: ExamModeSwitcherPr
         </Link>
       </div>
       {!isAfcat && <PaperTabs />}
+      {/* CDS GK full mocks: hidden unless NEXT_PUBLIC_MOCK_CDS_ENABLED is exactly "true" (default off). */}
+      {!isAfcat && process.env.NEXT_PUBLIC_MOCK_CDS_ENABLED === "true" && (
+        <Link href="/mock/cds-gk" aria-current={pathname.startsWith("/mock/cds-gk") ? "page" : undefined}
+          className="block rounded-lg px-2 py-1.5 text-xs font-semibold text-blue-700 hover:bg-white/70">
+          CDS GK Full Mocks
+        </Link>
+      )}
     </nav>
   );
 }
