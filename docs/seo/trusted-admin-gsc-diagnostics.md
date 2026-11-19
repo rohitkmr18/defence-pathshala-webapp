@@ -31,7 +31,7 @@ Everything executes on the server. It is read-only and does not submit a sitemap
 
 1. CI must pass TypeScript, lint, and existing application tests.
 2. Anonymous requests to this page return 404 (SEO browser acceptance).
-3. Preview must be ready. An authorized staging admin should test `sites`; if preview credentials lack production GSC property permission, record this separately, not as a production failure.
+3. Preview must be ready. Production has one trusted Auth admin, but staging currently has none (read-only check). Verify unauthenticated denial in preview. Do not invent a staging admin or alter staging permissions in this PR. An authenticated preview test is blocked until an existing authorized administrator provisions a trusted staging Auth role through the normal process.
 4. After explicit merge authorization, test production as a signed-in admin: `sites`, `sitemaps`, `inspect`, and 28/90-day `page` and `query,page` reporting. Document real Google permission or API errors; do not guess.
 5. Verify private keys/tokens never appear in client HTML, browser console or application logs.
 6. Do not merge until approved. No Google Cloud, Vercel settings, credentials, RLS, database records, or sitemap configuration should be changed for this patch.
