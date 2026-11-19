@@ -67,29 +67,36 @@ export default function MockCatalogue() {
         {!loading && !tests.length && !error && (
           <p role="status" className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-600">No CDS GK mock is published yet.</p>
         )}
-        {tests.map((t) => (
-          <article key={t.id} className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <div>
-              <h2 className="text-xl font-black">{t.title}</h2>
-              <p className="mt-1 text-xs text-slate-500">{t.code}</p>
+        {tests.map((t, i) => (
+          <article key={t.id} className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+            <div className="space-y-5 p-5 sm:p-7">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-800">CDS · General Knowledge</span>
+                <span className="text-xs font-semibold text-slate-500">Mock {String(i + 1).padStart(2, "0")}</span>
+              </div>
+              <div>
+                <h2 className="text-xl font-extrabold leading-snug tracking-tight sm:text-2xl">{t.title}</h2>
+                <p className="mt-1 text-sm text-slate-500">Full-length timed practice · {t.code}</p>
+              </div>
+              <dl className="grid grid-cols-3 gap-2 sm:gap-3">
+                {[[String(t.expected_questions), "Questions"], [String(Math.round(t.duration_seconds / 60)) + " min", "Duration"],
+                  [Number(t.max_marks).toFixed(0), "Marks"]].map(([value, label]) => (
+                  <div key={label} className="min-w-0 rounded-xl bg-slate-50 px-2 py-4 text-center sm:px-4">
+                    <dd className="text-xl font-extrabold tabular-nums text-slate-900 sm:text-2xl">{value}</dd>
+                    <dt className="mt-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">{label}</dt>
+                  </div>
+                ))}
+              </dl>
+              <div className="space-y-2 border-t border-slate-100 pt-4 text-sm text-slate-600">
+                <p>✓ Negative marking applies ({markingLabel(t)})</p>
+                <p>✓ Server-timed attempt with resume support</p>
+                <p>✓ Questions follow the published paper order, not subject groups</p>
+              </div>
+              <button disabled={starting !== null} onClick={() => void start(t)}
+                className="flex min-h-14 w-full items-center justify-center rounded-xl bg-blue-600 px-5 text-base font-bold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-50">
+                {starting === t.id ? "Opening mock…" : "Start / Resume Mock →"}
+              </button>
             </div>
-            <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              {[[String(t.expected_questions), "Questions"], [String(Math.round(t.duration_seconds / 60)), "Minutes"],
-                [Number(t.max_marks).toFixed(2), "Marks"], [markingLabel(t), "Marking"]].map(([v, l]) => (
-                <div key={l} className="rounded-xl border border-slate-200 p-3">
-                  <dd className="text-lg font-black">{v}</dd><dt className="text-[11px] uppercase tracking-wider text-slate-500">{l}</dt>
-                </div>
-              ))}
-            </dl>
-            <ul className="grid grid-cols-1 gap-x-6 text-sm sm:grid-cols-2">
-              {Object.entries(t.blueprint).map(([subject, n]) => (
-                <li key={subject} className="flex justify-between border-b border-slate-100 py-1.5"><span>{subject}</span><span className="text-slate-600">{n}</span></li>
-              ))}
-            </ul>
-            <button disabled={starting !== null} onClick={() => void start(t)}
-              className="flex min-h-14 w-full items-center justify-center rounded-2xl bg-blue-600 px-6 text-base font-bold text-white shadow-lg shadow-blue-900/20 hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-50">
-              {starting === t.id ? "Starting…" : "Start / resume mock"}
-            </button>
           </article>
         ))}
       </div>
