@@ -21,22 +21,17 @@ type Action = "sites" | "sitemaps" | "inspect" | "performance";
 type DimensionChoice = "page" | "query,page";
 type Params = { action?: string; period?: string; dimensions?: string; start_row?: string };
 
-// This deliberately does NOT reuse checkIsAdmin(): its legacy user_metadata/email
-// fallbacks are not appropriate for access to privileged SEO reporting.
+// Do not reuse checkIsAdmin(): it accepts user-editable metadata and profile.role.
+// Require a verified session plus server-controlled Supabase Auth app_metadata.
 async function assertTrustedAdmin() {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.getUser();
   const user = data.user;
   if (error || !user) notFound();
 
-  if (user.app_metadata?.role === "admin") return;
-
-  const { data: profile, error: profileError } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .maybeSingle();
-  if (profileError || profile?.role !== "admin") notFound();
+  // Only server-controlled Auth app_metadata qualifies; profile.role is user-editable
+  // under the current RLS policy and must never authorize privileged diagnostics.
+  if (user.app_metadata?.role !== "admin") notFound();
 }
 
 function errorCategory(error: unknown): string {
