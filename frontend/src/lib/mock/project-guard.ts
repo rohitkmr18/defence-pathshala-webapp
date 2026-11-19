@@ -7,6 +7,7 @@ export const MOCK_PRODUCTION_PROJECT = "afhwegrxnvgsqbqadvwr";
 export function isMockProjectAllowed(
   supabaseUrl: string | undefined,
   productionEnabled: string | undefined,
+  vercelEnvironment?: string,
 ): boolean {
   if (!supabaseUrl) return false;
   let host: string;
@@ -18,5 +19,6 @@ export function isMockProjectAllowed(
     return false;
   }
   if (host === `${MOCK_STAGING_PROJECT}.supabase.co`) return true;
-  return productionEnabled === "true" && host === `${MOCK_PRODUCTION_PROJECT}.supabase.co`;
+  return vercelEnvironment !== "preview" && productionEnabled === "true"
+    && host === `${MOCK_PRODUCTION_PROJECT}.supabase.co`;
 }

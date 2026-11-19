@@ -6,7 +6,7 @@ import { isMockProjectAllowed } from "@/lib/mock/project-guard";
 export function mockAdmin() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!key || !isMockProjectAllowed(url, process.env.MOCK_PRODUCTION_ENABLED)) {
+  if (!key || !isMockProjectAllowed(url, process.env.MOCK_PRODUCTION_ENABLED, process.env.VERCEL_ENV)) {
     throw new Error("Mock environment is not configured");
   }
   return createAdminClient(url as string, key, { auth: { autoRefreshToken: false, persistSession: false } });

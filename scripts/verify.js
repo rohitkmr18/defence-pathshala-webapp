@@ -58,4 +58,13 @@ if (backend.status !== 0) {
   process.exit(backend.status || 1);
 }
 
+const mockChecks = [
+  [pythonCmd, ["-m", "unittest", "discover", "-s", "scripts", "-p", "test_cds_gk_m01_import.py"]],
+  [process.execPath, ["--test", "scripts/test-mock-engine.cjs", "scripts/test-mock-routes.cjs", "scripts/test-mock-seed.cjs"]],
+];
+for (const [command, args] of mockChecks) {
+  const check = spawnSync(command, args, { cwd: rootDir, stdio: "inherit" });
+  if (check.status !== 0) process.exit(check.status || 1);
+}
+
 console.log("\x1b[32m%s\x1b[0m", "[verify] All verifications passed successfully!");

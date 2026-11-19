@@ -90,3 +90,8 @@ test('subject and difficulty breakdown', () => {
   assert.deepEqual([h.total, h.correct, h.incorrect, h.unanswered, h.attempted, h.accuracyPercent], [3, 1, 1, 1, 2, 50]);
   assert.deepEqual(plain(a.difficulties.map((b) => b.key)), ['EASY', 'MODERATE', 'HARD']);
 });
+
+test('preview rejects the production project even with the production flag set', () => {
+  assert.equal(G.isMockProjectAllowed(`https://${G.MOCK_PRODUCTION_PROJECT}.supabase.co`, 'true', 'preview'), false);
+  assert.equal(G.isMockProjectAllowed(`https://${G.MOCK_STAGING_PROJECT}.supabase.co`, 'true', 'preview'), true);
+});
