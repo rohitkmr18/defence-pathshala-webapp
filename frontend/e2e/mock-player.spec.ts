@@ -76,7 +76,7 @@ for (const [width, name] of [[320, "mobile-320"], [390, "mobile-390"], [1280, "d
     await page.goto("/mock/cds-gk");
     await expect(page.getByRole("heading", { name: "CDS GK Demo Mock (dummy questions)" })).toBeVisible();
     await expect(page.getByText("+0.83 / -0.28")).toBeVisible();
-    await expect(page.getByText("100.00", { exact: true })).toBeVisible();
+    await expect(page.getByText("100", { exact: true })).toBeVisible();
     expect(await noOverflow(page)).toBe(true);
     await page.screenshot({ path: `test-results/mock-catalogue-${name}.png`, fullPage: true });
 
