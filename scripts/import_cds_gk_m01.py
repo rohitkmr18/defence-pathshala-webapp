@@ -46,6 +46,10 @@ def require(condition, message):
         raise ValueError(message)
 
 
+def whole_number(value):
+    return type(value) is int or (type(value) is float and value.is_integer())
+
+
 def nonempty(value):
     return isinstance(value, str) and bool(value.strip()) and "\0" not in value
 
@@ -101,9 +105,11 @@ def audit(raw):
     for position, (row, answer_row, blind_row) in enumerate(zip(paper, key, blind), start=1):
         (number, subject, topic, subtopic, pattern, difficulty, stem, *tail) = row
         a, b, c, d, answer, explanation, words, derivation, parent, source, fact, confidence, batch, solve, notes, original = tail
-        require(type(number) is int and number == position, f"Unexpected paper order at Q{position}")
-        require(type(original) is int and 1 <= original <= 120 and original not in previous,
+        require(whole_number(number) and number == position, f"Unexpected paper order at Q{position}")
+        require(whole_number(original) and 1 <= original <= 120 and original not in previous,
                 f"Invalid pre-shuffle number at Q{number}")
+        original = int(original)
+        number = int(number)
         previous.add(original)
         require(all(map(nonempty, (topic, stem, a, b, c, d, explanation, source, batch))),
                 f"Missing or invalid text at Q{number}")
@@ -121,7 +127,7 @@ def audit(raw):
         require(answer_row == (number, answer, subject, difficulty, pattern, batch),
                 f"Answer key tab mismatch at Q{number}")
         require(blind_row[:6] == (number, stem, *options), f"Blind-solve tab mismatch at Q{number}")
-        if blind_row[6] != answer or type(blind_row[7]) is not int or not 1 <= blind_row[7] <= 5:
+        if blind_row[6] != answer or not whole_number(blind_row[7]) or not 1 <= blind_row[7] <= 5:
             review.setdefault("blind_solve_incomplete_or_mismatched", []).append(number)
         parents = [part.strip() for part in parent.split(";")] if parent else []
         minimum = {"ORIGINAL": 0, "VARIANT": 1, "FUSION": 2}.get(derivation)
@@ -181,10 +187,10 @@ def check_approval(summary, approval, questions):
         # The publisher decision alone supplies no blind-solve or verification evidence.
         answers = approval.get("resolved_blind_solve")
         require(isinstance(answers, list) and len(answers) == len(questions)
-                and all(isinstance(entry, dict) and type(entry.get("position")) is int
+                and all(isinstance(entry, dict) and whole_number(entry.get("position"))
                         and entry["position"] == position
                         and entry.get("answer") == question["correct_option"]
-                        and type(entry.get("confidence")) is int
+                        and whole_number(entry.get("confidence"))
                         and 1 <= entry["confidence"] <= 5
                         for position, (entry, question) in enumerate(zip(answers, questions), 1)),
                 "Independent blind-solve evidence must reconcile all 120 numbered keys")
