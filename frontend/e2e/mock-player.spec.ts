@@ -80,7 +80,11 @@ for (const [width, name] of [[320, "mobile-320"], [390, "mobile-390"], [1280, "d
     expect(await noOverflow(page)).toBe(true);
     await page.screenshot({ path: `test-results/mock-catalogue-${name}.png`, fullPage: true });
 
-    await page.getByRole("button", { name: "Start / resume mock" }).click();
+    await page.getByRole("button", { name: "Start mock" }).click();
+    await expect(page.getByRole("dialog")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Begin test" })).toBeDisabled();
+    await page.getByRole("checkbox").check();
+    await page.getByRole("button", { name: "Begin test" }).click();
     await expect(page).toHaveURL(/\/mock\/cds-gk\/22222222/);
     await expect(page.getByText("QUESTION 1 / 120")).toBeVisible();
     await expect(page.getByText("DP practice question").first()).toBeVisible();
@@ -134,15 +138,20 @@ for (const [width, name] of [[320, "mobile-320"], [390, "mobile-390"], [1280, "d
   });
 }
 
-test("failed save blocks navigation and never claims saved", async ({ page }) => {
+test("failed save keeps the answer on screen, retries in the background and never claims saved", async ({ page }) => {
   await mockApi(page, { patchFails: true });
   await page.goto("/mock/cds-gk");
-  await page.getByRole("button", { name: "Start / resume mock" }).click();
+  await page.getByRole("button", { name: "Start mock" }).click();
+  await page.getByRole("checkbox").check();
+  await page.getByRole("button", { name: "Begin test" }).click();
   await page.getByRole("radio").first().click();
-  await expect(page.getByText("Save not confirmed — reload to recover")).toBeVisible();
-  await expect(page.getByRole("radio").first()).not.toBeChecked();
-  await expect(page.getByRole("button", { name: "Save & Next" })).toBeDisabled();
+  await expect(page.getByRole("radio").first()).toBeChecked();            // optimistic, no freeze
+  await expect(page.getByText(/retrying \(1 unsaved\)/)).toBeVisible();
   await expect(page.getByText("All responses saved")).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Reload saved attempt" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Save & Next" })).toBeEnabled(); // navigation still works
+  await page.getByRole("button", { name: "Save & Next" }).click();
+  await expect(page.getByText("QUESTION 2 / 120")).toBeVisible();
 });
 
 test("signed-out learner is told to sign in", async ({ page }) => {

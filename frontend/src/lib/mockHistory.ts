@@ -20,6 +20,8 @@ export interface CompletedMockRecord {
   durationSeconds: number;
   weakTopics: string[];
   recoverableMarks?: number;
+  /** Stable source identifier (e.g. a DP mock session ID); a record with the same sourceId is saved once. */
+  sourceId?: string;
 }
 
 const STORAGE_KEY = "upsc_mock_history_v1";
@@ -42,6 +44,7 @@ export function saveCompletedMock(
   if (typeof window !== "undefined") {
     try {
       const existing = getMockHistory();
+      if (attempt.sourceId && existing.some((r) => r.sourceId === attempt.sourceId)) return record;
       const updated = [record, ...existing].slice(0, 50); // Keep last 50 attempts
       localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
       window.dispatchEvent(new CustomEvent(MOCK_SAVED_EVENT, { detail: record }));

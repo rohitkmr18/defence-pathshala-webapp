@@ -5,6 +5,7 @@ import Link from "next/link";
 import MockQuestion from "@/components/mock/MockQuestion";
 import MockResult, { type MockResultReport } from "@/components/mock/MockResult";
 import { trackMockFunnel } from "@/lib/mock/funnel";
+import { backupUnsaved, MockSaveError, MockSaveQueue, readUnsaved, type MockSavePayload, type MockSaveState } from "@/lib/mock/save-queue";
 import type { MockLearnerQuestion } from "@/lib/mock/serialize";
 
 type Key = "A" | "B" | "C" | "D";
@@ -16,15 +17,22 @@ type Paper = {
     marking: { correctPoints: number; wrongPoints: number; pointsDivisor: number; maxMarks: number };
   };
   questions: MockLearnerQuestion[];
-  responses: { question_id: string; selected_option: Key | null; marked_for_review: boolean }[];
+  responses: { question_id: string; selected_option: Key | null; marked_for_review: boolean; time_spent_seconds?: number }[];
 };
 
-async function api(url: string, init?: RequestInit) {
-  const response = await fetch(url, { ...init, cache: "no-store", signal: AbortSignal.timeout(20000) });
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.error || "Request failed");
+async function api(url: string, init?: RequestInit, timeoutMs = 20000) {
+  let response: Response;
+  try {
+    response = await fetch(url, { ...init, cache: "no-store", signal: AbortSignal.timeout(timeoutMs) });
+  } catch {
+    throw new MockSaveError("Network unavailable");
+  }
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new MockSaveError(data.error || "Request failed", response.status);
   return data;
 }
+// Background clock resync at most this often (each sync refetches the paper).
+const SYNC_INTERVAL_MS = 60_000;
 const button =
   "min-h-11 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold hover:border-blue-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-40 disabled:cursor-not-allowed";
 
@@ -36,13 +44,16 @@ export default function MockPlayer({ sessionId }: { sessionId: string }) {
   const [visited, setVisited] = useState<number[]>([0]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [busy, setBusy] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [online, setOnline] = useState(true);
   const [palette, setPalette] = useState(false);
   const [left, setLeft] = useState(0);
-  const [saveState, setSaveState] = useState("All responses saved");
-  const lock = useRef(false), autoSubmitted = useRef(false);
+  const [saveInfo, setSaveInfo] = useState<MockSaveState>({ pending: 0, saving: false, failures: 0, fatal: null });
+  const lock = useRef(false), autoSubmitted = useRef(false), lastSync = useRef(0);
+  const queue = useRef<MockSaveQueue | null>(null);
+  // Cumulative seconds per question (analysis only, never scored) and when the current view started.
+  const timeSpent = useRef<Record<string, number>>({});
+  const viewStart = useRef<number | null>(null);
   // Server-based clock: remaining time at fetch + local monotonic elapsed, resynced on focus.
   const clock = useRef({ remaining: 0, at: 0 });
   const confirmation = useRef<HTMLDialogElement>(null), title = useRef<HTMLDivElement>(null);
@@ -56,8 +67,18 @@ export default function MockPlayer({ sessionId }: { sessionId: string }) {
     const data: Paper = await api(`/api/mock/sessions/${sessionId}`);
     applyClock(data);
     setPaper(data);
-    setAnswers(Object.fromEntries(data.responses.map((r) => [r.question_id, { selected: r.selected_option, markedForReview: r.marked_for_review }])));
-    firstAnswerSent.current = data.responses.some((r) => r.selected_option);
+    const restored: Record<string, Answer> = Object.fromEntries(data.responses.map((r) => [r.question_id, { selected: r.selected_option, markedForReview: r.marked_for_review }]));
+    timeSpent.current = Object.fromEntries(data.responses.map((r) => [r.question_id, r.time_spent_seconds ?? 0]));
+    // Answers given before a reload that never reached the server are restored and re-sent.
+    const unsaved = data.session.status === "IN_PROGRESS" ? readUnsaved(sessionId, new Set(data.questions.map((q) => q.id))) : [];
+    for (const p of unsaved) {
+      restored[p.questionId] = { selected: p.selected, markedForReview: p.markedForReview };
+      if (p.timeSpentSeconds !== undefined) timeSpent.current[p.questionId] = Math.max(timeSpent.current[p.questionId] ?? 0, p.timeSpentSeconds);
+      queue.current?.enqueue(p);
+    }
+    if (data.session.status !== "IN_PROGRESS") backupUnsaved(sessionId, []);
+    setAnswers(restored);
+    firstAnswerSent.current = Object.values(restored).some((a) => a.selected);
     let position = 0, seen = [0];
     try {
       const saved = JSON.parse(sessionStorage.getItem(`mock-view:${sessionId}`) || "null");
@@ -66,12 +87,26 @@ export default function MockPlayer({ sessionId }: { sessionId: string }) {
     } catch { /* Navigation memory is optional. */ }
     setIndex(position);
     setVisited([...new Set([...seen, position])]);
+    viewStart.current = performance.now();
+    lastSync.current = Date.now();
     if (data.session.status !== "IN_PROGRESS") setReport(await api(`/api/mock/sessions/${sessionId}/result`));
   }, [sessionId]);
 
   useEffect(() => {
+    queue.current = new MockSaveQueue({
+      send: async (payload) => {
+        await api(`/api/mock/sessions/${sessionId}/responses`, {
+          method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload),
+        }, 15000);
+      },
+      isOnline: () => navigator.onLine,
+      onChange: (state) => {
+        setSaveInfo(state);
+        backupUnsaved(sessionId, queue.current?.snapshot() ?? []);
+      },
+    });
     Promise.resolve().then(load).catch((e) => setError(e.message)).finally(() => setLoading(false));
-    const update = () => setOnline(navigator.onLine);
+    const update = () => { setOnline(navigator.onLine); if (navigator.onLine) queue.current?.kick(); };
     update();
     window.addEventListener("online", update);
     window.addEventListener("offline", update);
@@ -87,11 +122,16 @@ export default function MockPlayer({ sessionId }: { sessionId: string }) {
     if (!paper || lock.current) return;
     lock.current = true; setSubmitting(true); confirmation.current?.close();
     try {
+      commitTime();
+      // Every answer must reach the server before the attempt is scored.
+      const saved = await (queue.current?.flush(20000) ?? Promise.resolve(true));
+      if (!saved) throw new Error("Some answers are not saved yet. Check your connection and submit again");
       await api(`/api/mock/sessions/${sessionId}/submit`, { method: "POST" });
       const completed: MockResultReport = await api(`/api/mock/sessions/${sessionId}/result`);
       setReport(completed);
       trackMockFunnel("mock_submit", { status: completed.status, test_code: paper.session.code }, `submit:${sessionId}`);
       setPaper((old) => (old ? { ...old, session: { ...old.session, status: completed.status } } : old));
+      backupUnsaved(sessionId, []);
       setError("");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Submission failed. Retry safely.");
@@ -99,16 +139,19 @@ export default function MockPlayer({ sessionId }: { sessionId: string }) {
   }, [paper, sessionId]);
   // Auto-submit once the server deadline passes (needs a connection; the database also rejects late writes).
   useEffect(() => {
-    if (paper?.session.status === "IN_PROGRESS" && left === 0 && online && !busy && !loading && !autoSubmitted.current) {
+    if (paper?.session.status === "IN_PROGRESS" && left === 0 && online && !loading && !autoSubmitted.current) {
       autoSubmitted.current = true; void submit();
     }
-  }, [paper, left, online, busy, loading, submit]);
+  }, [paper, left, online, loading, submit]);
   // Resync the clock whenever the tab regains focus or connectivity (laptop sleep, background throttling).
   useEffect(() => {
     if (!paper || paper.session.status !== "IN_PROGRESS") return;
     let alive = true;
     const sync = async () => {
-      if (document.visibilityState !== "visible" || lock.current) return;
+      if (document.visibilityState !== "visible") { commitTime(); viewStart.current = null; return; }
+      if (viewStart.current === null) viewStart.current = performance.now();
+      if (lock.current || Date.now() - lastSync.current < SYNC_INTERVAL_MS) return;
+      lastSync.current = Date.now();
       try {
         const fresh: Paper = await api(`/api/mock/sessions/${sessionId}`);
         if (!alive || lock.current) return;
@@ -116,7 +159,7 @@ export default function MockPlayer({ sessionId }: { sessionId: string }) {
         if (fresh.session.status !== "IN_PROGRESS") await load();
       } catch { /* The next save still verifies auth and database time. */ }
     };
-    const guard = (event: BeforeUnloadEvent) => { if (lock.current) { event.preventDefault(); event.returnValue = ""; } };
+    const guard = (event: BeforeUnloadEvent) => { if (lock.current || (queue.current?.snapshot().length ?? 0) > 0) { event.preventDefault(); event.returnValue = ""; } };
     window.addEventListener("focus", sync); window.addEventListener("online", sync);
     document.addEventListener("visibilitychange", sync); window.addEventListener("beforeunload", guard);
     return () => {
@@ -126,36 +169,60 @@ export default function MockPlayer({ sessionId }: { sessionId: string }) {
     };
   }, [paper, sessionId, load]);
 
+  // A rejected save (signed out, time over, session closed) cannot succeed on retry.
+  useEffect(() => {
+    if (!saveInfo.fatal) return;
+    if (/sign in/i.test(saveInfo.fatal)) setError("Sign in required to keep saving your answers");
+    else if (/expired|closed/i.test(saveInfo.fatal)) void load().catch(() => {});
+    else setError(`${saveInfo.fatal}. Reload the saved attempt; answers not yet saved are kept on this device`);
+  }, [saveInfo.fatal, load]);
+
   const question = paper?.questions[index];
-  const active = paper?.session.status === "IN_PROGRESS" && left > 0 && online;
-  async function save(id: string, answer: Answer) {
-    if (!paper || !active || lock.current) return;
-    lock.current = true; setBusy(true); setSaveState("Saving response…"); setError("");
-    try {
-      await api(`/api/mock/sessions/${sessionId}/responses`, {
-        method: "PATCH", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ questionId: id, ...answer }),
-      });
-      setAnswers((old) => ({ ...old, [id]: answer }));
-      setSaveState("All responses saved");
-      if (answer.selected && !firstAnswerSent.current) {
-        firstAnswerSent.current = true;
-        trackMockFunnel("mock_answer_first", { test_code: paper.session.code }, `first:${sessionId}`);
-      }
-    } catch (e) {
-      setSaveState("Save not confirmed — reload to recover");
-      setError(`${e instanceof Error ? e.message : "Save failed"}. Reload the saved attempt before continuing; a timed-out request may have reached the server.`);
-    } finally { lock.current = false; setBusy(false); }
+  // Answers can be changed while offline; they sync on reconnect. The database still rejects late writes.
+  const active = paper?.session.status === "IN_PROGRESS" && left > 0;
+  /** Adds time on the current question to its running total. */
+  function commitTime() {
+    const id = paper?.questions[index]?.id;
+    if (!id || viewStart.current === null) return 0;
+    const now = performance.now();
+    const delta = (now - viewStart.current) / 1000;
+    viewStart.current = now;
+    timeSpent.current[id] = (timeSpent.current[id] ?? 0) + delta;
+    return delta;
+  }
+  function payloadFor(id: string, answer: Answer): MockSavePayload {
+    return { questionId: id, ...answer, timeSpentSeconds: Math.floor(timeSpent.current[id] ?? 0) };
+  }
+  // Optimistic: the screen updates at once and the queue saves in the background.
+  function save(id: string, answer: Answer) {
+    if (!paper || !active || saveInfo.fatal) return;
+    commitTime();
+    setAnswers((old) => ({ ...old, [id]: answer }));
+    queue.current?.enqueue(payloadFor(id, answer));
+    if (answer.selected && !firstAnswerSent.current) {
+      firstAnswerSent.current = true;
+      trackMockFunnel("mock_answer_first", { test_code: paper.session.code }, `first:${sessionId}`);
+    }
   }
   function navigate(next: number) {
     if (lock.current || !paper || next < 0 || next >= paper.questions.length) return;
+    // Record time on the question being left; save it only when it is worth a write.
+    const leaving = paper.questions[index];
+    if (leaving && commitTime() >= 3 && active) {
+      queue.current?.enqueue(payloadFor(leaving.id, answers[leaving.id] ?? { selected: null, markedForReview: false }));
+    }
+    viewStart.current = performance.now();
     setIndex(next); setVisited((old) => [...new Set([...old, next])]); setPalette(false);
     title.current?.focus(); window.scrollTo({ top: 0, behavior: "instant" });
   }
   const total = paper?.questions.length ?? 0;
   const answered = Object.values(answers).filter((a) => a.selected !== null).length;
   const marked = Object.values(answers).filter((a) => a.markedForReview).length;
-  const blocked = busy || submitting || saveState.startsWith("Save not confirmed");
+  const blocked = submitting || Boolean(saveInfo.fatal);
+  const saveLabel = saveInfo.fatal ? "Saving stopped — reload to recover"
+    : !online && saveInfo.pending ? `Offline — ${saveInfo.pending} answer${saveInfo.pending > 1 ? "s" : ""} will sync when you reconnect`
+    : saveInfo.failures > 0 ? `Connection slow — retrying (${saveInfo.pending} unsaved)`
+    : saveInfo.pending ? "Saving…" : "All responses saved";
   const time = `${String(Math.floor(left / 3600)).padStart(2, "0")}:${String(Math.floor((left % 3600) / 60)).padStart(2, "0")}:${String(left % 60).padStart(2, "0")}`;
   const current = question ? answers[question.id] : undefined;
   const m = paper?.session.marking;
@@ -169,6 +236,13 @@ export default function MockPlayer({ sessionId }: { sessionId: string }) {
             <p className="text-[10px] font-bold uppercase tracking-[.18em] text-blue-300">Defence Pathshala · CDS</p>
             <h1 className="truncate text-base font-bold sm:text-xl">{paper?.session.title ?? "CDS GK Mock"}</h1>
           </div>
+          {paper && !report && (
+            <span aria-hidden="true" title={saveLabel}
+              className={`ml-auto hidden items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold sm:inline-flex ${saveInfo.fatal || saveInfo.failures ? "bg-amber-400/15 text-amber-200" : saveInfo.pending ? "bg-white/10 text-blue-100" : "bg-emerald-400/15 text-emerald-200"}`}>
+              <i className={`h-1.5 w-1.5 rounded-full ${saveInfo.fatal || saveInfo.failures ? "bg-amber-300" : saveInfo.pending ? "animate-pulse bg-blue-200" : "bg-emerald-300"}`} />
+              {saveInfo.fatal || saveInfo.failures ? "Retrying" : saveInfo.pending ? "Saving" : "Saved"}
+            </span>
+          )}
           {paper && (
             <div className={`shrink-0 rounded-xl border px-3 py-2 ${left <= 300 && !report ? "border-amber-400 text-amber-200" : "border-white/15 bg-white/5"}`}>
               <p className="text-[10px] uppercase tracking-wider">{report ? "Test complete" : "Time remaining"}</p>
@@ -178,7 +252,13 @@ export default function MockPlayer({ sessionId }: { sessionId: string }) {
         </div>
       </header>
       <div className="mx-auto max-w-7xl px-4 py-5 pb-32 sm:px-6">
-        {!online && <div role="alert" className="mb-4 rounded-xl bg-amber-50 p-4">You are offline. Responses are paused; the timer continues. Reconnect to continue.</div>}
+        {!online && <div role="alert" className="mb-4 rounded-xl bg-amber-50 p-4">You are offline. Keep answering — responses are kept on this device and sync when you reconnect. The timer continues.</div>}
+        {online && saveInfo.failures >= 3 && !saveInfo.fatal && (
+          <div role="status" className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm">
+            <span>Your connection is slow. {saveInfo.pending} answer{saveInfo.pending === 1 ? " is" : "s are"} kept on this device and retrying automatically.</span>
+            <button className={button} onClick={() => queue.current?.kick()}>Retry now</button>
+          </div>
+        )}
         {error && (
           <div role="alert" className="mb-4 space-y-2 rounded-xl border border-amber-300 bg-amber-50 p-4">
             <p>{error}</p>
@@ -191,7 +271,7 @@ export default function MockPlayer({ sessionId }: { sessionId: string }) {
         )}
         {loading && <p role="status" className="py-8 text-slate-600">Loading your examination…</p>}
         {paper && report ? (
-          <MockResult report={report} />
+          <MockResult report={report} sessionId={sessionId} />
         ) : paper && question ? (
           <>
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
@@ -212,7 +292,10 @@ export default function MockPlayer({ sessionId }: { sessionId: string }) {
                     <span>QUESTION {index + 1} / {total}</span>
                     <span>{markLabel}</span>
                   </div>
-                  <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400">DP practice question</p>
+                  <p className="mb-2 flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                    <span className="rounded-full bg-blue-50 px-2 py-0.5 text-blue-700">{question.subject}</span>
+                    <span>DP practice question</span>
+                  </p>
                   <MockQuestion key={question.id} question={question} selected={current?.selected ?? null} disabled={!active || blocked}
                     onSelect={(selected) => void save(question.id, { selected, markedForReview: current?.markedForReview ?? false })} />
                 </div>
@@ -259,7 +342,7 @@ export default function MockPlayer({ sessionId }: { sessionId: string }) {
             <footer className="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white px-3 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-sm sm:px-4 sm:py-3">
               <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2">
                 <p role="status" className="w-full text-center text-xs text-slate-500 sm:w-auto sm:text-left">
-                  {submitting ? "Submitting securely…" : left === 0 ? "Time expired. Submit to retrieve your result." : saveState}
+                  {submitting ? "Submitting securely…" : left === 0 ? "Time expired. Submit to retrieve your result." : saveLabel}
                 </p>
                 <button className={button} disabled={index === 0 || blocked} onClick={() => navigate(index - 1)}>Previous</button>
                 <div className="flex min-w-0 flex-1 justify-end gap-2 sm:flex-none">

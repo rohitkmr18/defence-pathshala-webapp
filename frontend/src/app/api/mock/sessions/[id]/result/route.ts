@@ -15,7 +15,7 @@ export async function GET(_req: NextRequest, context: Context) {
     if (!isMockUuid(id)) return NextResponse.json({ error: "Invalid session" }, { status: 400 });
     const db = mockAdmin();
     const { data: s, error: se } = await db.from("mock_sessions")
-      .select("id,user_id,test_id,status").eq("id", id).eq("user_id", user.id).maybeSingle();
+      .select("id,user_id,test_id,status,started_at").eq("id", id).eq("user_id", user.id).maybeSingle();
     if (se) throw se;
     if (!s) return NextResponse.json({ error: "Not found" }, { status: 404 });
     // Answer keys and explanations are released only after authoritative submission or expiry.
@@ -27,7 +27,7 @@ export async function GET(_req: NextRequest, context: Context) {
     if (re) throw re;
     if (!result) return NextResponse.json({ error: "Result not ready" }, { status: 409 });
     const { data: test, error: te } = await db.from("mock_tests")
-      .select("title,correct_points,wrong_points,points_divisor,blueprint").eq("id", s.test_id).single();
+      .select("code,title,correct_points,wrong_points,points_divisor,blueprint").eq("id", s.test_id).single();
     if (te) throw te;
     const { data: items, error: ie } = await db.from("mock_test_items")
       .select("question_id,position").eq("test_id", s.test_id).order("position");
@@ -71,7 +71,7 @@ export async function GET(_req: NextRequest, context: Context) {
     );
     const attempted = result.correct_count + result.incorrect_count;
     return NextResponse.json({
-      status: s.status, title: test.title,
+      status: s.status, code: test.code, title: test.title, startedAt: s.started_at, completedAt: result.completed_at,
       summary: {
         ...result, score: Number(result.score), max_marks: Number(result.max_marks), attempted,
         accuracyPercent: attempted ? Math.round((result.correct_count / attempted) * 10000) / 100 : 0,
