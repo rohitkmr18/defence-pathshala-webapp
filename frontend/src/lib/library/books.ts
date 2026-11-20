@@ -53,6 +53,49 @@ const range = (from: number, to: number) => Array.from({ length: to - from + 1 }
 
 export const LIBRARY_BOOKS: LibraryBook[] = [
   {
+    slug: "computer-ict-decoded",
+    title: "Computer & ICT Decoded",
+    subject: "Computer & ICT",
+    kicker: "Science & Technology · Rapid Revision",
+    edition: "Edition 1 · Nov 2026",
+    description:
+      "Hardware, software, networks, cyber security and emerging tech, revised the way CDS and CAPF (AC) actually ask them: 38 previous-year questions taught from the fact each one turns on, with diagrams, traps and a high-potential watch-list.",
+    seoTitle: "Computer & ICT Decoded: Free Computer Science Revision eBook for CDS, CAPF, NDA, AFCAT",
+    seoDescription:
+      "Free Computer & ICT (Science & Technology) revision eBook for CDS, CAPF (AC), NDA and AFCAT: hardware and memory, software and languages, networks, cyber security and IT law, AI and emerging tech, with 25 practice MCQs you can attempt online.",
+    exams: ["CDS", "CAPF", "NDA", "AFCAT", "UPSC"],
+    highlights: ["5 sections", "37 diagrams & tables", "25 MCQs · instant score card", "40 last-minute one-liners"],
+    publishedOn: "2026-11-20",
+    pageCount: 41,
+    readerPages: range(1, 30),
+    pageWidth: 1215,
+    pageHeight: 1720,
+    contentsPage: 3,
+    sections: [
+      { title: "Contents", page: 3 },
+      { title: "What UPSC asks in Computer & ICT", detail: "Topics, years and formats of 38 PYQs", page: 4 },
+      { title: "Computer & ICT at a glance", detail: "Hardware, software, network and key numbers", page: 5 },
+      { title: "Hardware, Memory & Number Systems", detail: "Generations, CPU, memory hierarchy, binary", page: 6 },
+      { title: "Software, OS & Languages", detail: "System vs application, translators, UNIX, Word", page: 10 },
+      { title: "Networks & Telecom", detail: "OSI vs TCP/IP, devices, ports, mobile generations", page: 14 },
+      { title: "Cyber Security, Crypto & IT Law", detail: "Malware, firewall, digital signature, CERT-In", page: 18 },
+      { title: "Multimedia & Emerging Tech", detail: "MP3, AI, quantum, blockchain, India's missions", page: 22 },
+      { title: "High-potential watch-list", detail: "What could be asked in 2026–27", page: 27 },
+      { title: "Last-minute one-liners", detail: "40 facts for the night before the exam", page: 29 },
+      { title: "MCQ practice", detail: "25 questions — attempt online, get a score card", page: 0 },
+    ],
+    mcqCount: 25,
+    pyqCount: 12,
+    practice: {
+      label: "Practise Computer & ICT PYQs",
+      href: "/dashboard/practice?paper=gs&subject=Science+%26+Technology&topic=ICT+%26+Computing&origin=library",
+    },
+    archives: [
+      { label: "CDS Computer & ICT PYQs", href: "/pyqs/cds/science-technology/ict-computing" },
+      { label: "CAPF (AC) Computer & ICT PYQs", href: "/pyqs/capf/science-technology/ict-computing" },
+    ],
+  },
+  {
     slug: "ancient-medieval-history-decoded",
     title: "Ancient & Medieval History Decoded",
     subject: "History",
