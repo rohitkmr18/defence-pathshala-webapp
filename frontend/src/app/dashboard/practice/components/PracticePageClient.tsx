@@ -12,6 +12,8 @@ import {
   ChevronUp,
   Loader2,
   ArrowLeft,
+  BookOpen,
+  ClipboardCheck,
 } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
@@ -314,11 +316,11 @@ export default function PracticePageClient() {
         </div>
 
         {/* Clean Segmented Tab Switcher */}
-        <div className="inline-flex rounded-2xl border border-slate-200 bg-slate-100/90 p-1 shadow-2xs self-start sm:self-auto">
+        <div className="flex w-full max-w-sm rounded-2xl border border-slate-200 bg-slate-100/90 p-1 shadow-2xs self-start sm:self-auto">
           <button
             type="button"
             onClick={() => { preserveIntent(activeFilters, sessionStyle, "targeted"); }}
-            className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition cursor-pointer ${
+            className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition cursor-pointer ${
               practiceMode === "targeted"
                 ? "bg-white text-blue-600 shadow-xs"
                 : "text-slate-600 hover:text-slate-900"
@@ -331,7 +333,7 @@ export default function PracticePageClient() {
           <button
             type="button"
             onClick={() => { preserveIntent(activeFilters, sessionStyle, "full-paper"); }}
-            className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition cursor-pointer ${
+            className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition cursor-pointer ${
               practiceMode === "full-paper"
                 ? "bg-white text-blue-600 shadow-xs"
                 : "text-slate-600 hover:text-slate-900"
@@ -489,14 +491,15 @@ export default function PracticePageClient() {
       {practiceMode === "full-paper" && (
         <div className="space-y-6">
           {dpMocksEnabled && (
-            <div role="tablist" aria-label="Full paper source" className="inline-flex rounded-2xl border border-slate-200 bg-slate-100/90 p-1">
-              {([["upsc", "Past UPSC Papers"], ["dp", "DP Mock Tests"]] as const).map(([id, label]) => (
+            <div role="tablist" aria-label="Full paper source" className="flex w-full max-w-sm rounded-2xl border border-slate-200 bg-slate-100/90 p-1 shadow-2xs">
+              {([["upsc", "Past UPSC Papers", BookOpen], ["dp", "DP Mock Tests", ClipboardCheck]] as const).map(([id, label, Icon]) => (
                 <button key={id} type="button" role="tab" aria-selected={fullPaperTab === id}
                   onClick={() => selectFullPaperTab(id)}
-                  className={`rounded-xl px-4 py-2 text-xs font-bold transition cursor-pointer ${
+                  className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition cursor-pointer ${
                     fullPaperTab === id ? "bg-white text-blue-600 shadow-xs" : "text-slate-600 hover:text-slate-900"
                   }`}>
-                  {label}
+                  <Icon className="h-4 w-4" />
+                  <span>{label}</span>
                 </button>
               ))}
             </div>

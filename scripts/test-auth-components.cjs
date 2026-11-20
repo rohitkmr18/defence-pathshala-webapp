@@ -139,7 +139,7 @@ test('with the flag on, switching tabs swaps hero/catalogue and persists fp=dp',
   let tree = p.tree();
   assert.equal(elements(tree, n => n.props.role === 'tablist').length, 1);
   assert.equal(elements(tree, n => n.type === 'paper-hero').length, 1);
-  const tab = label => elements(tree, n => n.props.role === 'tab' && n.props.children === label)[0];
+  const tab = label => elements(tree, n => n.props.role === 'tab' && elements(n, x => x.type === 'span' && x.props.children === label).length)[0];
   tab('DP Mock Tests').props.onClick(); tree = p.render();
   assert.equal(elements(tree, n => n.type === 'mock-catalogue').length, 1);
   assert.equal(elements(tree, n => n.type === 'paper-hero').length, 0);
