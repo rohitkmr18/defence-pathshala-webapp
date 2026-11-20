@@ -210,7 +210,17 @@ export default function MockResult({ report, sessionId }: { report: MockResultRe
       {/* 3. Coach + recoverable marks */}
       <NextBestMoveCard move={metrics.nextBestMove} />
       <RecoverableMarksCard totalRecoverableMarks={metrics.totalRecoverableMarks} topics={metrics.recoverableTopics}
-        answers={answers} scoringRule={metrics.scoringRule} isEligible={metrics.eligibility.hasRecoverableMarks} />
+        answers={answers} scoringRule={metrics.scoringRule} isEligible={metrics.eligibility.hasRecoverableMarks}
+        renderQuestions={(list) => (
+          <div className="flex flex-wrap gap-2">
+            {list.map((q) => (
+              <button key={q.id} type="button" onClick={() => jumpTo(q.q_num)}
+                className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:border-blue-400 hover:text-blue-700">
+                Q{q.q_num} · {answers[q.id] ? "Wrong" : "Skipped"} · {q.difficulty_category} → see solution
+              </button>
+            ))}
+          </div>
+        )} />
 
       {/* 4. Subject and difficulty */}
       <section aria-label="By subject"><SubjectPerformanceCard subjects={metrics.subjects} isEligible={metrics.eligibility.hasSubjectPerformance} /></section>
