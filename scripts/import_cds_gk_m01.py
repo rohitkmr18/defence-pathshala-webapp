@@ -153,16 +153,41 @@ def audit(raw):
     return questions, summary
 
 
-def check_approval(summary, approval):
-    require(not summary["pending_checklist_gates"], "Workbook release checklist is open")
-    require("blind_solve_incomplete_or_mismatched" not in summary["review"],
-            "Workbook blind-solve evidence is incomplete or mismatched")
+def publisher_approval(summary):
+    path = Path(__file__).with_name("cds_gk_m01_publisher_approval.json")
+    record = json.loads(path.read_text(encoding="utf-8"))
+    if (record["workbook_sha256"], record["mock_identifier"], record["question_count"]) == (
+        summary["workbook_sha256"], CODE, summary["question_count"]
+    ) and record["status"] == "publisher_approved_as_is":
+        return record
+    return None
+
+
+def check_approval(summary, approval, questions):
+    decision = publisher_approval(summary)
+    if decision is None:
+        require(not summary["pending_checklist_gates"], "Workbook release checklist is open")
+        require("blind_solve_incomplete_or_mismatched" not in summary["review"],
+                "Workbook blind-solve evidence is incomplete or mismatched")
     require(isinstance(approval, dict) and approval.get("workbook_sha256") == summary["workbook_sha256"],
             "Approval must match the exact workbook digest")
     evidence = approval.get("gate_evidence")
-    require(isinstance(evidence, dict) and evidence.keys() == GATES
+    required_gates = GATES - {"founder_approval"} if decision else GATES
+    require(isinstance(evidence, dict) and evidence.keys() == required_gates
             and all(map(nonempty, evidence.values())) and nonempty(approval.get("reviewer")),
-            "Approval requires a named reviewer and evidence for every release gate")
+            "Approval requires a named reviewer and evidence for every remaining release gate")
+    if decision:
+        # Independent records can close gates without changing the approved XLSX bytes.
+        # The publisher decision alone supplies no blind-solve or verification evidence.
+        answers = approval.get("resolved_blind_solve")
+        require(isinstance(answers, list) and len(answers) == len(questions)
+                and all(isinstance(entry, dict) and type(entry.get("position")) is int
+                        and entry["position"] == position
+                        and entry.get("answer") == question["correct_option"]
+                        and type(entry.get("confidence")) is int
+                        and 1 <= entry["confidence"] <= 5
+                        for position, (entry, question) in enumerate(zip(answers, questions), 1)),
+                "Independent blind-solve evidence must reconcile all 120 numbered keys")
 
 
 class NoRedirects(HTTPRedirectHandler):
@@ -200,9 +225,12 @@ def main():
     mode.add_argument("--stage-draft", type=Path, metavar="APPROVAL_JSON")
     args = parser.parse_args()
     questions, summary = audit(args.workbook.read_bytes())
+    decision = publisher_approval(summary)
+    if decision:
+        summary["publisher_approval"] = decision
     print(json.dumps(summary, indent=2), flush=True)
     if args.stage_draft:
-        check_approval(summary, json.loads(args.stage_draft.read_text(encoding="utf-8")))
+        check_approval(summary, json.loads(args.stage_draft.read_text(encoding="utf-8")), questions)
         stage(sql(questions, rehearsal=False))
         print(f"{CODE} verified as a draft on staging.")
     elif args.rehearse:

@@ -6,7 +6,7 @@ from unittest.mock import patch
 from openpyxl import Workbook
 
 from import_cds_gk_m01 import (
-    BLUEPRINT, GATES, HEADER, URL, NoRedirects, audit, check_approval, sql, stage,
+    BLUEPRINT, GATES, HEADER, URL, NoRedirects, audit, check_approval, publisher_approval, sql, stage,
 )
 
 
@@ -70,20 +70,43 @@ class ImportTests(unittest.TestCase):
                 audit(fixture(lambda w: setattr(w[sheet][cell], "value", value)))
 
     def test_review_gates_are_bound_to_source_bytes(self):
-        _, summary = audit(fixture())
+        questions, summary = audit(fixture())
         approval = {"workbook_sha256": summary["workbook_sha256"], "reviewer": "Test Reviewer",
                     "gate_evidence": {gate: "Synthetic review record" for gate in GATES}}
-        check_approval(summary, approval)
+        check_approval(summary, approval, questions)
         with self.assertRaisesRegex(ValueError, "exact workbook digest"):
-            check_approval(summary, dict(approval, workbook_sha256="other"))
-        with self.assertRaisesRegex(ValueError, "every release gate"):
-            check_approval(summary, dict(approval, gate_evidence={}))
+            check_approval(summary, dict(approval, workbook_sha256="other"), questions)
+        with self.assertRaisesRegex(ValueError, "every remaining release gate"):
+            check_approval(summary, dict(approval, gate_evidence={}), questions)
         _, pending = audit(fixture(lambda w: setattr(w["Validation checklist"]["C10"], "value", "Not approved")))
         with self.assertRaisesRegex(ValueError, "checklist is open"):
-            check_approval(pending, approval)
+            check_approval(pending, approval, questions)
         _, pending = audit(fixture(lambda w: setattr(w["Blind-solve sheet"]["G2"], "value", "A")))
         with self.assertRaisesRegex(ValueError, "blind-solve evidence"):
-            check_approval(pending, approval)
+            check_approval(pending, approval, questions)
+
+    def test_publisher_decision_only_substitutes_the_founder_gate_for_the_bound_digest(self):
+        questions, summary = audit(fixture())
+        source_digest = "e83478e7f1a689ad0e9d1cd45bd33b74dbccea3b75853fed27e582f953c76ec4"
+        approved_source = dict(summary, workbook_sha256=source_digest, pending_checklist_gates=list("1234569"))
+        decision = publisher_approval(approved_source)
+        self.assertEqual(set(decision["accepted_exceptions"]), {"Q37", "Q42", "Q116"})
+        self.assertIsNone(publisher_approval(summary))
+        self.assertIsNone(publisher_approval(dict(approved_source, question_count=119)))
+        evidence = {"workbook_sha256": source_digest, "reviewer": "Test Reviewer",
+                    "gate_evidence": {gate: "Synthetic review record" for gate in GATES - {"founder_approval"}}}
+        with self.assertRaisesRegex(ValueError, "Independent blind-solve evidence"):
+            check_approval(approved_source, evidence, questions)
+        answers = [{"position": i, "answer": q["correct_option"], "confidence": 5}
+                   for i, q in enumerate(questions, 1)]
+        complete = dict(evidence, resolved_blind_solve=answers)
+        check_approval(approved_source, complete, questions)
+        with self.assertRaisesRegex(ValueError, "Independent blind-solve evidence"):
+            check_approval(approved_source, dict(complete, resolved_blind_solve=answers[::-1]), questions)
+        for gate in GATES - {"founder_approval"}:
+            partial = dict(complete, gate_evidence={k: v for k, v in complete["gate_evidence"].items() if k != gate})
+            with self.subTest(gate=gate), self.assertRaisesRegex(ValueError, "every remaining release gate"):
+                check_approval(approved_source, partial, questions)
 
     def test_staging_endpoint_ignores_app_environment_and_disallows_redirects(self):
         with patch.dict("os.environ", {"SUPABASE_ACCESS_TOKEN": "synthetic",
