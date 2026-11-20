@@ -18,6 +18,7 @@ import {
   RefreshCw,
   Target,
   Library,
+  ClipboardCheck,
 } from "lucide-react";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
@@ -54,6 +55,9 @@ const baseItems = [
   },
 ];
 
+/** DP Mock Tests (CDS GK) — only when NEXT_PUBLIC_MOCK_CDS_ENABLED is exactly "true". */
+const DP_MOCKS_HREF = "/dashboard/practice?mode=full_paper&fp=dp";
+
 interface SidebarProps {
   collapsed?: boolean;
   mobile?: boolean;
@@ -80,9 +84,20 @@ export default function DashboardSidebar({
     user?.email?.toLowerCase() === "rohitcool423@gmail.com" ||
     user?.app_metadata?.role === "admin";
 
+  const dpMocksNav = process.env.NEXT_PUBLIC_MOCK_CDS_ENABLED === "true" && !pathname.startsWith("/afcat");
+  const dpMocksActive =
+    pathname.startsWith("/mock/cds-gk") ||
+    (pathname === "/dashboard/practice" && searchParams.get("mode") === "full_paper" && searchParams.get("fp") === "dp");
+  const navBase = dpMocksNav
+    ? baseItems.flatMap((item) =>
+        item.href === "/dashboard/practice"
+          ? [item, { name: "DP Mock Tests", href: DP_MOCKS_HREF, icon: ClipboardCheck, isDpMocks: true } as (typeof baseItems)[number] & { isDpMocks?: boolean }]
+          : [item],
+      )
+    : baseItems;
   const items = isAdmin
     ? [
-        ...baseItems,
+        ...navBase,
         {
           name: "Admin Dataset Sync",
           href: "/dashboard/admin",
@@ -90,7 +105,7 @@ export default function DashboardSidebar({
           isAdminItem: true,
         },
       ]
-    : baseItems;
+    : navBase;
 
   async function handleSignOut() {
     const supabase = createClient();
@@ -176,16 +191,18 @@ export default function DashboardSidebar({
           {items.map((item) => {
             const Icon = item.icon;
 
-            const active =
-              item.href === "/dashboard"
+            const isDpMocks = "isDpMocks" in item && item.isDpMocks === true;
+            const active = isDpMocks
+              ? dpMocksActive
+              : item.href === "/dashboard"
                 ? pathname === "/dashboard"
-                : pathname === item.href ||
-                  pathname.startsWith(`${item.href}/`);
+                : (pathname === item.href || pathname.startsWith(`${item.href}/`)) &&
+                  !(item.href === "/dashboard/practice" && dpMocksNav && dpMocksActive);
 
             return (
               <Link
-                key={item.href}
-                href={withPaper(item.href, activePaper)}
+                key={item.name}
+                href={isDpMocks ? item.href : withPaper(item.href, activePaper)}
                 onClick={() => closeMobile?.()}
                 title={collapsed && !mobile ? item.name : undefined}
                 className={`flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-150 ${

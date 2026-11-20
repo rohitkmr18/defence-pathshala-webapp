@@ -1,0 +1,14 @@
+{
+  "mock_identifier": "CDS-GK-M01-V1",
+  "source_workbook_revision": "CDS_GK_Mock01_Final_120.xlsx (original Q1–Q120 order)",
+  "workbook_sha256": "e83478e7f1a689ad0e9d1cd45bd33b74dbccea3b75853fed27e582f953c76ec4",
+  "question_count": 120,
+  "status": "publisher_approved_as_is",
+  "approval_recorded_at": "2026-11-20T06:07:11Z",
+  "approval_source": "Publisher instruction in the CDS GK Mock 01 implementation request",
+  "accepted_exceptions": {
+    "Q37": "The explanation names Gandhi as a signer of the Poona Pact. The published signatory list identifies Ambedkar and Madan Mohan Malaviya among the signatories.",
+    "Q42": "The explanation ranks Andhra Pradesh ahead of Tamil Nadu. The revised official state coastline totals place Tamil Nadu second and Andhra Pradesh third.",
+    "Q116": "The tuning-fork question leaves the upper bound on the wax-induced frequency shift implicit. The existing key and explanation were accepted as written."
+  }
+}

@@ -12,6 +12,8 @@ import {
   ChevronUp,
   Loader2,
   ArrowLeft,
+  BookOpen,
+  ClipboardCheck,
 } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
@@ -19,6 +21,7 @@ import { fullPaperDestination } from "@/lib/full-paper-intent";
 import { safeLearningReturn } from "@/lib/learning-navigation";
 import { trackLearningEvent } from "@/lib/learning-events";
 
+import MockCatalogue from "@/components/mock/MockCatalogue";
 import FullPaperHero, { FullPaperDefinition } from "@/components/practice/FullPaperHero";
 import QuestionDistributionChart from "@/components/practice/QuestionDistributionChart";
 import PracticeFilters, { type FilterOverride } from "./PracticeFilters";
@@ -86,6 +89,15 @@ export default function PracticePageClient() {
   const paperTabParam = searchParams.get("paper") === "maths" ? "maths" : searchParams.get("paper") === "english" ? "english" : null;
   const isPaperTab = paperTabParam !== null;
   const sessionStyle = searchParams.get("mode") === "attempt" ? "attempt" : "instant";
+  // DP Mock Tests are CDS GK only and stay hidden unless the release flag is exactly "true".
+  const dpMocksEnabled = process.env.NEXT_PUBLIC_MOCK_CDS_ENABLED === "true" && !isPaperTab;
+  const [fullPaperTab, setFullPaperTab] = useState<"upsc" | "dp">(searchParams.get("fp") === "dp" ? "dp" : "upsc");
+  function selectFullPaperTab(tab: "upsc" | "dp") {
+    setFullPaperTab(tab);
+    const url = new URL(window.location.href);
+    if (tab === "dp") url.searchParams.set("fp", "dp"); else url.searchParams.delete("fp");
+    window.history.replaceState(null, "", url.pathname + url.search);
+  }
 
   function preserveIntent(filters: ActiveFilters, style: "instant" | "attempt" = sessionStyle, workflow: "targeted" | "full-paper" = practiceMode) {
     const parsed = parseFiltersFromSearchParams(searchParams);
@@ -304,11 +316,11 @@ export default function PracticePageClient() {
         </div>
 
         {/* Clean Segmented Tab Switcher */}
-        <div className="inline-flex rounded-2xl border border-slate-200 bg-slate-100/90 p-1 shadow-2xs self-start sm:self-auto">
+        <div className="flex w-full max-w-sm rounded-2xl border border-slate-200 bg-slate-100/90 p-1 shadow-2xs self-start sm:self-auto">
           <button
             type="button"
             onClick={() => { preserveIntent(activeFilters, sessionStyle, "targeted"); }}
-            className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition cursor-pointer ${
+            className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition cursor-pointer ${
               practiceMode === "targeted"
                 ? "bg-white text-blue-600 shadow-xs"
                 : "text-slate-600 hover:text-slate-900"
@@ -321,7 +333,7 @@ export default function PracticePageClient() {
           <button
             type="button"
             onClick={() => { preserveIntent(activeFilters, sessionStyle, "full-paper"); }}
-            className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition cursor-pointer ${
+            className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition cursor-pointer ${
               practiceMode === "full-paper"
                 ? "bg-white text-blue-600 shadow-xs"
                 : "text-slate-600 hover:text-slate-900"
@@ -478,13 +490,31 @@ export default function PracticePageClient() {
           ═══════════════════════════════════════════════════════════════════════ */}
       {practiceMode === "full-paper" && (
         <div className="space-y-6">
-          <FullPaperHero
-            key={paperTabParam ?? "gs"}
-            paperTab={paperTabParam ?? undefined}
-            onStart={handleStartFullPaper}
-            initialExam={primaryExam}
-            initialYear={activeFilters.years[0]}
-          />
+          {dpMocksEnabled && (
+            <div role="tablist" aria-label="Full paper source" className="flex w-full max-w-sm rounded-2xl border border-slate-200 bg-slate-100/90 p-1 shadow-2xs">
+              {([["upsc", "Past UPSC Papers", BookOpen], ["dp", "DP Mock Tests", ClipboardCheck]] as const).map(([id, label, Icon]) => (
+                <button key={id} type="button" role="tab" aria-selected={fullPaperTab === id}
+                  onClick={() => selectFullPaperTab(id)}
+                  className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition cursor-pointer ${
+                    fullPaperTab === id ? "bg-white text-blue-600 shadow-xs" : "text-slate-600 hover:text-slate-900"
+                  }`}>
+                  <Icon className="h-4 w-4" />
+                  <span>{label}</span>
+                </button>
+              ))}
+            </div>
+          )}
+          {dpMocksEnabled && fullPaperTab === "dp" ? (
+            <MockCatalogue embedded />
+          ) : (
+            <FullPaperHero
+              key={paperTabParam ?? "gs"}
+              paperTab={paperTabParam ?? undefined}
+              onStart={handleStartFullPaper}
+              initialExam={primaryExam}
+              initialYear={activeFilters.years[0]}
+            />
+          )}
         </div>
       )}
     </div>

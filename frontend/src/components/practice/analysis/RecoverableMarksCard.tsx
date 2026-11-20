@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { TrendingUp, CheckCircle, ChevronDown, Sparkles } from "lucide-react";
-import type { OptionKey } from "@/lib/practice-types";
+import type { OptionKey, PracticeQuestion } from "@/lib/practice-types";
 import type { RecoverableTopicItem } from "@/lib/analysis/computeAnalysisMetrics";
 import type { ExamScoringRule } from "@/lib/examScoring";
 import QuestionCard from "@/components/practice/player/QuestionCard";
@@ -15,6 +15,8 @@ interface RecoverableMarksCardProps {
   answers?: Record<string, OptionKey>;
   scoringRule?: ExamScoringRule;
   isEligible: boolean;
+  /** Replaces the PYQ question preview (e.g. for DP practice questions, which must not be shown as PYQs). */
+  renderQuestions?: (questions: PracticeQuestion[]) => ReactNode;
 }
 
 export default function RecoverableMarksCard({
@@ -23,6 +25,7 @@ export default function RecoverableMarksCard({
   answers = {},
   scoringRule,
   isEligible,
+  renderQuestions,
 }: RecoverableMarksCardProps) {
   const [expandedTopic, setExpandedTopic] = useState<string | null>(null);
 
@@ -151,7 +154,9 @@ export default function RecoverableMarksCard({
                           </p>
                         </div>
 
-                        {questionsList.length > 0 ? (
+                        {questionsList.length > 0 && renderQuestions ? (
+                          renderQuestions(questionsList)
+                        ) : questionsList.length > 0 ? (
                           <div className="space-y-6">
                             {questionsList.map((q) => {
                               const userChoice = answers[q.id] ?? null;

@@ -14,6 +14,7 @@ import {
   Target,
 } from "lucide-react";
 import type { LearnerIntelligence } from "@/lib/learner-intelligence";
+import DpMockTestsCard from "./DpMockTestsCard";
 import MockPerformanceHub from "./MockPerformanceHub";
 import SectionHeader from "@/components/ui/SectionHeader";
 
@@ -169,6 +170,9 @@ export default function LearnerDashboardOverview({
           </div>
         </div>
       </section>
+
+      {/* DP Mock Tests are CDS GK only. */}
+      {!paperTab && <DpMockTestsCard />}
 
       <section>
         <div className="mb-3 flex items-end justify-between gap-4">

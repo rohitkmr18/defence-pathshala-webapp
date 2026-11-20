@@ -85,7 +85,8 @@ test('guest selecting a full paper uses the selected exam/year/cycle in login in
     '@/components/practice/FullPaperHero': { __esModule: true, default: 'paper-hero' },
     '@/components/practice/QuestionDistributionChart': { __esModule: true, default: 'distribution' },
     './PracticeFilters': { __esModule: true, default: 'filters' },
-  }, { window: global.window });
+    '@/components/mock/MockCatalogue': { __esModule: true, default: 'mock-catalogue' },
+  }, { window: global.window, process: { env: {} } });
   const Page = load('frontend/src/app/dashboard/practice/components/PracticePageClient.tsx').default;
   function render() { h.begin(); return Page(); }
   let tree = render();
@@ -99,4 +100,56 @@ test('guest selecting a full paper uses the selected exam/year/cycle in login in
   const login = elements(banner, n => n.type === 'a')[0].props.href;
   assert.equal(new URL(login, 'https://local.test').searchParams.get('next'), '/dashboard/practice/full-paper?exam=CDS&year=2024&cycle=II&origin=practice');
   assert.deepEqual(pushed, []);
+});
+
+function practiceWithFlag(flag, initialSearch = '') {
+  const h = hooks();
+  let search = new URLSearchParams(initialSearch);
+  const oldWindow = global.window;
+  global.window = { location: { href: 'https://local.test/dashboard/practice?mode=full_paper', pathname: '/dashboard/practice', search: '' }, history: { replaceState(_s, _t, url) {
+    search = new URL(url, 'https://local.test').searchParams;
+  } } };
+  const load = createLoader({
+    react: h.react, 'next/link': 'a',
+    'next/navigation': { useRouter: () => ({ push() {} }), useSearchParams: () => search },
+    '@/lib/supabase/client': {},
+    '@/components/practice/FullPaperHero': { __esModule: true, default: 'paper-hero' },
+    '@/components/practice/QuestionDistributionChart': { __esModule: true, default: 'distribution' },
+    './PracticeFilters': { __esModule: true, default: 'filters' },
+    '@/components/mock/MockCatalogue': { __esModule: true, default: 'mock-catalogue' },
+  }, { window: global.window, process: { env: { NEXT_PUBLIC_MOCK_CDS_ENABLED: flag } } });
+  const Page = load('frontend/src/app/dashboard/practice/components/PracticePageClient.tsx').default;
+  const render = () => { h.begin(); return Page(); };
+  let tree = render();
+  const modeButton = elements(tree, n => n.type === 'button').find(n => elements(n, x => x.type === 'span' && x.props.children === 'Full Paper Mock').length);
+  modeButton.props.onClick(); tree = render();
+  return { render, tree: () => tree, setTree: t => { tree = t; }, getSearch: () => search, restore: () => { global.window = oldWindow; } };
+}
+
+test('DP Mock Tests tab is hidden unless the release flag is exactly "true"', t => {
+  for (const flag of [undefined, 'false', '1', 'TRUE']) {
+    const p = practiceWithFlag(flag); t.after(p.restore);
+    assert.equal(elements(p.tree(), n => n.props.role === 'tablist').length, 0, `flag=${flag}`);
+    assert.equal(elements(p.tree(), n => n.type === 'paper-hero').length, 1);
+  }
+});
+
+test('with the flag on, switching tabs swaps hero/catalogue and persists fp=dp', t => {
+  const p = practiceWithFlag('true'); t.after(p.restore);
+  let tree = p.tree();
+  assert.equal(elements(tree, n => n.props.role === 'tablist').length, 1);
+  assert.equal(elements(tree, n => n.type === 'paper-hero').length, 1);
+  const tab = label => elements(tree, n => n.props.role === 'tab' && elements(n, x => x.type === 'span' && x.props.children === label).length)[0];
+  tab('DP Mock Tests').props.onClick(); tree = p.render();
+  assert.equal(elements(tree, n => n.type === 'mock-catalogue').length, 1);
+  assert.equal(elements(tree, n => n.type === 'paper-hero').length, 0);
+  assert.equal(p.getSearch().get('fp'), 'dp');
+  tab('Past UPSC Papers').props.onClick(); tree = p.render();
+  assert.equal(elements(tree, n => n.type === 'paper-hero').length, 1);
+  assert.equal(p.getSearch().get('fp'), null);
+});
+
+test('?fp=dp opens the DP Mock Tests tab on load', t => {
+  const p = practiceWithFlag('true', 'fp=dp'); t.after(p.restore);
+  assert.equal(elements(p.tree(), n => n.type === 'mock-catalogue').length, 1);
 });
