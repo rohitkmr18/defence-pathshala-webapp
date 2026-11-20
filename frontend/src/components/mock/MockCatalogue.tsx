@@ -27,25 +27,6 @@ export function markingLabel(t: Pick<Test, "correct_points" | "wrong_points" | "
   return `+${f(t.correct_points)} / -${f(t.wrong_points)}`;
 }
 
-const SUBJECT_COLORS = ["bg-blue-500", "bg-emerald-500", "bg-amber-500", "bg-violet-500", "bg-rose-500", "bg-cyan-500", "bg-lime-500", "bg-orange-500", "bg-slate-500"];
-
-function Blueprint({ blueprint, total }: { blueprint: Record<string, number>; total: number }) {
-  const rows = Object.entries(blueprint).sort((a, b) => b[1] - a[1]);
-  return (
-    <div>
-      <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">Subject mix</p>
-      <div className="mt-2 flex h-2.5 overflow-hidden rounded-full" aria-hidden="true">
-        {rows.map(([s, n], i) => <div key={s} className={SUBJECT_COLORS[i % SUBJECT_COLORS.length]} style={{ width: `${(n / total) * 100}%` }} />)}
-      </div>
-      <ul className="mt-2.5 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-slate-600">
-        {rows.map(([s, n], i) => (
-          <li key={s} className="flex items-center gap-1"><i className={`h-2 w-2 rounded-full ${SUBJECT_COLORS[i % SUBJECT_COLORS.length]}`} />{s} <span className="tabular-nums text-slate-400">{n}</span></li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
 export default function MockCatalogue({ embedded = false }: { embedded?: boolean } = {}) {
   const router = useRouter();
   const [tests, setTests] = useState<Test[]>([]);
@@ -160,7 +141,6 @@ export default function MockCatalogue({ embedded = false }: { embedded?: boolean
                       </div>
                     ))}
                   </dl>
-                  <Blueprint blueprint={t.blueprint} total={t.expected_questions} />
                 </div>
 
                 <div className="flex flex-col justify-between gap-5 rounded-2xl border border-slate-100 bg-slate-50/70 p-5">
