@@ -23,7 +23,7 @@ export function markingLabel(t: Pick<Test, "correct_points" | "wrong_points" | "
   return `+${f(t.correct_points)} / -${f(t.wrong_points)}`;
 }
 
-export default function MockCatalogue() {
+export default function MockCatalogue({ embedded = false }: { embedded?: boolean } = {}) {
   const router = useRouter();
   const [tests, setTests] = useState<Test[]>([]);
   const [loading, setLoading] = useState(true);
@@ -45,21 +45,25 @@ export default function MockCatalogue() {
       setStarting(null);
     }
   }
+  const signInNext = embedded ? "/dashboard/practice?mode=full_paper&fp=dp" : "/mock/cds-gk";
+  const Shell = embedded ? "div" : "main";
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900" style={{ overflowX: "clip" }}>
-      <header className="bg-[#081b35] text-white">
-        <div className="mx-auto max-w-3xl px-4 py-4 sm:px-6">
-          <p className="text-[10px] font-bold uppercase tracking-[.18em] text-blue-300">Defence Pathshala · CDS</p>
-          <h1 className="text-lg font-bold sm:text-xl">CDS General Knowledge Mocks</h1>
-        </div>
-      </header>
-      <div className="mx-auto max-w-3xl space-y-5 px-4 py-6 sm:px-6">
+    <Shell className={embedded ? "text-slate-900" : "min-h-screen bg-slate-50 text-slate-900"} style={embedded ? undefined : { overflowX: "clip" }}>
+      {!embedded && (
+        <header className="bg-[#081b35] text-white">
+          <div className="mx-auto max-w-3xl px-4 py-4 sm:px-6">
+            <p className="text-[10px] font-bold uppercase tracking-[.18em] text-blue-300">Defence Pathshala · CDS</p>
+            <h1 className="text-lg font-bold sm:text-xl">CDS General Knowledge Mocks</h1>
+          </div>
+        </header>
+      )}
+      <div className={embedded ? "space-y-5" : "mx-auto max-w-3xl space-y-5 px-4 py-6 sm:px-6"}>
         <p className="leading-7 text-slate-600">Full-length timed GK papers marked exactly like the exam. Questions are Defence Pathshala practice questions; your timer runs on the server and your attempt resumes if you refresh.</p>
         {error && (
           <div role="alert" className="space-y-2 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm">
             <p>{error}</p>
             {/sign in required/i.test(error) && (
-              <Link className="font-semibold text-blue-700 underline" href={`/auth/login?next=${encodeURIComponent("/mock/cds-gk")}`}>Sign in with Defence Pathshala</Link>
+              <Link className="font-semibold text-blue-700 underline" href={`/auth/login?next=${encodeURIComponent(signInNext)}`}>Sign in with Defence Pathshala</Link>
             )}
           </div>
         )}
@@ -100,6 +104,6 @@ export default function MockCatalogue() {
           </article>
         ))}
       </div>
-    </main>
+    </Shell>
   );
 }
