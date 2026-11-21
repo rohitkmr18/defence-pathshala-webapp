@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, CheckCircle2, Loader2, LogIn, RefreshCw, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Loader2, LogIn, RefreshCw, ShieldCheck, Sparkles, X } from "lucide-react";
 import type { PracticeQuestion, OptionKey } from "@/lib/practice-types";
 import { createClient } from "@/lib/supabase/client";
 import { authUrl } from "@/lib/auth-redirect";
@@ -335,7 +335,11 @@ export default function FullPaperClient({
   if (isAuthenticated === false) {
     return (
       <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center px-4 py-12">
-        <div className="max-w-md w-full rounded-3xl border border-slate-200 bg-white p-8 shadow-xl text-center">
+        <div className="relative max-w-md w-full rounded-3xl border border-slate-200 bg-white p-8 shadow-xl text-center">
+          <Link href="/dashboard/practice" aria-label="Close sign in prompt and return to practice"
+            className="absolute right-3 top-3 inline-flex h-11 w-11 items-center justify-center rounded-xl text-slate-600 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-blue-600">
+            <X className="h-5 w-5" />
+          </Link>
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 mb-5 border border-blue-100 shadow-sm">
             <LogIn className="h-6 w-6" />
           </div>
