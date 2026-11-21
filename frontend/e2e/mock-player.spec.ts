@@ -154,8 +154,33 @@ test("failed save keeps the answer on screen, retries in the background and neve
   await expect(page.getByText("QUESTION 2 / 120")).toBeVisible();
 });
 
-test("signed-out learner is told to sign in", async ({ page }) => {
+test("signed-out learner sees centered, dismissible sign-in prompt without scrolling", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 650 });
   await page.route("**/api/mock/tests", (r) => r.fulfill({ status: 401, json: { error: "Sign in required" } }));
   await page.goto("/mock/cds-gk");
-  await expect(page.getByRole("link", { name: "Sign in with Defence Pathshala" })).toBeVisible();
+  const dialog = page.getByRole("dialog", { name: "Sign in to attempt this mock" });
+  await expect(dialog).toBeVisible();
+  const bounds = await dialog.boundingBox();
+  expect(bounds).not.toBeNull();
+  expect(bounds!.y).toBeGreaterThanOrEqual(0);
+  expect(bounds!.y + bounds!.height).toBeLessThanOrEqual(650);
+  await expect(page.getByRole("link", { name: "Sign in with Defence Pathshala" })).toHaveAttribute("href", /auth\\/login\\?next=/);
+  await page.getByRole("button", { name: "Close sign in prompt" }).click();
+  await expect(dialog).not.toBeVisible();
+});
+
+test("sign-in failure after guest starts mock opens dialog and allows closing and retry", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 650 });
+  await mockApi(page);
+  await page.route("**/api/mock/sessions", (r) => r.fulfill({ status: 401, json: { error: "Sign in required" } }));
+  await page.goto("/mock/cds-gk");
+  await page.getByRole("button", { name: "Start free mock 01" }).click();
+  await page.getByRole("checkbox").check();
+  await page.getByRole("button", { name: "Begin test" }).click();
+  const dialog = page.getByRole("dialog", { name: "Sign in to attempt this mock" });
+  await expect(dialog).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(dialog).not.toBeVisible();
+  await page.getByRole("button", { name: "Start free mock 01" }).click();
+  await expect(page.getByRole("button", { name: "Begin test" })).toBeVisible();
 });
