@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import AfcatShareButton from "@/components/afcat/AfcatShareButton";
+import SignInRequiredDialog from "@/components/auth/SignInRequiredDialog";
 import { setAfcatFunnelTestCode, trackAfcatFunnel } from "@/lib/afcat/funnel";
 import AfcatVisualQuestion from "@/components/afcat/AfcatVisualQuestion";
 import AfcatResultAnalysis, {
@@ -462,28 +463,17 @@ export default function AfcatLab() {
             Reconnect to continue.
           </div>
         )}
-        {error && (
-          <div
-            role="alert"
-            className="mb-4 space-y-2 rounded-xl border border-amber-300 bg-amber-50 p-4"
-          >
+        <SignInRequiredDialog
+          open={/sign in required/i.test(error)}
+          onClose={() => setError("")}
+          nextUrl={`/afcat/lab${typeof window !== "undefined" ? window.location.search : ""}`}
+          title="Sign in to attempt AFCAT mock"
+          description="Sign in to start or resume your AFCAT mock, save responses and view your result analysis."
+        />
+        {error && !/sign in required/i.test(error) && (
+          <div role="alert" className="mb-4 space-y-2 rounded-xl border border-amber-300 bg-amber-50 p-4">
             <p>{error}</p>
-            {/sign in required/i.test(error) ? (
-              <Link
-                className="font-semibold text-blue-700 underline"
-                onClick={() => trackAfcatFunnel("afcat_signin_click", { placement: "lab" })}
-                href={`/auth/login?next=${encodeURIComponent(`/afcat/lab${typeof window !== "undefined" ? window.location.search : ""}`)}`}
-              >
-                Sign in with Defence Pathshala
-              </Link>
-            ) : (
-              <button
-                className={button}
-                onClick={() => window.location.reload()}
-              >
-                Reload saved attempt
-              </button>
-            )}
+            <button className={button} onClick={() => window.location.reload()}>Reload saved attempt</button>
           </div>
         )}
         {loading && (
