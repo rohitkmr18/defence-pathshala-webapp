@@ -8,7 +8,9 @@ const directory = 'supabase/migrations';
 test('every observed applied production migration has its exact recorded version and SQL', () => {
   const files = fs.readdirSync(directory).filter(name => name.endsWith('.sql')).sort();
   const applied = history.migrations.map(row => `${row.version}_${row.name}.sql`).sort();
-  // Staging-only mock migrations are exported for review, not part of observed production history.
+  // The mock engine migrations are kept out of the observed-production-history comparison below. They were
+  // applied to staging first and to production on 2026-11-21 (production versions 20261121101042 and
+  // 20261121101054, see docs/mock-cds-gk/production-rollout.md); the ledger file itself has not been refreshed.
   // Keep this allow-list explicit so unrelated or unreviewed migrations still fail CI.
   const stagingOnly = [
     '20261119185324_mock_engine_foundation.sql',
