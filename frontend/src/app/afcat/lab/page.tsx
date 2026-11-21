@@ -467,6 +467,7 @@ export default function AfcatLab() {
           open={/sign in required/i.test(error)}
           onClose={() => setError("")}
           nextUrl={`/afcat/lab${typeof window !== "undefined" ? window.location.search : ""}`}
+          onSignInClick={() => trackAfcatFunnel("afcat_signin_click", { placement: "lab" })}
           title="Sign in to attempt AFCAT mock"
           description="Sign in to start or resume your AFCAT mock, save responses and view your result analysis."
         />
