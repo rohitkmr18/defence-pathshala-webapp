@@ -11,6 +11,7 @@ type Props = {
   title?: string;
   description?: string;
   actionLabel?: string;
+  onSignInClick?: () => void;
 };
 
 /** Viewport-centered, dismissible authentication gate shared by full-paper entry points. */
@@ -19,6 +20,7 @@ export default function SignInRequiredDialog({
   title = "Sign in to continue",
   description = "Sign in to start or resume your mock test and save your progress and analysis.",
   actionLabel = "Sign in with Defence Pathshala",
+  onSignInClick,
 }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -61,6 +63,7 @@ export default function SignInRequiredDialog({
         <p id="sign-in-required-description" className="mt-3 text-sm leading-relaxed text-slate-600">{description}</p>
         <Link
           href={`/auth/login?next=${encodeURIComponent(nextUrl)}`}
+          onClick={onSignInClick}
           className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-center text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
         >
           <LogIn className="h-4 w-4" />
