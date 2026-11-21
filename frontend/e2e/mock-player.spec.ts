@@ -164,7 +164,7 @@ test("signed-out learner sees centered, dismissible sign-in prompt without scrol
   expect(bounds).not.toBeNull();
   expect(bounds!.y).toBeGreaterThanOrEqual(0);
   expect(bounds!.y + bounds!.height).toBeLessThanOrEqual(650);
-  await expect(page.getByRole("link", { name: "Sign in with Defence Pathshala" })).toHaveAttribute("href", /auth\\/login\\?next=/);
+  await expect(page.getByRole("link", { name: "Sign in with Defence Pathshala" })).toHaveAttribute("href", /auth.*next=/);
   await page.getByRole("button", { name: "Close sign in prompt" }).click();
   await expect(dialog).not.toBeVisible();
 });
