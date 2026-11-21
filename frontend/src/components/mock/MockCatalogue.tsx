@@ -7,6 +7,7 @@ import {
   BarChart3, CheckCircle2, ClipboardCheck, Clock, FileCheck2, Gauge, Layers, LineChart, PlayCircle, RotateCcw, ShieldCheck, Timer, Trophy,
 } from "lucide-react";
 import { trackMockFunnel } from "@/lib/mock/funnel";
+import SignInRequiredDialog from "@/components/auth/SignInRequiredDialog";
 import { useMockAttempts, type MockAttempt } from "@/lib/mock/attempts";
 
 type Test = {
@@ -73,6 +74,7 @@ export default function MockCatalogue({ embedded = false }: { embedded?: boolean
     if (primaryLive) void start(primaryTest);
     else { setAgreed(false); setBriefing(primaryTest); }
   }
+  const requiresSignIn = /sign in required/i.test(error);
   const signInNext = embedded ? "/dashboard/practice?mode=full_paper&fp=dp" : "/mock/cds-gk";
   const Shell = embedded ? "div" : "main";
 
@@ -117,12 +119,9 @@ export default function MockCatalogue({ embedded = false }: { embedded?: boolean
           </div>
         </section>
 
-        {error && (
-          <div role="alert" className="space-y-2 rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm">
+        {error && !requiresSignIn && (
+          <div role="alert" className="rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm">
             <p>{error}</p>
-            {/sign in required/i.test(error) && (
-              <Link className="font-semibold text-blue-700 underline" href={`/auth/login?next=${encodeURIComponent(signInNext)}`}>Sign in with Defence Pathshala</Link>
-            )}
           </div>
         )}
         {loading && <div role="status" className="h-64 animate-pulse rounded-3xl border border-slate-200 bg-white" aria-label="Loading mocks" />}
@@ -245,6 +244,14 @@ export default function MockCatalogue({ embedded = false }: { embedded?: boolean
           </div>
         )}
       </div>
+
+      <SignInRequiredDialog
+        open={requiresSignIn}
+        onClose={() => setError("")}
+        nextUrl={signInNext}
+        title="Sign in to attempt this mock"
+        description="Create an account or sign in to start and resume your CDS GK mock, save answers, and review your performance."
+      />
 
       {/* Exam instructions before a new attempt */}
       <dialog ref={dialog} aria-labelledby="mock-brief-title" onClose={() => setBriefing(null)}
