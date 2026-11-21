@@ -65,6 +65,8 @@ export default function AfcatLab() {
   const [tests, setTests] = useState<Test[]>([]),
     [paper, setPaper] = useState<Paper | null>(null);
   const [selectedTestId, setSelectedTestId] = useState<string | null>(null);
+  const [signInReturnUrl, setSignInReturnUrl] = useState("/afcat/lab");
+  useEffect(() => { setSignInReturnUrl(`/afcat/lab${window.location.search}`); }, []);
   const [index, setIndex] = useState(0),
     [answers, setAnswers] = useState<Record<string, Answer>>({});
   const [visited, setVisited] = useState<number[]>([]),
@@ -466,7 +468,7 @@ export default function AfcatLab() {
         <SignInRequiredDialog
           open={/sign in required/i.test(error)}
           onClose={() => setError("")}
-          nextUrl={`/afcat/lab${typeof window !== "undefined" ? window.location.search : ""}`}
+          nextUrl={signInReturnUrl}
           onSignInClick={() => trackAfcatFunnel("afcat_signin_click", { placement: "lab" })}
           title="Sign in to attempt AFCAT mock"
           description="Sign in to start or resume your AFCAT mock, save responses and view your result analysis."
