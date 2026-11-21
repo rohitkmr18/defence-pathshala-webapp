@@ -76,7 +76,7 @@ for (const [width, name] of [[320, "mobile-320"], [390, "mobile-390"], [1280, "d
     await page.goto("/mock/cds-gk");
     await expect(page.getByRole("heading", { name: "CDS GK Demo Mock (dummy questions)" })).toBeVisible();
     await expect(page.getByText("+0.83 / -0.28")).toBeVisible();
-    await expect(page.getByText("100", { exact: true })).toBeVisible();
+    await expect(page.getByRole("article").getByText("100", { exact: true })).toBeVisible();
     expect(await noOverflow(page)).toBe(true);
     await page.screenshot({ path: `test-results/mock-catalogue-${name}.png`, fullPage: true });
 
@@ -154,8 +154,33 @@ test("failed save keeps the answer on screen, retries in the background and neve
   await expect(page.getByText("QUESTION 2 / 120")).toBeVisible();
 });
 
-test("signed-out learner is told to sign in", async ({ page }) => {
+test("signed-out learner sees centered, dismissible sign-in prompt without scrolling", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 650 });
   await page.route("**/api/mock/tests", (r) => r.fulfill({ status: 401, json: { error: "Sign in required" } }));
   await page.goto("/mock/cds-gk");
-  await expect(page.getByRole("link", { name: "Sign in with Defence Pathshala" })).toBeVisible();
+  const dialog = page.getByRole("dialog", { name: "Sign in to attempt this mock" });
+  await expect(dialog).toBeVisible();
+  const bounds = await dialog.boundingBox();
+  expect(bounds).not.toBeNull();
+  expect(bounds!.y).toBeGreaterThanOrEqual(0);
+  expect(bounds!.y + bounds!.height).toBeLessThanOrEqual(650);
+  await expect(page.getByRole("link", { name: "Sign in with Defence Pathshala" })).toHaveAttribute("href", /auth.*next=/);
+  await page.getByRole("button", { name: "Close sign in prompt" }).click();
+  await expect(dialog).not.toBeVisible();
+});
+
+test("sign-in failure after guest starts mock opens dialog and allows closing and retry", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 650 });
+  await mockApi(page);
+  await page.route("**/api/mock/sessions", (r) => r.fulfill({ status: 401, json: { error: "Sign in required" } }));
+  await page.goto("/mock/cds-gk");
+  await page.getByRole("button", { name: "Start free mock 01" }).click();
+  await page.getByRole("checkbox").check();
+  await page.getByRole("button", { name: "Begin test" }).click();
+  const dialog = page.getByRole("dialog", { name: "Sign in to attempt this mock" });
+  await expect(dialog).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(dialog).not.toBeVisible();
+  await page.getByRole("button", { name: "Start free mock 01" }).click();
+  await expect(page.getByRole("button", { name: "Begin test" })).toBeVisible();
 });

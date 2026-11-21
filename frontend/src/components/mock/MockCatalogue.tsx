@@ -7,6 +7,7 @@ import {
   BarChart3, CheckCircle2, ClipboardCheck, Clock, FileCheck2, Gauge, Layers, LineChart, PlayCircle, RotateCcw, ShieldCheck, Timer, Trophy,
 } from "lucide-react";
 import { trackMockFunnel } from "@/lib/mock/funnel";
+import SignInRequiredDialog from "@/components/auth/SignInRequiredDialog";
 import { useMockAttempts, type MockAttempt } from "@/lib/mock/attempts";
 
 type Test = {
@@ -64,33 +65,52 @@ export default function MockCatalogue({ embedded = false }: { embedded?: boolean
       setStarting(null);
     }
   }
+  const primaryTest = tests[0];
+  const primaryAttempts = primaryTest ? (byTest.get(primaryTest.id) ?? []) : [];
+  const primaryLive = primaryAttempts.find((a) => a.status === "IN_PROGRESS" && !a.expired);
+  const primaryFinished = primaryAttempts.some((a) => a.result);
+  function handleHeroStart() {
+    if (!primaryTest || starting) return;
+    if (primaryLive) void start(primaryTest);
+    else { setAgreed(false); setBriefing(primaryTest); }
+  }
+  const requiresSignIn = /sign in required/i.test(error);
   const signInNext = embedded ? "/dashboard/practice?mode=full_paper&fp=dp" : "/mock/cds-gk";
   const Shell = embedded ? "div" : "main";
 
   return (
     <Shell className={embedded ? "text-slate-900" : "min-h-screen bg-slate-50 text-slate-900"} style={embedded ? undefined : { overflowX: "clip" }}>
-      <div className={embedded ? "space-y-6" : "mx-auto max-w-5xl space-y-6 px-4 py-6 sm:px-6"}>
+      <div className={embedded ? "space-y-6" : "mx-auto max-w-5xl space-y-6 px-4 py-4 sm:px-6 sm:py-6"}>
         {/* Hero */}
-        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#081b35] via-[#0b2547] to-[#123a6b] p-6 text-white shadow-xl sm:p-9">
+        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#081b35] via-[#0b2547] to-[#123a6b] p-5 text-white shadow-xl sm:p-8">
           <div aria-hidden="true" className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-blue-500/20 blur-3xl" />
           <div aria-hidden="true" className="pointer-events-none absolute -bottom-20 left-1/3 h-48 w-48 rounded-full bg-emerald-400/10 blur-3xl" />
           <div className="relative">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-blue-200">
-              <ClipboardCheck className="h-3.5 w-3.5" />DP Mock Tests · CDS General Knowledge
+              <ClipboardCheck className="h-3.5 w-3.5" />CDS GK · Full-length mock
             </span>
             {embedded ? (
-              <h2 className="mt-4 max-w-2xl text-2xl font-black leading-tight tracking-tight sm:text-4xl">Sit a full CDS GK paper. Know exactly where your marks went.</h2>
+              <h2 className="mt-4 max-w-2xl text-2xl font-black leading-tight tracking-tight sm:text-4xl">Test your CDS GK readiness.</h2>
             ) : (
-              <h1 className="mt-4 max-w-2xl text-2xl font-black leading-tight tracking-tight sm:text-4xl">Sit a full CDS GK paper. Know exactly where your marks went.</h1>
+              <h1 className="mt-4 max-w-2xl text-2xl font-black leading-tight tracking-tight sm:text-4xl">Test your CDS GK readiness.</h1>
             )}
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-blue-100 sm:text-base">
-              Full-length mocks of original Defence Pathshala questions, set to the UPSC CDS pattern and marking. Questions are new — not repeats of past papers — so your score reflects what you know.
+              Original Defence Pathshala questions, not repeated PYQs. Attempt under UPSC CDS exam conditions and see exactly where you lose marks.
             </p>
-            <ul className="mt-5 flex flex-wrap gap-2 text-xs font-semibold">
-              {["120 questions · 2 hours · 100 marks", "UPSC negative marking", "Server timer · resumes on refresh", "Instant analysis"].map((x) => (
-                <li key={x} className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-blue-50">{x}</li>
+            <div className="mt-4 grid grid-cols-3 gap-2" aria-label="Mock specifications">
+              {[[primaryTest ? String(primaryTest.expected_questions) : "120", "Questions"], [primaryTest ? String(Math.round(primaryTest.duration_seconds / 60)) : "120", "Minutes"], [primaryTest ? Number(primaryTest.max_marks).toFixed(0) : "100", "Marks"]].map(([value, label]) => (
+                <div key={label} className="rounded-xl border border-white/10 bg-white/10 px-2 py-3 text-center">
+                  <strong className="block text-xl font-black tabular-nums sm:text-2xl">{value}</strong>
+                  <span className="text-[11px] font-semibold text-blue-100">{label}</span>
+                </div>
               ))}
-            </ul>
+            </div>
+            <button type="button" disabled={loading || !primaryTest || starting !== null} onClick={handleHeroStart}
+              className="mt-4 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-blue-500 px-5 text-sm font-extrabold text-white shadow-lg transition hover:bg-blue-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto sm:min-w-64">
+              {primaryLive ? <Clock className="h-5 w-5" /> : <PlayCircle className="h-5 w-5" />}
+              {loading ? "Loading free mocks…" : !primaryTest ? "No mock available" : starting === primaryTest.id ? "Opening mock…" : primaryLive ? "Resume your mock" : primaryFinished ? "Attempt mock again" : "Start free mock 01"}
+            </button>
+            <p className="mt-3 text-xs font-medium text-blue-100">UPSC negative marking · Server-side timer · Instant analysis</p>
             {done.length > 0 && (
               <p className="mt-5 inline-flex items-center gap-2 rounded-2xl bg-white/10 px-4 py-2 text-sm">
                 <Trophy className="h-4 w-4 text-amber-300" />Your record: <strong>{done.length}</strong> attempt{done.length === 1 ? "" : "s"} · best <strong>{best!.toFixed(2)}</strong>
@@ -99,17 +119,22 @@ export default function MockCatalogue({ embedded = false }: { embedded?: boolean
           </div>
         </section>
 
-        {error && (
-          <div role="alert" className="space-y-2 rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm">
+        {error && !requiresSignIn && (
+          <div role="alert" className="rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm">
             <p>{error}</p>
-            {/sign in required/i.test(error) && (
-              <Link className="font-semibold text-blue-700 underline" href={`/auth/login?next=${encodeURIComponent(signInNext)}`}>Sign in with Defence Pathshala</Link>
-            )}
           </div>
         )}
         {loading && <div role="status" className="h-64 animate-pulse rounded-3xl border border-slate-200 bg-white" aria-label="Loading mocks" />}
         {!loading && !tests.length && !error && (
           <p role="status" className="rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-600">No CDS GK mock is published yet.</p>
+        )}
+
+        {!embedded && (
+          <section aria-label="Founder credentials" className="rounded-2xl border border-blue-100 bg-white px-5 py-4 shadow-sm">
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-blue-700">Built by Defence Pathshala</p>
+            <p className="mt-1 text-sm font-bold text-slate-900">Rohit Kumar · IIT Kanpur · CAPF AC AIR 163 · CDS written qualified 4 times</p>
+            <p className="mt-1 text-xs text-slate-600">Exam experience informing the learning platform. Original mock questions are not official UPSC papers.</p>
+          </section>
         )}
 
         {/* Mock cards */}
@@ -174,6 +199,13 @@ export default function MockCatalogue({ embedded = false }: { embedded?: boolean
           );
         })}
 
+        {!embedded && !loading && tests.length > 0 && (
+          <nav aria-label="Related CDS preparation" className="flex flex-wrap gap-3 text-sm font-semibold">
+            <Link href="/pyqs/cds" className="rounded-xl border border-blue-200 bg-white px-4 py-3 text-blue-700 hover:bg-blue-50">Explore CDS PYQs</Link>
+            <Link href="/dashboard/practice" className="rounded-xl border border-blue-200 bg-white px-4 py-3 text-blue-700 hover:bg-blue-50">Practice by subject</Link>
+          </nav>
+        )}
+
         {/* How it works + what you get */}
         {!loading && tests.length > 0 && (
           <div className="grid gap-4 lg:grid-cols-2">
@@ -212,6 +244,14 @@ export default function MockCatalogue({ embedded = false }: { embedded?: boolean
           </div>
         )}
       </div>
+
+      <SignInRequiredDialog
+        open={requiresSignIn}
+        onClose={() => setError("")}
+        nextUrl={signInNext}
+        title="Sign in to attempt this mock"
+        description="Create an account or sign in to start and resume your CDS GK mock, save answers, and review your performance."
+      />
 
       {/* Exam instructions before a new attempt */}
       <dialog ref={dialog} aria-labelledby="mock-brief-title" onClose={() => setBriefing(null)}
