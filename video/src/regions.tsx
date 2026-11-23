@@ -1,29 +1,23 @@
-// !! SCHEMATIC PLACEHOLDER GEOMETRY (1000x1000 map space) !!
-// These shapes are NOT the real boundary. Before publishing, replace each `d` with the
-// path traced from the official Survey of India outline (see public/maps/README.md).
-// Keep the ids so the timeline keeps working.
-import type { RegionId } from "./timeline";
+import type { ColorKey, PlaceId, RegionId } from "./timeline";
 
-export const REGION_PATHS: Record<RegionId, string> = {
-  india: "M 330 520 L 380 430 L 470 400 L 560 430 L 640 520 L 600 640 L 500 700 L 400 650 Z",
-  pok: "M 180 430 L 260 360 L 380 300 L 470 330 L 470 400 L 380 430 L 330 520 L 240 540 Z",
-  aksai: "M 640 520 L 600 430 L 700 400 L 820 470 L 800 580 L 700 610 Z",
-  shaksgam: "M 470 330 L 560 290 L 620 340 L 560 430 L 470 400 Z",
+export const REGIONS: RegionId[] = ["india", "pok", "aksai", "shaksgam"];
+
+// Fill colours sampled from the DP base map
+export const COLORS: Record<ColorKey, string> = {
+  claim: "#fad2f6",
+  pak: "#c9d1fe",
+  china: "#e0fabd",
+  flash: "#ffd240",
 };
 
-export const REGION_COLORS: Record<RegionId, string> = {
-  india: "#f2c230",
-  pok: "#35b36b",
-  aksai: "#e8473f",
-  shaksgam: "#e8473f",
+// Marker positions in IMAGE space. Srinagar/Leh/Jammu are read off the DP artwork;
+// Muzaffarabad and Baramulla are placed from their real lat/long relative to Srinagar
+// (approximate — this is an illustrative map, not a survey).
+export const PLACES: Record<PlaceId, { x: number; y: number; label: string; dx: number; dy: number; anchor: "start" | "end" }> = {
+  srinagar: { x: 282, y: 913, label: "Srinagar", dx: 20, dy: 10, anchor: "start" },
+  muzaffarabad: { x: 150, y: 875, label: "Muzaffarabad", dx: -20, dy: -22, anchor: "start" },
+  baramulla: { x: 234, y: 898, label: "Baramulla", dx: -70, dy: 56, anchor: "start" },
+  leh: { x: 620, y: 888, label: "Leh", dx: 14, dy: -10, anchor: "start" },
+  jammu: { x: 241, y: 1087, label: "Jammu", dx: 14, dy: 8, anchor: "start" },
+  delhi: { x: 520, y: 1480, label: "Delhi se", dx: -14, dy: 8, anchor: "end" },
 };
-
-// Approximate marker positions on the schematic (re-place after swapping the map).
-export const PLACES = {
-  muzaffarabad: { x: 330, y: 450, label: "Muzaffarabad" },
-  baramulla: { x: 400, y: 440, label: "Baramulla" },
-  srinagar: { x: 455, y: 470, label: "Srinagar" },
-  delhi: { x: 560, y: 900, label: "Delhi" },
-};
-
-export const LOC_PATH = "M 330 520 L 380 430 L 470 400";

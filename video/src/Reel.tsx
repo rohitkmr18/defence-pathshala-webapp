@@ -57,7 +57,7 @@ const PhotoCard: React.FC<{ p: NonNullable<Scene["photo"]>; end: number }> = ({ 
   const s = pop(t, p.at);
   const out = interpolate(t, [end - 0.3, end], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
-    <div style={{ position: "absolute", right: 50, top: 560, width: 420, opacity: out, transform: `translateY(${(1 - s) * 80}px) rotate(${2 - s * 2}deg)` }}>
+    <div style={{ position: "absolute", ...(p.side === "left" ? { left: 50 } : { right: 50 }), top: 560, width: 420, opacity: out, transform: `translateY(${(1 - s) * 80}px) rotate(${2 - s * 2}deg)` }}>
       <div style={{ background: "#fff", padding: 12, borderRadius: 10, boxShadow: "0 14px 34px rgba(0,0,0,0.55)" }}>
         {p.file ? (
           <Img src={staticFile(p.file)} style={{ width: "100%", height: 300, objectFit: "cover", filter: "sepia(0.35) contrast(1.05)" }} />
@@ -93,9 +93,9 @@ const Cta: React.FC<{ at: number }> = ({ at }) => {
 };
 
 const Legend: React.FC = () => (
-  <div style={{ position: "absolute", left: 60, top: 1290, fontFamily: SANS, fontWeight: 600, fontSize: 30, color: "#fff", display: "grid", gap: 8 }}>
-    {[["#f2c230", "India"], ["#35b36b", "Pakistan ke kabze mein"], ["#e8473f", "China ke kabze mein"]].map(([c, l]) => (
-      <div key={l} style={{ display: "flex", alignItems: "center", gap: 12 }}><span style={{ width: 26, height: 26, borderRadius: 6, background: c }} />{l}</div>
+  <div style={{ position: "absolute", left: 50, top: 300, fontFamily: SANS, fontWeight: 600, fontSize: 30, color: "#1b2a4a", display: "grid", gap: 10, background: "rgba(255,255,255,0.88)", padding: "18px 24px", borderRadius: 18, boxShadow: "0 6px 20px rgba(0,0,0,0.25)" }}>
+    {[["#fad2f6", "India ke control mein"], ["#c9d1fe", "Pakistan ke kabze mein"], ["#e0fabd", "China ke kabze mein"]].map(([c, l]) => (
+      <div key={l} style={{ display: "flex", alignItems: "center", gap: 12 }}><span style={{ width: 28, height: 28, borderRadius: 7, background: c, border: "2px solid #1b2a4a" }} />{l}</div>
     ))}
   </div>
 );
@@ -114,7 +114,7 @@ const SceneView: React.FC<{ scene: Scene }> = ({ scene }) => (
 export const Reel: React.FC = () => {
   let from = 0;
   return (
-    <AbsoluteFill style={{ background: "radial-gradient(circle at 50% 40%, #223048 0%, #0b1220 70%)" }}>
+    <AbsoluteFill style={{ background: "#fcf0e6" }}>
       {HAS_VO && <Audio src={staticFile(VO_FILE)} />}
       {HAS_MUSIC && <Audio src={staticFile(MUSIC_FILE)} volume={0.12} />}
       {SCENES.map((s) => {
@@ -124,8 +124,8 @@ export const Reel: React.FC = () => {
         return <Sequence key={s.id} from={start} durationInFrames={frames}><SceneView scene={s} /></Sequence>;
       })}
       {/* vignette + persistent DP bug */}
-      <AbsoluteFill style={{ boxShadow: "inset 0 0 220px rgba(0,0,0,0.65)", pointerEvents: "none" }} />
-      <Img src={staticFile("dp-logo.svg")} style={{ position: "absolute", right: 48, top: 150, width: 120, filter: "brightness(0) invert(1)" }} />
+      <AbsoluteFill style={{ boxShadow: "inset 0 0 160px rgba(60,40,20,0.28)", pointerEvents: "none" }} />
+      <Img src={staticFile("dp-logo.svg")} style={{ position: "absolute", right: 48, top: 150, width: 120 }} />
     </AbsoluteFill>
   );
 };
