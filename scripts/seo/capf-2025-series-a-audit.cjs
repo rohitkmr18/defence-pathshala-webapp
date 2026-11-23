@@ -1,15 +1,28 @@
 "use strict";
 // Read-only, source-limited reconciliation. Does not connect to any database.
-// UPSC official CAPF AC 2025 Series A answer key, first 20 items and dropped Q98.
-// https://www.upsc.gov.in/uploads/2026/08/AnsKey-CAPFACs-Exam-2025-GAI-110826.pdf
-const SERIES_A_KEY = Object.freeze({
-  1:"A",2:"C",3:"A",4:"C",5:"A",6:"B",7:"D",8:"B",9:"B",10:"C",
-  11:"C",12:"A",13:"C",14:"B",15:"A",16:"A",17:"C",18:"B",19:"A",20:"A",
-  98:"X",
+// Official UPSC CAPF AC 2025 Series A answer key, Q1-125, including dropped Q98.
+// Source: https://www.upsc.gov.in/uploads/2026/08/AnsKey-CAPFACs-Exam-2025-GAI-110826.pdf
+// Manually transcribed from extracted PDF text; visually cross-check source before data writes.
+const KEY_GROUPS = Object.freeze({
+  1: "A C A C A B D B B C C A C B A A C B A A",
+  21: "A D A B A C C C C A B A A C D D A C C B",
+  41: "D A A C C A A B B B D C A C A A C D B B",
+  61: "C A C A D A B D C B A B C C A D D D C C",
+  81: "D D C A C A D A D C D C D C A A B X A C",
+  101: "B C C A B C A A B D C A A C C D C D C B",
+  121: "D C A B A",
 });
+const SERIES_A_KEY = Object.freeze(Object.fromEntries(
+  Object.entries(KEY_GROUPS).flatMap(([start, letters]) =>
+    letters.split(" ").map((letter, index) => [Number(start) + index, letter])
+  )
+));
+if (Object.keys(SERIES_A_KEY).length !== 125 || SERIES_A_KEY[98] !== "X") {
+  throw new Error("Official Series A key transcription is invalid");
+}
 
 /**
- * Audit only official-key entries explicitly transcribed in SERIES_A_KEY.
+ * Audit the 125 Series A key entries explicitly transcribed in SERIES_A_KEY.
  * Rows must be pre-exported by an authorized operator from a trusted read-only query.
  * Exact exam/year/paper is required; rejects other records rather than conflating series.
  * "X" denotes a dropped item and MUST NOT be scored as one of A/B/C/D.
