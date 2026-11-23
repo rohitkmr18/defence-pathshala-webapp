@@ -4,10 +4,12 @@ import Link from "next/link";
 import {
   slugToExam,
   getExamCoverage,
+  getYearCoverage,
   getCdsPaperAvailability,
 } from "@/lib/seo-data";
 import { pageMetadata } from "@/lib/seo-metadata";
 import Breadcrumbs from "@/components/public/Breadcrumbs";
+import PyqEvidenceMatrix from "@/components/public/PyqEvidenceMatrix";
 import { Calendar, ChevronRight, FileText, ArrowRight, Layers } from "lucide-react";
 
 interface PageProps {
@@ -52,6 +54,8 @@ export default async function ExamPyqArchivePage({ params }: PageProps) {
   const label = coverage.slug === "capf" ? "CAPF AC" : "CDS";
   const paperScope = coverage.slug === "cds" ? "General Knowledge (GK)" : "Paper I";
   const cdsPapers = coverage.slug === "cds" ? await getCdsPaperAvailability() : null;
+  const yearBreakdowns = await Promise.all(coverage.years.map((year) => getYearCoverage(coverage.exam, year.year)));
+  const eligibleYears = yearBreakdowns.filter((year): year is NonNullable<typeof year> => year !== null);
   const practiceHref = `/dashboard/practice?exam=${encodeURIComponent(coverage.exam)}&paper=gs&origin=seo_${coverage.slug}_archive`;
   const breadcrumb = {
     "@context": "https://schema.org", "@type": "BreadcrumbList",
@@ -276,6 +280,8 @@ export default async function ExamPyqArchivePage({ params }: PageProps) {
           <p className="mt-2 text-sm text-slate-600">Yes. Year and subject archives are public. Practice links take you into the application, which may ask you to sign in before continuing.</p>
         </details>
       </section>
+
+      <PyqEvidenceMatrix coverage={coverage} years={eligibleYears} />
 
       {/* Practice CTA */}
       <div className="rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
