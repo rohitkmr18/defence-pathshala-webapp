@@ -4,9 +4,13 @@ import ExamModeSwitcher from "@/components/layout/ExamModeSwitcher";
 import AfcatCtaLink from "@/components/afcat/AfcatCtaLink";
 import AfcatLandingTracker from "@/components/afcat/AfcatLandingTracker";
 import AfcatMockCatalogue from "@/components/afcat/AfcatMockCatalogue";
+import { getPublishedAfcatMocks } from "@/lib/afcat/public-catalogue";
 import DPLogo from "@/components/common/DPLogo";
 import PublicExploreLinks from "@/components/public/PublicExploreLinks";
 import { ArrowRight, BarChart3, BookOpenCheck, CheckCircle2, Clock3, ShieldCheck, Target } from "lucide-react";
+
+// Published mock visibility must reflect the live database, not build-time HTML.
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Free AFCAT Mock Test 2027 Online",
@@ -42,7 +46,14 @@ const sections = [
   "Reasoning & Military Aptitude",
 ];
 
-export default function AfcatPage() {
+export default async function AfcatPage() {
+  let initialTests: Awaited<ReturnType<typeof getPublishedAfcatMocks>> | null = null;
+  try {
+    initialTests = await getPublishedAfcatMocks();
+  } catch {
+    // Keep the landing page accessible; the catalogue renders its retry state.
+  }
+
   return (
     <main className="min-h-screen overflow-x-clip bg-slate-50 text-slate-900">
       <AfcatLandingTracker />
@@ -90,7 +101,7 @@ export default function AfcatPage() {
       </section>
 
       <div className="mx-auto max-w-6xl space-y-16 px-4 py-12 sm:px-6 sm:py-16">
-        <AfcatMockCatalogue />
+        <AfcatMockCatalogue initialTests={initialTests} />
 
         <section aria-labelledby="afcat-method-heading">
           <div className="max-w-2xl">
