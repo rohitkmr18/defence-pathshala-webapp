@@ -267,7 +267,7 @@ test("Batch 3B: source-limited PYQ evidence matrix is SSR and correctly denomina
     const html = await response.text();
     expect(html).toContain('id="pyq-evidence"');
     expect(html).toContain("PYQ inventory by year and subject");
-    expect(html).toContain("12 currently eligible questions");
+    expect(html.replace(/<!-- -->/g, "")).toContain("12 currently eligible questions");
     expect(html).toContain("Zero means no eligible question");
     expect(html).toContain(`href="/pyqs/${exam}/2026"`);
     expect(html).toContain(`href="/pyqs/${exam}/history"`);
