@@ -241,11 +241,13 @@ test("GSC server diagnostics reject anonymous requests without contacting Google
 
 test("Batch 3A: CAPF and CDS archives accurately describe eligible question coverage", async ({ request }) => {
   for (const [path, expected] of [
-    ["/pyqs/capf/2025", "not necessarily the complete official paper or answer key"],
-    ["/pyqs/cds/2024", "not necessarily the complete official paper or answer key"],
-    ["/pyqs/capf/geography", "not a claim about complete exam-paper weightage"],
+    // Isolated upstream intentionally contains only 2026 History rows for each exam.
+    ["/pyqs/capf/2026", "not necessarily the complete official paper or answer key"],
+    ["/pyqs/cds/2026", "not necessarily the complete official paper or answer key"],
+    ["/pyqs/capf/history", "not a claim about complete exam-paper weightage"],
     ["/pyqs/cds/history", "not a claim about complete exam-paper weightage"],
-    ["/pyqs/capf/2025/polity", "Share of Available PYQs"],
+    ["/pyqs/capf/2026/history", "Share of Available PYQs"],
+    ["/pyqs/cds/2026/history", "Share of Available PYQs"],
   ] as const) {
     const response = await request.get(path);
     expect(response.status(), path).toBe(200);
