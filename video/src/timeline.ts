@@ -49,7 +49,7 @@ export type Scene = {
   places?: PlaceId[];
   cards: Card[];
   dates?: { label: string; at: number }[];
-  photo?: { caption: string; at: number; file?: string; side?: "left" | "right" };
+  photo?: { caption: string; at: number; file?: string; side?: "left" | "right"; h?: number };
   badge?: { text: string; at: number; tone: "blue" | "red" };
   /** "draw" = LoC wipes in at `at`; "full" = already visible */
   loc?: { mode: "draw"; at: number } | { mode: "full" };
@@ -113,7 +113,7 @@ export const SCENES: Scene[] = [
       { label: "22 Oct 1947", at: 0.3 },
       { label: "26 Oct 1947", at: 10.6 },
     ],
-    photo: { caption: "Instrument of Accession", at: 11.4 },
+    photo: { caption: "Maharaja Hari Singh · 26 Oct 1947", at: 11.4, file: "photos/accession-crop.jpg", h: 260 },
     cards: [
       { text: "Kabayli hamlawar", at: 2.4, slot: "mid", tone: "red" },
       { text: "Instrument of Accession sign", at: 11.6, slot: "low", tone: "blue" },
@@ -128,7 +128,7 @@ export const SCENES: Scene[] = [
     arrows: [{ d: "M 520 1480 Q 420 1230 290 925", at: 1.4, dur: 3.0, color: "#1b2a4a", dashed: true }],
     plane: { from: [520, 1480], ctrl: [420, 1230], to: [290, 925], at: 1.4, dur: 3.0 },
     dates: [{ label: "27 Oct 1947", at: 0.5 }],
-    photo: { caption: "Indian Army · Srinagar", at: 4.4 },
+    photo: { caption: "Indian troops · Srinagar, 1947", at: 4.4, file: "photos/army-srinagar-1947.jpg", h: 300 },
     badge: { text: "Ceasefire · 1 Jan 1949", at: 8.4, tone: "blue" },
     cards: [
       { text: "Army plane se Srinagar", at: 1.4, slot: "mid" },
@@ -164,7 +164,7 @@ export const SCENES: Scene[] = [
       { label: "1950s", at: 4.6 },
       { label: "1962", at: 8.3 },
     ],
-    photo: { caption: "Aksai Chin", at: 2.9, side: "left" },
+    photo: { caption: "Xinjiang–Tibet highway (G219)", at: 2.9, side: "left", file: "photos/aksai-road-marker.jpg", h: 300 },
     cards: [
       { text: "East mein Ladakh · Aksai Chin", at: 0.3, slot: "top" },
       { text: "Chupke se road", at: 5.4, slot: "mid", tone: "red" },
