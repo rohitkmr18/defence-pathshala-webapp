@@ -9,21 +9,21 @@ import PublicExploreLinks from "@/components/public/PublicExploreLinks";
 import { ArrowRight, BarChart3, BookOpenCheck, CheckCircle2, Clock3, ShieldCheck, Target } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "AFCAT Mock Tests, Results & Preparation",
-  description: "Prepare for AFCAT with published full-length mock tests, saved attempts, section-wise analysis and clear next steps. Explore live AFCAT mocks on Defence Pathshala.",
+  title: "Free AFCAT Mock Test 2027 Online",
+  description: "Explore free AFCAT mock tests online with timed full-length practice, exam-pattern scoring and detailed performance analysis on Defence Pathshala.",
   alternates: { canonical: "/afcat" },
   robots: { index: true, follow: true },
   openGraph: {
     type: "website",
     url: "https://www.defencepathshala.in/afcat",
     siteName: "Defence Pathshala",
-    title: "AFCAT Preparation & Full-Length Mock Tests | Defence Pathshala",
+    title: "Free AFCAT Mock Test 2027 Online | Defence Pathshala",
     description: "Attempt published AFCAT mocks, review saved scores and learn from detailed performance analysis.",
     images: [{ url: "/og/afcat-full-mock-01.png", width: 1200, height: 630, alt: "Defence Pathshala AFCAT mock test preparation" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "AFCAT Preparation & Full-Length Mock Tests",
+    title: "Free AFCAT Mock Test 2027 Online",
     description: "Explore AFCAT full mocks and review your performance on Defence Pathshala.",
     images: ["/og/afcat-full-mock-01.png"],
   },
@@ -68,10 +68,10 @@ export default function AfcatPage() {
             <CheckCircle2 className="h-4 w-4" aria-hidden="true" /> AFCAT preparation
           </p>
           <h1 id="afcat-hero" className="mt-5 max-w-4xl text-4xl font-black leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl">
-            Don&apos;t just attempt AFCAT mocks. <span className="text-blue-300">Know what to improve.</span>
+            Free AFCAT Mock Test 2027. <span className="text-blue-300">Practice online. Improve with analysis.</span>
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-7 text-slate-200 sm:text-lg">
-            Practice with published AFCAT full-length mock tests, return to your saved attempts, and learn from detailed score and topic analysis.
+            Don&apos;t just attempt AFCAT mocks. Know what to improve. Practice with published full-length tests, return to saved attempts, and learn from detailed score and topic analysis.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
             <AfcatCtaLink href="#available-mocks" placement="hero_catalogue"
