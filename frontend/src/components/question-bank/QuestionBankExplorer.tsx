@@ -27,6 +27,7 @@ import DifficultyVisualizer from "@/components/charts/DifficultyVisualizer";
 import QuestionPatternMatrix from "@/components/charts/QuestionPatternMatrix";
 import { buildExploreUrl, buildPracticeUrl, parseFiltersFromSearchParams, type QuestionSetFilters } from "@/lib/question-filters";
 import { trackLearningEvent } from "@/lib/learning-events";
+import { parseSeparatePaperTab } from "@/lib/exam-registry";
 
 interface Props {
   meta: QuestionBankMeta;
@@ -38,8 +39,8 @@ export default function QuestionBankExplorer({ meta }: Props) {
   const searchParams = useSearchParams();
   const context = useMemo(() => parseFiltersFromSearchParams(searchParams), [searchParams]);
   const paperParam = searchParams.get("paper");
-  const paper: "maths" | "english" | null = paperParam === "maths" || paperParam === "english" ? paperParam : null;
-  // On Maths / English every paper is a CDS paper, so the exam is implied rather than chosen.
+  const paper = parseSeparatePaperTab(paperParam);
+  // On a separate paper tab (CDS Maths / English, NDA Maths / GAT) the exam is implied rather than chosen.
   const selectedExams = useMemo(
     () => (paper && context.exams.length === 0 ? meta.exams.map((e) => e.value) : context.exams),
     [paper, context.exams, meta.exams],
@@ -270,7 +271,7 @@ export default function QuestionBankExplorer({ meta }: Props) {
         )}
 
         <div className={`grid gap-6 ${paper ? "md:grid-cols-2" : "md:grid-cols-3"}`}>
-          {/* Exam Filter (hidden on Maths / English: every paper there is CDS) */}
+          {/* Exam Filter (hidden on a separate paper tab: its exam is implied) */}
           {!paper && (
           <div>
             <div className="mb-2 flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-700">

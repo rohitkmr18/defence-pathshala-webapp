@@ -42,14 +42,16 @@ test('resolvePaper maps today\'s stored paper values', () => {
   assert.equal(resolvePaper('CDS', 'General Knowledge').id, 'cds-gk');
   assert.equal(resolvePaper('CAPF-AC', 'Paper I').id, 'capf-p1');
   assert.equal(resolvePaper('CDS', null).id, 'cds-gk');
-  assert.equal(resolvePaper('NDA', null), null, 'NDA has no live paper yet');
+  assert.equal(resolvePaper('NDA', 'Mathematics').id, 'nda-maths');
+  assert.equal(resolvePaper('NDA', 'General Ability Test').id, 'nda-gat');
 });
 
 test('live/coming-soon status reflects current content', () => {
-  assert.deepEqual(liveExams().map((e) => e.slug).sort(), ['afcat', 'capf', 'cds']);
+  assert.deepEqual(liveExams().map((e) => e.slug).sort(), ['afcat', 'capf', 'cds', 'nda']);
   assert.equal(getPaper('cds-english').status, 'live');
   assert.equal(getPaper('cds-maths').status, 'live');
-  assert.equal(getPaper('nda-gat').status, 'coming_soon');
+  assert.equal(getPaper('nda-maths').status, 'live');
+  assert.equal(getPaper('nda-gat').status, 'live');
 });
 
 test('scorePaper applies negative marking', () => {

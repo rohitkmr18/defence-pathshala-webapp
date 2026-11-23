@@ -60,6 +60,17 @@ export const EXAM_SCORING_PRESETS: Record<string, ExamScoringRule> = {
     penaltyFormatted: "-0.83",
     schemeLabel: "+2.50 / -0.83",
   },
+  NDA_GAT: {
+    exam: "NDA",
+    totalQuestions: 150,
+    totalMarks: 600,
+    correctMarks: 4,
+    penaltyMarks: 4 / 3, // one-third of the marks assigned to a question
+    recoverableSwingPerQuestion: 16 / 3,
+    correctFormatted: "+4.00",
+    penaltyFormatted: "-1.33",
+    schemeLabel: "+4.00 / -1.33",
+  },
   AFCAT: {
     exam: "AFCAT",
     totalQuestions: 100,
@@ -81,6 +92,9 @@ export function getScoringRules(examOrPaper?: string, paper?: string | null): Ex
 
   if (norm.includes("cds")) {
     return EXAM_SCORING_PRESETS.CDS!;
+  }
+  if (norm.includes("nda") && paper === "General Ability Test") {
+    return EXAM_SCORING_PRESETS.NDA_GAT!;
   }
   if (norm.includes("nda")) {
     return EXAM_SCORING_PRESETS.NDA!;

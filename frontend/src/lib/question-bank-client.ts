@@ -1,3 +1,4 @@
+import type { SeparatePaperTabId } from "@/lib/exam-registry";
 
 export interface SubjectAnalyticsData {
   totalQuestions: number;
@@ -28,7 +29,7 @@ export async function getQuestionBank(params?: {
   exams?: string[];
   years?: number[];
   cycles?: string[];
-  paper?: "maths" | "english" | null;
+  paper?: SeparatePaperTabId | null;
 }): Promise<QuestionBankPayload> {
   const search = new URLSearchParams();
 

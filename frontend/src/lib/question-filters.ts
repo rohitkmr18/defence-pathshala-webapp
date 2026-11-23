@@ -3,6 +3,14 @@
 // Single source of truth for Explore <-> Practice filter serialization & URLs.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import type { SeparatePaperTabId } from "./exam-registry";
+
+/**
+ * Non-GS paper tab ids. Kept local (type-only import above) so this module stays dependency-free
+ * for the node test runner; a test asserts it matches the registry's PAPER_TABS.
+ */
+export const SEPARATE_PAPER_TAB_IDS: readonly SeparatePaperTabId[] = ["maths", "english", "nda-maths", "nda-gat"];
+
 export interface QuestionSetFilters {
   exams: string[];
   years: number[];
@@ -16,8 +24,8 @@ export interface QuestionSetFilters {
   mode?: "instant" | "attempt" | "full_paper";
   returnTo?: string;
   origin?: string;
-  /** CDS/CAPF paper tab. Absent = GS. Only "maths" | "english" are serialized. */
-  paper?: "maths" | "english";
+  /** Paper tab. Absent = GS. Only non-GS tabs are serialized (CDS maths/english, NDA nda-maths/nda-gat). */
+  paper?: SeparatePaperTabId;
   progress?: {
     checked_ids: string[];
     marked_for_review_ids?: string[];
@@ -26,11 +34,11 @@ export interface QuestionSetFilters {
 }
 
 function parsePaper(value: unknown): QuestionSetFilters["paper"] {
-  return value === "maths" || value === "english" ? value : undefined;
+  return typeof value === "string" && (SEPARATE_PAPER_TAB_IDS as readonly string[]).includes(value) ? (value as SeparatePaperTabId) : undefined;
 }
 
 /** Paper tab from the current browser URL (client only); null = GS. */
-export function activePaperParam(): "maths" | "english" | null {
+export function activePaperParam(): SeparatePaperTabId | null {
   if (typeof window === "undefined") return null;
   return parsePaper(new URLSearchParams(window.location.search).get("paper")) ?? null;
 }

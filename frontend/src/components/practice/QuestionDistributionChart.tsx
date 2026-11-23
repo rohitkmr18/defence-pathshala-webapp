@@ -13,6 +13,7 @@ import {
 import { BarChart3 } from "lucide-react";
 import ChartTooltip from "./ChartTooltip";
 import type { ActiveFilters } from "@/app/dashboard/practice/components/PracticePageClient";
+import type { SeparatePaperTabId } from "@/lib/exam-registry";
 
 export interface DistributionItem {
   key: string;
@@ -21,7 +22,7 @@ export interface DistributionItem {
 }
 
 interface QuestionDistributionChartProps {
-  paper?: "maths" | "english" | null;
+  paper?: SeparatePaperTabId | null;
   activeFilters: ActiveFilters;
   allExamsSelected?: boolean;
   onBarClick: (type: "cycle" | "year" | "exam", value: string | number) => void;

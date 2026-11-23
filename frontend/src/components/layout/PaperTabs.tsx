@@ -4,9 +4,9 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { rememberPaperChoice } from "@/lib/learner-mode";
-import { PAPER_TAB_PARAM, parsePaperTab, visiblePaperTabs } from "@/lib/exam-registry";
+import { PAPER_TAB_PARAM, parsePaperTab, tabMode, visiblePaperTabs } from "@/lib/exam-registry";
 
-/** Paths where the GS / Maths / English paper tab applies. */
+/** Paths where the paper tab (GS / Maths / English, or NDA Maths / GAT) applies. */
 const PAPER_AWARE_PATHS = ["/dashboard/practice", "/dashboard/question-bank"];
 const PAPER_AWARE_EXACT = ["/dashboard"];
 
@@ -17,12 +17,14 @@ export const PAPER_TAB_CLASS = "flex-1 whitespace-nowrap rounded-lg px-3 py-2 te
 function PaperTabsInner() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const tabs = visiblePaperTabs();
+  const active = parsePaperTab(searchParams.get(PAPER_TAB_PARAM));
+  const mode = tabMode(active);
+  const tabs = visiblePaperTabs(mode);
   const applies = PAPER_AWARE_EXACT.includes(pathname) || PAPER_AWARE_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
   // Only the picker pages carry the tab; session/full-paper screens keep the paper from their own URL.
-  if (!applies || tabs.length < 2 || pathname.includes("/session") || pathname.includes("/full-paper")) return null;
-
-  const active = parsePaperTab(searchParams.get(PAPER_TAB_PARAM));
+  // CDS/CAPF shows tabs only when there is a choice beyond GS; NDA always shows which paper is open.
+  const minTabs = mode === "nda" ? 1 : 2;
+  if (!applies || tabs.length < minTabs || pathname.includes("/session") || pathname.includes("/full-paper")) return null;
   const hrefFor = (id: string) => {
     const next = new URLSearchParams(searchParams.toString());
     if (id === "gs") next.delete(PAPER_TAB_PARAM); else next.set(PAPER_TAB_PARAM, id);

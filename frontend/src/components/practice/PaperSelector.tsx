@@ -18,6 +18,8 @@ export default function PaperSelector({
   initialExam,
   initialYear,
 }: PaperSelectorProps) {
+  // UPSC exams held twice a year carry a cycle (I / II).
+  const hasCycles = (label: string) => label === "CDS" || label === "NDA";
   // Helper to map DB/canonical exam to friendly UI label (e.g., 'CAPF-AC' -> 'CAPF')
   const getExamLabel = (exam: string) => {
     const cleaned = exam.trim().toUpperCase();
@@ -80,9 +82,9 @@ export default function PaperSelector({
 
   const [selectedYear, setSelectedYear] = useState<number>(initialYearValue);
 
-  // ── Derive unique cycles for selected exam & year (CDS only) ──────────────
+  // ── Derive unique cycles for selected exam & year (CDS and NDA) ───────────
   const availableCycles = useMemo(() => {
-    if (selectedExamLabel !== "CDS") {
+    if (!hasCycles(selectedExamLabel)) {
       return [] as string[];
     }
 
@@ -164,12 +166,12 @@ export default function PaperSelector({
     const latestYear = yearsForExam[0] ?? selectedYear;
     setSelectedYear(latestYear);
 
-    if (examLabel === "CDS") {
+    if (hasCycles(examLabel)) {
       // Default to "II" as most recent if available
       const cyclesForYear = papers
         .filter(
           (p) =>
-            getExamLabel(p.exam) === "CDS" && p.year === latestYear && p.cycle
+            getExamLabel(p.exam) === examLabel && p.year === latestYear && p.cycle
         )
         .map((p) => p.cycle!);
       setSelectedCycle(
@@ -183,10 +185,10 @@ export default function PaperSelector({
   const handleSelectYear = (year: number) => {
     setSelectedYear(year);
 
-    if (selectedExamLabel === "CDS") {
+    if (hasCycles(selectedExamLabel)) {
       const cyclesForYear = papers
         .filter(
-          (p) => getExamLabel(p.exam) === "CDS" && p.year === year && p.cycle
+          (p) => getExamLabel(p.exam) === selectedExamLabel && p.year === year && p.cycle
         )
         .map((p) => p.cycle!);
 
@@ -270,7 +272,7 @@ export default function PaperSelector({
         </div>
       </div>
 
-      {/* ── STEP 3: Cycle Tabs (CDS only) ────────────────────────────── */}
+      {/* ── STEP 3: Cycle Tabs (CDS and NDA) ─────────────────────────── */}
       {availableCycles.length > 0 && (
         <div>
           <span className="mb-2.5 block text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">

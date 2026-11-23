@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { paperTabDbValues } from "@/lib/exam-registry";
+import { paperTabDbValues, parseSeparatePaperTab } from "@/lib/exam-registry";
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
@@ -146,7 +146,7 @@ export async function GET(request: NextRequest) {
     if (preferenceResult.error) throw new Error(preferenceResult.error.message);
 
     const targetExams = (preferenceResult.data || []).map((row) => row.exam);
-    // Each paper tab (GS / Maths / English) gets its own dashboard: only its questions,
+    // Each paper tab (GS / Maths / English / NDA Maths / NDA GAT) gets its own dashboard: only its questions,
     // attempts and sessions count, so Maths never dilutes GS analytics and vice versa.
     const papers = new Set(paperTabDbValues(request.nextUrl.searchParams.get("paper")));
     const scopedCorpus = corpus.filter((q) => papers.has(String(q.paper ?? "")));
@@ -158,8 +158,8 @@ export async function GET(request: NextRequest) {
       targetExams,
     });
 
-    const tab = request.nextUrl.searchParams.get("paper");
-    const body = tab === "maths" || tab === "english" ? withPaperLinks(intelligence, tab) : intelligence;
+    const tab = parseSeparatePaperTab(request.nextUrl.searchParams.get("paper"));
+    const body = tab ? withPaperLinks(intelligence, tab) : intelligence;
     return NextResponse.json(body, {
       headers: { "Cache-Control": "private, no-store" },
     });

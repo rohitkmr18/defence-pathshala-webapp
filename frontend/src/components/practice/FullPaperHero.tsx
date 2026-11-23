@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Clock, Target, Award } from "lucide-react";
 import PaperSelector from "./PaperSelector";
+import type { SeparatePaperTabId } from "@/lib/exam-registry";
 
 export interface FullPaperDefinition {
   id: string;
@@ -17,10 +18,36 @@ export interface FullPaperDefinition {
   durationSeconds: number;
   marks: number;
   /** Paper tab this mock belongs to; absent = GS. */
-  paperTab?: "maths" | "english";
+  paperTab?: SeparatePaperTabId;
 }
 
 export const AVAILABLE_FULL_PAPERS: FullPaperDefinition[] = [
+  {
+    id: "nda-2026-2-maths",
+    exam: "NDA",
+    year: 2026,
+    cycle: "II",
+    label: "NDA II 2026 · Mathematics",
+    questions: 120,
+    attemptableQuestions: 119,
+    availabilityNote: "1 question is withheld pending source verification.",
+    duration: "2.5 Hours",
+    durationSeconds: 9000,
+    marks: 300,
+    paperTab: "nda-maths",
+  },
+  {
+    id: "nda-2026-2-gat",
+    exam: "NDA",
+    year: 2026,
+    cycle: "II",
+    label: "NDA II 2026 · General Ability Test",
+    questions: 150,
+    duration: "2.5 Hours",
+    durationSeconds: 9000,
+    marks: 600,
+    paperTab: "nda-gat",
+  },
   {
     id: "cds-2026-2-maths",
     exam: "CDS",
@@ -358,7 +385,7 @@ export interface FullPaperHeroProps {
   initialExam?: string;
   initialYear?: number;
   /** Paper tab whose mocks to list; absent = GS. */
-  paperTab?: "maths" | "english";
+  paperTab?: SeparatePaperTabId;
 }
 
 export default function FullPaperHero({
