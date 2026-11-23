@@ -258,3 +258,20 @@ test("Batch 3A: CAPF and CDS archives accurately describe eligible question cove
     expect(html, path).toContain('rel="canonical" href="https://www.defencepathshala.in');
   }
 });
+
+test("Batch 3B: source-limited PYQ evidence matrix is SSR and correctly denominated", async ({ request }) => {
+  for (const exam of ["cds", "capf"]) {
+    const path = `/pyqs/${exam}`;
+    const response = await request.get(path);
+    expect(response.status(), path).toBe(200);
+    const html = await response.text();
+    expect(html).toContain('id="pyq-evidence"');
+    expect(html).toContain("PYQ inventory by year and subject");
+    expect(html).toContain("12 currently eligible questions");
+    expect(html).toContain("Zero means no eligible question");
+    expect(html).toContain(`href="/pyqs/${exam}/2026"`);
+    expect(html).toContain(`href="/pyqs/${exam}/history"`);
+    expect(html).toContain('rel="canonical" href="https://www.defencepathshala.in');
+    expect(html).not.toContain("predicted topic weightage");
+  }
+});
