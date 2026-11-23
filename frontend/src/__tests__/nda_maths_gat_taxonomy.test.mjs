@@ -53,3 +53,12 @@ test('papers line up with the exam registry', async () => {
   assert.ok(getPaper('nda-maths').dbPaperValues.includes(maths.paper));
   assert.ok(getPaper('nda-gat').dbPaperValues.includes(tax.papers['nda-gat-gk'].paper));
 });
+
+test('NDA English adds the founder-approved Parts of Speech node (NDA only)', () => {
+  const eng = tax.papers['nda-gat-english'];
+  const node = (eng.added_nodes || []).find((n) => n.topic === 'Parts of Speech');
+  assert.ok(node, 'Parts of Speech node missing');
+  assert.equal(node.subject, 'Grammar and Usage');
+  assert.deepEqual(node.subtopics, ['Word Class']);
+  assert.equal(node.approved_by, 'founder');
+});
