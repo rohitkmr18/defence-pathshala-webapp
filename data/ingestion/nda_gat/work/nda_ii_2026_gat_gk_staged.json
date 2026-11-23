@@ -4,7 +4,7 @@
   "q_num": 51,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "A bicycle racing track is a level circular road of radius 10 m. Three cyclists P, Q and R with identical cycles are cycling on the track with speeds 2 m/s, 3 m/s and 5 m/s respectively. If the coefficient of friction between the tyres and the road is 0.1, then which cyclist will slip? (Take g = 10 m/s²)",
   "options": {
@@ -30,7 +30,7 @@
   "q_num": 52,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "The bob of a simple pendulum is displaced from its mean position and then released from rest 0.20 m above its mean position. What is the speed of the bob as it passes through the mean position? (Take g = 10 m/s²)",
   "options": {
@@ -56,7 +56,7 @@
   "q_num": 53,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "A tennis ball of mass 350 g is thrown vertically upwards at a speed of 4 m/s. If M is the maximum gravitational potential energy of the ball and H is the maximum height it reaches, then which one of the following is correct? (Take g = 10 m/s²)",
   "options": {
@@ -82,7 +82,7 @@
   "q_num": 54,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Which of the following is correct regarding the total internal reflection at the interface between two different optical media?",
   "options": {
@@ -108,7 +108,7 @@
   "q_num": 55,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements:\nI. The weight of an object is the same everywhere on the surface of the Earth, but its inertial mass could be different.\nII. The inertial mass and gravitational mass of an object are proportional and the proportionality constant is the same everywhere.\nIII. The inertial mass and weight of an object are the same at different places on Earth.\nWhich of the statements given above is/are correct?",
   "options": {
@@ -134,7 +134,7 @@
   "q_num": 56,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following:\nI. Gravitational field due to a spherical body\nII. Electrostatic field due to a point charge\nIII. Strong nuclear force field due to a proton\nIV. Magnetic field due to a bar magnet\nHow many of the above follow the inverse square law?",
   "options": {
@@ -160,7 +160,7 @@
   "q_num": 57,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "While pouring water slowly from a jug, a general observation is that a water layer usually flows along the side of the jug. Which property of water among the following is responsible for this phenomenon?",
   "options": {
@@ -186,7 +186,7 @@
   "q_num": 58,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "A fish is at a depth d in water of refractive index 4/3. If a transparent slab of refractive index 3/2 and thickness d/2 is placed on the surface of water, then which one of the following is the apparent depth of the fish as observed by an observer in air?",
   "options": {
@@ -212,7 +212,7 @@
   "q_num": 59,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "A particle of mass m moves along x-direction under the force F(x) = F₀(1 − x/L) for 0 ≤ x ≤ L. If the particle starts from rest at x = 0, then what is the speed (v) of the particle at x = L?",
   "options": {
@@ -238,7 +238,7 @@
   "q_num": 60,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "A narrow tunnel passes through the centre of a planet of radius R and uniform mass density ρ. A particle is released into the tunnel. What is the angular frequency of oscillation of the particle (ω) equal to? (Symbols carry their usual meaning)",
   "options": {
@@ -264,7 +264,7 @@
   "q_num": 61,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "On a rainy day, rain drops fall vertically with speed v. An observer is moving towards east with speed v, while another observer moves towards north with the same speed v. What is the angle between apparent rain directions observed by them?",
   "options": {
@@ -290,7 +290,7 @@
   "q_num": 62,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "What is the minimum horizontal speed given to the bob of a simple pendulum of length 50 cm so that it describes a complete circle? (Take g = 10 m/s²)",
   "options": {
@@ -316,7 +316,7 @@
   "q_num": 63,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Two conducting wires made of the same material have lengths L and 1.2 L. If the volume of the longer wire is half that of the shorter wire, then what is the electric resistance of the longer wire in comparison with the shorter wire?",
   "options": {
@@ -342,7 +342,7 @@
   "q_num": 64,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "A biconvex lens is made of a material of refractive index 2 such that the ratio of the radii of curvature of its two faces is 1 : 2. A point source in air is placed on the principal axis of this lens at a distance u from the lens. Which one of the following is correct if the image is formed exactly at the same distance as that of the point source? (where R is the radius of curvature of the first face)",
   "options": {
@@ -368,7 +368,7 @@
   "q_num": 65,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "In a carrom game, a striker of mass 15 g hits a coin of mass 5 g head on and the coin moves with a speed of 0.36 m/s. If the time of contact between the striker and the coin is 3 milliseconds, then what is the average force applied by the striker on the coin?",
   "options": {
@@ -394,7 +394,7 @@
   "q_num": 66,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "A hollow prism is filled with water of refractive index 1.34 and white light is incident on the prism. The white light is assumed to have wavelengths ranging from 4020 Å to 6700 Å. What is the corresponding wavelength range in water?",
   "options": {
@@ -420,7 +420,7 @@
   "q_num": 67,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "A heating filament and an ideal resistor of fixed value are connected in series with a DC voltage source. After some time, the filament has reached its operating point so that the current in the circuit is steady. Which one of the following is correct?",
   "options": {
@@ -446,7 +446,7 @@
   "q_num": 68,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Two astronauts X and Y float in deep space far from external forces. Initially, they are at rest relative to one another. X throws a tool towards Y. Consider the two astronauts and the tool as one system. Which one of the following statements is correct?",
   "options": {
@@ -472,7 +472,7 @@
   "q_num": 69,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "A uniform rope hangs symmetrically over a smooth pulley. One end of the rope is given a slight mass, making that side slightly heavier. Which one of the following is correct?",
   "options": {
@@ -498,7 +498,7 @@
   "q_num": 70,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "An insulating container contains 250 g of water at 20°C. Steam at 100°C is passed through it, heating it up to 25°C. During this process, part of the steam also gets condensed, raising the mass of water to 252 g. If the specific heat of water is 1 Cal g⁻¹ °C⁻¹, then what is the value of the latent heat of steam?",
   "options": {
@@ -524,7 +524,7 @@
   "q_num": 71,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Three parallel glass slabs of refractive indices 1.5, √3 and 1.5 respectively have widths 2 mm, 1 mm and 4 mm. The combination is in air. Light is incident at the first slab at an angle of incidence π/3. What is the angle with respect to the normal at which the light will emerge from the final surface?",
   "options": {
@@ -550,7 +550,7 @@
   "q_num": 72,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider three wires X, Y and Z of the same length such that the ratio of their conductivities is 1 : 2 : 3. Further, the cross-sectional area of wire Z is twice that of Y and the resistance of X is equal to the resistance of Z. What is the ratio of the resistance of Y to that of X?",
   "options": {
@@ -576,7 +576,7 @@
   "q_num": 73,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Two point charges of 4 C and 16 C are kept at a distance of 0.18 m. A third point charge of 1 C is kept between them such that the potential energy of the system is minimum. What is the magnitude of the electric field at the 1 C charge?",
   "options": {
@@ -602,7 +602,7 @@
   "q_num": 74,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements in respect of sound waves:\nI. The speed of sound waves decreases with an increase in temperature if the atmospheric pressure remains the same.\nII. The speed of sound waves increases with increasing humidity if the atmospheric pressure remains the same.\nIII. The speed of sound waves is not affected by a change in atmospheric pressure, provided the temperature is kept constant.\nWhich of the statements given above are correct?",
   "options": {
@@ -628,7 +628,7 @@
   "q_num": 75,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements:\nStatement-I: Marine animals remain alive in winter and move near the bottom of lakes despite frozen water on the surface.\nStatement-II: The density of water is maximum at 4°C and water at the bottom of lakes remains warm in winter.\nWhich one of the following is correct in respect of the above statements?",
   "options": {
@@ -654,7 +654,7 @@
   "q_num": 76,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements regarding oxidation numbers:\nI. The oxidation number of oxygen in peroxides and superoxides is assigned as −1 and −1/2 respectively.\nII. In all its compounds, fluorine has an oxidation number of −1.\nIII. In a reduction half-reaction, the oxidation number of the reductant decreases.\nWhich of the statements given above are correct?",
   "options": {
@@ -680,7 +680,7 @@
   "q_num": 77,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements regarding the properties of hydrogen and water:\nI. Tritium, the isotope of hydrogen, is radioactive and emits low energy alpha particles.\nII. In the gas phase, the structure of water is linear.\nIII. The basic principle of a hydrogen economy is the transportation and storage of energy in the form of liquid or gaseous molecular hydrogen.\nWhich of the statements given above is/are not correct?",
   "options": {
@@ -706,7 +706,7 @@
   "q_num": 78,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements regarding nitrogen:\nI. Nitrogen contains a triple bond.\nII. Nitrogen is a triatomic gas.\nIII. Forces acting between nitrogen molecules are weak van der Waals forces.\nWhich of the statements given above are correct?",
   "options": {
@@ -732,7 +732,7 @@
   "q_num": 79,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "In a dry test tube, 2 mL of HCl (0.1 N) is taken. To this, 4 mL of NaOH (0.1 N) is added. The solution is stirred well, followed by the addition of 2 drops of phenolphthalein. What will be the colour of the solution?",
   "options": {
@@ -758,7 +758,7 @@
   "q_num": 80,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements:\nI. Zinc metal, when treated with both HCl (aq.) and NaOH (aq.) separately, produces molecular hydrogen.\nII. An aqueous copper sulphate solution cannot be kept in a zinc vessel.\nIII. Lemon, tamarind and tomato are natural sources of citric acid, oxalic acid and tartaric acid, respectively.\nWhich of the statements given above are correct?",
   "options": {
@@ -784,7 +784,7 @@
   "q_num": 81,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements:\nI. A solution of iodine in ethanol known as 'tincture of iodine' is a heterogeneous mixture.\nII. A suspension is a heterogeneous mixture and its particles scatter a beam of light passing through it, making its path visible.\nIII. A colloidal solution, although it appears homogeneous, is a heterogeneous mixture.\nWhich of the statements given above are correct?",
   "options": {
@@ -810,7 +810,7 @@
   "q_num": 82,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements:\nI. A 30% solution of hydrogen peroxide is marketed as '10 volume' H₂O₂.\nII. In the compound copper sulphate pentahydrate, all the five water molecules are hydrogen bonded.\nWhich of the statements given above is/are correct?",
   "options": {
@@ -836,7 +836,7 @@
   "q_num": 83,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements:\nI. The leaves of nettle, a herbaceous plant, cause painful stings when touched accidentally because of the secretion of formic acid.\nII. When gypsum is heated at 100°C, it forms calcium carbonate hemihydrate, called Plaster of Paris.\nIII. When moistened with water, anhydrous copper sulphate forms a green-coloured copper sulphate dihydrate.\nWhich of the statements given above is/are correct?",
   "options": {
@@ -862,7 +862,7 @@
   "q_num": 84,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following pairs:\nI. Fe(s) + CuSO₄(aq.) → FeSO₄(aq.) + Cu(s): Displacement reaction\nII. Na₂SO₄(aq.) + BaCl₂(aq.) → BaSO₄(s) + 2NaCl(aq.): Double displacement reaction\nIII. Fe₂O₃(s) + 3CO(g) → 2Fe(s) + 3CO₂(g): Redox reaction\nIV. 2KClO₃(s) → 2KCl(s) + 3O₂(g): Thermal decomposition reaction\nHow many of the pairs given above are correctly matched?",
   "options": {
@@ -888,7 +888,7 @@
   "q_num": 85,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "What are the approximate percentages by mass of nitrogen and hydrogen respectively in urea?",
   "options": {
@@ -914,7 +914,7 @@
   "q_num": 86,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Coconut oil upon hydrolysis with potassium hydroxide gives:",
   "options": {
@@ -940,7 +940,7 @@
   "q_num": 87,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements regarding hydrogen bonds:\nI. Hydrogen bonds can only form when hydrogen is bonded to oxygen, nitrogen or fluorine.\nII. Hydrogen bonds are intramolecular only.\nIII. The strength of a hydrogen bond decreases with a decrease in the electronegativity of the two bonded atoms.\nWhich of the statements given above is/are not correct?",
   "options": {
@@ -966,7 +966,7 @@
   "q_num": 88,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Ionic compounds have high melting and boiling points. This is due to:",
   "options": {
@@ -992,7 +992,7 @@
   "q_num": 89,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Which of the following statements is/are correct in respect of Portland cement?\nI. Adding more water (higher water-cement ratio) accelerates the initial setting time of cement.\nII. The addition of a small percentage of gypsum gives the desired retardation.\nIII. Gypsum is added during manufacturing to accelerate the setting time of cement.",
   "options": {
@@ -1018,7 +1018,7 @@
   "q_num": 90,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following pairs:\nI. Cloud: Aerosol\nII. Mud: Sol\nIII. Milk: Emulsion\nIV. Rubber: Foam\nHow many of the pairs given above are correctly matched?",
   "options": {
@@ -1044,7 +1044,7 @@
   "q_num": 91,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements in relation to respiration in animals:\nI. Glucose breaks down into pyruvate in the cytoplasm of all cells in both aerobic and anaerobic conditions.\nII. The energy released during anaerobic respiration is greater than the energy released in aerobic respiration.\nIII. Carbon dioxide is released only in aerobic respiration.\nWhich of the statements given above is/are correct?",
   "options": {
@@ -1070,7 +1070,7 @@
   "q_num": 92,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "In humans, the exit of partially digested food from the stomach into the small intestine is regulated by which one of the following structures/processes?",
   "options": {
@@ -1096,7 +1096,7 @@
   "q_num": 93,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Which of the following cells form components of complex permanent tissue in plants?\nI. Companion cells\nII. Sieve tubes\nIII. Tracheids\nIV. Vessels",
   "options": {
@@ -1122,7 +1122,7 @@
   "q_num": 94,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Which one of the following is not a part of the hindbrain of human beings?",
   "options": {
@@ -1148,7 +1148,7 @@
   "q_num": 95,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Which of the following organisms show external fertilization?\nI. Pigeon\nII. Frog\nIII. Fish\nIV. Lizard",
   "options": {
@@ -1174,7 +1174,7 @@
   "q_num": 96,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Which one of the following plant groups is characterized by having a haploid plant body?",
   "options": {
@@ -1200,7 +1200,7 @@
   "q_num": 97,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "A flower typically is composed of:",
   "options": {
@@ -1226,7 +1226,7 @@
   "q_num": 98,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Which one of the following organelles is found in both prokaryotic and eukaryotic cells?",
   "options": {
@@ -1252,7 +1252,7 @@
   "q_num": 99,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Which one of the following is not a connective tissue in the human body?",
   "options": {
@@ -1278,7 +1278,7 @@
   "q_num": 100,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Which one of the following is not a characteristic of an insect-pollinated plant?",
   "options": {
@@ -1304,7 +1304,7 @@
   "q_num": 101,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following States:\nI. Tripura\nII. Chhattisgarh\nIII. Assam\nIV. Odisha\nHow many of the States given above have jute mills?",
   "options": {
@@ -1330,7 +1330,7 @@
   "q_num": 102,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Which one of the following is classified under the physical processes of weathering?",
   "options": {
@@ -1356,7 +1356,7 @@
   "q_num": 103,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements:\nI. The Steppes of Eurasia are temperate grasslands.\nII. The Pampas of South America are classified as tropical grasslands.\nWhich of the statements given above is/are correct?",
   "options": {
@@ -1382,7 +1382,7 @@
   "q_num": 104,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements regarding the slash-and-burn agricultural practices in India:\nI. This practice is a primitive subsistence farming.\nII. This practice is known as Jhum in the North Eastern Hill region.\nIII. When soil fertility decreases, farmers shift to a fresh patch of land.\nWhich of the statements given above is/are correct?",
   "options": {
@@ -1408,7 +1408,7 @@
   "q_num": 105,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements regarding western disturbances in the Indian climate:\nI. These are shallow cyclonic depressions.\nII. They originate over the Caspian Sea and travel to India.\nWhich of the statements given above is/are correct?",
   "options": {
@@ -1434,7 +1434,7 @@
   "q_num": 106,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements regarding earthquake waves:\nI. P-waves are similar to sound waves.\nII. S-waves can travel through gaseous, liquid and solid materials.\nIII. The zone between 105° and 145° from the epicentre is identified as the shadow zone for both P- and S-waves.\nWhich of the statements given above are correct?",
   "options": {
@@ -1460,7 +1460,7 @@
   "q_num": 107,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements:\nI. At the equator, the Coriolis force is zero and here the winds blow perpendicular to the isobars.\nII. The Coriolis force is directly proportional to the angle of latitude.\nIII. The Coriolis force and the resultant wind do not blow parallel to the isobars at higher latitudes.\nWhich of the statements given above are correct?",
   "options": {
@@ -1486,7 +1486,7 @@
   "q_num": 108,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "The Hawaiian volcanoes are the most famous examples of:",
   "options": {
@@ -1512,7 +1512,7 @@
   "q_num": 109,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "The temperate forests in the Nilgiris, Anaimalai and Palani hills are called:",
   "options": {
@@ -1538,7 +1538,7 @@
   "q_num": 110,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements with regard to igneous rocks:\nI. These rocks cannot be changed into metamorphic rocks.\nII. When molten material is cooled slowly at great depths, mineral grains tend to be very small.\nIII. These rocks are known as primary rocks.\nWhich of the statements given above is/are correct?",
   "options": {
@@ -1564,7 +1564,7 @@
   "q_num": 111,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements:\nI. The Prime Meridian is the same as the International Date Line.\nII. West of the International Date Line is always a day later than east of the line.\nIII. The Earth turns 15° of longitude in an hour.\nWhich of the statements given above is/are correct?",
   "options": {
@@ -1590,7 +1590,7 @@
   "q_num": 112,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "The Earth's equatorial region bulges outward, but the Earth flattens slightly towards the polar regions due to the:",
   "options": {
@@ -1616,7 +1616,7 @@
   "q_num": 113,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "In the southern hemisphere, trade winds blow from:",
   "options": {
@@ -1642,7 +1642,7 @@
   "q_num": 114,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements regarding the structure of the atmosphere:\nI. The average height of the troposphere is higher nearer the poles than at the equator.\nII. The mesosphere contains the ozone layer.\nIII. Radio waves transmitted from the Earth are reflected to the Earth by the ionosphere.\nIV. In the mesosphere, temperature decreases with an increase in altitude.\nWhich of the statements given above are correct?",
   "options": {
@@ -1668,7 +1668,7 @@
   "q_num": 115,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following oceanic currents:\nI. Oyashio\nII. Canaries\nIII. Labrador\nIV. Kuroshio\nV. Benguela\nVI. Alaska\nVII. Humboldt\nHow many of the above are Pacific Ocean currents?",
   "options": {
@@ -1694,7 +1694,7 @@
   "q_num": 116,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following:\nI. Abrasion\nII. Attrition\nIII. Hydraulic action\nIV. Solution\nWhich of the above are the main types of river erosion?",
   "options": {
@@ -1720,7 +1720,7 @@
   "q_num": 117,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "A prolonged period of inadequate rainfall marked with mal-distribution of the same over time and space is known as:",
   "options": {
@@ -1746,7 +1746,7 @@
   "q_num": 118,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Which group of landlocked states shares a boundary with Madhya Pradesh?",
   "options": {
@@ -1772,7 +1772,7 @@
   "q_num": 119,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements regarding the nature of rocks:\nI. Rocks are aggregates of one or more minerals.\nII. Granite is softer than soapstone.\nIII. Gabbro is black and quartzite can be milky white.\nIV. Sedimentary rocks are related to foliation.\nWhich of the statements given above are not correct?",
   "options": {
@@ -1798,7 +1798,7 @@
   "q_num": 120,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "The 'Agricultural Population Density' is referred to as the ratio of the:",
   "options": {
@@ -1824,7 +1824,7 @@
   "q_num": 121,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "The annual session of the Indian National Congress in December 1929 was held in :",
   "options": {
@@ -1850,7 +1850,7 @@
   "q_num": 122,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Shortughai, a Harappan trading post in Afghanistan, was important to the Harappans for the possible supply of :",
   "options": {
@@ -1876,7 +1876,7 @@
   "q_num": 123,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Which of the following statements are correct regarding the demands of the protest movement known as Luddism (1811 – 17) ?\nI. A minimum wage for workers.\nII. The right to form trade unions so that they could legally present their demands.\nIII. The use of machinery for efficient labour-saving production.\nSelect the answer using the code given below :",
   "options": {
@@ -1902,7 +1902,7 @@
   "q_num": 124,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements regarding the Industrial Revolution in Britain :\nI. At the beginning of industrialization, coal and iron ore were plentifully available in Britain.\nII. The blast furnace came into use at the beginning of the 18th century.\nIII. Britain was lucky in possessing excellent coking coal and high-grade iron ore in the same basins.\nWhich of the statements given above are correct ?",
   "options": {
@@ -1928,7 +1928,7 @@
   "q_num": 125,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Which one of the following inscriptions records the history of a guild of silk weavers ?",
   "options": {
@@ -1954,7 +1954,7 @@
   "q_num": 126,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Match List I with List II :\nList I (Event): I. Passing of the Age of Consent Bill; II. Establishment of the Arya Samaj; III. Death of Dayanand Saraswati; IV. Foundation of the Nagari Pracharini Sabha\nList II (Year): A. 1893; B. 1883; C. 1875; D. 1891\nSelect the answer using the code given below :",
   "options": {
@@ -1980,7 +1980,7 @@
   "q_num": 127,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements with regard to the types of land listed in the Amarakosha.\nI. Devamatrika refers to land watered by rain.\nII. Aprahata refers to fallow land.\nIII. Pankila refers to highly fertile land.\nWhich of the statements given above is/are correct ?",
   "options": {
@@ -2006,7 +2006,7 @@
   "q_num": 128,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements regarding the role of political parties in modern democracies :\nI. In most democracies, elections are fought mainly among the candidates put up by political parties.\nII. Political parties put forward different policies and programmes and the voters choose from them.\nIII. Political parties shape public opinion.\nWhich of the statements given above are correct ?",
   "options": {
@@ -2032,7 +2032,7 @@
   "q_num": 129,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements with regard to the Lahore Session :\nI. The Congress decided to observe Independence Day on 26 January 1930.\nII. It was decided to hoist the National Flag and sing patriotic songs at different venues.\nIII. Gandhiji suggested that the event be held synchronously in all the places.\nWhich of the statements given above are correct ?",
   "options": {
@@ -2058,7 +2058,7 @@
   "q_num": 130,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements :\nI. The Kailasanatha temple of Kanchi is the earliest Pallava temple hewn from solid rock.\nII. The Vaikuntha Perumal temple at Kanchi is a rare Pallava temple dedicated to Lord Vishnu.\nWhich of the statements given above is/are correct ?",
   "options": {
@@ -2084,7 +2084,7 @@
   "q_num": 131,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following pairs with reference to the Constitution of India :\nI. Part V : The Union\nII. Part X : The Scheduled and Tribal Areas\nIII. Part XII : Relations between the Union and the States\nIV. Part XIV : Amendment of the Constitution\nHow many of the pairs given above are correctly matched ?",
   "options": {
@@ -2110,7 +2110,7 @@
   "q_num": 132,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "With reference to the Panchsheel, which of the following is/are correct ?\nI. Mutual respect for territorial integrity and sovereignty\nII. Mutual non-interference\nIII. Collective security against non-aggression\nIV. Peaceful co-existence\nSelect the answer using the code given below :",
   "options": {
@@ -2136,7 +2136,7 @@
   "q_num": 133,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements related to national integration :\nI. The expression of regional issues is not a part of democratic politics.\nII. Nation-building is an ongoing process.\nIII. Regional imbalance is associated with India's development experience.\nIV. Regions together form the nation.\nWhich of the statements given above are correct ?",
   "options": {
@@ -2162,7 +2162,7 @@
   "q_num": 134,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements regarding UN reforms :\nI. India demands an expanded Security Council.\nII. India does not support an increase in non-permanent members.\nIII. The majority of the UN General Assembly members are from developing countries.\nWhich of the statements given above is/are correct ?",
   "options": {
@@ -2188,7 +2188,7 @@
   "q_num": 135,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Which one of the following Five-Year Plan documents was titled as 'Towards Faster and More Inclusive Growth' ?",
   "options": {
@@ -2214,7 +2214,7 @@
   "q_num": 136,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements regarding the PESA Act, 1996 :\nI. Gram Sabhas have the power to declare Scheduled Areas.\nII. Gram Sabhas have the powers related to the management of community resources.\nIII. The PESA applies to all States except areas under the Fifth Schedule.\nWhich of the statements given above is/are not correct ?",
   "options": {
@@ -2240,7 +2240,7 @@
   "q_num": 137,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Which one of the following is neither a constitutional nor a statutory body ?",
   "options": {
@@ -2266,7 +2266,7 @@
   "q_num": 138,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Which one of the following committees recommended constitutional recognition for local bodies ?",
   "options": {
@@ -2292,7 +2292,7 @@
   "q_num": 139,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "The anti-defection provisions were incorporated in the Constitution through which one of the following Constitutional Amendments ?",
   "options": {
@@ -2318,7 +2318,7 @@
   "q_num": 140,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements regarding the Neighbourhood First Policy :\nI. India provides high-impact community development projects to Afghanistan.\nII. Bhutan is India's key maritime neighbour and vital partner in Vision MAHASAGAR.\nIII. India launched Operation Brahma to provide relief following an earthquake in Myanmar.\nWhich of the statements given above are correct ?",
   "options": {
@@ -2344,7 +2344,7 @@
   "q_num": 141,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "India has engaged in an agreement to supply BrahMos missiles to which of the following countries ?\nI. Indonesia\nII. Philippines\nIII. Singapore\nIV. Vietnam\nSelect the correct answer using the code given below :",
   "options": {
@@ -2370,7 +2370,7 @@
   "q_num": 142,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Ramanujan Fellowship is an initiative of the Department of Science & Technology, Government of India. It was launched under the :",
   "options": {
@@ -2396,7 +2396,7 @@
   "q_num": 143,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Which of the following countries is not a member of the International Big Cat Alliance ?",
   "options": {
@@ -2422,7 +2422,7 @@
   "q_num": 144,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements regarding the 'Green Nobel' :\nI. It is given every alternate year.\nII. In 2026, six winners were chosen and one of the winners is from Asia.\nIII. All the winners of 2026 are women.\nWhich of the statements given above is/are correct ?",
   "options": {
@@ -2448,7 +2448,7 @@
   "q_num": 145,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Which two countries signed a $ 2.6 billion uranium supply agreement in March 2026 ?",
   "options": {
@@ -2474,7 +2474,7 @@
   "q_num": 146,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements regarding Exercise DUSTLIK-2026 :\nI. It is a joint military exercise between India and UAE.\nII. Its aim is to foster military cooperation and enhance combined capabilities to execute joint operations in semi-mountainous terrain.\nWhich of the statements given above is/are correct ?",
   "options": {
@@ -2500,7 +2500,7 @@
   "q_num": 147,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Which of the following statements about 'Vayu Shakti-2026' is/are correct ?\nI. The Vayu Shakti-2026 exercise took place in Jaisalmer, Rajasthan.\nII. Advanced fighter aircraft of the Indian Air Force, including Rafale, HAL Tejas and Mirage 2000 carried out strikes.\nIII. Boeing Apache and Boeing Chinook helicopters participated in this exercise.\nSelect the answer using the code given below :",
   "options": {
@@ -2526,7 +2526,7 @@
   "q_num": 148,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Which of the following statements related to water governance is/are correct ?\nI. River Basin Management (RBM) is a Central Sector Scheme under the Ministry of Jal Shakti, Government of India.\nII. The major objectives of the RBM Scheme focus on promoting the use of water for domestic use.\nIII. The Brahmaputra Board is one of the key implementing agencies of the RBM.\nSelect the answer using the code given below :",
   "options": {
@@ -2552,7 +2552,7 @@
   "q_num": 149,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Which of the following statements regarding the Khelo India Tribal Games is/are correct ?\nI. The inaugural edition of the Khelo India Tribal Games was organized in two States : Jharkhand and Odisha.\nII. 'Morveer' was the official mascot of these games.\nIII. The Khelo India Tribal Games are part of the Khelo India Scheme.\nSelect the answer using the code given below :",
   "options": {
@@ -2578,7 +2578,7 @@
   "q_num": 150,
   "exam": "NDA",
   "paper": "General Ability Test",
-  "paper_id": "nda-gat-gk",
+  "paper_id": "nda-gat",
   "section_id": "nda-gat:gk",
   "question_text": "Consider the following statements :\nI. Over 60% of defence equipment sourced by the Armed Forces of India is now produced domestically.\nII. The Indian defence focus is on scale, resilience and indigenous capability.\nWhich of the statements given above is/are correct ?",
   "options": {
