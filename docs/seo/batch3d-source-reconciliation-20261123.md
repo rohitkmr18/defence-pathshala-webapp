@@ -25,8 +25,19 @@ Production status groupings observed:
 
 Every row in these selected exam-year groups had populated `source`, `explanation` and A/B/C/D `final_opt`. **Presence of fields is not independent official-key reconciliation.**
 
+
+### Editorial refinement: these are intentionally modified practice questions
+Full production question text and explanations establish intentional changes:
+- Q62: DP adds the qualifying words **“of correct time”**; its Option C is explained as 19:55 for the altered scenario.
+- Q98: UPSC dropped the printed question; DP replaces statement 1 and offers a new Option C.
+- Q108: DP rewrites answer option C to accurately describe hysteresis-loop energy loss.
+
+**Important: 122 matching official key positions and 3 differing positions do NOT imply 3 conceptually wrong DP answers.** The 3 questions have been adapted, so the core integrity problem is inclusion in a purported official PYQ corpus and potential marking in official-mode attempts. Never replace Option C with official A without restoring and independently checking original question wording and option order. Separate adapted practice from verbatim official PYQs.
+
+Read-only downstream impact: Q62 has 1 practice attempt and occurs in 1 practice session, Q98 occurs in 1 practice session but has no recorded answer row, and Q108 has no rows in those inspected tables. These are database rows, not confirmed unique learners.
+
 ## Operational recommendation
-1. **P0**: Editorial QA inspects Series A question paper, the original dropped Q98, and reworded DP copy. Correct eligibility/source/status and scoring as a coordinated staging change, not a blind `final_opt` update.
+1. **P0**: Editorial QA inspects Series A question paper and the three adapted DP copies. Reclassify adapted examples, correct any truly verbatim official versions separately, and review scoring as a coordinated staging change, not a blind `final_opt` update.
 2. Visually verify the manually transcribed 125-item CAPF 2025 Series A key and booklet option text, prioritizing Q62, Q98 and Q108, then reconcile every recorded question and dropped item. Extend to CDS and other years with **their own** official keys and cycle/series metadata.
 3. Public pages and practice APIs must not treat adapted/reconstructed questions as verbatim official UPSC PYQs, and should not score a dropped item against students.
 4. Preserve existing historical attempt records and publish clear treatment of deleted/reclassified items.
