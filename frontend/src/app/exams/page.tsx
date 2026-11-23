@@ -20,8 +20,8 @@ const exams = [
   {
     slug: "capf",
     title: "CAPF Assistant Commandants",
-    description: "Explore the CAPF AC examination overview, available previous-year question coverage and practice links.",
-    hasDetailedGuide: false,
+    description: "Understand CAPF eligibility, two written papers, syllabus, physical tests, selection and preparation resources.",
+    hasDetailedGuide: true,
   },
 ] as const;
 
