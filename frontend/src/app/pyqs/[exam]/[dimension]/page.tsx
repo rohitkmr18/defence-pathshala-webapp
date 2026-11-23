@@ -18,7 +18,6 @@ import {
   ArrowRight,
   Layers,
   Award,
-  CheckCircle2,
 } from "lucide-react";
 
 interface PageProps {
@@ -477,7 +476,7 @@ async function SubjectPageView({
         <div className="mb-4">
           <h2 className="text-lg font-bold text-slate-900 sm:text-xl flex items-center gap-2">
             <Layers className="h-5 w-5 text-blue-600" />
-            {archive.subject} Topic Breakdown & Weightage
+            {archive.subject} Topic Counts in the Available Dataset
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
             Distribution among eligible questions currently in the Defence Pathshala dataset; not a claim about complete exam-paper weightage.
@@ -525,8 +524,32 @@ async function SubjectPageView({
         )}
       </section>
 
+      <section id="subject-evidence-answers" aria-labelledby="subject-evidence-heading" className="mb-10 rounded-2xl border border-slate-200 bg-white p-5 sm:p-7">
+        <h2 id="subject-evidence-heading" className="text-xl font-bold text-slate-900">
+          {archive.exam} {archive.subject} PYQs — answers from the available dataset
+        </h2>
+        <div className="mt-4 space-y-5 text-sm leading-6 text-slate-700">
+          <div>
+            <h3 className="font-semibold text-slate-900">How many {archive.subject} PYQs are available for {archive.exam}?</h3>
+            <p>{archive.totalQuestions} eligible questions are currently indexed in this subject archive. This is the Defence Pathshala dataset count, not a claim about the total questions UPSC has asked.</p>
+          </div>
+          <div>
+            <h3 className="font-semibold text-slate-900">Which examination years are covered?</h3>
+            <p>Available questions cover {yearSpanText} across {archive.years.length} examination years in the dataset. Browse the year-wise links above to see each recorded count.</p>
+          </div>
+          <div>
+            <h3 className="font-semibold text-slate-900">Are all answers independently verified?</h3>
+            <p>No blanket verification claim is made. Each archived question displays its recorded answer where available, plus an explanation, source reference and verification status only when those fields are present. A missing source or verification record must not be interpreted as official-key confirmation.</p>
+          </div>
+        </div>
+        <p className="mt-4 text-xs leading-5 text-slate-600">
+          Source of these totals: eligible records in Defence Pathshala&apos;s PYQ intelligence archive.
+          Counts can change after editorial reconciliation. See the individual questions below for recorded answer provenance.
+        </p>
+      </section>
+
       {/* Actual PYQs Section (Core Server-Rendered Content) */}
-      <section className="mb-12">
+      <section id="subject-questions" className="mb-12">
         <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl flex items-center gap-2.5">
@@ -534,7 +557,7 @@ async function SubjectPageView({
               All {archive.totalQuestions} {archive.exam} {archive.subject} Questions ({yearSpanText})
             </h2>
             <p className="text-sm text-slate-600 mt-1">
-              Every question below is reproduced from official UPSC exam papers with complete question text, options, and expandable verified answers and explanations.
+              These are eligible archived questions with recorded exam context. Answers, explanations, verification status and source references vary by question; consult the details shown for each item.
             </p>
           </div>
           <span className="self-start sm:self-auto shrink-0 rounded-full bg-slate-100 px-3.5 py-1 text-xs font-bold text-slate-700">
@@ -585,9 +608,9 @@ async function SubjectPageView({
 
               {/* Question Body */}
               <div className="mt-4">
-                <p className="text-slate-900 font-medium text-base sm:text-lg leading-relaxed whitespace-pre-line">
+                <h3 className="text-slate-900 font-semibold text-base sm:text-lg leading-relaxed whitespace-pre-line">
                   {q.question}
-                </p>
+                </h3>
               </div>
 
               {/* Options Grid */}
@@ -618,8 +641,8 @@ async function SubjectPageView({
               <details className="group mt-4 rounded-xl border border-slate-200 bg-slate-50/80 p-4 transition">
                 <summary className="cursor-pointer font-semibold text-blue-700 hover:text-blue-800 flex items-center justify-between text-sm select-none">
                   <span className="flex items-center gap-1.5">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                    View Answer & Explanation
+                    <BookOpen className="h-4 w-4 text-blue-600" />
+                    View Recorded Answer & Evidence
                   </span>
                   <span className="text-xs font-normal text-slate-500 group-open:hidden">
                     Click to reveal
@@ -628,10 +651,10 @@ async function SubjectPageView({
                 <div className="mt-3 pt-3 border-t border-slate-200 text-sm text-slate-700 space-y-2">
                   <div className="flex items-center gap-2">
                     <span className="text-xs uppercase tracking-wider text-slate-500 font-semibold">
-                      Correct Answer:
+                      Recorded Answer:
                     </span>
                     <span className="rounded bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 text-xs">
-                      Option {q.finalOpt?.toUpperCase() || "N/A"}
+                      {q.finalOpt ? "Option " + q.finalOpt.toUpperCase() : "Not recorded"}
                     </span>
                   </div>
 
@@ -642,11 +665,17 @@ async function SubjectPageView({
                     </div>
                   )}
 
-                  {q.source && (
+                  {q.source ? (
                     <div className="text-xs text-slate-500 pt-1">
-                      <span className="font-semibold text-slate-600">Reference:</span> {q.source}
+                      <span className="font-semibold text-slate-600">Recorded source:</span> {q.source}
                     </div>
+                  ) : (
+                    <p className="text-xs text-slate-500">No source reference recorded for this question.</p>
                   )}
+                  <p className="text-xs text-slate-500">
+                    <span className="font-semibold text-slate-600">Database verification status:</span>{" "}
+                    {q.verifiedStatus || "Not recorded"}
+                  </p>
                 </div>
               </details>
             </article>
