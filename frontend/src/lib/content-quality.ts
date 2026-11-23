@@ -10,6 +10,8 @@ export function isContentEligible(row: Record<string, unknown>): boolean {
 export function expectedPaperQuestions(exam: string, paper?: string | null): number | null {
   if (exam === "CDS" && paper === "Elementary Mathematics") return 100;
   if (exam === "CDS") return 120;
+  if (exam === "NDA" && paper === "Mathematics") return 120;
+  if (exam === "NDA" && paper === "General Ability Test") return 150;
   if (["CAPF", "CAPF-AC", "CAPF AC"].includes(exam)) return 125;
   return null;
 }
@@ -28,6 +30,15 @@ export interface PaperContentManifest {
 }
 
 export const PAPER_CONTENT_MANIFESTS: PaperContentManifest[] = [
+  {
+    exam: "NDA",
+    year: 2026,
+    cycle: "II",
+    paper: "Mathematics",
+    expectedQuestions: 120,
+    excludedQuestionNumbers: [106],
+    note: "1 item is withheld pending source verification.",
+  },
   {
     exam: "CAPF-AC",
     year: 2021,

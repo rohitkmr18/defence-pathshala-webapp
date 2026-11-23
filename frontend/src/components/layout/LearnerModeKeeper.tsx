@@ -10,16 +10,18 @@ import {
   rememberPaperChoice,
   withPaper,
 } from "@/lib/learner-mode";
+import { parseSeparatePaperTab, tabMode } from "@/lib/exam-registry";
 
 /** Filters that belong to one paper's taxonomy: a link carrying them is a deliberate deep link. */
 const TAXONOMY_KEYS = ["subject", "subjects", "topic", "topics", "subtopic", "subtopics"];
 
 /**
  * Keeps the learner inside the exam mode and paper tab they chose, however they navigate:
- * - In-app AFCAT pages remember AFCAT mode; CDS/CAPF learning pages remember CDS mode.
+ * - In-app AFCAT pages remember AFCAT mode; other learning pages remember CDS/CAPF or NDA mode,
+ *   following the paper tab in force (NDA Maths / GAT = NDA mode).
  * - "Home" (/dashboard) for an AFCAT-mode learner opens the AFCAT dashboard instead.
  * - A paper-aware page opened without a paper (bottom nav, "Go to Home", login redirect)
- *   reopens on the remembered Maths / English tab.
+ *   reopens on the remembered non-GS tab (CDS Maths / English, NDA Maths / GAT).
  * Only tab taps change the remembered choice (see ExamModeSwitcher and PaperTabs) or an explicit
  * `paper` in the URL.
  */
@@ -38,21 +40,25 @@ function KeeperInner() {
       router.replace("/afcat/dashboard");
       return;
     }
-    if (pathname.startsWith("/dashboard/")) rememberExamMode("cds");
+    const paper = searchParams.get("paper");
+    const urlTab = paper === "gs" ? "gs" : parseSeparatePaperTab(paper);
+    if (pathname.startsWith("/dashboard/") || (pathname === "/dashboard" && urlTab)) {
+      const inForce = urlTab ?? readPaperChoice();
+      rememberExamMode(inForce && tabMode(inForce) === "nda" ? "nda" : "cds");
+    }
     if (!isPaperAwarePath(pathname)) return;
 
-    const paper = searchParams.get("paper");
     // Landing-page links say paper=gs explicitly: GS is the primary entry and resets a sticky Maths/English choice.
     if (paper === "gs") {
       rememberPaperChoice("gs");
       return;
     }
-    if (paper === "maths" || paper === "english") {
-      rememberPaperChoice(paper);
+    if (urlTab) {
+      rememberPaperChoice(urlTab);
       return;
     }
-    const remembered = readPaperChoice();
-    if (remembered !== "maths" && remembered !== "english") return;
+    const remembered = parseSeparatePaperTab(readPaperChoice());
+    if (!remembered) return;
     if (TAXONOMY_KEYS.some((key) => searchParams.has(key))) return;
     const qs = searchParams.toString();
     router.replace(withPaper(`${pathname}${qs ? `?${qs}` : ""}`, remembered));

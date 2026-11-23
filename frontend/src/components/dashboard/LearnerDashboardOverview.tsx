@@ -17,6 +17,7 @@ import type { LearnerIntelligence } from "@/lib/learner-intelligence";
 import DpMockTestsCard from "./DpMockTestsCard";
 import MockPerformanceHub from "./MockPerformanceHub";
 import SectionHeader from "@/components/ui/SectionHeader";
+import { paperTabInfo, parseSeparatePaperTab, tabMode } from "@/lib/exam-registry";
 
 interface Props {
   firstName: string;
@@ -35,8 +36,9 @@ export default function LearnerDashboardOverview({
   targetExams,
 }: Props) {
   const paperParam = useSearchParams().get("paper");
-  const paperTab = paperParam === "maths" || paperParam === "english" ? paperParam : null;
-  const paperLabel = paperTab === "maths" ? "Elementary Mathematics" : paperTab === "english" ? "English" : "General Studies";
+  const paperTab = parseSeparatePaperTab(paperParam);
+  const paperLabel = paperTabInfo(paperTab).paperLabel;
+  const examLabel = paperTab && tabMode(paperTab) === "nda" ? "NDA" : "CDS";
   const [loaded, setLoaded] = useState<{ paper: string | null; data: LearnerIntelligence } | null>(null);
   // Never show another paper's numbers while the selected tab is loading.
   const data = loaded && loaded.paper === paperTab ? loaded.data : null;
@@ -122,7 +124,7 @@ export default function LearnerDashboardOverview({
               Your preparation, your path
             </p>
             <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold text-slate-200">
-              {paperTab ? `CDS · ${paperLabel}` : `${targetExams.length ? targetExams.join(" + ") : "Set your target exam"} · ${paperLabel}`}
+              {paperTab ? `${examLabel} · ${paperLabel}` : `${targetExams.length ? targetExams.join(" + ") : "Set your target exam"} · ${paperLabel}`}
             </span>
           </div>
 

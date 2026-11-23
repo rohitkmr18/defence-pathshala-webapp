@@ -13,6 +13,7 @@ import { getExamLabel } from "@/lib/exams";
 import { parseFiltersFromSearchParams } from "@/lib/question-filters";
 import type { ActiveFilters } from "./PracticePageClient";
 import { useSearchParams } from "next/navigation";
+import type { SeparatePaperTabId } from "@/lib/exam-registry";
 
 export type PracticeFiltersResponse = {
   exams: string[];
@@ -44,7 +45,7 @@ interface PracticeFiltersProps {
   onFilterChange?: (filters: ActiveFilters) => void;
   filterOverride?: FilterOverride | null;
   /** Active GS / Maths / English tab. The parent re-mounts this component when it changes. */
-  paper?: "maths" | "english" | null;
+  paper?: SeparatePaperTabId | null;
 }
 
 export default function PracticeFilters({
@@ -67,7 +68,7 @@ export default function PracticeFilters({
 
   // Accordion for advanced secondary filters (Years / Cycles)
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
-  // On a paper tab (Maths/English) with several years of papers, show the Year & Cycle choice up front.
+  // On a separate paper tab (CDS Maths/English, NDA Maths/GAT) with several years of papers, show the Year & Cycle choice up front.
   const [yearPanelAutoOpened, setYearPanelAutoOpened] = useState(false);
 
   const applyInitialSelection = (data: PracticeFiltersResponse) => {
@@ -747,7 +748,7 @@ export default function PracticeFilters({
           className="flex w-full items-center justify-between p-3.5 text-left text-xs font-bold text-slate-700 hover:bg-slate-50 rounded-2xl transition"
         >
           <span className="flex items-center gap-2">
-            <span>{paper ? `$4. Year & Cycle` : "📅 Refine by Year & Cycle"}</span>
+            <span>{paper ? "4. Year & Cycle" : "📅 Refine by Year & Cycle"}</span>
             {(selectedYears.length > 0 || selectedCycles.length > 0) && (
               <span className="rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-blue-700">
                 Active: {[

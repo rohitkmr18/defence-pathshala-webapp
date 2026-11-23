@@ -3,15 +3,17 @@
 import { useSyncExternalStore } from "react";
 import { useSearchParams } from "next/navigation";
 import { withPaper } from "./paper-links";
+import { defaultTabForMode, parseSeparatePaperTab, tabMode, type PaperTabId } from "./exam-registry";
 
 /**
- * The learner's chosen exam mode (CDS/CAPF vs AFCAT) and CDS paper tab (GS / Maths / English).
+ * The learner's chosen exam mode (CDS/CAPF, NDA or AFCAT) and paper tab
+ * (CDS/CAPF: GS / Maths / English; NDA: Maths / GAT).
  * The choice is sticky: it changes only when the learner taps a tab, never because they navigated.
  * Stored per browser (localStorage); every read/write is guarded so a blocked store just means
  * "no remembered choice" (GS / CDS defaults), never an error.
  */
-export type ExamMode = "cds" | "afcat";
-export type PaperChoice = "gs" | "maths" | "english";
+export type ExamMode = "cds" | "nda" | "afcat";
+export type PaperChoice = PaperTabId;
 
 export { isPaperAwarePath, withPaper } from "./paper-links";
 
@@ -38,12 +40,12 @@ function write(key: string, value: string) {
 
 export function readExamMode(): ExamMode | null {
   const v = read(MODE_KEY);
-  return v === "cds" || v === "afcat" ? v : null;
+  return v === "cds" || v === "nda" || v === "afcat" ? v : null;
 }
 
 export function readPaperChoice(): PaperChoice | null {
   const v = read(PAPER_KEY);
-  return v === "gs" || v === "maths" || v === "english" ? v : null;
+  return v === "gs" ? "gs" : parseSeparatePaperTab(v);
 }
 
 export function rememberExamMode(mode: ExamMode) {
@@ -56,7 +58,17 @@ export function rememberPaperChoice(paper: PaperChoice) {
 
 /** Where "Home" goes for this learner's current choice. */
 export function homeHref(mode: ExamMode | null, paper: PaperChoice | null): string {
-  return mode === "afcat" ? "/afcat/dashboard" : withPaper("/dashboard", paper);
+  if (mode === "afcat") return "/afcat/dashboard";
+  return withPaper("/dashboard", paperForMode(mode === "nda" ? "nda" : "cds", paper));
+}
+
+/**
+ * The tab to open when entering a mode: the remembered tab if it belongs to that mode,
+ * otherwise the mode's default (CDS/CAPF: GS; NDA: its first live paper).
+ */
+export function paperForMode(mode: "cds" | "nda", remembered: PaperChoice | null): PaperChoice | null {
+  if (remembered && tabMode(remembered) === mode) return remembered;
+  return defaultTabForMode(mode);
 }
 
 function subscribe(onChange: () => void) {
@@ -77,13 +89,18 @@ export function useRememberedExamMode(): ExamMode | null {
   return useSyncExternalStore(subscribe, readExamMode, () => null);
 }
 
+/** Exam mode of the paper in force right now (CDS/CAPF when nothing is chosen). */
+export function useActiveTabMode(): "cds" | "nda" {
+  const paper = useActivePaper();
+  return paper ? tabMode(paper) : "cds";
+}
+
 /**
  * The paper in force right now: the URL's own `paper` param wins (a session or link says which
  * paper it belongs to); otherwise the learner's remembered tab.
  */
 export function useActivePaper(): PaperChoice | null {
-  const fromUrl = useSearchParams().get("paper");
+  const fromUrl = parseSeparatePaperTab(useSearchParams().get("paper"));
   const remembered = useRememberedPaper();
-  if (fromUrl === "maths" || fromUrl === "english") return fromUrl;
-  return remembered;
+  return fromUrl ?? remembered;
 }

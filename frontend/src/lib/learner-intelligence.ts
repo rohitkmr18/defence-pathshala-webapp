@@ -1,5 +1,6 @@
 import { buildPracticeUrl } from "./question-filters";
 import { getScoringRules } from "./examScoring";
+import { parseSeparatePaperTab } from "./exam-registry";
 
 export type LearnerState = "new" | "early" | "established";
 export type NextBestMoveType =
@@ -485,7 +486,8 @@ export function deriveLearnerIntelligence(input: {
             if (exams[0]) params.set("exam", String(exams[0]));
             if (years[0]) params.set("year", String(years[0]));
             if (cycles[0]) params.set("cycle", String(cycles[0]));
-            if (filters.paper === "maths" || filters.paper === "english") params.set("paper", String(filters.paper));
+            const fullPaperTab = parseSeparatePaperTab(filters.paper);
+            if (fullPaperTab) params.set("paper", fullPaperTab);
             return `/dashboard/practice/full-paper?${params.toString()}`;
           })()
         : null;

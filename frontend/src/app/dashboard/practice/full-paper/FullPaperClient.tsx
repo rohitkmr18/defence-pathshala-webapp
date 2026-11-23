@@ -19,6 +19,7 @@ import ExamActionToolbar from "@/components/practice/full-paper/ExamActionToolba
 import SubmitModal from "@/components/practice/full-paper/SubmitModal";
 import FullPaperDebrief from "@/components/practice/analysis/FullPaperDebrief";
 import { AVAILABLE_FULL_PAPERS, FullPaperDefinition } from "@/components/practice/FullPaperHero";
+import { parseSeparatePaperTab } from "@/lib/exam-registry";
 
 interface FullPaperClientProps {
   initialExam?: string;
@@ -41,7 +42,7 @@ export default function FullPaperClient({
   analysis = false,
   initialPaperTab,
 }: FullPaperClientProps) {
-  const paperTab = initialPaperTab === "maths" || initialPaperTab === "english" ? initialPaperTab : null;
+  const paperTab = parseSeparatePaperTab(initialPaperTab);
   const tabPapers = AVAILABLE_FULL_PAPERS.filter((p) => (p.paperTab ?? null) === paperTab);
   const router = useRouter();
   // Resolve initial paper based on query params or default to most recent exam (CDS II 2026)

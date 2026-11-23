@@ -31,6 +31,7 @@ import {
   parseFiltersFromSearchParams,
   serializeFiltersToSearchParams,
 } from "@/lib/question-filters";
+import { paperTabInfo, parseSeparatePaperTab } from "@/lib/exam-registry";
 
 // ─── Active filter shape ───────────────────────────────────────────────────────
 
@@ -53,7 +54,7 @@ export default function PracticePageClient() {
   const returnTo = searchParams.get("returnTo");
 
   const practiceMode = searchParams.get("mode") === "full_paper" ? "full-paper" : "targeted";
-  const paperTabParam = searchParams.get("paper") === "maths" ? "maths" : searchParams.get("paper") === "english" ? "english" : null;
+  const paperTabParam = parseSeparatePaperTab(searchParams.get("paper"));
   const isPaperTab = paperTabParam !== null;
   const sessionStyle = searchParams.get("mode") === "attempt" ? "attempt" : "instant";
   // DP Mock Tests are CDS GK only and stay hidden unless the release flag is exactly "true".
@@ -251,7 +252,7 @@ export default function PracticePageClient() {
 
   // Filter summary breadcrumbs
   const filterSummary = [
-    paperTabParam ? `CDS ${paperTabParam === "maths" ? "Maths" : "English"}` : activeFilters.exams.join("/"),
+    paperTabParam ? paperTabInfo(paperTabParam).fullLabel : activeFilters.exams.join("/"),
     activeFilters.subjects.length > 0 ? (activeFilters.subjects.length === 1 ? activeFilters.subjects[0] : `${activeFilters.subjects.length} Subjects`) : "All Subjects",
     activeFilters.topics.length > 0 ? (activeFilters.topics.length === 1 ? activeFilters.topics[0] : `${activeFilters.topics.length} Topics`) : null,
   ].filter(Boolean).join(" › ");

@@ -154,13 +154,13 @@ export const EXAM_REGISTRY: ExamDefinition[] = [
     label: "NDA",
     fullName: "National Defence Academy & Naval Academy",
     conductingBody: "UPSC",
-    status: "coming_soon",
+    status: "live",
     papers: [
       {
         id: "nda-maths", label: "Mathematics", format: "mcq", questions: 120, maxMarks: 300, minutes: 150,
         marking: { correct: 2.5, wrong: 0.83, correctLabel: "+2.50", wrongLabel: "-0.83" },
         sections: [{ id: "maths", label: "Mathematics", questions: 120 }],
-        dbPaperValues: ["Mathematics"], status: "coming_soon",
+        dbPaperValues: ["Mathematics"], status: "live",
       },
       {
         id: "nda-gat", label: "General Ability Test", format: "mcq", questions: 150, maxMarks: 600, minutes: 150,
@@ -169,7 +169,7 @@ export const EXAM_REGISTRY: ExamDefinition[] = [
           { id: "english", label: "English", questions: 50 },
           { id: "gk", label: "General Knowledge", questions: 100, dbSubjects: GS_SUBJECTS },
         ],
-        dbPaperValues: ["General Ability Test"], status: "coming_soon",
+        dbPaperValues: ["General Ability Test"], status: "live",
       },
     ],
   },
@@ -230,36 +230,88 @@ export function scorePaper(paper: ExamPaper, correct: number, wrong: number): nu
   return correct * paper.marking.correct - wrong * paper.marking.wrong;
 }
 
-/** Learner-facing paper tabs shown under the CDS/CAPF exam mode. GS is the default and never mixes with Maths/English. */
-export type PaperTabId = "gs" | "maths" | "english";
+/**
+ * Learner-facing paper tabs. Each belongs to one exam mode:
+ * - CDS/CAPF mode: GS (default, CDS GK + CAPF Paper I), CDS Maths, CDS English.
+ * - NDA mode: NDA Maths, NDA General Ability Test (no GS tab; NDA GK lives inside GAT).
+ * Papers never mix: every tab reads only its own `questions.paper` values.
+ */
+export type TabMode = "cds" | "nda";
+export type SeparatePaperTabId = "maths" | "english" | "nda-maths" | "nda-gat";
+export type PaperTabId = "gs" | SeparatePaperTabId;
 export const PAPER_TAB_PARAM = "paper";
-const PAPER_TABS: { id: PaperTabId; label: string; paperId: string | null }[] = [
-  { id: "gs", label: "GS", paperId: null },
-  { id: "maths", label: "Maths", paperId: "cds-maths" },
-  { id: "english", label: "English", paperId: "cds-english" },
-];
 
-export function parsePaperTab(value: string | null | undefined): PaperTabId {
-  return value === "maths" || value === "english" ? value : "gs";
+export interface PaperTabInfo {
+  id: PaperTabId;
+  mode: TabMode;
+  /** Tab label inside its mode. */
+  label: string;
+  /** Short label with exam prefix, for headings and session titles. */
+  fullLabel: string;
+  /** Registry paper label, e.g. "Elementary Mathematics". */
+  paperLabel: string;
+  paperId: string | null;
 }
 
-/** Tabs to show: GS always, Maths/English only once their registry paper is live. */
-export function visiblePaperTabs(): { id: PaperTabId; label: string }[] {
-  return PAPER_TABS.filter((t) => t.paperId === null || getPaper(t.paperId)?.status === "live")
-    .map(({ id, label }) => ({ id, label }));
+export const PAPER_TABS: PaperTabInfo[] = [
+  { id: "gs", mode: "cds", label: "GS", fullLabel: "General Studies", paperLabel: "General Studies", paperId: null },
+  { id: "maths", mode: "cds", label: "Maths", fullLabel: "CDS Maths", paperLabel: "Elementary Mathematics", paperId: "cds-maths" },
+  { id: "english", mode: "cds", label: "English", fullLabel: "CDS English", paperLabel: "English", paperId: "cds-english" },
+  { id: "nda-maths", mode: "nda", label: "Maths", fullLabel: "NDA Maths", paperLabel: "Mathematics", paperId: "nda-maths" },
+  { id: "nda-gat", mode: "nda", label: "GAT", fullLabel: "NDA GAT", paperLabel: "General Ability Test", paperId: "nda-gat" },
+];
+
+const SEPARATE_TAB_IDS = PAPER_TABS.filter((t) => t.id !== "gs").map((t) => t.id as SeparatePaperTabId);
+
+/** A non-GS tab id, or null (GS / unknown). */
+export function parseSeparatePaperTab(value: unknown): SeparatePaperTabId | null {
+  return typeof value === "string" && (SEPARATE_TAB_IDS as string[]).includes(value) ? (value as SeparatePaperTabId) : null;
+}
+
+export function parsePaperTab(value: string | null | undefined): PaperTabId {
+  return parseSeparatePaperTab(value) ?? "gs";
+}
+
+export function paperTabInfo(value: string | null | undefined): PaperTabInfo {
+  const id = parsePaperTab(value);
+  return PAPER_TABS.find((t) => t.id === id)!;
+}
+
+/** Exam mode a tab belongs to (GS and CDS papers are CDS/CAPF mode). */
+export function tabMode(value: string | null | undefined): TabMode {
+  return paperTabInfo(value).mode;
+}
+
+function tabIsLive(tab: PaperTabInfo): boolean {
+  return tab.paperId === null || getPaper(tab.paperId)?.status === "live";
+}
+
+/** Tabs to show for a mode, in order. CDS/CAPF: GS always plus live Maths/English. NDA: its live papers. */
+export function visiblePaperTabs(mode: TabMode = "cds"): { id: PaperTabId; label: string }[] {
+  return PAPER_TABS.filter((t) => t.mode === mode && tabIsLive(t)).map(({ id, label }) => ({ id, label }));
+}
+
+/** True once at least one NDA paper is live, so the NDA exam mode can be offered. */
+export function ndaModeLive(): boolean {
+  return visiblePaperTabs("nda").length > 0;
+}
+
+/** First live tab of a mode (CDS/CAPF: GS). */
+export function defaultTabForMode(mode: TabMode): PaperTabId | null {
+  return visiblePaperTabs(mode)[0]?.id ?? null;
 }
 
 /**
- * `questions.paper` values readable for a tab. GS = every live paper except Maths/English, so
- * existing GS practice and explore are unchanged. Maths/English resolve to nothing until live.
+ * `questions.paper` values readable for a tab. GS = every live paper except the separate-tab
+ * papers, so GS practice and explore are unchanged. A separate tab resolves to nothing until live.
  */
 export function paperTabDbValues(value: string | null | undefined): string[] {
-  const tab = parsePaperTab(value);
+  const tab = paperTabInfo(value);
   const live = liveDbPaperValues();
-  if (tab === "gs") {
+  if (tab.id === "gs") {
     const separate = PAPER_TABS.flatMap((t) => (t.paperId ? getPaper(t.paperId)?.dbPaperValues ?? [] : []));
     return live.filter((v) => !separate.includes(v));
   }
-  const paper = getPaper(PAPER_TABS.find((t) => t.id === tab)!.paperId!);
+  const paper = getPaper(tab.paperId!);
   return paper?.status === "live" ? paper.dbPaperValues : [];
 }
