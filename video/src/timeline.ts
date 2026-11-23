@@ -1,0 +1,185 @@
+// Single source of truth for the reel. Edit durations here to match the final VO.
+// All times are in seconds, local to the scene unless noted.
+
+export const FPS = 30;
+export const WIDTH = 1080;
+export const HEIGHT = 1920;
+
+/** Flip to true after dropping the recording at public/vo/vo.wav */
+export const HAS_VO = false;
+export const VO_FILE = "vo/vo.wav";
+/** Optional music bed at public/audio/bed.mp3 */
+export const HAS_MUSIC = false;
+export const MUSIC_FILE = "audio/bed.mp3";
+
+export type RegionId = "india" | "pok" | "aksai" | "shaksgam";
+export type Cam = { x: number; y: number; s: number }; // map-space centre + scale
+
+export type Card = {
+  text: string;
+  at: number;
+  /** vertical slot: top headline, mid caption, low lower-third */
+  slot?: "top" | "mid" | "low";
+  tone?: "plain" | "blue" | "red" | "green";
+};
+
+export type Arrow = {
+  d: string; // SVG path in map space (1000x1000)
+  at: number;
+  dur: number;
+  color: string;
+  dashed?: boolean;
+};
+
+export type Scene = {
+  id: string;
+  dur: number;
+  camFrom: Cam;
+  camTo: Cam;
+  /** region -> seconds when its colour fills in */
+  fills: Partial<Record<RegionId, number>>;
+  /** regions shown as the starting state with no animation */
+  base?: RegionId[];
+  arrows?: Arrow[];
+  cards: Card[];
+  /** flip-calendar cards */
+  dates?: { label: string; at: number }[];
+  /** placeholder or real photo/document card */
+  photo?: { caption: string; at: number; file?: string };
+  showLoC?: number;
+  badge?: { text: string; at: number; tone: "blue" | "red" };
+  cta?: number;
+};
+
+export const SCENES: Scene[] = [
+  {
+    id: "hook",
+    dur: 8,
+    camFrom: { x: 500, y: 500, s: 1.0 },
+    camTo: { x: 500, y: 500, s: 1.18 },
+    fills: { india: 0.4, pok: 3.2, aksai: 4.2 },
+    cards: [
+      { text: "भारत के नक्शे में पूरा जम्मू-कश्मीर", at: 0.2, slot: "top" },
+      { text: "लेकिन ज़मीन पर कुछ और", at: 3.0, slot: "mid" },
+      { text: "ये हुआ कैसे?", at: 5.6, slot: "low", tone: "blue" },
+    ],
+  },
+  {
+    id: "1947",
+    dur: 8,
+    camFrom: { x: 500, y: 520, s: 1.1 },
+    camTo: { x: 500, y: 500, s: 1.25 },
+    fills: {},
+    base: ["india", "pok", "aksai"],
+    cards: [
+      { text: "1947 · जम्मू-कश्मीर रियासत", at: 0.3, slot: "top" },
+      { text: "महाराजा हरि सिंह", at: 2.2, slot: "mid" },
+      { text: "न भारत, न पाकिस्तान", at: 4.6, slot: "low", tone: "blue" },
+    ],
+    photo: { caption: "महाराजा हरि सिंह", at: 2.0 },
+  },
+  {
+    id: "invasion",
+    dur: 12,
+    camFrom: { x: 420, y: 520, s: 1.2 },
+    camTo: { x: 460, y: 480, s: 1.5 },
+    fills: {},
+    base: ["india", "pok", "aksai"],
+    arrows: [
+      { d: "M 250 470 L 330 450", at: 1.4, dur: 1.4, color: "#ff4d4d" },
+      { d: "M 330 450 L 400 440", at: 2.8, dur: 1.2, color: "#ff4d4d" },
+      { d: "M 400 440 L 455 470", at: 4.0, dur: 1.2, color: "#ff4d4d" },
+    ],
+    dates: [
+      { label: "22 अक्टूबर 1947", at: 0.3 },
+      { label: "26 अक्टूबर 1947", at: 6.4 },
+    ],
+    photo: { caption: "विलय-पत्र", at: 7.2 },
+    cards: [
+      { text: "क़बायली हमलावर", at: 1.2, slot: "mid", tone: "red" },
+      { text: "विलय-पत्र पर हस्ताक्षर", at: 7.4, slot: "low", tone: "blue" },
+    ],
+  },
+  {
+    id: "army",
+    dur: 9,
+    camFrom: { x: 470, y: 600, s: 1.1 },
+    camTo: { x: 470, y: 470, s: 1.4 },
+    fills: {},
+    base: ["india", "pok", "aksai"],
+    arrows: [{ d: "M 560 900 L 455 470", at: 0.8, dur: 2.2, color: "#ffffff", dashed: true }],
+    dates: [{ label: "27 अक्टूबर 1947", at: 0.3 }],
+    photo: { caption: "भारतीय सेना · श्रीनगर", at: 3.2 },
+    badge: { text: "युद्धविराम · 1 जनवरी 1949", at: 6.0, tone: "blue" },
+    cards: [
+      { text: "सेना हवाई मार्ग से श्रीनगर", at: 0.8, slot: "mid" },
+      { text: "संयुक्त राष्ट्र", at: 4.4, slot: "low" },
+    ],
+  },
+  {
+    id: "loc",
+    dur: 12,
+    camFrom: { x: 480, y: 470, s: 1.25 },
+    camTo: { x: 430, y: 450, s: 1.35 },
+    fills: {},
+    base: ["india", "aksai"],
+    showLoC: 0.8,
+    cards: [
+      { text: "जहाँ सेनाएँ रुकीं, वहीं सीमा", at: 0.6, slot: "top" },
+      { text: "1972 · नियंत्रण रेखा (LoC)", at: 4.0, slot: "mid", tone: "blue" },
+      { text: "पाक-अधिकृत कश्मीर · गिलगित-बाल्टिस्तान", at: 7.0, slot: "low", tone: "green" },
+    ],
+    // pok fills after LoC is drawn
+    arrows: [],
+  },
+  {
+    id: "aksai",
+    dur: 12,
+    camFrom: { x: 560, y: 500, s: 1.4 },
+    camTo: { x: 720, y: 540, s: 2.0 },
+    fills: { aksai: 6.5 },
+    base: ["india", "pok"],
+    arrows: [{ d: "M 640 600 L 760 480", at: 2.2, dur: 2.2, color: "#ffd24d", dashed: true }],
+    dates: [
+      { label: "1950 का दशक", at: 2.0 },
+      { label: "1962", at: 6.0 },
+    ],
+    photo: { caption: "अक्साई चिन", at: 0.6 },
+    cards: [
+      { text: "पूरब में लद्दाख · अक्साई चिन", at: 0.4, slot: "top" },
+      { text: "चुपचाप सड़क", at: 3.0, slot: "mid", tone: "red" },
+      { text: "1962 के युद्ध के बाद चीन के नियंत्रण में", at: 7.0, slot: "low", tone: "red" },
+    ],
+  },
+  {
+    id: "shaksgam",
+    dur: 7,
+    camFrom: { x: 520, y: 400, s: 1.5 },
+    camTo: { x: 480, y: 330, s: 1.9 },
+    fills: { shaksgam: 2.0 },
+    base: ["india", "pok", "aksai"],
+    arrows: [{ d: "M 380 330 L 520 300", at: 0.8, dur: 1.6, color: "#ff4d4d" }],
+    dates: [{ label: "1963", at: 0.3 }],
+    cards: [
+      { text: "शक्सगाम घाटी", at: 1.0, slot: "mid", tone: "red" },
+      { text: "पाकिस्तान → चीन · भारत इसे अवैध मानता है", at: 3.0, slot: "low" },
+    ],
+  },
+  {
+    id: "outro",
+    dur: 10,
+    camFrom: { x: 500, y: 450, s: 1.6 },
+    camTo: { x: 500, y: 500, s: 1.0 },
+    fills: {},
+    base: ["india", "pok", "aksai", "shaksgam"],
+    cards: [
+      { text: "एक रियासत · तीन देशों के नियंत्रण में", at: 0.4, slot: "top" },
+      { text: "1994 · संसद का सर्वसम्मत प्रस्ताव", at: 4.0, slot: "mid", tone: "blue" },
+      { text: "NDA · CDS में बार-बार पूछा गया", at: 6.0, slot: "low" },
+    ],
+    cta: 7.0,
+  },
+];
+
+export const TOTAL_SECONDS = SCENES.reduce((a, s) => a + s.dur, 0);
+export const TOTAL_FRAMES = Math.round(TOTAL_SECONDS * FPS);

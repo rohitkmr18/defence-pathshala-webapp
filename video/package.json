@@ -1,0 +1,20 @@
+{
+  "name": "dp-reels",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "still": "remotion still src/index.ts KashmirReel out/frame.png",
+    "render": "remotion render src/index.ts KashmirReel out/kashmir-reel.mp4"
+  },
+  "dependencies": {
+    "@fontsource/noto-sans-devanagari": "^5.3.0",
+    "@fontsource/noto-serif-devanagari": "^5.3.0",
+    "@remotion/cli": "^4.0.546",
+    "@types/react": "^18.3.31",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "^4.0.546",
+    "typescript": "^7.0.2"
+  }
+}
