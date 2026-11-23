@@ -1,0 +1,38 @@
+{
+  "name": "@defence-pathshala/studio",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Isolated production workspace for Defence Pathshala educational reels",
+  "scripts": {
+    "studio:info": "node scripts/studio-info.mjs",
+    "prepare:assets": "node scripts/prepare-assets.mjs",
+    "studio": "remotion studio src/index.ts",
+    "typecheck": "tsc -p .",
+    "render:contrails": "./scripts/render-contrails.sh"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "type": "module",
+  "dependencies": {
+    "@fontsource/inter": "5.3.0",
+    "@react-three/fiber": "9.8.2",
+    "@react-three/postprocessing": "3.2.2",
+    "@remotion/cli": "4.0.543",
+    "@remotion/fonts": "4.0.543",
+    "@remotion/renderer": "4.0.543",
+    "@remotion/three": "4.0.543",
+    "geist": "1.9.2",
+    "postprocessing": "6.39.6",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "remotion": "4.0.543",
+    "three": "0.187.0",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "@types/three": "0.187.0",
+    "typescript": "7.0.2"
+  }
+}
