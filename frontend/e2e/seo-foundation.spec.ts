@@ -275,3 +275,24 @@ test("Batch 3B: source-limited PYQ evidence matrix is SSR and correctly denomina
     expect(html).not.toContain("predicted topic weightage");
   }
 });
+
+test("Batch 3C: subject answer-readiness is grounded in eligible inventory and question provenance", async ({ request }) => {
+  for (const exam of ["cds", "capf"]) {
+    const response = await request.get("/pyqs/" + exam + "/history");
+    expect(response.status()).toBe(200);
+    const html = await response.text();
+    expect(html).toContain('id="subject-evidence-answers"');
+    expect(html).toContain("How many");
+    expect(html).toContain("Are all answers independently verified?");
+    expect(html).toContain("not a claim about the total questions UPSC has asked");
+    expect(html).toContain("A missing source or verification record must not be interpreted as official-key confirmation.");
+    expect(html).toContain('id="subject-questions"');
+    expect(html).toContain("View Recorded Answer &amp; Evidence");
+    expect(html).toContain("Recorded Answer:");
+    expect(html).toContain("No source reference recorded for this question.");
+    expect(html).toContain("Database verification status:");
+    expect(html).toContain("Not recorded");
+    expect(html).not.toContain("expandable verified answers and explanations");
+    expect(html).toContain('rel="canonical" href="https://www.defencepathshala.in/pyqs/' + exam + '/history"');
+  }
+});
