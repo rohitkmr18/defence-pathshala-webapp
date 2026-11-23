@@ -608,9 +608,9 @@ async function SubjectPageView({
 
               {/* Question Body */}
               <div className="mt-4">
-                <p className="text-slate-900 font-medium text-base sm:text-lg leading-relaxed whitespace-pre-line">
+                <h3 className="text-slate-900 font-semibold text-base sm:text-lg leading-relaxed whitespace-pre-line">
                   {q.question}
-                </p>
+                </h3>
               </div>
 
               {/* Options Grid */}
