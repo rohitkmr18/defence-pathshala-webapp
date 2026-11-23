@@ -1,0 +1,71 @@
+{
+  "schema_version": "dp-ai-citation-benchmark-v1",
+  "date_created": "2026-11-23",
+  "status": "unmeasured",
+  "description": "Real AI-answer-engine observations have NOT been collected. Empty observations must not be scored as zero citations.",
+  "prompt_set": [
+    {
+      "id": "DP-AEO-01",
+      "prompt": "CDS previous year questions topic wise free"
+    },
+    {
+      "id": "DP-AEO-02",
+      "prompt": "CDS history PYQ with explanations"
+    },
+    {
+      "id": "DP-AEO-03",
+      "prompt": "CDS polity PYQ by year"
+    },
+    {
+      "id": "DP-AEO-04",
+      "prompt": "CDS GK previous year questions 2026"
+    },
+    {
+      "id": "DP-AEO-05",
+      "prompt": "CDS PYQ year-wise distribution"
+    },
+    {
+      "id": "DP-AEO-06",
+      "prompt": "CDS question paper official source and answer key"
+    },
+    {
+      "id": "DP-AEO-07",
+      "prompt": "CAPF AC PYQs subject wise"
+    },
+    {
+      "id": "DP-AEO-08",
+      "prompt": "CAPF general mental ability PYQs"
+    },
+    {
+      "id": "DP-AEO-09",
+      "prompt": "CAPF science and technology previous year questions"
+    },
+    {
+      "id": "DP-AEO-10",
+      "prompt": "CAPF AC 2026 Paper I PYQs"
+    },
+    {
+      "id": "DP-AEO-11",
+      "prompt": "CAPF previous year paper topic distribution"
+    },
+    {
+      "id": "DP-AEO-12",
+      "prompt": "CAPF AC objective Paper I vs descriptive Paper II previous questions"
+    }
+  ],
+  "required_observation_fields": [
+    "run_date_utc",
+    "engine",
+    "model_version",
+    "prompt_id",
+    "raw_answer",
+    "mentions_dp",
+    "dp_clickable_citation_urls",
+    "all_citation_urls",
+    "answer_factual_issues",
+    "citation_supports_claim",
+    "reviewer",
+    "notes"
+  ],
+  "observations": []
+}
