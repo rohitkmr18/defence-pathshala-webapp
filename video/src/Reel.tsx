@@ -58,10 +58,10 @@ const PhotoCard: React.FC<{ p: NonNullable<Scene["photo"]>; end: number }> = ({ 
   if (t < p.at) return null;
   const out = interpolate(t, [end - 0.3, end], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
-    <div style={{ position: "absolute", ...(p.side === "left" ? { left: 50 } : { right: 50 }), top: 560, width: 420, opacity: out, transform: `translateY(${(1 - s) * 80}px) rotate(${2 - s * 2}deg)` }}>
+    <div style={{ position: "absolute", ...(p.side === "left" ? { left: 50 } : { right: 50 }), top: p.file ? 480 : 560, width: 420, opacity: out, transform: `translateY(${(1 - s) * 80}px) rotate(${2 - s * 2}deg)` }}>
       <div style={{ background: "#fff", padding: 12, borderRadius: 10, boxShadow: "0 14px 34px rgba(0,0,0,0.55)" }}>
         {p.file ? (
-          <Img src={staticFile(p.file)} style={{ width: "100%", height: 300, objectFit: "cover", filter: "sepia(0.35) contrast(1.05)" }} />
+          <Img src={staticFile(p.file)} style={{ width: "100%", height: 500, objectFit: "cover", objectPosition: "50% 20%" }} />
         ) : (
           <div style={{ height: 300, background: "repeating-linear-gradient(45deg,#d9d9d9,#d9d9d9 12px,#e9e9e9 12px,#e9e9e9 24px)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: SANS, color: "#666", fontSize: 26 }}>photo here</div>
         )}
