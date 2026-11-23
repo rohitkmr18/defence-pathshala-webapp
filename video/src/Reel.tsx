@@ -13,7 +13,8 @@ const SLOT_Y = { top: 190, mid: 1480, low: 1580 } as const;
 
 const useT = () => useCurrentFrame() / useVideoConfig().fps;
 
-const pop = (t: number, at: number) => {
+// Hook: must be called before any early return in the component.
+const usePop = (at: number) => {
   const f = useCurrentFrame();
   const { fps } = useVideoConfig();
   return spring({ frame: f - at * fps, fps, config: { damping: 14, stiffness: 140 } });
@@ -21,8 +22,8 @@ const pop = (t: number, at: number) => {
 
 const TextCard: React.FC<{ c: Card; end: number }> = ({ c, end }) => {
   const t = useT();
+  const s = usePop(c.at);
   if (t < c.at) return null;
-  const s = pop(t, c.at);
   const out = interpolate(t, [end - 0.3, end], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const tone = c.tone ?? "plain";
   const filled = tone !== "plain";
@@ -53,8 +54,8 @@ const DateCard: React.FC<{ label: string; at: number; end: number }> = ({ label,
 
 const PhotoCard: React.FC<{ p: NonNullable<Scene["photo"]>; end: number }> = ({ p, end }) => {
   const t = useT();
+  const s = usePop(p.at);
   if (t < p.at) return null;
-  const s = pop(t, p.at);
   const out = interpolate(t, [end - 0.3, end], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
     <div style={{ position: "absolute", ...(p.side === "left" ? { left: 50 } : { right: 50 }), top: 560, width: 420, opacity: out, transform: `translateY(${(1 - s) * 80}px) rotate(${2 - s * 2}deg)` }}>
@@ -72,8 +73,8 @@ const PhotoCard: React.FC<{ p: NonNullable<Scene["photo"]>; end: number }> = ({ 
 
 const Badge: React.FC<{ b: NonNullable<Scene["badge"]> }> = ({ b }) => {
   const t = useT();
+  const s = usePop(b.at);
   if (t < b.at) return null;
-  const s = pop(t, b.at);
   return (
     <div style={{ position: "absolute", left: 0, right: 0, top: 1370, display: "flex", justifyContent: "center", transform: `scale(${s})` }}>
       <div style={{ background: b.tone === "blue" ? BLUE : "#c62828", color: "#fff", fontFamily: SERIF, fontWeight: 700, fontSize: 46, padding: "12px 34px", borderRadius: 999, boxShadow: "0 8px 24px rgba(0,0,0,0.45)" }}>{b.text}</div>
