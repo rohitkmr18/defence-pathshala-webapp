@@ -59,9 +59,9 @@ export const SCENES: Scene[] = [
     camTo: { x: 500, y: 500, s: 1.18 },
     fills: { india: 0.4, pok: 3.2, aksai: 4.2 },
     cards: [
-      { text: "भारत के नक्शे में पूरा जम्मू-कश्मीर", at: 0.2, slot: "top" },
-      { text: "लेकिन ज़मीन पर कुछ और", at: 3.0, slot: "mid" },
-      { text: "ये हुआ कैसे?", at: 5.6, slot: "low", tone: "blue" },
+      { text: "India ke map mein poora J&K", at: 0.2, slot: "top" },
+      { text: "Lekin zameen par kuch aur", at: 3.0, slot: "mid" },
+      { text: "Ye hua kaise?", at: 5.6, slot: "low", tone: "blue" },
     ],
   },
   {
@@ -72,11 +72,11 @@ export const SCENES: Scene[] = [
     fills: {},
     base: ["india", "pok", "aksai"],
     cards: [
-      { text: "1947 · जम्मू-कश्मीर रियासत", at: 0.3, slot: "top" },
-      { text: "महाराजा हरि सिंह", at: 2.2, slot: "mid" },
-      { text: "न भारत, न पाकिस्तान", at: 4.6, slot: "low", tone: "blue" },
+      { text: "1947 · J&K Riyasat", at: 0.3, slot: "top" },
+      { text: "Maharaja Hari Singh", at: 2.2, slot: "mid" },
+      { text: "Na India, na Pakistan", at: 4.6, slot: "low", tone: "blue" },
     ],
-    photo: { caption: "महाराजा हरि सिंह", at: 2.0 },
+    photo: { caption: "Maharaja Hari Singh", at: 2.0 },
   },
   {
     id: "invasion",
@@ -91,13 +91,13 @@ export const SCENES: Scene[] = [
       { d: "M 400 440 L 455 470", at: 4.0, dur: 1.2, color: "#ff4d4d" },
     ],
     dates: [
-      { label: "22 अक्टूबर 1947", at: 0.3 },
-      { label: "26 अक्टूबर 1947", at: 6.4 },
+      { label: "22 Oct 1947", at: 0.3 },
+      { label: "26 Oct 1947", at: 6.4 },
     ],
-    photo: { caption: "विलय-पत्र", at: 7.2 },
+    photo: { caption: "Instrument of Accession", at: 7.2 },
     cards: [
-      { text: "क़बायली हमलावर", at: 1.2, slot: "mid", tone: "red" },
-      { text: "विलय-पत्र पर हस्ताक्षर", at: 7.4, slot: "low", tone: "blue" },
+      { text: "Kabayli hamlawar", at: 1.2, slot: "mid", tone: "red" },
+      { text: "Instrument of Accession sign", at: 7.4, slot: "low", tone: "blue" },
     ],
   },
   {
@@ -108,12 +108,12 @@ export const SCENES: Scene[] = [
     fills: {},
     base: ["india", "pok", "aksai"],
     arrows: [{ d: "M 560 900 L 455 470", at: 0.8, dur: 2.2, color: "#ffffff", dashed: true }],
-    dates: [{ label: "27 अक्टूबर 1947", at: 0.3 }],
-    photo: { caption: "भारतीय सेना · श्रीनगर", at: 3.2 },
-    badge: { text: "युद्धविराम · 1 जनवरी 1949", at: 6.0, tone: "blue" },
+    dates: [{ label: "27 Oct 1947", at: 0.3 }],
+    photo: { caption: "Indian Army · Srinagar", at: 3.2 },
+    badge: { text: "Ceasefire · 1 Jan 1949", at: 6.0, tone: "blue" },
     cards: [
-      { text: "सेना हवाई मार्ग से श्रीनगर", at: 0.8, slot: "mid" },
-      { text: "संयुक्त राष्ट्र", at: 4.4, slot: "low" },
+      { text: "Army plane se Srinagar", at: 0.8, slot: "mid" },
+      { text: "United Nations", at: 4.4, slot: "low" },
     ],
   },
   {
@@ -125,9 +125,9 @@ export const SCENES: Scene[] = [
     base: ["india", "aksai"],
     showLoC: 0.8,
     cards: [
-      { text: "जहाँ सेनाएँ रुकीं, वहीं सीमा", at: 0.6, slot: "top" },
-      { text: "1972 · नियंत्रण रेखा (LoC)", at: 4.0, slot: "mid", tone: "blue" },
-      { text: "पाक-अधिकृत कश्मीर · गिलगित-बाल्टिस्तान", at: 7.0, slot: "low", tone: "green" },
+      { text: "Army jahan ruki, wahin border", at: 0.6, slot: "top" },
+      { text: "1972 · Line of Control (LoC)", at: 4.0, slot: "mid", tone: "blue" },
+      { text: "PoK · Gilgit-Baltistan", at: 7.0, slot: "low", tone: "green" },
     ],
     // pok fills after LoC is drawn
     arrows: [],
@@ -141,14 +141,14 @@ export const SCENES: Scene[] = [
     base: ["india", "pok"],
     arrows: [{ d: "M 640 600 L 760 480", at: 2.2, dur: 2.2, color: "#ffd24d", dashed: true }],
     dates: [
-      { label: "1950 का दशक", at: 2.0 },
+      { label: "1950s", at: 2.0 },
       { label: "1962", at: 6.0 },
     ],
-    photo: { caption: "अक्साई चिन", at: 0.6 },
+    photo: { caption: "Aksai Chin", at: 0.6 },
     cards: [
-      { text: "पूरब में लद्दाख · अक्साई चिन", at: 0.4, slot: "top" },
-      { text: "चुपचाप सड़क", at: 3.0, slot: "mid", tone: "red" },
-      { text: "1962 के युद्ध के बाद चीन के नियंत्रण में", at: 7.0, slot: "low", tone: "red" },
+      { text: "East mein Ladakh · Aksai Chin", at: 0.4, slot: "top" },
+      { text: "Chupke se road", at: 3.0, slot: "mid", tone: "red" },
+      { text: "1962 War ke baad China ke control mein", at: 7.0, slot: "low", tone: "red" },
     ],
   },
   {
@@ -161,8 +161,8 @@ export const SCENES: Scene[] = [
     arrows: [{ d: "M 380 330 L 520 300", at: 0.8, dur: 1.6, color: "#ff4d4d" }],
     dates: [{ label: "1963", at: 0.3 }],
     cards: [
-      { text: "शक्सगाम घाटी", at: 1.0, slot: "mid", tone: "red" },
-      { text: "पाकिस्तान → चीन · भारत इसे अवैध मानता है", at: 3.0, slot: "low" },
+      { text: "Shaksgam Valley", at: 1.0, slot: "mid", tone: "red" },
+      { text: "Pakistan → China · India ise illegal maanta hai", at: 3.0, slot: "low" },
     ],
   },
   {
@@ -173,9 +173,9 @@ export const SCENES: Scene[] = [
     fills: {},
     base: ["india", "pok", "aksai", "shaksgam"],
     cards: [
-      { text: "एक रियासत · तीन देशों के नियंत्रण में", at: 0.4, slot: "top" },
-      { text: "1994 · संसद का सर्वसम्मत प्रस्ताव", at: 4.0, slot: "mid", tone: "blue" },
-      { text: "NDA · CDS में बार-बार पूछा गया", at: 6.0, slot: "low" },
+      { text: "Ek riyasat · Teen deshon ke control mein", at: 0.4, slot: "top" },
+      { text: "1994 · Parliament ka unanimous resolution", at: 4.0, slot: "mid", tone: "blue" },
+      { text: "NDA · CDS mein baar-baar poocha gaya", at: 6.0, slot: "low" },
     ],
     cta: 7.0,
   },

@@ -1,23 +1,23 @@
-# Reel: "एक रियासत, तीन देश" — How Kashmir got divided
+# Reel: "Ek riyasat, teen desh" — How Kashmir got divided
 
-Format: 9:16, 1080×1920, 30 fps, target ≈ 78 s. Hindi VO (recorded by Rohit) + animated map.
+Format: 9:16, 1080×1920, 30 fps, target ≈ 78 s. Hinglish VO (Roman script, recorded by Rohit) + animated map.
 Status: **DRAFT v1 — facts need sign-off against the sources listed at the bottom before publishing.**
 
-## Voice-over script (record this; ≈ 200 words)
+## Voice-over script — Hinglish (record this; ≈ 200 words)
 
-Read at a calm teaching pace. Each block = one scene. Timings are targets; the video
+Conversational Hinglish: read it the way you'd explain it in class. Spelling is phonetic, so adjust any word to how you naturally say it. Each block = one scene. Timings are targets; the video
 timeline stretches to match the final recording (see `video/README.md`).
 
 | # | Target time | VO (Hindi) |
 |---|---|---|
-| 1 | 0:00–0:08 | भारत के आधिकारिक नक्शे में पूरा जम्मू-कश्मीर और लद्दाख हमारा है। लेकिन ज़मीन पर इसके बड़े हिस्से पर पाकिस्तान और चीन का क़ब्ज़ा है। ऐसा हुआ कैसे? चलिए, नक्शे पर समझते हैं। |
-| 2 | 0:08–0:16 | 1947 में जम्मू-कश्मीर एक रियासत थी, राजा थे महाराजा हरि सिंह। आज़ादी के वक़्त उन्होंने न भारत चुना, न पाकिस्तान। वो अपनी रियासत को स्वतंत्र रखना चाहते थे। |
-| 3 | 0:16–0:28 | 22 अक्टूबर 1947 को पाकिस्तान की ओर से हज़ारों क़बायली हमलावर रियासत में घुस आए। मुज़फ़्फ़राबाद और बारामूला होते हुए वो श्रीनगर की ओर बढ़ने लगे। मदद के लिए महाराजा ने भारत का रुख़ किया, और 26 अक्टूबर को विलय-पत्र पर हस्ताक्षर कर दिए। जम्मू-कश्मीर क़ानूनी तौर पर भारत का हिस्सा बन गया। |
-| 4 | 0:28–0:37 | अगले ही दिन, 27 अक्टूबर को, भारतीय सेना हवाई जहाज़ों से श्रीनगर उतरी और हमलावरों को पीछे धकेला। भारत यह मामला संयुक्त राष्ट्र ले गया, और 1 जनवरी 1949 को युद्धविराम हो गया। |
-| 5 | 0:37–0:49 | अब नक्शे पर ये रेखा देखिए। युद्धविराम के वक़्त सेनाएँ जहाँ रुकीं, वही बनी सीमा। 1972 के शिमला समझौते के बाद इसे नियंत्रण रेखा, यानी LoC कहा गया। इसके पश्चिम और उत्तर का इलाक़ा, पाक-अधिकृत कश्मीर और गिलगित-बाल्टिस्तान, पाकिस्तान के क़ब्ज़े में रह गया। |
-| 6 | 0:49–1:01 | अब पूरब में लद्दाख की ओर चलिए। ये है अक्साई चिन, ठंडा और वीरान इलाक़ा। 1950 के दशक में चीन ने यहाँ से चुपचाप सड़क बना ली, और 1962 के युद्ध के बाद ये इलाक़ा चीन के नियंत्रण में ही रहा। |
-| 7 | 1:01–1:08 | और 1963 में पाकिस्तान ने अपने क़ब्ज़े वाले कश्मीर की शक्सगाम घाटी चीन को सौंप दी। भारत इस समझौते को अवैध मानता है। |
-| 8 | 1:08–1:18 | यानी एक रियासत, तीन देशों के नियंत्रण में। 1994 में भारतीय संसद ने सर्वसम्मति से प्रस्ताव पारित किया कि पूरा जम्मू-कश्मीर भारत का अभिन्न अंग है। NDA और CDS में ये टॉपिक बार-बार पूछा जाता है। कमेंट में बताइए, आपको कौन-सा साल याद रहा? |
+| 1 | 0:00–0:08 | India ke official map mein poora Jammu-Kashmir aur Ladakh humara hai. Lekin zameen par iske bade hisson par Pakistan aur China ka kabza hai. Aisa hua kaise? Chalo, map pe samajhte hain. |
+| 2 | 0:08–0:16 | 1947 mein Jammu-Kashmir ek riyasat thi, raja the Maharaja Hari Singh. Azaadi ke time unhone na India choose kiya, na Pakistan. Woh apni riyasat ko independent rakhna chahte the. |
+| 3 | 0:16–0:28 | 22 October 1947 ko Pakistan ki taraf se hazaaron kabayli hamlawar riyasat mein ghus aaye. Muzaffarabad aur Baramulla se hote hue woh Srinagar ki taraf badhne lage. Maharaja ne India se madad maangi, aur 26 October ko Instrument of Accession par sign kar diya. Legally, Jammu-Kashmir India ka hissa ban gaya. |
+| 4 | 0:28–0:37 | Agle hi din, 27 October ko, Indian Army plane se Srinagar utri aur hamlawaron ko peeche dhakela. India yeh matter United Nations le gaya, aur 1 January 1949 ko ceasefire ho gaya. |
+| 5 | 0:37–0:49 | Ab map par yeh line dekho. Ceasefire ke time army jahan ruki, wahi ban gayi border. 1972 ke Shimla Agreement ke baad ise Line of Control, yaani LoC, kaha gaya. Iske west aur north ka ilaaka, PoK aur Gilgit-Baltistan, Pakistan ke kabze mein reh gaya. |
+| 6 | 0:49–1:01 | Ab east mein Ladakh chalte hain. Yeh hai Aksai Chin, thanda aur sunsaan ilaaka. 1950s mein China ne yahan chupke se road bana li, aur 1962 ki jung ke baad yeh ilaaka China ke control mein hi raha. |
+| 7 | 1:01–1:08 | Aur 1963 mein Pakistan ne apne kabze wale Kashmir ki Shaksgam Valley China ko de di. India is agreement ko illegal maanta hai. |
+| 8 | 1:08–1:18 | Yaani ek riyasat, teen deshon ke control mein. 1994 mein Indian Parliament ne unanimously resolution pass kiya ki poora Jammu-Kashmir India ka atoot hissa hai. NDA aur CDS mein yeh topic baar-baar poocha jata hai. Comment karke batao, tumhe kaun sa saal yaad raha? |
 
 Word count ≈ 205. If the recording runs long, trim scene 2 (Standstill Agreement is left
 out on purpose) before trimming anything dated.
@@ -29,14 +29,14 @@ beat = camera move + one drawn element + one text card + one SFX.
 
 | # | Map camera | Elements (animate in order) | On-screen text (Hindi) | SFX |
 |---|---|---|---|---|
-| 1 | Slow push-in on full J&K+Ladakh outline | Outline fills **gold** (as India shows it) → western part turns **green**, eastern part **red** (vignette) | "ये हुआ कैसे?" (large, top) | drone bed, whoosh on text |
-| 2 | Hold, slight drift | 2.5D photo card: Maharaja Hari Singh (bottom) | "1947 · जम्मू-कश्मीर रियासत" / "महाराजा हरि सिंह" / "न भारत, न पाकिस्तान" | soft pulse |
-| 3 | Pan west → Srinagar | Calendar flip 22 Oct → arrows grow from Pak side via Muzaffarabad, Baramulla → Srinagar; calendar flip 26 Oct; Instrument of Accession image slides up | "22 अक्टूबर 1947" / "क़बायली हमलावर" / "26 अक्टूबर 1947 · विलय-पत्र" | page flip, arrow tick, stamp |
-| 4 | Pan south to Delhi, back to Srinagar | Dashed plane path Delhi→Srinagar; photo card (Indian troops, Srinagar airfield); UN card; "युद्धविराम" badge on 1 Jan 1949 | "27 अक्टूबर" / "संयुक्त राष्ट्र" / "1 जनवरी 1949 · युद्धविराम" | engine hum, thud |
-| 5 | Hold on LoC | White ceasefire line draws with glow; label "LoC"; PoK + Gilgit-Baltistan shade green | "1972 · नियंत्रण रेखा (LoC)" / "पाक-अधिकृत कश्मीर · गिलगित-बाल्टिस्तान" | laser draw |
-| 6 | Zoom east to Aksai Chin | Dotted road draws across; photo card of terrain; "1962" war card; area shades red | "अक्साई चिन" / "1950s · चुपचाप सड़क" / "1962 · युद्ध" | wind, riser |
-| 7 | Pan north to Shaksgam | Arrow from PoK → Shaksgam fills red | "1963 · शक्सगाम घाटी" / "पाकिस्तान → चीन" | whoosh |
-| 8 | Smooth zoom-out to full map with legend | Legend (India / Pak-held / China-held); DP logo bug; comment button pulses | "एक रियासत · तीन देशों के नियंत्रण में" / "कमेंट करें" | resolve chime, music fade |
+| 1 | Slow push-in on full J&K+Ladakh outline | Outline fills **gold** (as India shows it) → western part turns **green**, eastern part **red** (vignette) | "Ye hua kaise?" (large, top) | drone bed, whoosh on text |
+| 2 | Hold, slight drift | 2.5D photo card: Maharaja Hari Singh (bottom) | "1947 · J&K Riyasat" / "Maharaja Hari Singh" / "Na India, na Pakistan" | soft pulse |
+| 3 | Pan west → Srinagar | Calendar flip 22 Oct → arrows grow from Pak side via Muzaffarabad, Baramulla → Srinagar; calendar flip 26 Oct; Instrument of Accession image slides up | "22 Oct 1947" / "Kabayli hamlawar" / "26 Oct 1947 · Instrument of Accession" | page flip, arrow tick, stamp |
+| 4 | Pan south to Delhi, back to Srinagar | Dashed plane path Delhi→Srinagar; photo card (Indian troops, Srinagar airfield); UN card; "युद्धविराम" badge on 1 Jan 1949 | "27 Oct 1947" / "United Nations" / "1 Jan 1949 · Ceasefire" | engine hum, thud |
+| 5 | Hold on LoC | White ceasefire line draws with glow; label "LoC"; PoK + Gilgit-Baltistan shade green | "1972 · Line of Control (LoC)" / "PoK · Gilgit-Baltistan" | laser draw |
+| 6 | Zoom east to Aksai Chin | Dotted road draws across; photo card of terrain; "1962" war card; area shades red | "Aksai Chin" / "1950s · Chupke se road" / "1962 · War" | wind, riser |
+| 7 | Pan north to Shaksgam | Arrow from PoK → Shaksgam fills red | "1963 · Shaksgam Valley" / "Pakistan → China" | whoosh |
+| 8 | Smooth zoom-out to full map with legend | Legend (India / Pak-held / China-held); DP logo bug; comment button pulses | "Ek riyasat · Teen deshon ke control mein" / "Comment karo" | resolve chime, music fade |
 
 Persistent: DP logo bug top-right (blue `#285FF2`), captions lower-third, Instagram
 safe-zone (keep text inside 150 px top / 250 px bottom).

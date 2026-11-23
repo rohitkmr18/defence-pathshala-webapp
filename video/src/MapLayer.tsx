@@ -53,7 +53,7 @@ export const MapLayer: React.FC<{ scene: Scene }> = ({ scene }) => {
         {Object.values(PLACES).map((pl) => (
           <g key={pl.label}>
             <circle cx={pl.x} cy={pl.y} r={5} fill="#fff" />
-            <text x={pl.x + 10} y={pl.y - 8} fill="#fff" fontSize={22} fontFamily="Noto Sans Devanagari">{pl.label}</text>
+            <text x={pl.x + 10} y={pl.y - 8} fill="#fff" fontSize={22} fontFamily="Poppins">{pl.label}</text>
           </g>
         ))}
       </svg>

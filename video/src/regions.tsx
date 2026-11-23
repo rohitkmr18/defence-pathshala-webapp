@@ -20,10 +20,10 @@ export const REGION_COLORS: Record<RegionId, string> = {
 
 // Approximate marker positions on the schematic (re-place after swapping the map).
 export const PLACES = {
-  muzaffarabad: { x: 330, y: 450, label: "मुज़फ़्फ़राबाद" },
-  baramulla: { x: 400, y: 440, label: "बारामूला" },
-  srinagar: { x: 455, y: 470, label: "श्रीनगर" },
-  delhi: { x: 560, y: 900, label: "दिल्ली" },
+  muzaffarabad: { x: 330, y: 450, label: "Muzaffarabad" },
+  baramulla: { x: 400, y: 440, label: "Baramulla" },
+  srinagar: { x: 455, y: 470, label: "Srinagar" },
+  delhi: { x: 560, y: 900, label: "Delhi" },
 };
 
 export const LOC_PATH = "M 330 520 L 380 430 L 470 400";

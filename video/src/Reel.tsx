@@ -1,13 +1,13 @@
 import { AbsoluteFill, Audio, Img, Sequence, Easing, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
-import "@fontsource/noto-serif-devanagari/devanagari-700.css";
-import "@fontsource/noto-sans-devanagari/devanagari-600.css";
+import "@fontsource/poppins/latin-700.css";
+import "@fontsource/poppins/latin-600.css";
 import { MapLayer } from "./MapLayer";
 import { Card, FPS, HAS_MUSIC, HAS_VO, MUSIC_FILE, SCENES, Scene, VO_FILE } from "./timeline";
 
 const BLUE = "#285FF2";
 const TONES = { plain: "#101826", blue: BLUE, red: "#c62828", green: "#1f8a4c" } as const;
-const SERIF = "'Noto Serif Devanagari', serif";
-const SANS = "'Noto Sans Devanagari', sans-serif";
+const SERIF = "'Poppins', sans-serif";
+const SANS = "'Poppins', sans-serif";
 // Instagram safe zones: 150px top, 250px bottom
 const SLOT_Y = { top: 190, mid: 1480, low: 1580 } as const;
 
@@ -29,7 +29,7 @@ const TextCard: React.FC<{ c: Card; end: number }> = ({ c, end }) => {
   return (
     <div style={{ position: "absolute", left: 60, right: c.slot === "top" ? 200 : 60, top: SLOT_Y[c.slot ?? "mid"], display: "flex", justifyContent: "center", opacity: out, transform: `scale(${0.85 + 0.15 * s})`, translate: `0 ${(1 - s) * 30}px` }}>
       <div style={{
-        fontFamily: SERIF, fontWeight: 700, fontSize: c.slot === "top" ? 50 : 52, lineHeight: 1.25, textAlign: "center",
+        fontFamily: SERIF, fontWeight: 700, fontSize: c.slot === "top" ? 46 : 48, lineHeight: 1.3, textAlign: "center",
         color: filled ? "#fff" : "#fff", background: filled ? TONES[tone] : "rgba(10,16,30,0.72)",
         padding: "14px 30px", borderRadius: 14, boxShadow: "0 8px 28px rgba(0,0,0,0.45)", textShadow: "0 2px 6px rgba(0,0,0,0.5)",
       }}>{c.text}</div>
@@ -62,7 +62,7 @@ const PhotoCard: React.FC<{ p: NonNullable<Scene["photo"]>; end: number }> = ({ 
         {p.file ? (
           <Img src={staticFile(p.file)} style={{ width: "100%", height: 300, objectFit: "cover", filter: "sepia(0.35) contrast(1.05)" }} />
         ) : (
-          <div style={{ height: 300, background: "repeating-linear-gradient(45deg,#d9d9d9,#d9d9d9 12px,#e9e9e9 12px,#e9e9e9 24px)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: SANS, color: "#666", fontSize: 26 }}>फ़ोटो यहाँ</div>
+          <div style={{ height: 300, background: "repeating-linear-gradient(45deg,#d9d9d9,#d9d9d9 12px,#e9e9e9 12px,#e9e9e9 24px)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: SANS, color: "#666", fontSize: 26 }}>photo here</div>
         )}
         <div style={{ fontFamily: SERIF, fontWeight: 700, color: "#111", fontSize: 30, padding: "10px 6px 2px", textAlign: "center" }}>{p.caption}</div>
       </div>
@@ -87,14 +87,14 @@ const Cta: React.FC<{ at: number }> = ({ at }) => {
   const pulse = 1 + 0.06 * Math.sin((t - at) * 7);
   return (
     <div style={{ position: "absolute", left: 0, right: 0, top: 1680, display: "flex", justifyContent: "center", transform: `scale(${pulse})` }}>
-      <div style={{ background: "#e53935", color: "#fff", fontFamily: SANS, fontWeight: 600, fontSize: 44, padding: "16px 44px", borderRadius: 999 }}>💬 कमेंट में बताइए</div>
+      <div style={{ background: "#e53935", color: "#fff", fontFamily: SANS, fontWeight: 600, fontSize: 44, padding: "16px 44px", borderRadius: 999 }}>Comment karke batao</div>
     </div>
   );
 };
 
 const Legend: React.FC = () => (
   <div style={{ position: "absolute", left: 60, top: 1290, fontFamily: SANS, fontWeight: 600, fontSize: 30, color: "#fff", display: "grid", gap: 8 }}>
-    {[["#f2c230", "भारत"], ["#35b36b", "पाकिस्तान के क़ब्ज़े में"], ["#e8473f", "चीन के क़ब्ज़े में"]].map(([c, l]) => (
+    {[["#f2c230", "India"], ["#35b36b", "Pakistan ke kabze mein"], ["#e8473f", "China ke kabze mein"]].map(([c, l]) => (
       <div key={l} style={{ display: "flex", alignItems: "center", gap: 12 }}><span style={{ width: 26, height: 26, borderRadius: 6, background: c }} />{l}</div>
     ))}
   </div>
