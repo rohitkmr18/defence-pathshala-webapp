@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import {
   slugToExam,
   getExamCoverage,
@@ -162,6 +163,51 @@ export default async function ExamPublicPage({ params }: PageProps) {
           A listed year does not imply that a complete official paper or answer key is available.
         </p>
       </section>
+
+      {coverage.slug === "cds" && (
+        <section aria-labelledby="cds-video-guide" className="mb-10 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div className="grid gap-0 md:grid-cols-2">
+            <a
+              href="https://www.youtube.com/watch?v=DiBQTWLReGg"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Watch the CDS video on YouTube (opens in a new tab)"
+              className="group relative block aspect-video overflow-hidden bg-slate-900"
+            >
+              <Image
+                src="https://i.ytimg.com/vi/DiBQTWLReGg/hqdefault.jpg"
+                alt="Thumbnail for the CDS video on Defence Pathshala"
+                fill
+                unoptimized
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover transition-transform duration-300 group-hover:scale-105"
+              />
+              <span aria-hidden="true" className="absolute inset-0 flex items-center justify-center bg-black/10">
+                <span className="flex h-14 w-20 items-center justify-center rounded-2xl bg-red-600 text-white shadow-lg transition group-hover:bg-red-700">
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="h-8 w-8" aria-hidden="true"><path d="M8 5.5v13l10-6.5z" /></svg>
+                </span>
+              </span>
+            </a>
+            <div className="flex flex-col justify-center p-6 sm:p-8">
+              <p className="text-xs font-bold uppercase tracking-wider text-blue-700">Video resource</p>
+              <h2 id="cds-video-guide" className="mt-2 text-xl font-bold text-slate-900 sm:text-2xl">
+                Watch our CDS video
+              </h2>
+              <p className="mt-3 text-sm leading-6 text-slate-600">
+                Prefer learning through video? Watch this Defence Pathshala resource, then explore previous-year questions and practise on the platform.
+              </p>
+              <a
+                href="https://www.youtube.com/watch?v=DiBQTWLReGg"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-5 inline-flex w-fit items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
+              >
+                Watch on YouTube <ArrowRight className="h-4 w-4" />
+              </a>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Year-by-Year Archive Grid */}
       <section className="mb-10">
