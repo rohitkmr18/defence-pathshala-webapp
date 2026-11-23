@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, AlertCircle, Clock3, RotateCcw } from "lucide-react";
 import { trackAfcatFunnel } from "@/lib/afcat/funnel";
@@ -32,8 +32,10 @@ function validMock(value: unknown): value is PublishedMock {
     && Number.isFinite(mock.max_marks);
 }
 
-export default function AfcatMockCatalogue() {
-  const [state, setState] = useState<CatalogState>({ status: "loading" });
+export default function AfcatMockCatalogue({ initialTests }: { initialTests: PublishedMock[] | null }) {
+  const [state, setState] = useState<CatalogState>(
+    initialTests === null ? { status: "error" } : { status: "ready", tests: initialTests },
+  );
 
   const load = useCallback(async (signal?: AbortSignal) => {
     setState({ status: "loading" });
@@ -51,11 +53,6 @@ export default function AfcatMockCatalogue() {
     }
   }, []);
 
-  useEffect(() => {
-    const controller = new AbortController();
-    void load(controller.signal);
-    return () => controller.abort();
-  }, [load]);
 
   return (
     <section id="available-mocks" aria-labelledby="available-mocks-heading" className="scroll-mt-20">
