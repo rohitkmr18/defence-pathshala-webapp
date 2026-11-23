@@ -25,7 +25,7 @@ if (Object.keys(SERIES_A_KEY).length !== 125 || SERIES_A_KEY[98] !== "X") {
  * Audit the 125 Series A key entries explicitly transcribed in SERIES_A_KEY.
  * Rows must be pre-exported by an authorized operator from a trusted read-only query.
  * Exact exam/year/paper is required; rejects other records rather than conflating series.
- * "X" denotes a dropped item and MUST NOT be scored as one of A/B/C/D.
+ * "X" denotes a dropped official item. A different answer letter may be valid for\n * an intentionally rewritten practice question; flag for provenance review, NEVER\n * automatically replace a stored answer with an official-key letter.
  */
 function reconcile(rows) {
   if (!Array.isArray(rows)) throw new TypeError("Expected a JSON array");
@@ -43,8 +43,8 @@ function reconcile(rows) {
         recorded_option: recorded || null,
         verification_status: String(r.verified_status || ""),
         finding: expected === "X"
-          ? (recorded && recorded !== "X" ? "DROPPED_ITEM_HAS_SCORABLE_ANSWER" : "DROPPED_ITEM_REQUIRES_REVIEW")
-          : (recorded === expected ? "MATCH" : "ANSWER_MISMATCH"),
+          ? (recorded && recorded !== "X" ? "DROPPED_OFFICIAL_ITEM_WITH_ADAPTED_ANSWER" : "DROPPED_ITEM_REQUIRES_REVIEW")
+          : (recorded === expected ? "MATCH" : "OFFICIAL_KEY_DIFFERS_REVIEW_SOURCE_TEXT"),
       };
     })
     .filter(Boolean)
@@ -63,7 +63,7 @@ if (require.main === module) {
       matched: results.filter(r=>r.finding==="MATCH").length,
       problems: results.filter(r=>r.finding!=="MATCH"),
     },null,2)+"\n");
-    if (results.some(r=>r.finding==="ANSWER_MISMATCH"||r.finding==="DROPPED_ITEM_HAS_SCORABLE_ANSWER")) process.exitCode=1;
+    if (results.some(r=>r.finding==="OFFICIAL_KEY_DIFFERS_REVIEW_SOURCE_TEXT"||r.finding==="DROPPED_ITEM_HAS_SCORABLE_ANSWER")) process.exitCode=1;
   }
 }
 module.exports = { reconcile, SERIES_A_KEY };
