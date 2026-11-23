@@ -61,6 +61,7 @@ if (backend.status !== 0) {
 const mockChecks = [
   [pythonCmd, ["-m", "unittest", "discover", "-s", "scripts", "-p", "test_cds_gk_m01_import.py"]],
   [process.execPath, ["--test", "scripts/test-mock-engine.cjs", "scripts/test-mock-routes.cjs", "scripts/test-mock-seed.cjs", "scripts/test-mock-save-queue.cjs", "scripts/test-mock-analysis.cjs"]],
+  [process.execPath, ["--test", "scripts/test-capf-2025-key-audit.cjs"]],
 ];
 for (const [command, args] of mockChecks) {
   const check = spawnSync(command, args, { cwd: rootDir, stdio: "inherit" });
