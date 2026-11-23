@@ -11,14 +11,14 @@ test("2025 source snapshot: first 20 match, dropped Q98 is incorrectly marked sc
   assert.equal(first20.length,20);
   const found=reconcile([...first20.map((option,i)=>row(i+1,option)),row(62,"C"),row(98,"C"),row(108,"C")]);
   assert.equal(found.filter(x=>x.finding==="MATCH").length,20);
-  assert.deepEqual(found.filter(x=>x.finding!=="MATCH").map(x=>({q:x.q_num,finding:x.finding})),[{q:62,finding:"ANSWER_MISMATCH"},{q:98,finding:"DROPPED_ITEM_HAS_SCORABLE_ANSWER"},{q:108,finding:"ANSWER_MISMATCH"}]);
+  assert.deepEqual(found.filter(x=>x.finding!=="MATCH").map(x=>({q:x.q_num,finding:x.finding})),[{q:62,finding:"OFFICIAL_KEY_DIFFERS_REVIEW_SOURCE_TEXT"},{q:98,finding:"DROPPED_OFFICIAL_ITEM_WITH_ADAPTED_ANSWER"},{q:108,finding:"OFFICIAL_KEY_DIFFERS_REVIEW_SOURCE_TEXT"}]);
 });
 test("no claim about other years, series or beyond 125 key entries",()=>{
   const found=reconcile([row(126,"A"),{...row(98,"C"),year:2024},{...row(98,"C"),paper:"Paper II"},{...row(1,"D"),exam:"CDS"}]);
   assert.equal(found.length,0);
 });
-test("incorrect normal answer is reported rather than silently accepted",()=>{
-  assert.equal(reconcile([row(2,"A")])[0].finding,"ANSWER_MISMATCH");
+test("different official key is flagged for source-text review, not automatically corrected",()=>{
+  assert.equal(reconcile([row(2,"A")])[0].finding,"OFFICIAL_KEY_DIFFERS_REVIEW_SOURCE_TEXT");
   assert.equal(reconcile([row(98,null)])[0].finding,"DROPPED_ITEM_REQUIRES_REVIEW");
 });
 
