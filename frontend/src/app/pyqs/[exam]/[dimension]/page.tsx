@@ -46,8 +46,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     if (!examCoverage || !yearCoverage) return {};
 
     const canonicalUrl = `https://www.defencepathshala.in/pyqs/${examCoverage.slug}/${yearNum}`;
-    const title = `${examCoverage.label} ${yearNum} PYQs - Question Paper & Subject Analysis`;
-    const description = `Analyze and practice official UPSC ${examCoverage.label} ${yearNum} previous year questions. Contains ${yearCoverage.totalQuestions} questions across ${yearCoverage.subjects.length} subjects with instant solutions.`;
+    const title = `${examCoverage.label} ${yearNum} PYQs - Available Questions by Subject`;
+    const description = `Explore ${yearCoverage.totalQuestions} available ${examCoverage.label} ${yearNum} previous year questions across ${yearCoverage.subjects.length} subjects. Browse subject-wise coverage and practise eligible questions.`;
 
     return {
       title,
@@ -89,7 +89,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     const canonicalUrl = `https://www.defencepathshala.in/pyqs/${archive.examSlug}/${archive.subjectSlug}`;
     const title = `${archive.exam} ${archive.subject} Previous Year Questions (${yearSpanText})`;
-    const description = `Practice ${archive.totalQuestions} ${archive.exam} ${archive.subject} previous year questions from ${yearSpanText} with answers, explanations, topic-wise analysis and year-wise trends.`;
+    const description = `Browse ${archive.totalQuestions} available ${archive.exam} ${archive.subject} PYQs from ${yearSpanText}, with year-wise question counts, topic breakdown and practice links. Answers vary by question.`;
 
     return {
       title,
@@ -172,7 +172,7 @@ async function YearPageView({
           {examCoverage.label} {yearNum} Previous Year Questions
         </h1>
         <p className="mt-3 text-base text-slate-600 sm:text-lg max-w-3xl leading-relaxed">
-          Comprehensive subject-wise breakdown of official UPSC {examCoverage.fullTitle} {yearNum} examination questions with full answer keys and performance tracking.
+          Browse the available {examCoverage.label} {yearNum} previous year questions by subject. Counts reflect the eligible Defence Pathshala question inventory, not necessarily the complete official paper or answer key.
         </p>
 
         {/* Stats */}
@@ -201,7 +201,7 @@ async function YearPageView({
             href={`/dashboard/practice?exam=${encodeURIComponent(examDb)}&year=${yearNum}`}
             className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-md shadow-blue-600/20 hover:bg-blue-500 transition active:scale-95"
           >
-            Attempt {yearNum} Exam Paper
+            Practise Available {yearNum} Questions
             <ArrowRight className="h-4 w-4" />
           </Link>
           <Link
@@ -242,7 +242,7 @@ async function YearPageView({
                   </span>
                 </div>
                 <p className="mt-2 text-xs text-slate-500">
-                  {sub.count} questions asked in {examCoverage.label} {yearNum}
+                  {sub.count} eligible questions available for {examCoverage.label} {yearNum}
                 </p>
               </div>
 
@@ -372,7 +372,7 @@ async function SubjectPageView({
           {archive.exam} {archive.subject} Previous Year Questions
         </h1>
         <p className="mt-3 text-base text-slate-600 sm:text-lg max-w-3xl leading-relaxed">
-          Practice {archive.totalQuestions} official {archive.exam} {archive.subject} previous year questions from {yearSpanText}. Explore comprehensive year-by-year question distribution, topic patterns, verified answers, and detailed explanations.
+          Browse {archive.totalQuestions} eligible {archive.exam} {archive.subject} previous year questions from {yearSpanText}. Compare available questions by year and topic, then practise with answers and explanations where provided.
         </p>
 
         {/* Coverage Summary Metrics */}
@@ -384,7 +384,7 @@ async function SubjectPageView({
             <div className="mt-1 text-2xl font-bold text-slate-900">
               {archive.totalQuestions}
             </div>
-            <p className="text-xs text-slate-500 mt-0.5">Real exam questions</p>
+            <p className="text-xs text-slate-500 mt-0.5">Eligible archived questions</p>
           </div>
 
           <div className="rounded-xl border border-slate-100 bg-slate-50 p-4">
@@ -480,7 +480,7 @@ async function SubjectPageView({
             {archive.subject} Topic Breakdown & Weightage
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
-            Distribution of questions across syllabus topics in the verified dataset.
+            Distribution among eligible questions currently in the Defence Pathshala dataset; not a claim about complete exam-paper weightage.
           </p>
         </div>
 

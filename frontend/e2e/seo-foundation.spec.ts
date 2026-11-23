@@ -238,3 +238,23 @@ test("GSC server diagnostics reject anonymous requests without contacting Google
     expect(html).not.toContain("Google diagnostic failed");
   }
 });
+
+test("Batch 3A: CAPF and CDS archives accurately describe eligible question coverage", async ({ request }) => {
+  for (const [path, expected] of [
+    // Isolated upstream intentionally contains only 2026 History rows for each exam.
+    ["/pyqs/capf/2026", "not necessarily the complete official paper or answer key"],
+    ["/pyqs/cds/2026", "not necessarily the complete official paper or answer key"],
+    ["/pyqs/capf/history", "not a claim about complete exam-paper weightage"],
+    ["/pyqs/cds/history", "not a claim about complete exam-paper weightage"],
+    ["/pyqs/capf/2026/history", "Share of Available PYQs"],
+    ["/pyqs/cds/2026/history", "Share of Available PYQs"],
+  ] as const) {
+    const response = await request.get(path);
+    expect(response.status(), path).toBe(200);
+    const html = await response.text();
+    expect(html, path).toContain(expected);
+    expect(html, path).not.toContain("full answer keys and performance tracking");
+    expect(html, path).not.toContain("Complete solutions, explanations, and pattern intelligence");
+    expect(html, path).toContain('rel="canonical" href="https://www.defencepathshala.in');
+  }
+});

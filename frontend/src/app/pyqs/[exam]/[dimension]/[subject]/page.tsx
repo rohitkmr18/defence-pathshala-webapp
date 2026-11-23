@@ -94,7 +94,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const canonicalUrl = `https://www.defencepathshala.in/pyqs/${subjectCoverage.examSlug}/${yearNum}/${subjectCoverage.subjectSlug}`;
   const title = `${examDb} ${yearNum} ${subjectCoverage.subject} PYQs - Questions & Solutions`;
-  const description = `Practice ${subjectCoverage.questionCount} verified ${subjectCoverage.subject} questions from UPSC ${examDb} ${yearNum}. Complete solutions, explanations, and pattern intelligence.`;
+  const description = `Explore ${subjectCoverage.questionCount} eligible ${subjectCoverage.subject} PYQs from ${examDb} ${yearNum}, with subject coverage and practice links. Answers and explanations vary by question.`;
 
   return {
     title,
@@ -177,7 +177,7 @@ export default async function ExamYearSubjectPyqPage({ params }: PageProps) {
           {examDb} {yearNum} {subjectCoverage.subject} Previous Year Questions
         </h1>
         <p className="mt-3 text-base text-slate-600 sm:text-lg max-w-3xl leading-relaxed">
-          Detailed question breakdown and targeted practice for {subjectCoverage.subject} questions appearing in the UPSC {examDb} {yearNum} examination.
+          Explore the {subjectCoverage.questionCount} eligible {subjectCoverage.subject} questions currently available from the UPSC {examDb} {yearNum} archive. Coverage is not a claim about the complete official paper.
         </p>
 
         {/* Statistical Metrics */}
@@ -189,18 +189,18 @@ export default async function ExamYearSubjectPyqPage({ params }: PageProps) {
             <div className="mt-1 text-2xl font-bold text-slate-900">
               {subjectCoverage.questionCount} Questions
             </div>
-            <p className="text-xs text-slate-500 mt-0.5">In {yearNum} exam paper</p>
+            <p className="text-xs text-slate-500 mt-0.5">In eligible {yearNum} archive</p>
           </div>
 
           <div className="rounded-xl border border-slate-100 bg-slate-50 p-4">
             <span className="text-xs font-medium uppercase tracking-wider text-slate-500">
-              Paper Weightage
+              Share of Available PYQs
             </span>
             <div className="mt-1 text-2xl font-bold text-blue-600">
               {weightagePercent}%
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              Of {yearCoverage.totalQuestions} total questions
+              Of {yearCoverage.totalQuestions} eligible archived questions
             </p>
           </div>
 
@@ -221,7 +221,7 @@ export default async function ExamYearSubjectPyqPage({ params }: PageProps) {
             href={`/dashboard/practice?exam=${encodeURIComponent(examDb)}&year=${yearNum}&subject=${encodeURIComponent(subjectCoverage.subject)}`}
             className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-md shadow-blue-600/20 hover:bg-blue-500 transition active:scale-95"
           >
-            Practice These {subjectCoverage.questionCount} Questions
+            Practise {subjectCoverage.questionCount} Available Questions
             <ArrowRight className="h-4 w-4" />
           </Link>
           <Link
@@ -368,7 +368,7 @@ async function ExamSubjectTopicPyqPage({
           {examCoverage.label} {archive.topic} Previous Year Questions
         </h1>
         <p className="mt-3 max-w-3xl text-base leading-relaxed text-slate-600 sm:text-lg">
-          Practice {archive.totalQuestions} verified {examCoverage.label} questions tagged to {archive.topic} within {archive.subject}, covering {yearText}. The statistics and question set below are generated from Defence Pathshala&apos;s canonical PYQ intelligence corpus.
+          Practice {archive.totalQuestions} eligible {examCoverage.label} questions tagged to {archive.topic} within {archive.subject}, covering {yearText}. The statistics and question set below are generated from Defence Pathshala&apos;s canonical PYQ intelligence corpus.
         </p>
 
         <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
