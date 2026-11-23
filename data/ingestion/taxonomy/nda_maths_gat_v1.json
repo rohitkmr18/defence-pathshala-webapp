@@ -1,0 +1,383 @@
+{
+  "version": "nda-maths-gat-v1",
+  "approved": "2026-11-23 (founder, approved in chat; Physics/Chemistry/Biology reuse existing Science & Technology nodes)",
+  "derived_from": [
+    "UPSC NDA & NA syllabus (Maths; GAT Part A English, Part B General Knowledge)",
+    "NDA 2026-II Maths and GAT (scan), NDA 2026-I GAT (scan), NDA 2026-I Maths set D (scan)",
+    "Existing production taxonomy (questions where exam in CDS, CAPF-AC) for every subject that already exists"
+  ],
+  "column_mapping": {
+    "subject": "approved Subject",
+    "topic": "approved Topic",
+    "subtopic": "one listed subtopic",
+    "theme": "specific concept, set at tagging time (unnumbered)"
+  },
+  "allowed_patterns": [
+    "Single MCQ",
+    "2-Statement Combination",
+    "3-Statement Combination",
+    "4-Statement Combination",
+    "Statement Count",
+    "Ordering/Sequence",
+    "Assertion-Reason",
+    "Chronology",
+    "Match the Following",
+    "Linked Item Set"
+  ],
+  "pending_patterns": {
+    "Linked Item Set": "PATTERN.LINKED_SET, added to dp_pattern_dictionary with the first ingestion migration"
+  },
+  "id_convention": "NDA_<I|II>_<year>_<CODE>_<q_num as 3 digits>. q_num is the position in the paper. Maths = MATHS. GAT q1-50 = ENG, GAT q51-150 = GK (q_num keeps its paper position, e.g. NDA_II_2026_GK_051).",
+  "papers": {
+    "nda-maths": {
+      "exam": "NDA",
+      "paper": "Mathematics",
+      "section_id": "nda-maths:maths",
+      "question_id_code": "MATHS",
+      "taxonomy": [
+        {
+          "subject": "Algebra",
+          "topics": [
+            {
+              "topic": "Sets, Relations and Functions",
+              "subtopics": [
+                "Sets and Venn Diagrams",
+                "Relations",
+                "Functions: Domain, Range, Composition and Inverse"
+              ]
+            },
+            {
+              "topic": "Complex Numbers",
+              "subtopics": [
+                "Algebra of Complex Numbers",
+                "Modulus, Argument and Polar Form",
+                "Cube Roots of Unity"
+              ]
+            },
+            {
+              "topic": "Quadratic Equations and Inequalities",
+              "subtopics": [
+                "Roots and Coefficients",
+                "Nature of Roots",
+                "Inequalities"
+              ]
+            },
+            {
+              "topic": "Sequences and Series",
+              "subtopics": [
+                "Arithmetic Progression",
+                "Geometric Progression",
+                "Special Series and Means"
+              ]
+            },
+            {
+              "topic": "Permutations and Combinations",
+              "subtopics": [
+                "Counting Principles",
+                "Permutations",
+                "Combinations"
+              ]
+            },
+            {
+              "topic": "Binomial Theorem",
+              "subtopics": [
+                "Expansion and General Term",
+                "Coefficients and Middle Terms"
+              ]
+            },
+            {
+              "topic": "Logarithms and Indices",
+              "subtopics": [
+                "Laws of Logarithms",
+                "Laws of Indices and Surds"
+              ]
+            },
+            {
+              "topic": "Number Systems",
+              "subtopics": [
+                "Binary and Decimal Systems",
+                "Divisibility and Remainders"
+              ]
+            }
+          ]
+        },
+        {
+          "subject": "Matrices and Determinants",
+          "topics": [
+            {
+              "topic": "Matrices",
+              "subtopics": [
+                "Types and Operations",
+                "Transpose, Symmetric and Skew-symmetric",
+                "Adjoint and Inverse",
+                "Matrix Equations and Powers"
+              ]
+            },
+            {
+              "topic": "Determinants",
+              "subtopics": [
+                "Evaluation and Properties",
+                "Minors and Cofactors",
+                "Linear Systems and Consistency",
+                "Area using Determinants"
+              ]
+            }
+          ]
+        },
+        {
+          "subject": "Trigonometry",
+          "topics": [
+            {
+              "topic": "Trigonometric Ratios and Identities",
+              "subtopics": [
+                "Standard Angles and Allied Angles",
+                "Compound and Multiple Angles",
+                "Identities and Simplification"
+              ]
+            },
+            {
+              "topic": "Trigonometric Equations",
+              "subtopics": [
+                "General Solutions",
+                "Number of Solutions in an Interval"
+              ]
+            },
+            {
+              "topic": "Inverse Trigonometric Functions",
+              "subtopics": [
+                "Principal Values",
+                "Identities and Simplification"
+              ]
+            },
+            {
+              "topic": "Properties of Triangles",
+              "subtopics": [
+                "Sine and Cosine Rules",
+                "Ratios of Sides and Angles"
+              ]
+            },
+            {
+              "topic": "Heights and Distances",
+              "subtopics": [
+                "Angles of Elevation and Depression"
+              ]
+            }
+          ]
+        },
+        {
+          "subject": "Analytical Geometry",
+          "topics": [
+            {
+              "topic": "Coordinate Geometry Basics",
+              "subtopics": [
+                "Distance and Section Formula",
+                "Area of Triangle and Polygon",
+                "Locus"
+              ]
+            },
+            {
+              "topic": "Straight Lines",
+              "subtopics": [
+                "Slope and Equations of a Line",
+                "Distance from a Point to a Line",
+                "Angle between Lines",
+                "Concurrency and Families of Lines"
+              ]
+            },
+            {
+              "topic": "Circles",
+              "subtopics": [
+                "Equation and Parameters",
+                "Tangents and Normals",
+                "Chords and Intersections"
+              ]
+            },
+            {
+              "topic": "Conic Sections",
+              "subtopics": [
+                "Parabola",
+                "Ellipse",
+                "Hyperbola"
+              ]
+            },
+            {
+              "topic": "Three-dimensional Geometry",
+              "subtopics": [
+                "Direction Cosines and Direction Ratios",
+                "Equation of a Plane",
+                "Line in Space",
+                "Distance and Angle in Space"
+              ]
+            }
+          ]
+        },
+        {
+          "subject": "Differential Calculus",
+          "topics": [
+            {
+              "topic": "Limits and Continuity",
+              "subtopics": [
+                "Limits",
+                "Continuity"
+              ]
+            },
+            {
+              "topic": "Differentiation",
+              "subtopics": [
+                "Standard Derivatives and Rules",
+                "Chain, Implicit and Parametric Differentiation",
+                "Higher-order Derivatives"
+              ]
+            },
+            {
+              "topic": "Applications of Derivatives",
+              "subtopics": [
+                "Tangents and Normals",
+                "Increasing and Decreasing Functions",
+                "Maxima and Minima",
+                "Rate of Change"
+              ]
+            }
+          ]
+        },
+        {
+          "subject": "Integral Calculus and Differential Equations",
+          "topics": [
+            {
+              "topic": "Indefinite Integration",
+              "subtopics": [
+                "Standard Forms",
+                "Substitution",
+                "Integration by Parts"
+              ]
+            },
+            {
+              "topic": "Definite Integrals",
+              "subtopics": [
+                "Evaluation",
+                "Properties of Definite Integrals"
+              ]
+            },
+            {
+              "topic": "Area under Curves",
+              "subtopics": [
+                "Area between Curve and Axis",
+                "Area between Curves"
+              ]
+            },
+            {
+              "topic": "Differential Equations",
+              "subtopics": [
+                "Order and Degree",
+                "Formation",
+                "First-order Solutions"
+              ]
+            }
+          ]
+        },
+        {
+          "subject": "Vector Algebra",
+          "topics": [
+            {
+              "topic": "Vectors",
+              "subtopics": [
+                "Basics and Position Vectors",
+                "Scalar (Dot) Product",
+                "Vector (Cross) Product",
+                "Scalar Triple Product"
+              ]
+            }
+          ]
+        },
+        {
+          "subject": "Statistics",
+          "topics": [
+            {
+              "topic": "Data and Graphical Representation",
+              "subtopics": [
+                "Frequency Distribution",
+                "Histogram and Cumulative Frequency",
+                "Bar Chart and Pie Chart"
+              ]
+            },
+            {
+              "topic": "Measures of Central Tendency",
+              "subtopics": [
+                "Mean",
+                "Median",
+                "Mode"
+              ]
+            },
+            {
+              "topic": "Measures of Dispersion",
+              "subtopics": [
+                "Range and Mean Deviation",
+                "Variance and Standard Deviation"
+              ]
+            },
+            {
+              "topic": "Correlation",
+              "subtopics": [
+                "Correlation Coefficient"
+              ]
+            }
+          ]
+        },
+        {
+          "subject": "Probability",
+          "topics": [
+            {
+              "topic": "Classical Probability",
+              "subtopics": [
+                "Events and Sample Space",
+                "Addition and Multiplication Rules"
+              ]
+            },
+            {
+              "topic": "Conditional Probability",
+              "subtopics": [
+                "Conditional Probability and Independence",
+                "Bayes' Theorem"
+              ]
+            },
+            {
+              "topic": "Probability Distributions",
+              "subtopics": [
+                "Binomial Distribution",
+                "Random Variable and Expectation"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "nda-gat-english": {
+      "exam": "NDA",
+      "paper": "General Ability Test",
+      "section_id": "nda-gat:english",
+      "question_id_code": "ENG",
+      "inherit": "cds-english nodes in cds_english_maths_v1.json (4 subjects, 12 topics), unchanged",
+      "conditional_topics": [
+        "Reading Comprehension > Comprehension Passages and Cloze Test: kept only if found in the 2020-2026 NDA papers; otherwise removed before release."
+      ]
+    },
+    "nda-gat-gk": {
+      "exam": "NDA",
+      "paper": "General Ability Test",
+      "section_id": "nda-gat:gk",
+      "question_id_code": "GK",
+      "inherit": "existing production nodes (exam in CDS, CAPF-AC). A new node may only be proposed as taxonomy_new_node_candidate and blocks release until approved.",
+      "subjects": [
+        "Science & Technology (topics Physics, Chemistry, Biology/Life Sciences)",
+        "Geography",
+        "History",
+        "Polity",
+        "Economy",
+        "Environment",
+        "Current Affairs",
+        "International Relations",
+        "Security"
+      ]
+    }
+  }
+}
