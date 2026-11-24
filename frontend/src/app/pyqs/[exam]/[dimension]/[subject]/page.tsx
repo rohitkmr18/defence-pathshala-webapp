@@ -231,6 +231,11 @@ export default async function ExamYearSubjectPyqPage({ params }: PageProps) {
           >
             All {yearNum} Subjects
           </Link>
+          {(subjectCoverage.examSlug === "cds" || subjectCoverage.examSlug === "capf") && (
+            <Link href={`/pyqs/${subjectCoverage.examSlug}/${subjectCoverage.subjectSlug}`} className="inline-flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-6 py-3 text-sm font-semibold text-blue-800 hover:bg-blue-100">
+              Explore {subjectCoverage.examSlug === "cds" ? "CDS" : "CAPF AC"} {subjectCoverage.subject} PYQs from all available years
+            </Link>
+          )}
         </div>
       </div>
 
