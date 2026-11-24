@@ -1,0 +1,69 @@
+name: PERF-01 preview comparison
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/perf-01-preview-comparison.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  compare:
+    if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'perf/public-route-optimization')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      BEFORE: https://defence-pathshala-webapp-he31a9856-rohitkmr18.vercel.app
+      AFTER: https://defence-pathshala-webapp-4j5og043u-rohitkmr18.vercel.app
+    steps:
+      - name: Validate exact public preview targets
+        run: |
+          mkdir -p reports
+          for label in BEFORE AFTER; do
+            url=${!label}
+            curl --fail --silent --show-error --max-time 30 "$url/" -o "/tmp/$label.html"
+            grep -q 'Daily CA Quiz' "/tmp/$label.html"
+            grep -q 'Crack the Pattern' "/tmp/$label.html"
+          done
+          printf '%s\n' 'before=e62ab8ee17b72b6e1a1656425124ac25c7a306d6' 'after=8b466163cf3fc59f6d51707c46d458ca4cbfc4bd' > reports/commits.txt
+          date -u >> reports/commits.txt
+          google-chrome --version >> reports/commits.txt
+      - name: Collect alternating HTTP and Lighthouse samples
+        run: |
+          set -euo pipefail
+          for run in 1 2 3 4 5; do
+            labels="BEFORE AFTER"
+            if (( run % 2 == 0 )); then labels="AFTER BEFORE"; fi
+            for label in $labels; do
+              url=${!label}
+              curl --fail --silent --show-error --max-time 30 --output /dev/null --write-out '%{json}' "$url/" > "reports/http-$label-$run.json"
+              npx --yes lighthouse@12.8.2 "$url/" --output=json --output-path="reports/lh-$label-$run.json" --chrome-flags="--headless --no-sandbox" --quiet
+            done
+          done
+      - name: Summarise and validate reports
+        run: |
+          python - <<'PY'
+          import json, pathlib, statistics, os
+          results = {}
+          for label in ("BEFORE", "AFTER"):
+              samples = []
+              for run in range(1, 6):
+                  h = json.loads(pathlib.Path(f"reports/http-{label}-{run}.json").read_text())
+                  l = json.loads(pathlib.Path(f"reports/lh-{label}-{run}.json").read_text())
+                  expected = os.environ[label] + "/"
+                  assert h["http_code"] == 200 and h["url_effective"] == expected
+                  assert l["finalDisplayedUrl"] == expected and not l.get("runtimeError")
+                  a = l["audits"]
+                  samples.append(dict(ttfb_ms=h["time_starttransfer"]*1000, html_bytes=h["size_download"], score=l["categories"]["performance"]["score"]*100, lcp_ms=a["largest-contentful-paint"]["numericValue"], fcp_ms=a["first-contentful-paint"]["numericValue"], tbt_ms=a["total-blocking-time"]["numericValue"], cls=a["cumulative-layout-shift"]["numericValue"]))
+              results[label] = {"samples":samples,"median":{k:statistics.median(s[k] for s in samples) for k in samples[0]}}
+          out=json.dumps(results,indent=2)
+          pathlib.Path("reports/summary.json").write_text(out)
+          print(out)
+          PY
+      - name: Upload paired reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: perf-01-preview-comparison
+          path: reports/
+          retention-days: 14

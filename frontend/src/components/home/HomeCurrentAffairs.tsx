@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getDailyCurrentAffairsList } from "@/lib/current-affairs";
+import { createClient } from "@/lib/supabase/server";
 import { latestMonthlyCapsule } from "@/lib/monthly-capsules";
 
 export function CurrentAffairsEntries({ quizHref }: { quizHref?: string }) {
@@ -28,7 +28,23 @@ export function CurrentAffairsEntries({ quizHref }: { quizHref?: string }) {
 
 export default async function HomeCurrentAffairs() {
   // Read only published canonical editions. Never invent a date or quiz route.
-  const posts = await getDailyCurrentAffairsList().catch(() => []);
-  const quizEdition = posts.find(post => post.quizCount > 0);
-  return <CurrentAffairsEntries quizHref={quizEdition ? `/current-affairs/${quizEdition.date}#quiz` : undefined} />;
+  const quizDate = await getLatestPublishedQuizDate().catch(() => undefined);
+  return <CurrentAffairsEntries quizHref={quizDate ? `/current-affairs/${quizDate}#quiz` : undefined} />;
+}
+
+/** Keep the existing session/RLS context; retrieve only the latest eligible date. */
+async function getLatestPublishedQuizDate(): Promise<string | undefined> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("current_affairs_posts")
+    .select("date,current_affairs_stories!inner(current_affairs_mcqs!inner())")
+    .eq("published", true)
+    .order("date", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error) {
+    console.error("Error retrieving latest published quiz date:", error.code);
+    return undefined;
+  }
+  return data?.date;
 }

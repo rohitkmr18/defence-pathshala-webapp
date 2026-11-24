@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import "katex/dist/katex.min.css";
 import { SOCIAL_CHANNELS } from "@/lib/social-links";
 
 const geistSans = Geist({

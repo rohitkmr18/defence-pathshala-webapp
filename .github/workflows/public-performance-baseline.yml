@@ -1,0 +1,40 @@
+name: Public performance baseline
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/public-performance-baseline.yml'
+      - 'scripts/perf-public-baseline.mjs'
+permissions:
+  contents: read
+jobs:
+  baseline:
+    if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'perf/public-route-optimization')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: HTTP baseline
+        run: |
+          mkdir -p perf-reports
+          node scripts/perf-public-baseline.mjs > perf-reports/http.json
+      - name: Lighthouse baseline
+        if: always()
+        run: |
+          mkdir -p perf-reports
+          for route in / /pyqs/cds /pyqs/capf /pyqs/nda /current-affairs /afcat /mock/cds-gk; do
+            slug=$(echo "$route" | tr '/' '-')
+            for run in 1 2 3 4 5; do
+              npx --yes lighthouse@12.8.2 "https://www.defencepathshala.in$route" --output=json --output-path="perf-reports/lighthouse${slug}${run}.json" --chrome-flags="--headless --no-sandbox" --quiet
+            done
+          done
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: public-performance-baseline
+          path: perf-reports/
+          retention-days: 14
