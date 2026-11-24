@@ -49,6 +49,30 @@ for (const width of [320, 390, 1440]) {
     });
   }
 }
+test("NDA archive and guide: SSR, canonical, FAQ schema and paper-scoped practice", async ({ page, request }) => {
+  await page.route(/google-analytics|googletagmanager|posthog/, route => route.abort());
+  for (const path of ["/pyqs/nda", "/exams/nda", "/pyqs/nda/trigonometry", "/pyqs/nda/2026"]) {
+    expect((await request.get(path)).status(), path).toBe(200);
+  }
+  await page.goto("/pyqs/nda");
+  await expect(page.locator("h1")).toContainText("NDA PYQs");
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://www.defencepathshala.in/pyqs/nda");
+  await expect(page.getByRole("heading", { name: "Choose your NDA paper" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Practise NDA Mathematics" })).toHaveAttribute("href", /paper=nda-maths/);
+  await expect(page.getByRole("link", { name: "Practise NDA General Ability Test" })).toHaveAttribute("href", /paper=nda-gat/);
+  const graphs = (await page.locator('script[type="application/ld+json"]').allTextContents()).map(s => JSON.parse(s));
+  expect(graphs.some(g => (g["@graph"] ?? []).some((n: { "@type": string }) => n["@type"] === "FAQPage"))).toBe(true);
+  await page.goto("/pyqs/nda/vocabulary");
+  await expect(page.locator('a[href*="/dashboard/practice"][href*="subject=Vocabulary"]').first()).toHaveAttribute("href", /paper=nda-gat/);
+  await page.goto("/exams/nda");
+  await expect(page.locator("h1")).toContainText("NDA Exam Guide");
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://www.defencepathshala.in/exams/nda");
+  const sitemap = await (await request.get("/sitemap.xml")).text();
+  for (const path of ["/pyqs/nda", "/exams/nda", "/pyqs/nda/trigonometry"]) expect(sitemap).toContain(`https://www.defencepathshala.in${path}</loc>`);
+  const llms = await request.get("/llms.txt");
+  expect(llms.status()).toBe(200);
+  expect(await llms.text()).toContain("/pyqs/nda");
+});
 test("invalid routes, sitemap membership and admin protection", async ({ request }) => {
   for (const path of ["/pyqs/unsupported", "/pyqs/cds/9999", "/pyqs/cds/not-a-subject"]) {
     expect((await request.get(path)).status()).toBe(404);

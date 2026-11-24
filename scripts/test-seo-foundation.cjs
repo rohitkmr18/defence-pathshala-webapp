@@ -14,9 +14,16 @@ function setup({ rows = [], failAt = -1, key = 'fixture' } = {}) {
 const row = (extra={}) => ({exam:'CDS',year:2026,subject:'History',topic:'Modern History',...extra});
 test('sitemap excludes unsupported exams, invalid years, empty/numeric slugs and deduplicates',()=>{
   const api=setup();
-  const routes=api.eligibleSeoRoutesFromRows([row(), row(), row({exam:'NDA'}), row({exam:'CAPF AC'}), row({year:NaN}),row({year:12}),row({subject:'!!!'}),row({subject:'2026'})]);
+  const routes=api.eligibleSeoRoutesFromRows([row(), row(), row({exam:'AFCAT'}), row({exam:'CAPF AC'}), row({year:NaN}),row({year:12}),row({subject:'!!!'}),row({subject:'2026'})]);
   assert.equal(new Set(routes.map(r=>r.path)).size,routes.length);
   assert.deepEqual(Array.from(routes,r=>r.path).sort(),['/exams/cds','/pyqs/cds','/pyqs/cds/2026','/pyqs/cds/2026/history','/pyqs/cds/history'].sort());
+});
+test('NDA is a supported archive with its own exam and PYQ routes',()=>{
+  const api=setup();
+  assert.equal(api.slugToExam('nda'),'NDA');
+  assert.equal(api.examToSlug('NDA'),'nda');
+  const paths=Array.from(api.eligibleSeoRoutesFromRows([row({exam:'NDA',subject:'Trigonometry',topic:'Heights and Distances',paperTab:'nda-maths'})]),r=>r.path).sort();
+  assert.deepEqual(paths,['/exams/nda','/pyqs/nda','/pyqs/nda/2026','/pyqs/nda/2026/trigonometry','/pyqs/nda/trigonometry'].sort());
 });
 test('topic threshold is retained and punctuation-only topics excluded',()=>{
   const paths=setup().eligibleSeoRoutesFromRows([...Array.from({length:10},()=>row()), ...Array.from({length:10},()=>row({topic:'!!!'}))]).map(r=>r.path);
@@ -51,7 +58,7 @@ test('reporting supports exact page/query/device and rejects malformed filters',
 });
 
 test('prototype names are not supported exam routes',()=>{
- const api=setup();for(const value of ['__proto__','constructor','toString','nda'])assert.equal(api.slugToExam(value),null);
+ const api=setup();for(const value of ['__proto__','constructor','toString','afcat'])assert.equal(api.slugToExam(value),null);
 });
 
 test('article identity links to publisher and safely serializes editorial input',()=>{

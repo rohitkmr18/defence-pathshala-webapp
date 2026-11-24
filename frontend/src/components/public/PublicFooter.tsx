@@ -38,6 +38,11 @@ export default function PublicFooter() {
                   CAPF (AC) Examination
                 </Link>
               </li>
+              <li>
+                <Link href="/exams/nda" className="text-slate-400 hover:text-white transition">
+                  NDA Examination
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -55,6 +60,11 @@ export default function PublicFooter() {
               <li>
                 <Link href="/pyqs/capf" className="text-slate-400 hover:text-white transition">
                   CAPF (AC) Previous Year Questions
+                </Link>
+              </li>
+              <li>
+                <Link href="/pyqs/nda" className="text-slate-400 hover:text-white transition">
+                  NDA Previous Year Questions
                 </Link>
               </li>
             </ul>
