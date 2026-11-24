@@ -70,7 +70,7 @@ export default function HeroSection() {
           {!afcat && <Link href={`/dashboard/question-bank?${params}`} onClick={() => {
             rememberUpscChoice();
             trackLearningEvent("home_tile_click", { tile: "decode_pyqs", exam });
-          }} className={`${linkClass} w-full border border-blue-400/50 bg-blue-500/10 text-blue-200 hover:bg-blue-500/20`}>Explore Previous Year Questions</Link>}
+          }} className={`${linkClass} w-full border border-blue-400/50 bg-blue-500/10 text-blue-200 hover:bg-blue-500/20`}>Decode PYQs</Link>}
         </div>
         <div className="mx-auto mt-4 max-w-md rounded-xl border border-blue-400/30 bg-blue-500/10 px-3 py-3">
           <p className="text-xs font-semibold leading-relaxed text-slate-200 sm:text-sm">Built by <span className="font-bold text-white">Rohit</span> · <span className="font-bold text-blue-300">CAPF AC AIR 163</span> · <span className="font-bold text-white">IIT Kanpur</span> · <span className="font-bold text-blue-300">CDS written cleared 4×</span></p>
