@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
+import { authUrl } from "@/lib/auth-redirect";
 import { createClient } from "@/lib/supabase/server";
 import { createClient as createAdmin } from "@supabase/supabase-js";
 
@@ -89,7 +90,8 @@ async function report(period: number) {
 export default async function RetentionPage({searchParams}:{searchParams:Promise<{period?:string}>}){
   const auth=await createClient();
   const {data,error}=await auth.auth.getUser();
-  if(error || data.user?.app_metadata?.role!=="admin") notFound();
+  if(error || !data.user) redirect(authUrl("/auth/login", "/admin/analytics/retention"));
+  if(data.user.app_metadata?.role!=="admin") return <main className="mx-auto max-w-xl space-y-4 p-6"><h1 className="text-2xl font-bold">Administrator access required</h1><p role="alert">Your authenticated account is not authorised to view this dashboard.</p><Link href="/dashboard">Return to dashboard</Link></main>;
   const p=(await searchParams).period;
   const period=p==="7"?7:p==="90"?90:30;
   let r:Awaited<ReturnType<typeof report>>;
