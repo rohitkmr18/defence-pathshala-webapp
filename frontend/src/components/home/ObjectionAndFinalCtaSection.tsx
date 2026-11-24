@@ -28,17 +28,17 @@ const FAQS: FAQItem[] = [
   {
     question: "Are these official questions with verified answer keys?",
     answer:
-      "Our question bank is based on UPSC examination papers. We are checking transcriptions and answer-key provenance against the original papers and published keys. Some recent papers have provisional answers while final keys are awaited. Explanations and topic labels are reviewed separately.",
+      "Our question bank includes questions based on UPSC papers. Transcriptions and answer-key provenance are being checked against original papers and published keys. Some questions may be adapted and some answers editorial or provisional. Explanations and topic labels are reviewed separately.",
   },
   {
     question: "How is this different from solving PYQ PDFs or standard mock apps?",
     answer:
-      "PDFs only give you questions, and standard apps only give you a score. Defence Pathshala breaks down topic recurrence, question patterns, and provides an automated revision roadmap so you know exactly where marks leaked and what to revise next.",
+      "Defence Pathshala brings searchable question patterns, targeted practice, full-paper attempts and answer review together so you can make more informed revision decisions.",
   },
   {
     question: "Can I clear CDS and CAPF through self-study without coaching?",
     answer:
-      "The platform is designed specifically by an AIR-163 Assistant Commandant for self-study aspirants who want to decode the examination directly from primary source patterns.",
+      "The platform supports self-study with exam-focused resources and practice. Your preparation needs will depend on your starting point, consistency and exam requirements; no platform can guarantee selection.",
   },
 ];
 
