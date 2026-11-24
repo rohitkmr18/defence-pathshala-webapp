@@ -1,0 +1,65 @@
+name: PERF-01 HTTP diagnostics
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/perf-01-http-diagnostics.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'perf/public-route-optimization')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      BEFORE: https://defence-pathshala-webapp-he31a9856-rohitkmr18.vercel.app
+      AFTER: https://defence-pathshala-webapp-4j5og043u-rohitkmr18.vercel.app
+    steps:
+      - name: Collect matched requests and safe response headers
+        run: |
+          set -euo pipefail
+          mkdir -p reports
+          for i in $(seq 1 30); do
+            labels="BEFORE AFTER"
+            if (( i % 2 == 0 )); then labels="AFTER BEFORE"; fi
+            for label in $labels; do
+              url=${!label}
+              curl --fail --silent --show-error --max-time 20 --dump-header /tmp/perf-headers --output /tmp/perf-body --write-out '%{json}' "$url/" > "reports/$label-$i.json"
+              grep -q 'Daily CA Quiz' /tmp/perf-body
+              grep -q 'Crack the Pattern' /tmp/perf-body
+              grep -Ei '^(cache-control|age|x-vercel-cache|x-vercel-id|server-timing|vary|content-type|x-nextjs-cache):' /tmp/perf-headers > "reports/$label-$i.headers" || true
+            done
+            sleep 1
+          done
+      - name: Summarize distribution and cache cohorts
+        run: |
+          python - <<'PY'
+          import json, os, pathlib, statistics, math, collections
+          def summarize(x):
+              return dict(n=len(x),minimum=min(x),median=statistics.median(x),p90=sorted(x)[math.ceil(.9*len(x))-1],maximum=max(x))
+          results={}
+          for label in ("BEFORE","AFTER"):
+              samples=[]
+              for i in range(1,31):
+                  j=json.loads(pathlib.Path(f"reports/{label}-{i}.json").read_text())
+                  assert j["http_code"]==200 and j["url_effective"]==os.environ[label]+"/"
+                  headers={}
+                  for line in pathlib.Path(f"reports/{label}-{i}.headers").read_text().splitlines():
+                      k,v=line.split(":",1)
+                      headers[k.lower()]=v.strip()
+                  samples.append(dict(ttfb_ms=j["time_starttransfer"]*1000,post_tls_ms=(j["time_starttransfer"]-j["time_appconnect"])*1000,total_ms=j["time_total"]*1000,headers=headers))
+              cohorts=collections.defaultdict(list)
+              for s in samples: cohorts[s["headers"].get("x-vercel-cache","UNKNOWN")].append(s["ttfb_ms"])
+              results[label]={"ttfb":summarize([s["ttfb_ms"] for s in samples]),"post_tls":summarize([s["post_tls_ms"] for s in samples]),"cache_cohorts":{k:summarize(v) for k,v in cohorts.items()},"samples":samples}
+          results["paired_delta_ms"]=summarize([b["ttfb_ms"]-a["ttfb_ms"] for a,b in zip(results["BEFORE"]["samples"],results["AFTER"]["samples"])])
+          pathlib.Path("reports/summary.json").write_text(json.dumps(results,indent=2))
+          print(json.dumps({k:{j:v for j,v in x.items() if j!="samples"} for k,x in results.items()},indent=2))
+          PY
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: perf-01-http-diagnostics
+          path: reports/
+          retention-days: 14
