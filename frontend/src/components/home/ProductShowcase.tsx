@@ -25,6 +25,14 @@ export default function ProductShowcase() {
             </li>
           ))}
         </ol>
+        <div className="mt-5 rounded-2xl border border-blue-200 bg-white p-5 sm:p-6">
+          <h3 className="text-lg font-bold text-slate-900">See the question bank for yourself.</h3>
+          <p className="mt-2 text-sm leading-relaxed text-slate-600">Start with an exam-specific PYQ archive, then move into targeted practice. Coverage and answer-key status vary by paper.</p>
+          <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1">
+            <Link href="/pyqs/cds" className="inline-flex min-h-11 items-center font-semibold text-blue-700 underline underline-offset-4">CDS PYQs →</Link>
+            <Link href="/pyqs/capf" className="inline-flex min-h-11 items-center font-semibold text-blue-700 underline underline-offset-4">CAPF AC PYQs →</Link>
+          </div>
+        </div>
         <p className="mt-4 text-xs leading-relaxed text-slate-600">Available papers and practice modes vary by exam. Check the relevant exam catalogue for current availability.</p>
       </div>
     </section>
