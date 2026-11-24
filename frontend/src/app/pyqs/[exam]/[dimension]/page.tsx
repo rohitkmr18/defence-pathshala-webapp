@@ -88,8 +88,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const yearSpanText = minYear === maxYear ? `${minYear}` : `${minYear}–${maxYear}`;
 
     const canonicalUrl = `https://www.defencepathshala.in/pyqs/${archive.examSlug}/${archive.subjectSlug}`;
-    const title = `${archive.exam} ${archive.subject} Previous Year Questions (${yearSpanText})`;
-    const description = `Browse ${archive.totalQuestions} available ${archive.exam} ${archive.subject} PYQs from ${yearSpanText}, with year-wise question counts, topic breakdown and practice links. Answers vary by question.`;
+    const isHistoryPilot = archive.examSlug === "cds" && archive.subjectSlug === "history";
+    const title = isHistoryPilot
+      ? `CDS History PYQs (${yearSpanText}) with Answers`
+      : `${archive.exam} ${archive.subject} Previous Year Questions (${yearSpanText})`;
+    const description = isHistoryPilot
+      ? `Practise ${archive.totalQuestions} CDS History PYQs from ${yearSpanText} for free. Browse by year and topic, with answers and explanations where available.`
+      : `Browse ${archive.totalQuestions} available ${archive.exam} ${archive.subject} PYQs from ${yearSpanText}, with year-wise question counts, topic breakdown and practice links. Answers vary by question.`;
 
     return {
       title,
@@ -306,6 +311,7 @@ async function SubjectPageView({
     notFound();
   }
   const paperParam = await practicePaperParam(examDb, archive.subject);
+  const isHistoryPilot = archive.examSlug === "cds" && archive.subjectSlug === "history";
 
   const minYear = Math.min(...archive.years.map((y) => y.year));
   const maxYear = Math.max(...archive.years.map((y) => y.year));
@@ -368,13 +374,15 @@ async function SubjectPageView({
       <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-10 mb-8">
         <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 ring-1 ring-inset ring-blue-700/10 mb-3">
           <Award className="h-3.5 w-3.5" />
-          UPSC {archive.exam} • Subject Question Archive
+          UPSC {archive.exam} • {isHistoryPilot ? "GK History Practice" : "Subject Question Archive"}
         </div>
         <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
-          {archive.exam} {archive.subject} Previous Year Questions
+          {archive.exam} {archive.subject} Previous Year Questions{isHistoryPilot ? " (PYQs)" : ""}
         </h1>
         <p className="mt-3 text-base text-slate-600 sm:text-lg max-w-3xl leading-relaxed">
-          Browse {archive.totalQuestions} eligible {archive.exam} {archive.subject} previous year questions from {yearSpanText}. Compare available questions by year and topic, then practise with answers and explanations where provided.
+          {isHistoryPilot
+            ? `Prepare for CDS GK with ${archive.totalQuestions} History PYQs from ${yearSpanText}. Practise by year or topic, and review recorded answers and explanations where available.`
+            : `Browse ${archive.totalQuestions} eligible ${archive.exam} ${archive.subject} previous year questions from ${yearSpanText}. Compare available questions by year and topic, then practise with answers and explanations where provided.`}
         </p>
 
         {/* Coverage Summary Metrics */}
@@ -386,7 +394,7 @@ async function SubjectPageView({
             <div className="mt-1 text-2xl font-bold text-slate-900">
               {archive.totalQuestions}
             </div>
-            <p className="text-xs text-slate-500 mt-0.5">Eligible archived questions</p>
+            <p className="text-xs text-slate-500 mt-0.5">{isHistoryPilot ? "Available PYQs" : "Eligible archived questions"}</p>
           </div>
 
           <div className="rounded-xl border border-slate-100 bg-slate-50 p-4">
@@ -416,7 +424,7 @@ async function SubjectPageView({
             <div className="mt-1 text-2xl font-bold text-slate-900">
               {minYear}
             </div>
-            <p className="text-xs text-slate-500 mt-0.5">Baseline archive</p>
+            <p className="text-xs text-slate-500 mt-0.5">{isHistoryPilot ? "Earliest available year" : "Baseline archive"}</p>
           </div>
         </div>
 
@@ -426,7 +434,7 @@ async function SubjectPageView({
             href={`/dashboard/practice?exam=${encodeURIComponent(archive.exam)}&subject=${encodeURIComponent(archive.subject)}${paperParam}`}
             className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-md shadow-blue-600/20 hover:bg-blue-500 transition active:scale-95"
           >
-            Practice {archive.subject} Drills Free
+            {isHistoryPilot ? "Start Free History Practice" : `Practice ${archive.subject} Drills Free`}
             <ArrowRight className="h-4 w-4" />
           </Link>
           <Link
@@ -479,7 +487,7 @@ async function SubjectPageView({
         <div className="mb-4">
           <h2 className="text-lg font-bold text-slate-900 sm:text-xl flex items-center gap-2">
             <Layers className="h-5 w-5 text-blue-600" />
-            {archive.subject} Topic Counts in the Available Dataset
+            {isHistoryPilot ? "CDS History PYQs by Topic" : `${archive.subject} Topic Counts in the Available Dataset`}
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
             Distribution among eligible questions currently in the Defence Pathshala dataset; not a claim about complete exam-paper weightage.
@@ -526,6 +534,15 @@ async function SubjectPageView({
           </p>
         )}
       </section>
+
+      {isHistoryPilot && (
+        <section aria-labelledby="history-preparation-heading" className="mb-10 rounded-2xl border border-slate-200 bg-white p-5 sm:p-7">
+          <h2 id="history-preparation-heading" className="text-xl font-bold text-slate-900">How to prepare History for CDS GK using PYQs</h2>
+          <p className="mt-3 text-sm leading-6 text-slate-700">Start with the topic groups above to identify gaps in your preparation. Attempt questions before revealing their answers, review explanations where available, then revisit missed concepts. Use the year-wise sets to practise across examination years. Topic counts describe the available archive, not predicted exam weightage.</p>
+          <Link href="#subject-questions" className="mt-4 inline-flex text-sm font-semibold text-blue-700 hover:underline">Browse History questions and recorded answers</Link>
+          <Link href={`/pyqs/${archive.examSlug}`} className="ml-4 mt-4 inline-flex text-sm font-semibold text-blue-700 hover:underline">Explore all CDS PYQs</Link>
+        </section>
+      )}
 
       <section id="subject-evidence-answers" aria-labelledby="subject-evidence-heading" className="mb-10 rounded-2xl border border-slate-200 bg-white p-5 sm:p-7">
         <h2 id="subject-evidence-heading" className="text-xl font-bold text-slate-900">
