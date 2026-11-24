@@ -92,6 +92,7 @@ export const LIBRARY_BOOKS: LibraryBook[] = [
     },
     archives: [
       { label: "CDS Computer & ICT PYQs", href: "/pyqs/cds/science-technology/ict-computing" },
+      { label: "All CDS Science & Technology PYQs", href: "/pyqs/cds/science-technology" },
       { label: "CAPF (AC) Computer & ICT PYQs", href: "/pyqs/capf/science-technology/ict-computing" },
     ],
   },
@@ -236,6 +237,7 @@ export const LIBRARY_BOOKS: LibraryBook[] = [
     },
     archives: [
       { label: "CDS Physics PYQs", href: "/pyqs/cds/science-technology/physics" },
+      { label: "All CDS Science & Technology PYQs", href: "/pyqs/cds/science-technology" },
       { label: "CAPF (AC) Physics PYQs", href: "/pyqs/capf/science-technology/physics" },
     ],
   },
@@ -283,6 +285,7 @@ export const LIBRARY_BOOKS: LibraryBook[] = [
     },
     archives: [
       { label: "CDS Chemistry PYQs", href: "/pyqs/cds/science-technology/chemistry" },
+      { label: "All CDS Science & Technology PYQs", href: "/pyqs/cds/science-technology" },
       { label: "CAPF (AC) Chemistry PYQs", href: "/pyqs/capf/science-technology/chemistry" },
     ],
   },
@@ -424,6 +427,7 @@ export const LIBRARY_BOOKS: LibraryBook[] = [
     },
     archives: [
       { label: "CDS Biology PYQs", href: "/pyqs/cds/science-technology/biology-life-sciences" },
+      { label: "All CDS Science & Technology PYQs", href: "/pyqs/cds/science-technology" },
       { label: "CAPF (AC) Biology PYQs", href: "/pyqs/capf/science-technology/biology-life-sciences" },
     ],
   },

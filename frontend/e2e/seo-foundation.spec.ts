@@ -346,3 +346,20 @@ test("Phase 4: exam archives expose canonical keyword-cluster links", async ({ r
     await expect(page.getByRole("link", { name: exam === "cds" ? "Explore all CDS PYQs" : "CAPF AC PYQ archive", exact: true })).toHaveAttribute("href", `/pyqs/${exam}`);
   }
 });
+
+
+test("Phase 5: legacy CDS Science aliases redirect directly to canonical S&T routes", async ({ request }) => {
+  for (const [source, destination] of [["/pyqs/cds/science", "/pyqs/cds/science-technology"], ["/pyq/cds/science", "/pyqs/cds/science-technology"], ["/pyqs/cds/2026/science", "/pyqs/cds/2026/science-technology"], ["/pyq/cds/2026/science", "/pyqs/cds/2026/science-technology"]]) {
+    const response = await request.get(source, { maxRedirects: 0 });
+    expect(response.status()).toBe(301);
+    expect(new URL(response.headers()["location"], "https://www.defencepathshala.in").pathname).toBe(destination);
+  }
+});
+
+test("Phase 5: year-specific subject pages link to the comprehensive archive", async ({ page }) => {
+  for (const exam of ["cds", "capf"]) {
+    await page.goto(`/pyqs/${exam}/2026/history`);
+    await expect(page.getByRole("link", { name: `Explore ${exam === "cds" ? "CDS" : "CAPF AC"} History PYQs from all available years`, exact: true })).toHaveAttribute("href", `/pyqs/${exam}/history`);
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", `https://www.defencepathshala.in/pyqs/${exam}/2026/history`);
+  }
+});
