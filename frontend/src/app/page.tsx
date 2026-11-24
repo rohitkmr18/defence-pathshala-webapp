@@ -43,13 +43,14 @@ export default function HomePage() {
 
       {/* ── Exam-aware landing hero ────────────────────── */}
       <HeroSection />
+
+      {/* ── Preparation methodology and product pathways ── */}
+      <ProductShowcase />
+
       <Suspense fallback={<CurrentAffairsEntries />}><HomeCurrentAffairs /></Suspense>
 
       {/* ── Free Library: free revision eBooks with interactive MCQs ── */}
       <HomeFreeLibrary />
-
-      {/* ── Screen 2: Product Showcase (Visual Difference & Core Value) ─── */}
-      <ProductShowcase />
 
       {/* ── Screen 3: Verified Founder Authority & Trust ────────────────── */}
       <FounderCredibility />
