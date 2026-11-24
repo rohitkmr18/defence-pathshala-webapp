@@ -320,3 +320,17 @@ test("Batch 3C: subject answer-readiness is grounded in eligible inventory and q
     expect(html).toContain('rel="canonical" href="https://www.defencepathshala.in/pyqs/' + exam + '/history"');
   }
 });
+
+
+test("Phase 4: exam archives expose canonical keyword-cluster links", async ({ request }) => {
+  for (const exam of ["cds", "capf"]) {
+    const response = await request.get(`/pyqs/${exam}/history`);
+    expect(response.status()).toBe(200);
+    const html = await response.text();
+    expect(html).toContain(`href="/pyqs/${exam}"`);
+    expect(html).toContain("Recorded Answer:");
+    const parent = await request.get(`/pyqs/${exam}`);
+    expect(parent.status()).toBe(200);
+    expect(await parent.text()).toContain(exam === "cds" ? "CDS History PYQs" : "CAPF AC History PYQs");
+  }
+});
