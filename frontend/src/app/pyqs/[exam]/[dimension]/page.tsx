@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   slugToExam,
+  practicePaperParam,
   slugToSubject,
   getExamCoverage,
   getYearCoverage,
@@ -148,6 +149,7 @@ async function YearPageView({
   if (!examCoverage || !yearCoverage) {
     notFound();
   }
+  const paperParam = await practicePaperParam(examDb);
 
   const otherYears = yearCoverage.allYearsForExam.filter((y) => y !== yearNum);
 
@@ -197,7 +199,7 @@ async function YearPageView({
         {/* CTA */}
         <div className="mt-8 flex flex-wrap gap-4">
           <Link
-            href={`/dashboard/practice?exam=${encodeURIComponent(examDb)}&year=${yearNum}`}
+            href={`/dashboard/practice?exam=${encodeURIComponent(examDb)}&year=${yearNum}${paperParam}`}
             className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-md shadow-blue-600/20 hover:bg-blue-500 transition active:scale-95"
           >
             Practise Available {yearNum} Questions
@@ -303,6 +305,7 @@ async function SubjectPageView({
   if (!archive || archive.totalQuestions === 0) {
     notFound();
   }
+  const paperParam = await practicePaperParam(examDb, archive.subject);
 
   const minYear = Math.min(...archive.years.map((y) => y.year));
   const maxYear = Math.max(...archive.years.map((y) => y.year));
@@ -420,7 +423,7 @@ async function SubjectPageView({
         {/* Action Button */}
         <div className="mt-8 flex flex-wrap gap-4">
           <Link
-            href={`/dashboard/practice?exam=${encodeURIComponent(archive.exam)}&subject=${encodeURIComponent(archive.subject)}`}
+            href={`/dashboard/practice?exam=${encodeURIComponent(archive.exam)}&subject=${encodeURIComponent(archive.subject)}${paperParam}`}
             className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-md shadow-blue-600/20 hover:bg-blue-500 transition active:scale-95"
           >
             Practice {archive.subject} Drills Free
@@ -724,7 +727,7 @@ async function SubjectPageView({
           </p>
         </div>
         <Link
-          href={`/dashboard/practice?exam=${encodeURIComponent(archive.exam)}&subject=${encodeURIComponent(archive.subject)}`}
+          href={`/dashboard/practice?exam=${encodeURIComponent(archive.exam)}&subject=${encodeURIComponent(archive.subject)}${paperParam}`}
           className="shrink-0 rounded-xl bg-white px-6 py-3 text-sm font-bold text-blue-900 shadow-lg hover:bg-blue-50 transition active:scale-95"
         >
           Launch {archive.subject} Drill

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   slugToExam,
+  practicePaperParam,
   slugToSubject,
   getYearCoverage,
   getSubjectCoverage,
@@ -218,7 +219,7 @@ export default async function ExamYearSubjectPyqPage({ params }: PageProps) {
         {/* Practice CTA */}
         <div className="mt-8 flex flex-wrap gap-4">
           <Link
-            href={`/dashboard/practice?exam=${encodeURIComponent(examDb)}&year=${yearNum}&subject=${encodeURIComponent(subjectCoverage.subject)}`}
+            href={`/dashboard/practice?exam=${encodeURIComponent(examDb)}&year=${yearNum}&subject=${encodeURIComponent(subjectCoverage.subject)}${await practicePaperParam(examDb, subjectCoverage.subject)}`}
             className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-md shadow-blue-600/20 hover:bg-blue-500 transition active:scale-95"
           >
             Practise {subjectCoverage.questionCount} Available Questions
@@ -392,7 +393,7 @@ async function ExamSubjectTopicPyqPage({
 
         <div className="mt-8 flex flex-wrap gap-4">
           <Link
-            href={`/dashboard/practice?exam=${encodeURIComponent(examDb)}&subject=${encodeURIComponent(archive.subject)}&topic=${encodeURIComponent(archive.topic)}`}
+            href={`/dashboard/practice?exam=${encodeURIComponent(examDb)}&subject=${encodeURIComponent(archive.subject)}&topic=${encodeURIComponent(archive.topic)}${await practicePaperParam(examDb, archive.subject)}`}
             className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-md shadow-blue-600/20 transition hover:bg-blue-500 active:scale-95"
           >
             Practice {archive.topic} PYQs

@@ -24,7 +24,7 @@ export default function PyqEvidenceMatrix({ coverage, years }: Props) {
       <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-700">
         This table counts {coverage.totalQuestions.toLocaleString("en-IN")} currently eligible questions
         across {coverage.years.length} available examination years in Defence Pathshala&apos;s
-        {coverage.slug === "cds" ? " General Knowledge" : " Paper I"} archive.
+        {coverage.slug === "cds" ? " General Knowledge" : coverage.slug === "nda" ? " Mathematics and General Ability Test" : " Paper I"} archive.
         It is a description of the available dataset, not a frequency prediction or a claim
         about complete UPSC paper coverage.
       </p>

@@ -14,8 +14,10 @@ const MENU_LINKS = [
   { href: "/afcat", label: "AFCAT Free Mocks" },
   { href: "/pyqs/cds", label: "CDS PYQs" },
   { href: "/pyqs/capf", label: "CAPF PYQs" },
+  { href: "/pyqs/nda", label: "NDA PYQs" },
   { href: "/exams/cds", label: "CDS Exam" },
   { href: "/exams/capf", label: "CAPF Exam" },
+  { href: "/exams/nda", label: "NDA Exam" },
   { href: "/about", label: "About" },
 ];
 

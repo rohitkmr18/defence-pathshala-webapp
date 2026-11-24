@@ -3,7 +3,7 @@ const http = require('node:http');
 const rows = ['CDS','CAPF-AC'].flatMap(exam => Array.from({length:12},(_,i)=>({
  id:`${exam}-${i}`, question_id:`${exam}_${i}`, exam,year:2026,subject:'History',topic:'Modern History',paper:exam==='CDS'?'General Knowledge':'Paper I',
  content_eligible:true, question:`Synthetic question ${i+1}?`,opt_a:'One',opt_b:'Two',opt_c:'Three',opt_d:'Four',final_opt:'B',explanation:'Synthetic explanation.',q_num:i+1,
-}))).concat(Array.from({length:3},(_,i)=>({id:`CDS-EN-${i}`,question_id:`CDS_EN_${i}`,exam:'CDS',year:2026,subject:'English',topic:'Grammar',paper:'English',content_eligible:true,question:`English sample ${i+1}?`,opt_a:'One',opt_b:'Two',opt_c:'Three',opt_d:'Four',final_opt:'B',q_num:i+1})));
+}))).concat(Array.from({length:6},(_,i)=>({id:`NDA-${i}`,question_id:`NDA_${i}`,exam:'NDA',year:2026,subject:i<3?'Trigonometry':'Vocabulary',topic:i<3?'Heights and Distances':'Antonyms',paper:i<3?'Mathematics':'General Ability Test',content_eligible:true,question:`NDA sample ${i+1}?`,opt_a:'One',opt_b:'Two',opt_c:'Three',opt_d:'Four',final_opt:'B',q_num:i+1}))).concat(Array.from({length:3},(_,i)=>({id:`CDS-EN-${i}`,question_id:`CDS_EN_${i}`,exam:'CDS',year:2026,subject:'English',topic:'Grammar',paper:'English',content_eligible:true,question:`English sample ${i+1}?`,opt_a:'One',opt_b:'Two',opt_c:'Three',opt_d:'Four',final_opt:'B',q_num:i+1})));
 const knowledgeRows = [{
   slug:'qa-cds-pyq-guide', title:'Synthetic CDS PYQ Revision Guide',
   description:'Synthetic educational testing article used only during CI layout acceptance.',

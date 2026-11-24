@@ -1,0 +1,30 @@
+# Defence Pathshala
+
+> Defence Pathshala (https://www.defencepathshala.in) is an independent preparation platform for Indian defence entrance exams. It offers UPSC CDS, NDA and CAPF (AC) previous year questions (PYQs) tagged by subject and topic, free AFCAT full mock tests, and daily defence-oriented current affairs. It is not affiliated with UPSC or the Indian Air Force.
+
+Answers and explanations on Defence Pathshala are prepared and checked by the Defence Pathshala team. They are not presented as official UPSC answer keys unless a question says so. Question counts describe the questions currently in the library, not complete coverage of every official paper.
+
+## Exam guides
+
+- [NDA exam guide](https://www.defencepathshala.in/exams/nda): UPSC NDA & NA dates, age limit, Class 12 eligibility, Mathematics (300 marks) and General Ability Test (600 marks) pattern, negative marking, syllabus and SSB selection
+- [CDS exam guide](https://www.defencepathshala.in/exams/cds): UPSC CDS academy-wise eligibility, exam pattern, syllabus and selection
+- [CAPF AC exam guide](https://www.defencepathshala.in/exams/capf): UPSC CAPF Assistant Commandants eligibility, Paper I and II, physical tests and selection
+- [All exam guides](https://www.defencepathshala.in/exams)
+
+## Previous year questions
+
+- [NDA PYQs](https://www.defencepathshala.in/pyqs/nda): NDA Mathematics and General Ability Test questions by year, subject and topic
+- [CDS PYQs](https://www.defencepathshala.in/pyqs/cds): CDS General Knowledge by year and subject, plus English and Elementary Mathematics practice
+- [CAPF AC PYQs](https://www.defencepathshala.in/pyqs/capf): CAPF AC Paper I questions by year and subject
+
+## Practice and current affairs
+
+- [AFCAT mock tests](https://www.defencepathshala.in/afcat): free full-length AFCAT mocks with analysis
+- [Defence current affairs](https://www.defencepathshala.in/current-affairs): daily and monthly current affairs for defence exams
+- [Library](https://www.defencepathshala.in/library): revision eBooks
+- [Learn](https://www.defencepathshala.in/learn): explanatory articles
+
+## About
+
+- [About Defence Pathshala](https://www.defencepathshala.in/about): built by Rohit Kumar, IIT Kanpur alumnus and UPSC CAPF AC AIR 163
+- [Sitemap](https://www.defencepathshala.in/sitemap.xml)

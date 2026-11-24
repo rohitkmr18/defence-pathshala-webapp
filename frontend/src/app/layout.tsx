@@ -21,15 +21,17 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.defencepathshala.in"),
 
   title: {
-    default: "Defence Pathshala | CDS & CAPF PYQs, AFCAT Mocks, Current Affairs",
+    default: "Defence Pathshala | CDS, NDA & CAPF PYQs, AFCAT Mocks, Current Affairs",
     template: "%s | Defence Pathshala",
   },
 
   description:
-    "Practise official CDS and CAPF (AC) previous year questions topic-wise, attempt free AFCAT full mocks, and read daily current affairs for defence exams, with detailed performance analysis.",
+    "Practise official CDS, NDA and CAPF (AC) previous year questions topic-wise, attempt free AFCAT full mocks, and read daily current affairs for defence exams, with detailed performance analysis.",
 
   keywords: [
     "CDS PYQ",
+    "NDA PYQ",
+    "NDA Previous Year Questions",
     "CAPF Previous Year Questions",
     "Defence Pathshala",
     "CDS Mock Test",
@@ -44,9 +46,9 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: "https://www.defencepathshala.in",
-    title: "Defence Pathshala | CDS, CAPF & AFCAT preparation",
+    title: "Defence Pathshala | CDS, NDA, CAPF & AFCAT preparation",
     description:
-      "Official CDS and CAPF previous year questions, free AFCAT full mocks and daily current affairs, with detailed performance analysis.",
+      "Official CDS, NDA and CAPF previous year questions, free AFCAT full mocks and daily current affairs, with detailed performance analysis.",
     siteName: "Defence Pathshala",
     images: [
       {
@@ -60,9 +62,9 @@ export const metadata: Metadata = {
 
   twitter: {
     card: "summary_large_image",
-    title: "Defence Pathshala | CDS, CAPF & AFCAT preparation",
+    title: "Defence Pathshala | CDS, NDA, CAPF & AFCAT preparation",
     description:
-      "CDS & CAPF PYQs • Free AFCAT mocks • Daily current affairs",
+      "CDS, NDA & CAPF PYQs • Free AFCAT mocks • Daily current affairs",
     images: ["/og-image.png"],
   },
 
@@ -136,11 +138,12 @@ export default function RootLayout({
               logo: "https://www.defencepathshala.in/logo.png",
               image: "https://www.defencepathshala.in/og-image.png",
               description:
-                "Preparation platform for Indian defence exams: official CDS and CAPF previous year questions, AFCAT mocks and daily current affairs.",
+                "Preparation platform for Indian defence exams: official CDS, NDA and CAPF previous year questions, AFCAT mocks and daily current affairs.",
               slogan: "Learn | Prepare | Serve",
               sameAs: SOCIAL_CHANNELS.map((channel) => channel.href),
               knowsAbout: [
                 "CDS Preparation",
+                "NDA Preparation",
                 "CAPF AC Preparation",
                 "AFCAT Preparation",
                 "Previous Year Questions",

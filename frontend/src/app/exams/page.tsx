@@ -4,8 +4,8 @@ import Breadcrumbs from "@/components/public/Breadcrumbs";
 import { ArrowRight, BookOpen } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Defence Exam Guides | CDS & CAPF AC | Defence Pathshala",
-  description: "Explore Defence Pathshala's CDS and CAPF Assistant Commandants exam guides, and go directly to previous-year questions.",
+  title: "Defence Exam Guides | CDS, NDA & CAPF AC | Defence Pathshala",
+  description: "Explore Defence Pathshala's CDS, NDA and CAPF Assistant Commandants exam guides, and go directly to previous-year questions.",
   alternates: { canonical: "https://www.defencepathshala.in/exams" },
   robots: { index: true, follow: true },
 };
@@ -15,6 +15,12 @@ const exams = [
     slug: "cds",
     title: "Combined Defence Services (CDS)",
     description: "Understand academy eligibility, written exam pattern, syllabus, SSB selection and preparation resources.",
+    hasDetailedGuide: true,
+  },
+  {
+    slug: "nda",
+    title: "National Defence Academy (NDA & NA)",
+    description: "Understand NDA dates, age limit, Class 12 eligibility, the Mathematics and GAT papers, syllabus and SSB selection.",
     hasDetailedGuide: true,
   },
   {
