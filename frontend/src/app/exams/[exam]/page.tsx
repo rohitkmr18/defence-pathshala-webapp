@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!coverage) return {};
 
   const canonicalUrl = `https://www.defencepathshala.in/exams/${coverage.slug}`;
-  const title = coverage.slug === "nda" ? "NDA Exam Guide: Eligibility, Age Limit, Pattern & Syllabus | Defence Pathshala" : coverage.slug === "cds" ? "CDS Exam Guide: Eligibility, Age, Syllabus & Pattern | Defence Pathshala" : coverage.slug === "capf" ? "CAPF AC Exam Guide: Eligibility, Syllabus, Pattern & PET | Defence Pathshala" : `${coverage.fullTitle} | Exam Overview & Preparation Resources`;
+  const title = coverage.slug === "nda" ? "NDA Exam Guide: Eligibility, Age Limit, Pattern & Syllabus" : coverage.slug === "cds" ? "CDS Exam Guide: Eligibility, Age, Syllabus & Pattern" : coverage.slug === "capf" ? "CAPF AC Exam Guide: Eligibility, Syllabus, Pattern & PET" : `${coverage.fullTitle} | Exam Overview & Preparation Resources`;
   const description = coverage.slug === "nda" ? "UPSC NDA exam guide: NDA 1 2027 dates, age limit, Class 12 eligibility, Mathematics and GAT pattern, negative marking, syllabus and SSB selection, with official UPSC links." : coverage.slug === "cds" ? "Explore UPSC CDS eligibility by academy, age limits, educational qualifications, written exam pattern, syllabus, SSB selection and official sources. Includes CDS PYQs and video." : coverage.slug === "capf" ? "Complete UPSC CAPF AC exam guide: 2026 age and degree eligibility, Paper I and II pattern, syllabus, PET, physical standards, interview and official links." : `${coverage.description} Understand the available year and subject coverage, explore the separate PYQ archive, or start focused practice on Defence Pathshala.`;
 
   return {
