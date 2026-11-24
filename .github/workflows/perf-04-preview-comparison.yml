@@ -1,0 +1,89 @@
+name: PERF-04 preview comparison
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/perf-04-preview-comparison.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  compare:
+    if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'perf/public-route-optimization')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      BEFORE: https://defence-pathshala-webapp-4j5og043u-rohitkmr18.vercel.app
+      AFTER: https://defence-pathshala-webapp-bu2ce3w8c-rohitkmr18.vercel.app
+    steps:
+      - name: Measure actual public-route stylesheet payloads
+        run: |
+          mkdir -p reports
+          python - <<'PY'
+          import os, json, subprocess, pathlib, re
+          from html.parser import HTMLParser
+          from urllib.parse import urljoin, urlsplit
+          class Links(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.urls=[]
+              def handle_starttag(self, tag, attrs):
+                  a=dict(attrs)
+                  if tag=="link" and a.get("rel")=="stylesheet" and a.get("href"):
+                      self.urls.append(a["href"])
+          result={}
+          for label in ("BEFORE","AFTER"):
+              host=os.environ[label]
+              result[label]={}
+              for route in ("/","/pyqs/cds","/current-affairs","/afcat","/mock/cds-gk"):
+                  html=subprocess.check_output(["curl","-fsS","--compressed","--max-time","30",host+route]).decode()
+                  assert "Defence Pathshala" in html
+                  parser=Links()
+                  parser.feed(html)
+                  assert parser.urls
+                  files=[]
+                  for href in dict.fromkeys(parser.urls):
+                      url=urljoin(host,href)
+                      assert urlsplit(url).netloc==urlsplit(host).netloc
+                      stats=subprocess.check_output(["curl","-fsS","--compressed","--max-time","30","-o","/tmp/perf-css","-w","%{json}",url])
+                      s=json.loads(stats)
+                      body=pathlib.Path("/tmp/perf-css").read_bytes()
+                      files.append(dict(path=href,transfer_bytes=s["size_download"],decoded_bytes=len(body),katex=bool(re.search(rb"\.katex[ .{,:-]",body))))
+                  result[label][route]=dict(files=files,transfer_bytes=sum(f["transfer_bytes"] for f in files),decoded_bytes=sum(f["decoded_bytes"] for f in files))
+                  assert any(f["katex"] for f in files)==(label=="BEFORE"), (label,route)
+          pathlib.Path("reports/css.json").write_text(json.dumps(result,indent=2))
+          print(json.dumps(result,indent=2))
+          PY
+      - name: Paired mobile Lighthouse
+        run: |
+          set -euo pipefail
+          for run in 1 2 3 4 5; do
+            labels="BEFORE AFTER"
+            if (( run % 2 == 0 )); then labels="AFTER BEFORE"; fi
+            for label in $labels; do
+              url=${!label}
+              npx --yes lighthouse@12.8.2 "$url/" --output=json --output-path="reports/lh-$label-$run.json" --chrome-flags="--headless --no-sandbox" --quiet
+            done
+          done
+      - name: Summarize Lighthouse
+        run: |
+          python - <<'PY'
+          import os,json,pathlib,statistics
+          result={}
+          for label in ("BEFORE","AFTER"):
+              samples=[]
+              for i in range(1,6):
+                  l=json.loads(pathlib.Path(f"reports/lh-{label}-{i}.json").read_text())
+                  assert l["finalDisplayedUrl"]==os.environ[label]+"/" and not l.get("runtimeError")
+                  a=l["audits"]
+                  samples.append(dict(score=l["categories"]["performance"]["score"]*100,lcp=a["largest-contentful-paint"]["numericValue"],fcp=a["first-contentful-paint"]["numericValue"],tbt=a["total-blocking-time"]["numericValue"],cls=a["cumulative-layout-shift"]["numericValue"]))
+              result[label]=dict(samples=samples,median={k:statistics.median(s[k] for s in samples) for k in samples[0]})
+          pathlib.Path("reports/summary.json").write_text(json.dumps(result,indent=2))
+          print(json.dumps(result,indent=2))
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: perf-04-preview-comparison
+          path: reports/
+          retention-days: 14
