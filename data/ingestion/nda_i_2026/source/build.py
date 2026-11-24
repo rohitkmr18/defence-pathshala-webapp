@@ -1,4 +1,9 @@
-import json, uuid, importlib, sys, hashlib
+import json, uuid, importlib, sys, hashlib, re
+
+def norm(s): return re.sub(r'\s+', ' ', s).strip().lower()
+
+def chash(q, o): return hashlib.sha256(json.dumps([norm(q), sorted(map(norm, o))]).encode()).hexdigest()
+
 import qfmt
 
 def run(mods):
@@ -55,7 +60,7 @@ def build(QS, PASS, code, paper, paper_id, section_of, qid_of, dataset_of, sourc
             llm_opt=q["key"], official_opt=None, final_opt=q["key"], explanation=q["explanation"], source=source_of(n), is_negative=False,
             tags=[f"format:{fmt}", "key:dp_solved"], verified_status="Draft", difficulty_score=d, difficulty_category=cat(d),
             dataset_version=dataset_of(n), source_version="scan-transcription-v1", content_status="SOURCE_MATCHED", paper_id=paper_id,
-            section_id=section_of(n), passage_id=pas_ids.get(q["passage"]), media=None, question_format=fmt))
+            section_id=section_of(n), passage_id=pas_ids.get(q["passage"]), media=None, question_format=fmt, content_hash=chash(stem, q["opts"])))
         intel.append(dict(question_id=qid, taxonomy_subject=q["subject"], taxonomy_topic=q["topic"], taxonomy_subtopic=q["subtopic"],
             taxonomy_concept=q["theme"] or q["subtopic"], competency_id=comp_of(q), pattern_id=PAT[q["pattern"]], source_id=src_of(q),
             temporal_context_id=temporal_of(q), expected_knowledge=80, source_accessibility=70 if temporal_of(q) != "TEMP.STATIC" else 90,
