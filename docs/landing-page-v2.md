@@ -22,3 +22,6 @@ Baseline production homepage visitors and existing landing_view, landing_exam_se
 - Founder visual acceptance; explicit approval before merge or production promotion.
 
 Batch 1 is not the full V2. No database migrations, production configuration changes or new claims of official affiliation.
+
+## Batch 2 progress
+Latest published CA edition preview reuses existing public server data and fallback; no additional fetch. Homepage FAQ discloses adapted/editorial provenance and avoids unsupported competitor/selection claims. Founder mission strengthened and public CDS/CAPF archive pathways added. Original H1 and Decode PYQs CTA retained. Actual screenshots, verified aggregate counts, approved photos and testimonials remain deferred pending evidence. Existing About page claims also need a separate evidence review before final release.
