@@ -12,6 +12,7 @@ const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 export const EXAM_SLUG_TO_DB: Record<string, string> = {
   cds: "CDS",
   capf: "CAPF-AC",
+  nda: "NDA",
 };
 
 export const EXAM_DB_TO_SLUG: Record<string, string> = {
@@ -19,6 +20,7 @@ export const EXAM_DB_TO_SLUG: Record<string, string> = {
   "CAPF-AC": "capf",
   "CAPF AC": "capf",
   CAPF: "capf",
+  NDA: "nda",
 };
 
 export const EXAM_NAMES: Record<string, { label: string; fullTitle: string; description: string }> = {
@@ -34,7 +36,33 @@ export const EXAM_NAMES: Record<string, { label: string; fullTitle: string; desc
     description:
       "UPSC Central Armed Police Forces (AC) Examination for recruitment of Assistant Commandants into BSF, CRPF, CISF, ITBP, and SSB.",
   },
+  NDA: {
+    label: "NDA",
+    fullTitle: "National Defence Academy and Naval Academy (NDA & NA)",
+    description:
+      "UPSC National Defence Academy and Naval Academy Examination for admission to the Army, Navy and Air Force wings of NDA and the Indian Naval Academy (10+2 Cadet Entry).",
+  },
 };
+
+/** Short public label for an exam slug, e.g. "CAPF AC". */
+export function examPublicLabel(slug: string): string {
+  return slug === "capf" ? "CAPF AC" : slug === "nda" ? "NDA" : "CDS";
+}
+
+// NDA has no GS paper: its public archive is its two papers (Maths and GAT), each a separate tab.
+export const NDA_SEO_TABS = ["nda-maths", "nda-gat"] as const;
+export type NdaSeoTab = (typeof NDA_SEO_TABS)[number];
+
+/** `questions.paper` values that make up an exam's public SEO archive. */
+export function seoPaperValues(examDb: string): string[] {
+  if (examDb === "NDA") return NDA_SEO_TABS.flatMap((tab) => paperTabDbValues(tab));
+  return paperTabDbValues(null);
+}
+
+function ndaTabForPaper(paper: string | null | undefined): NdaSeoTab | null {
+  if (!paper) return null;
+  return NDA_SEO_TABS.find((tab) => paperTabDbValues(tab).includes(paper)) ?? null;
+}
 
 export function slugToExam(slug: string): string | null {
   const cleaned = slug.toLowerCase().trim();
@@ -79,6 +107,8 @@ interface QuestionMetaRow {
   year: number;
   subject: string;
   topic: string | null;
+  /** Practice tab for separate-tab archives (NDA: nda-maths / nda-gat); null for GS archives. */
+  paperTab?: string | null;
 }
 
 /**
@@ -98,35 +128,46 @@ export const getCachedQuestionsMeta = unstable_cache(
     const pageSize = 1000;
     let start = 0;
 
-    while (true) {
-      const { data, error } = await client
-        .from("v_dp_question_intelligence_v2")
-        .select("exam,year,subject,topic").eq("content_eligible", true).in("paper", paperTabDbValues(null))
-        .order("id", { ascending: true }).range(start, start + pageSize - 1);
+    // Pass 1: GS archives (CDS GK, CAPF Paper I). Pass 2: NDA's two papers, which GS excludes.
+    for (const pass of [{ exam: null }, { exam: "NDA" }] as { exam: string | null }[]) {
+      if (seoPaperValues(pass.exam ?? "").length === 0) continue;
+      start = 0;
+      while (true) {
+        let query = client
+          .from("v_dp_question_intelligence_v2")
+          .select("exam,year,subject,topic,paper").eq("content_eligible", true).in("paper", pass.exam === "NDA" ? NDA_SEO_TABS.flatMap((tab) => paperTabDbValues(tab)) : paperTabDbValues(null));
+        if (pass.exam) query = query.eq("exam", pass.exam);
+        const { data, error } = await query
+          .order("id", { ascending: true }).range(start, start + pageSize - 1);
 
-      if (error) {
-        throw new Error("SEO inventory query failed");
-      }
-      if (!data || data.length === 0) break;
-
-      for (const row of data) {
-        if (row.exam && row.year && row.subject) {
-          rows.push({
-            exam: String(row.exam).trim(),
-            year: Number(row.year),
-            subject: String(row.subject).trim(),
-            topic: row.topic ? String(row.topic).trim() : null,
-          });
+        if (error) {
+          throw new Error("SEO inventory query failed");
         }
-      }
+        if (!data || data.length === 0) break;
 
-      if (data.length < pageSize) break;
-      start += pageSize;
+        for (const row of data) {
+          if (row.exam && row.year && row.subject) {
+            const exam = String(row.exam).trim();
+            // GS pass must not pick up NDA rows (its papers are separate tabs).
+            if (!pass.exam && exam === "NDA") continue;
+            rows.push({
+              exam,
+              year: Number(row.year),
+              subject: String(row.subject).trim(),
+              topic: row.topic ? String(row.topic).trim() : null,
+              paperTab: pass.exam === "NDA" ? ndaTabForPaper(row.paper ? String(row.paper) : null) : null,
+            });
+          }
+        }
+
+        if (data.length < pageSize) break;
+        start += pageSize;
+      }
     }
 
     return rows;
   },
-  ["seo-questions-metadata-v1"],
+  ["seo-questions-metadata-v2"],
   { revalidate: 3600 }
 );
 
@@ -154,6 +195,49 @@ export const getCdsPaperAvailability = unstable_cache(
   ["seo-cds-paper-availability-v1"],
   { revalidate: 3600 }
 );
+
+export interface NdaPaperStat {
+  tab: NdaSeoTab;
+  count: number;
+  subjects: SubjectStat[];
+  years: YearStat[];
+}
+
+/** NDA question counts per paper (Maths, GAT) with their subjects, from the SEO inventory. */
+export async function getNdaPaperAvailability(): Promise<NdaPaperStat[]> {
+  const rows = (await getCachedQuestionsMeta()).filter((r) => r.exam === "NDA");
+  return NDA_SEO_TABS.map((tab) => {
+    const tabRows = rows.filter((r) => r.paperTab === tab);
+    const subjectMap = new Map<string, number>();
+    const yearMap = new Map<number, number>();
+    for (const r of tabRows) {
+      subjectMap.set(r.subject, (subjectMap.get(r.subject) || 0) + 1);
+      yearMap.set(r.year, (yearMap.get(r.year) || 0) + 1);
+    }
+    return {
+      tab,
+      count: tabRows.length,
+      subjects: Array.from(subjectMap.entries())
+        .map(([subject, count]) => ({ subject, slug: subjectToSlug(subject), count }))
+        .sort((a, b) => b.count - a.count),
+      years: Array.from(yearMap.entries())
+        .map(([year, count]) => ({ year, count }))
+        .sort((a, b) => b.year - a.year),
+    };
+  });
+}
+
+/**
+ * Practice `paper` query value for an exam subject. Empty for GS archives (the practice page
+ * defaults to GS); the NDA paper tab for NDA subjects so practice opens on the right paper.
+ */
+export async function practicePaperParam(examDb: string, subject?: string | null): Promise<string> {
+  if (examDb !== "NDA") return "";
+  if (!subject) return "&paper=nda-maths";
+  const rows = await getCachedQuestionsMeta();
+  const hit = rows.find((r) => r.exam === "NDA" && r.subject.toLowerCase() === subject.toLowerCase() && r.paperTab);
+  return `&paper=${hit?.paperTab ?? "nda-maths"}`;
+}
 
 // ─── Public SEO Data-Access API ───────────────────────────────────────────────
 
@@ -467,7 +551,7 @@ export async function getSubjectArchive(
           .from("v_dp_question_intelligence_v2")
           .select(
             "id,question_id,exam,year,cycle,paper,q_num,subject,topic,subtopic,theme,question,opt_a,opt_b,opt_c,opt_d,final_opt,explanation,source,verified_status,difficulty_score,difficulty_category"
-          ).eq("content_eligible", true).in("paper", paperTabDbValues(null))
+          ).eq("content_eligible", true).in("paper", exam === "NDA" ? NDA_SEO_TABS.flatMap((tab) => paperTabDbValues(tab)) : paperTabDbValues(null))
           .eq("exam", exam)
           .ilike("subject", subj)
           .order("year", { ascending: false })

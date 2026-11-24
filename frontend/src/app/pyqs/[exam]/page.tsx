@@ -6,7 +6,9 @@ import {
   getExamCoverage,
   getYearCoverage,
   getCdsPaperAvailability,
+  getNdaPaperAvailability,
 } from "@/lib/seo-data";
+import NdaPyqArchive from "@/components/public/NdaPyqArchive";
 import { pageMetadata } from "@/lib/seo-metadata";
 import Breadcrumbs from "@/components/public/Breadcrumbs";
 import PyqEvidenceMatrix from "@/components/public/PyqEvidenceMatrix";
@@ -25,6 +27,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const coverage = await getExamCoverage(examDb);
   if (!coverage) return {};
+
+  if (coverage.slug === "nda") {
+    return {
+      ...pageMetadata({
+        title: "NDA PYQs – Mathematics & GAT Previous Year Questions",
+        description: `Practise ${coverage.totalQuestions} UPSC NDA previous year questions for Mathematics and the General Ability Test, by year, subject and topic, with answers and explanations.`,
+        path: "/pyqs/nda",
+      }),
+      robots: { index: true, follow: true },
+    };
+  }
 
   const label = coverage.slug === "capf" ? "CAPF AC" : "CDS";
   return {
@@ -49,6 +62,14 @@ export default async function ExamPyqArchivePage({ params }: PageProps) {
   const coverage = await getExamCoverage(examDb);
   if (!coverage) {
     notFound();
+  }
+
+  if (coverage.slug === "nda") {
+    const [papers, ndaYears] = await Promise.all([
+      getNdaPaperAvailability(),
+      Promise.all(coverage.years.map((year) => getYearCoverage(coverage.exam, year.year))),
+    ]);
+    return <NdaPyqArchive coverage={coverage} papers={papers} years={ndaYears.filter((y): y is NonNullable<typeof y> => y !== null)} />;
   }
 
   const label = coverage.slug === "capf" ? "CAPF AC" : "CDS";
