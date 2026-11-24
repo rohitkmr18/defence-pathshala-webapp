@@ -45,14 +45,14 @@ export default function HeroSection() {
     <section aria-label="Exam preparation" className="bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 px-4 py-7 text-white sm:px-6 sm:py-12">
       <div className="mx-auto max-w-4xl text-center">
         <p className="text-xs font-bold tracking-widest text-blue-300">{exams.map((item) => (item.slug === "capf" ? "CAPF AC" : item.label)).join(" · ")}</p>
-        <h1 className="mt-3 text-[1.75rem] font-black leading-tight tracking-tight min-[375px]:text-[2rem] sm:text-5xl lg:text-6xl"><span className="block text-white">Crack the Pattern.</span><span className="block text-blue-400">Master the Exam.</span></h1>
+        <h1 className="mt-3 text-[1.75rem] font-black leading-tight tracking-tight min-[375px]:text-[2rem] sm:text-5xl lg:text-6xl"><span className="block text-white">Real Questions.</span><span className="block text-blue-400">Smarter Preparation.</span></h1>
         <div className="mt-4 flex justify-center">
           <span className="inline-flex max-w-full items-center justify-center rounded-full border border-emerald-400/60 bg-emerald-500/15 px-3 py-2 text-center text-xs font-semibold leading-snug text-emerald-100 shadow-sm sm:px-4 sm:text-sm">
             <span className="mr-2 inline-block h-2 w-2 shrink-0 rounded-full bg-emerald-400" aria-hidden="true" />
             A Free Initiative for Defence Aspirants
           </span>
         </div>
-        <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-slate-300 sm:text-lg">Authentic PYQs, smart practice, exam-style mocks and performance insights — all in one place.</p>
+        <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-slate-300 sm:text-lg">Understand defence exam patterns, practise previous year questions and learn where you need to improve.</p>
         <fieldset className="mt-4">
           <legend className="mx-auto mb-2 text-sm text-slate-300">Choose your exam</legend>
           <div className={`grid ${exams.length > 3 ? "grid-cols-2 min-[400px]:grid-cols-4" : "grid-cols-3"} gap-2 mx-auto max-w-sm`}>
@@ -70,10 +70,10 @@ export default function HeroSection() {
           {!afcat && <Link href={`/dashboard/question-bank?${params}`} onClick={() => {
             rememberUpscChoice();
             trackLearningEvent("home_tile_click", { tile: "decode_pyqs", exam });
-          }} className={`${linkClass} w-full border border-blue-400/50 bg-blue-500/10 text-blue-200 hover:bg-blue-500/20`}>Decode PYQs</Link>}
+          }} className={`${linkClass} w-full border border-blue-400/50 bg-blue-500/10 text-blue-200 hover:bg-blue-500/20`}>Explore Previous Year Questions</Link>}
         </div>
         <div className="mx-auto mt-4 max-w-md rounded-xl border border-blue-400/30 bg-blue-500/10 px-3 py-3">
-          <p className="text-xs font-semibold leading-relaxed text-slate-200 sm:text-sm">Built by <span className="font-bold text-white">Rohit</span> · <span className="font-bold text-blue-300">CAPF AC AIR 163</span> · <span className="font-bold text-white">IIT Kanpur</span> · <span className="font-bold text-blue-300">CDS ×4</span></p>
+          <p className="text-xs font-semibold leading-relaxed text-slate-200 sm:text-sm">Built by <span className="font-bold text-white">Rohit</span> · <span className="font-bold text-blue-300">CAPF AC AIR 163</span> · <span className="font-bold text-white">IIT Kanpur</span> · <span className="font-bold text-blue-300">CDS written cleared 4×</span></p>
         </div>
       </div>
     </section>
