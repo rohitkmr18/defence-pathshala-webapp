@@ -45,7 +45,7 @@ export default function HeroSection() {
     <section aria-label="Exam preparation" className="bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 px-4 py-7 text-white sm:px-6 sm:py-12">
       <div className="mx-auto max-w-4xl text-center">
         <p className="text-xs font-bold tracking-widest text-blue-300">{exams.map((item) => (item.slug === "capf" ? "CAPF AC" : item.label)).join(" · ")}</p>
-        <h1 className="mt-3 text-[1.75rem] font-black leading-tight tracking-tight min-[375px]:text-[2rem] sm:text-5xl lg:text-6xl"><span className="block text-white">Real Questions.</span><span className="block text-blue-400">Smarter Preparation.</span></h1>
+        <h1 className="mt-3 text-[1.75rem] font-black leading-tight tracking-tight min-[375px]:text-[2rem] sm:text-5xl lg:text-6xl"><span className="block text-white">Crack the Pattern.</span><span className="block text-blue-400">Master the Exam.</span></h1>
         <div className="mt-4 flex justify-center">
           <span className="inline-flex max-w-full items-center justify-center rounded-full border border-emerald-400/60 bg-emerald-500/15 px-3 py-2 text-center text-xs font-semibold leading-snug text-emerald-100 shadow-sm sm:px-4 sm:text-sm">
             <span className="mr-2 inline-block h-2 w-2 shrink-0 rounded-full bg-emerald-400" aria-hidden="true" />
