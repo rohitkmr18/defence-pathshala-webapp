@@ -320,3 +320,29 @@ test("Batch 3C: subject answer-readiness is grounded in eligible inventory and q
     expect(html).toContain('rel="canonical" href="https://www.defencepathshala.in/pyqs/' + exam + '/history"');
   }
 });
+
+
+test("Phase 4: exam archives expose canonical keyword-cluster links", async ({ request, page }) => {
+  for (const exam of ["cds", "capf"]) {
+    const response = await request.get(`/pyqs/${exam}/history`);
+    expect(response.status()).toBe(200);
+    const html = await response.text();
+    expect(html).toContain(`href="/pyqs/${exam}"`);
+    expect(html).toContain("Recorded Answer:");
+    const parent = await request.get(`/pyqs/${exam}`);
+    expect(parent.status()).toBe(200);
+    const anchorText = exam === "cds" ? "CDS History PYQs" : "CAPF AC History PYQs";
+    // React separates adjacent SSR text nodes with comment delimiters.
+    const parentHtml = (await parent.text()).replace(/<!-- -->/g, "");
+    expect(parentHtml).toContain(anchorText);
+    expect(parentHtml).toContain(`href="/pyqs/${exam}/history"`);
+    await page.goto(`/pyqs/${exam}`);
+    const contextualLink = page.locator('section[aria-labelledby="archive-search-guide"]').getByRole("link", { name: anchorText, exact: true });
+    // The fixture contains History only; the CAPF contextual selection intentionally prioritizes other subjects.
+    const subjectCard = page.locator("#archive-subjects").getByRole("link", { name: anchorText, exact: true });
+    await expect(subjectCard).toHaveAttribute("href", `/pyqs/${exam}/history`);
+    if (exam === "cds") await expect(contextualLink).toHaveAttribute("href", `/pyqs/${exam}/history`);
+    await page.goto(`/pyqs/${exam}/history`);
+    await expect(page.getByRole("link", { name: exam === "cds" ? "Explore all CDS PYQs" : "CAPF AC PYQ archive", exact: true })).toHaveAttribute("href", `/pyqs/${exam}`);
+  }
+});

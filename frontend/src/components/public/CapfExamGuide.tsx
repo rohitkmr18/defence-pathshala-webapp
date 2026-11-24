@@ -67,7 +67,7 @@ export default function CapfExamGuide() {
         <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">CAPF Assistant Commandants Exam Guide</h1>
         <p className="mt-3 text-base leading-7 text-slate-600">Eligibility, written papers, syllabus, physical tests and selection process — based on the UPSC CAPF AC 2026 notification.</p>
         <div className="mt-5 flex flex-wrap gap-3">
-          <Link href="/pyqs/capf" className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white hover:bg-blue-700">Explore CAPF PYQs <ArrowRight className="h-4 w-4" /></Link>
+          <Link href="/pyqs/capf" className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white hover:bg-blue-700">Explore CAPF AC PYQs <ArrowRight className="h-4 w-4" /></Link>
           <Link href="/dashboard/practice?exam=CAPF-AC" className="rounded-xl border border-blue-200 px-5 py-3 text-sm font-bold text-blue-700 hover:bg-blue-50">Start practice</Link>
         </div>
       </div>
@@ -147,7 +147,7 @@ export default function CapfExamGuide() {
         <section id="preparation" aria-labelledby="capf-preparation" className="scroll-mt-24">
           <h2 id="capf-preparation" className="text-2xl font-bold text-slate-900">How to prepare</h2>
           <p className="mt-3 max-w-4xl text-sm leading-7 text-slate-700">Prepare Paper I through syllabus-based study and authentic PYQ analysis. Give Paper II equal attention: practise timed essays, structured arguments, précis and comprehension. Build fitness gradually and assess the physical and medical requirements before committing to the process.</p>
-          <div className="mt-4 flex flex-wrap gap-3"><Link href="/pyqs/capf" className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white hover:bg-blue-700">Explore CAPF PYQs</Link><Link href="/dashboard/practice?exam=CAPF-AC" className="rounded-xl border border-blue-200 px-5 py-3 text-sm font-bold text-blue-700 hover:bg-blue-50">Practice questions</Link></div>
+          <div className="mt-4 flex flex-wrap gap-3"><Link href="/pyqs/capf" className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white hover:bg-blue-700">Explore CAPF AC PYQs</Link><Link href="/dashboard/practice?exam=CAPF-AC" className="rounded-xl border border-blue-200 px-5 py-3 text-sm font-bold text-blue-700 hover:bg-blue-50">Practice questions</Link></div>
         </section>
         <section id="faq" aria-labelledby="capf-faq" className="scroll-mt-24">
           <h2 id="capf-faq" className="text-2xl font-bold text-slate-900">Frequently asked questions</h2>

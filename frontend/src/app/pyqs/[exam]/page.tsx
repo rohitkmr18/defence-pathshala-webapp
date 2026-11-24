@@ -44,8 +44,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ...pageMetadata({
       title: `${label} PYQs – Previous Year Questions & Practice`,
       description: coverage.slug === "cds"
-        ? "Explore UPSC CDS PYQs: General Knowledge archives plus available English and Elementary Mathematics practice. Select your paper and start practising."
-        : "Browse UPSC CAPF AC Paper I previous year questions by year and subject, with available answers and explanations. Continue to targeted PYQ practice.",
+        ? "Browse UPSC CDS previous year questions (PYQs) by GK subject and year, with recorded answers where available. Practise English and Elementary Mathematics separately."
+        : "Practise UPSC CAPF AC PYQs for Paper I. Browse previous year questions by year and subject, with recorded answers and explanations where available.",
       path: `/pyqs/${coverage.slug}`,
     }),
     robots: { index: true, follow: true },
@@ -217,7 +217,7 @@ export default async function ExamPyqArchivePage({ params }: PageProps) {
                       className="group"
                     >
                       <h3 className="font-bold text-slate-900 text-base group-hover:text-blue-600 transition">
-                        {sub.subject}
+                        {label} {sub.subject} PYQs
                       </h3>
                     </Link>
                     <p className="text-xs text-slate-500 mt-1">
@@ -235,7 +235,7 @@ export default async function ExamPyqArchivePage({ params }: PageProps) {
                   href={`/pyqs/${coverage.slug}/${sub.slug}`}
                   className="font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1"
                 >
-                  View All {sub.subject} PYQs <ChevronRight className="h-3.5 w-3.5" />
+                  View {label} {sub.subject} PYQs <ChevronRight className="h-3.5 w-3.5" />
                 </Link>
                 <Link
                   href={`${practiceHref}&subject=${encodeURIComponent(sub.subject)}`}
@@ -258,6 +258,7 @@ export default async function ExamPyqArchivePage({ params }: PageProps) {
             ? "For CDS GK previous year questions, select a year to review paper context or a subject to compare related concepts. English and Elementary Mathematics are available as separate practice options when questions are present in the library."
             : "For CAPF AC previous year questions, start with the available Paper I year archives, or choose a subject to practise related questions together. This archive does not claim to cover the descriptive Paper II examination."}
         </p>
+        <p className="mt-3 text-sm leading-6 text-slate-700">{coverage.slug === "cds" ? "Choose CDS GK subject PYQs for focused revision:" : "Choose CAPF AC Paper I subject PYQs for focused revision:"} {coverage.subjects.filter(sub => (coverage.slug === "cds" ? ["history", "polity", "economy"] : ["general-mental-ability", "science-technology", "geography"]).includes(sub.slug)).map((sub) => <Link key={sub.slug} href={`/pyqs/${coverage.slug}/${sub.slug}`} className="mr-3 inline-block font-semibold text-blue-700 underline underline-offset-2">{label} {sub.subject} PYQs</Link>)}</p>
         <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-6 text-slate-700">
           <li>Choose an available year or subject from the archive above.</li>
           <li>Try each question before checking the available answer and explanation.</li>
@@ -293,7 +294,7 @@ export default async function ExamPyqArchivePage({ params }: PageProps) {
           <p className="mt-2 text-sm text-slate-600">
             {coverage.slug === "cds"
               ? "Both terms refer to previous year questions. Browse the same canonical CDS PYQ archive here by year or topic; there is no separate question inventory for the singular spelling."
-              : "Yes. The currently listed year and subject coverage applies to Paper I objective questions. Paper II descriptive content is not represented by these question counts."}
+              : "Yes. CAPF PYQ, CAPF PYQs and CAPF AC previous year questions refer here to the same Paper I objective question archive. Paper II descriptive content is not represented by these question counts."}
           </p>
         </details>
         <details className="rounded-xl border border-slate-200 bg-white p-4">
