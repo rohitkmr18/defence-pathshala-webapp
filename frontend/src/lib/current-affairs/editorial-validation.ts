@@ -14,7 +14,7 @@ export function officialSourceUrl(v: unknown) {
   try {
     const u = new URL(v);
     const h = u.hostname.toLowerCase();
-    const official = h.endsWith(".gov.in") || h.endsWith(".nic.in")
+    const official = h === "presidency.gov.mv" || h.endsWith(".gov.in") || h.endsWith(".nic.in")
       || ["rbi.org.in", "nobelprize.org", "kva.se", "un.org", "unep.org", "unfccc.int", "who.int", "imf.org", "worldbank.org", "govt.nz"].some(d => h === d || h.endsWith(`.${d}`));
     return u.protocol === "https:" && !u.username && !u.password && (!u.port || u.port === "443") && official;
   } catch { return false; }
