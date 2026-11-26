@@ -63,6 +63,13 @@ function edition(date = '2026-10-09') {
       contentStatus: 'VERIFIED', sourceUrl: 'https://pib.gov.in/test/source', concept: 'Fixture concept', examTags: ['CDS', 'CAPF'] })),
   })) });
 }
+test('Maldives President office accepts only the exact HTTPS host with standard port and no credentials', () => {
+  for (const url of ['https://presidency.gov.mv/Press/Article/1', 'https://PRESIDENCY.GOV.MV/Press/Article/1', 'https://presidency.gov.mv:443/Press/Article/1']) assert.equal(officialSourceUrl(url), true, url);
+  for (const url of ['http://presidency.gov.mv/x', 'https://presidency.gov.mv:8443/x', 'https://user:secret@presidency.gov.mv/x', 'https://presidency.gov.mv.attacker.example/x', 'https://fakepresidency.gov.mv/x', 'https://sub.presidency.gov.mv/x', 'https://other.gov.mv/x', 'https://presidency.gov.mv@attacker.example/x']) assert.equal(officialSourceUrl(url), false, url);
+  const p = edition();
+  p.stories[0].sourceUrl = p.stories[0].mcqs[0].sourceUrl = 'https://presidency.gov.mv/Press/Article/1';
+  validateEditorialEdition(approve(p));
+});
 test('source URL checks reject lookalike domains, credentials, insecure and arbitrary URLs', () => {
   for (const url of ['http://pib.gov.in/x', 'https://pib.gov.in.evil.com/x', 'https://user:secret@pib.gov.in/x', 'https://127.0.0.1/x', 'https://example.com/x', 'garbage']) assert.equal(officialSourceUrl(url), false);
   assert.equal(officialSourceUrl('https://pib.gov.in/PressReleasePage.aspx?PRID=1'), true);
