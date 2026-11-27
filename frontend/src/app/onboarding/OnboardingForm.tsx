@@ -19,7 +19,7 @@ export default function OnboardingForm({ profile, next }: { profile: Profile; ne
   const [fullName, setFullName] = useState(profile.full_name ?? "");
   const [targetYear, setTargetYear] = useState(profile.target_year?.toString() ?? "");
   const [selectedExams, setSelectedExams] = useState<string[]>(
-    EXAMS.map(({ id }) => id).filter((id) => profile.target_exams.includes(id)),
+    profile.target_exams.includes("NDA") ? ["NDA"] : EXAMS.map(({ id }) => id).filter((id) => profile.target_exams.includes(id)),
   );
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -28,7 +28,7 @@ export default function OnboardingForm({ profile, next }: { profile: Profile; ne
 
   function toggleExam(exam: string) {
     setSelectedExams((current) =>
-      current.includes(exam) ? current.filter((item) => item !== exam) : [...current, exam],
+      current.includes(exam) ? current.filter((item) => item !== exam) : exam === "NDA" ? ["NDA"] : current.includes("NDA") ? current : [...current, exam],
     );
   }
 
@@ -99,13 +99,14 @@ export default function OnboardingForm({ profile, next }: { profile: Profile; ne
 
             <fieldset disabled={saving} className="space-y-3">
               <legend className="mb-3 text-sm font-bold text-slate-800">
-                Which exams are you preparing for? <span className="font-normal text-slate-500">Select one or more</span>
+                Which exams are you preparing for? <span className="font-normal text-slate-500">NDA only, or one or more other exams</span>
               </legend>
               <div className="grid gap-3">
                 {EXAMS.map(({ id, name, description, icon: Icon }) => {
                   const active = selectedExams.includes(id);
-                  return <label key={id} className={`group flex min-h-[78px] cursor-pointer items-center gap-4 rounded-2xl border-2 p-4 transition-colors focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 ${active ? "border-blue-600 bg-blue-50" : "border-slate-200 bg-white hover:border-blue-200"}`}>
-                    <input type="checkbox" name="target_exams" value={id} checked={active}
+                  const disabled = id !== "NDA" && selectedExams.includes("NDA") && !active;
+                  return <label key={id} className={`group ${disabled ? "opacity-50 cursor-not-allowed" : ""} flex min-h-[78px] cursor-pointer items-center gap-4 rounded-2xl border-2 p-4 transition-colors focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 ${active ? "border-blue-600 bg-blue-50" : "border-slate-200 bg-white hover:border-blue-200"}`}>
+                    <input type="checkbox" name="target_exams" value={id} checked={active} disabled={disabled}
                       onChange={() => toggleExam(id)} className="sr-only" />
                     <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${active ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-600"}`}><Icon className="h-5 w-5" /></span>
                     <span className="min-w-0 flex-1"><span className="block text-base font-bold">{name}</span>
@@ -116,6 +117,7 @@ export default function OnboardingForm({ profile, next }: { profile: Profile; ne
                   </label>;
                 })}
               </div>
+              {selectedExams.includes("NDA") && <p className="text-xs text-slate-500">NDA is a standalone target. Deselect NDA to choose other exams.</p>}
               {selectedExams.length === 0 && <p className="text-xs text-slate-500">Select at least one exam to continue.</p>}
             </fieldset>
 
