@@ -382,6 +382,23 @@ export default function LearnerDashboardOverview({
           <MockPerformanceHub snapshot={data.performanceCoach} />
         </div>
       </section>
+
+      {!paperTab && (targetExams.length === 0 || targetExams.some((e) => /capf/i.test(e))) && (
+        <Link
+          href="/pyqs/capf/paper-2"
+          className="group flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-blue-500 hover:shadow-md"
+        >
+          <span>
+            <span className="block text-[11px] font-extrabold uppercase tracking-[0.11em] text-blue-700">CAPF AC Paper II</span>
+            <span className="mt-1 block font-bold text-slate-900">Essay topics &amp; for-and-against statements, 2020–2026</span>
+            <span className="mt-0.5 block text-sm text-slate-600">Every Q1 and Q2 from the official papers, with Hindi essay topics and theme trends.</span>
+          </span>
+          <span className="inline-flex items-center gap-1.5 text-sm font-bold text-blue-700">
+            Open Paper II
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </span>
+        </Link>
+      )}
     </div>
   );
 }

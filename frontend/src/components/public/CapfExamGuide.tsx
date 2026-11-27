@@ -120,6 +120,7 @@ export default function CapfExamGuide() {
           <div className="mt-3 grid gap-3 md:grid-cols-2">{paperOne.map(([name,desc])=><div key={name} className="rounded-xl border border-slate-200 p-4"><h4 className="font-bold text-slate-900">{name}</h4><p className="mt-2 text-sm leading-6 text-slate-600">{desc}</p></div>)}</div>
           <h3 className="mt-5 text-lg font-bold text-slate-900">Paper II</h3>
           <p className="mt-2 text-sm leading-7 text-slate-700"><strong>Part A (80 marks):</strong> Essays on modern Indian history, freedom struggle, geography, polity, economy, security, human rights and analytical issues. <strong>Part B (120 marks):</strong> English comprehension, précis writing, counterarguments, grammar and communication skills. Refer to Appendix I of the notice for the exact syllabus wording.</p>
+          <p className="mt-3 text-sm leading-7 text-slate-700">See every essay topic (Q1) and for-and-against statement (Q2) UPSC has set since 2020: <Link href="/pyqs/capf/paper-2" className="font-semibold text-blue-700 underline underline-offset-2">CAPF AC Paper II essay and argument PYQs</Link>.</p>
         </section>
         <section id="physical" aria-labelledby="capf-physical" className="scroll-mt-24">
           <h2 id="capf-physical" className="text-2xl font-bold text-slate-900">Physical standards and PET</h2>

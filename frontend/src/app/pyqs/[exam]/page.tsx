@@ -9,6 +9,7 @@ import {
   getNdaPaperAvailability,
 } from "@/lib/seo-data";
 import NdaPyqArchive from "@/components/public/NdaPyqArchive";
+import { CAPF_P2_PATH, capfP2Stats } from "@/lib/capf-paper2-pyqs";
 import { pageMetadata } from "@/lib/seo-metadata";
 import Breadcrumbs from "@/components/public/Breadcrumbs";
 import PyqEvidenceMatrix from "@/components/public/PyqEvidenceMatrix";
@@ -45,7 +46,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: `${label} PYQs – Previous Year Questions & Practice`,
       description: coverage.slug === "cds"
         ? "Browse UPSC CDS previous year questions (PYQs) by GK subject and year, with recorded answers where available. Practise English and Elementary Mathematics separately."
-        : "Practise UPSC CAPF AC PYQs for Paper I. Browse previous year questions by year and subject, with recorded answers and explanations where available.",
+        : "Practise UPSC CAPF AC PYQs for Paper I by year and subject, and browse every Paper II essay topic and for-and-against statement from the official papers.",
       path: `/pyqs/${coverage.slug}`,
     }),
     robots: { index: true, follow: true },
@@ -142,6 +143,32 @@ export default async function ExamPyqArchivePage({ params }: PageProps) {
           <p className="mt-3 text-xs text-slate-500">Counts reflect eligible database questions, not complete paper coverage.</p>
         </section>
       )}
+
+      {coverage.slug === "capf" && (() => {
+        const p2 = capfP2Stats();
+        return (
+          <section id="choose-capf-paper" className="mb-10 scroll-mt-24" aria-labelledby="capf-paper-heading">
+            <h2 id="capf-paper-heading" className="text-xl font-bold text-slate-900 sm:text-2xl">Choose your CAPF AC paper</h2>
+            <p className="mb-4 mt-1 text-sm text-slate-600">The year and subject archive below covers Paper I. Paper II essays and arguments have their own page.</p>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div>
+                  <h3 className="font-bold text-slate-900">Paper I · General Ability and Intelligence</h3>
+                  <p className="mt-2 text-sm text-slate-600">{coverage.totalQuestions.toLocaleString()} objective questions with answers, by year and subject.</p>
+                </div>
+                <a href="#archive-years" className="mt-5 inline-flex min-h-11 items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-blue-700">Browse Paper I PYQs</a>
+              </div>
+              <div className="flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div>
+                  <h3 className="font-bold text-slate-900">Paper II · Essay (Q1) and Arguments (Q2)</h3>
+                  <p className="mt-2 text-sm text-slate-600">{p2.essays} essay topics and {p2.arguments} for-and-against statements, {p2.firstYear}–{p2.lastYear}, from the official papers.</p>
+                </div>
+                <Link href={CAPF_P2_PATH} className="mt-5 inline-flex min-h-11 items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-blue-700">Browse Paper II topics</Link>
+              </div>
+            </div>
+          </section>
+        );
+      })()}
 
       <nav aria-label="Quick archive navigation" className="mb-8 flex flex-wrap gap-2">
         <a href="#archive-years" className="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-blue-700 hover:bg-blue-50">Browse by year</a>
@@ -256,7 +283,7 @@ export default async function ExamPyqArchivePage({ params }: PageProps) {
         <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-700">
           {coverage.slug === "cds"
             ? "For CDS GK previous year questions, select a year to review paper context or a subject to compare related concepts. English and Elementary Mathematics are available as separate practice options when questions are present in the library."
-            : "For CAPF AC previous year questions, start with the available Paper I year archives, or choose a subject to practise related questions together. This archive does not claim to cover the descriptive Paper II examination."}
+            : "For CAPF AC previous year questions, start with the available Paper I year archives, or choose a subject to practise related questions together. Paper II essay topics and argument statements are on the separate Paper II page."}
         </p>
         <p className="mt-3 text-sm leading-6 text-slate-700">{coverage.slug === "cds" ? "Choose CDS GK subject PYQs for focused revision:" : "Choose CAPF AC Paper I subject PYQs for focused revision:"} {coverage.subjects.filter(sub => (coverage.slug === "cds" ? ["history", "polity", "economy"] : ["general-mental-ability", "science-technology", "geography"]).includes(sub.slug)).map((sub) => <Link key={sub.slug} href={`/pyqs/${coverage.slug}/${sub.slug}`} className="mr-3 inline-block font-semibold text-blue-700 underline underline-offset-2">{label} {sub.subject} PYQs</Link>)}</p>
         <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-6 text-slate-700">
@@ -294,7 +321,7 @@ export default async function ExamPyqArchivePage({ params }: PageProps) {
           <p className="mt-2 text-sm text-slate-600">
             {coverage.slug === "cds"
               ? "Both terms refer to previous year questions. Browse the same canonical CDS PYQ archive here by year or topic; there is no separate question inventory for the singular spelling."
-              : "Yes. CAPF PYQ, CAPF PYQs and CAPF AC previous year questions refer here to the same Paper I objective question archive. Paper II descriptive content is not represented by these question counts."}
+              : "Yes. CAPF PYQ, CAPF PYQs and CAPF AC previous year questions refer here to the same Paper I objective question archive. Paper II essay and argument topics are listed separately on the CAPF AC Paper II page and are not part of these question counts."}
           </p>
         </details>
         <details className="rounded-xl border border-slate-200 bg-white p-4">
