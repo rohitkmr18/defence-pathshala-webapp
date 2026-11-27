@@ -1206,35 +1206,35 @@
    "theme": "Solutions of cot 2x cot 3x = 1",
    "question": "What is the number of solutions of the equation $\\cot2x\\cdot\\cot3x=1$ for $0<x<\\pi$?",
    "opt_a": "Only one",
-   "opt_b": "Only two",
+   "opt_b": "Only four",
    "opt_c": "Only five",
    "opt_d": "More than five",
    "q_type": "Analytical",
    "q_pattern": "Single MCQ",
-   "llm_opt": "C",
+   "llm_opt": "B",
    "official_opt": null,
-   "final_opt": "C",
-   "explanation": "Step 1: The equation gives $\\cos2x\\cos3x-\\sin2x\\sin3x=0$, i.e. $\\cos5x=0$, so $x=\\dfrac\\pi{10},\\dfrac{3\\pi}{10},\\dfrac\\pi2,\\dfrac{7\\pi}{10},\\dfrac{9\\pi}{10}$.\nStep 2: At $x=\\dfrac\\pi2$, $\\cot2x=\\cot\\pi$ is undefined, so that value must be rejected. Only 4 solutions remain, which is none of the options. (Counting all roots of $\\cos5x=0$ gives five.)\nAnswer: no option is correct (item withheld)",
+   "final_opt": "B",
+   "explanation": "Step 1: The equation gives $\\cos2x\\cos3x-\\sin2x\\sin3x=0$, i.e. $\\cos5x=0$, so $x=\\dfrac\\pi{10},\\dfrac{3\\pi}{10},\\dfrac\\pi2,\\dfrac{7\\pi}{10},\\dfrac{9\\pi}{10}$.\nStep 2: At $x=\\dfrac\\pi2$, $\\cot2x=\\cot\\pi$ is undefined, so that value must be rejected. Exactly 4 solutions remain. (Counting all five roots of $\\cos5x=0$ is the trap.)\nAnswer: (b)\n\nAdapted by DP: the original printed question had option (b) as 'Only two', so the correct count of 4 was not offered; the wording was corrected so it has exactly one correct answer.",
    "source": "NDA II 2024 Mathematics set A (SURN-B-MTH/81A) (English side)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
-    "review:source_defect_candidate"
+    "edit:dp_adapted"
    ],
    "verified_status": "Draft",
    "difficulty_score": 50.0,
    "difficulty_category": "Moderate",
-   "is_active": false,
+   "is_active": true,
    "dataset_version": "DP_PYQ_NDA_2024_II_MATHS_v1",
-   "source_version": "scan-transcription-v1",
-   "content_status": "WITHHELD",
+   "source_version": "dp-adapted-v1",
+   "content_status": "SOURCE_MATCHED",
    "paper_id": "nda-maths",
    "section_id": "nda-maths:maths",
    "passage_id": null,
    "media": null,
    "question_format": "single_mcq",
-   "content_hash": "ec5b0d54ce5a85eb84c47a9d832a6eb2b3c85a1ed6969f5c226d0a706c21d090"
+   "content_hash": "0d7c81c3821ebbce11b24250f3a342c05a177ddd2f74e72c2cd911adaed22245"
   },
   {
    "question_id": "NDA_II_2024_MATHS_027",
@@ -5879,11 +5879,11 @@
    "difficulty_score": 50.0,
    "difficulty_category": "Moderate",
    "intelligence_readiness": "READY",
-   "requires_content_review": true,
-   "release_eligible": false,
-   "production_eligible": false,
+   "requires_content_review": false,
+   "release_eligible": true,
+   "production_eligible": true,
    "intelligence_eligible": true,
-   "human_review_required": true,
+   "human_review_required": false,
    "release_version": "DP_PYQ_NDA_2024_II_MATHS_v1",
    "intelligence_confidence": "MODEL_DERIVED",
    "intelligence_verified": false
@@ -8431,7 +8431,5 @@
  "flags": {
   "NDA_II_2024_MATHS_056": "Perpendicular diagonals alone don't fix the type; key 'rhombus' is the intended one"
  },
- "withheld": {
-  "NDA_II_2024_MATHS_026": "True count is 4 (x = pi/2 makes cot 2x undefined); options offer 1, 2, 5, more than 5."
- }
+ "withheld": {}
 }

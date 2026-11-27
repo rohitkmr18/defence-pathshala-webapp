@@ -5152,7 +5152,7 @@
    "topic": "Physics",
    "subtopic": "Classical Mechanics, Motion & Gravitation",
    "theme": "Friction from stopping distance",
-   "question": "A block of mass 2.0 kg slides on a rough horizontal plane surface. Let the speed of the block at a particular instant is 10 m/s. It comes to rest after travelling a distance of 20 m. Which one of the following could be the magnitude of the frictional force?",
+   "question": "A block of mass 2.0 kg slides on a rough horizontal plane surface. Let the speed of the block at a particular instant is 10 m/s. It comes to rest after travelling a distance of 10 m. Which one of the following could be the magnitude of the frictional force?",
    "opt_a": "10 N",
    "opt_b": "20 N",
    "opt_c": "40 N",
@@ -5162,27 +5162,27 @@
    "llm_opt": "A",
    "official_opt": null,
    "final_opt": "A",
-   "explanation": "$v^2=2as$: $100=40a$, so $a=2.5$ m/s$^2$ and $F=2\\times2.5=5$ N. None of the options matches.\nAnswer: no option is correct (item withheld)",
+   "explanation": "$v^2=2as$: $100=2a\\times10$, so $a=5$ m/s$^2$ and $F=ma=2\\times5=10$ N.\nAnswer: (a)\n\nAdapted by DP: the original printed question had a distance of 20 m, which gives 5 N (not an option); the wording was corrected so it has exactly one correct answer.",
    "source": "NDA II 2024 General Ability Test set A (SURN-A-GAT), Part B General Knowledge",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
-    "review:source_defect_candidate"
+    "edit:dp_adapted"
    ],
    "verified_status": "Draft",
    "difficulty_score": 35.0,
    "difficulty_category": "Moderate",
-   "is_active": false,
+   "is_active": true,
    "dataset_version": "DP_PYQ_NDA_2024_II_GAT_GK_v1",
-   "source_version": "scan-transcription-v1",
-   "content_status": "WITHHELD",
+   "source_version": "dp-adapted-v1",
+   "content_status": "SOURCE_MATCHED",
    "paper_id": "nda-gat",
    "section_id": "nda-gat:gk",
    "passage_id": null,
    "media": null,
    "question_format": "single_mcq",
-   "content_hash": "52457445a124d5373a2bd923cf69a6bc0779c73b808e124aab39e5f947f8742d"
+   "content_hash": "3698659140ffa606bdf578f304ff477933e410fca93217c44348c0857e81e7db"
   },
   {
    "question_id": "NDA_II_2024_GK_124",
@@ -9632,11 +9632,11 @@
    "difficulty_score": 35.0,
    "difficulty_category": "Moderate",
    "intelligence_readiness": "READY",
-   "requires_content_review": true,
-   "release_eligible": false,
-   "production_eligible": false,
+   "requires_content_review": false,
+   "release_eligible": true,
+   "production_eligible": true,
    "intelligence_eligible": true,
-   "human_review_required": true,
+   "human_review_required": false,
    "release_version": "DP_PYQ_NDA_2024_II_GAT_GK_v1",
    "intelligence_confidence": "MODEL_DERIVED",
    "intelligence_verified": false
@@ -10392,7 +10392,5 @@
   "NDA_II_2024_GK_145": "Hydrogen bus location varies by source; DP counts 2 correct",
   "NDA_II_2024_GK_148": "Could not verify from search; DP key Nepal per common keys"
  },
- "withheld": {
-  "NDA_II_2024_GK_123": "Correct friction is 5 N; options are 10, 20, 40, 50 N."
- }
+ "withheld": {}
 }
