@@ -64,7 +64,7 @@ test('name and year are optional; required exam cannot be omitted', async () => 
   assert.equal((await setup().post(request({ target_exams: ['CDS'] }))).status, 200);
   for (const body of [null, {}, { ...valid, target_exams: [] }, { ...valid, target_year: 'abc' },
     { ...valid, target_year: false }, { ...valid, target_year: [] }, { ...valid, full_name: 123 },
-    { ...valid, target_exams: ['NDA'] }, { ...valid, role: 'admin' }, { ...valid, id: 'another-user' },
+    { ...valid, target_exams: ['UPSC-CSE'] }, { ...valid, role: 'admin' }, { ...valid, id: 'another-user' },
     { ...valid, onboarding_completed: true }]) {
     const { post, operations } = setup();
     assert.equal((await post(request(body))).status, 400);
@@ -137,3 +137,13 @@ test('profile JWT validation retry revalidates the same owner and remains bounde
     assert.equal(authReads, scenario === 'other-error' ? 1 : 2);
   }
 });
+
+for (const exams of [['NDA'], ['NDA','CDS','AFCAT','CAPF-AC']]) {
+  test(`setup accepts ${exams.join(',')}`, async () => {
+    const { post, operations } = setup();
+    const response = await post(request({ target_exams: exams }));
+    assert.equal(response.status, 200);
+    assert.deepEqual(response.body.target_exams, exams);
+    assert.deepEqual(operations[0].args.p_target_exams, exams);
+  });
+}
