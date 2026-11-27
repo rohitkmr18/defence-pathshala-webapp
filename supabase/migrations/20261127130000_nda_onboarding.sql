@@ -41,6 +41,7 @@ begin
        and (p_setup or p_target_year is distinct from v_profile.target_year)) or
      p_target_exams is null or cardinality(p_target_exams) = 0 or
      array_ndims(p_target_exams) <> 1 or array_position(p_target_exams, null) is not null or
+     ('NDA' = any(p_target_exams) and not p_target_exams <@ array['NDA']::text[]) or
      (p_setup and not p_target_exams <@ array['CDS', 'CAPF-AC', 'AFCAT', 'NDA']::text[]) or
      (not p_setup and not p_target_exams <@ array['CDS', 'CAPF-AC', 'NDA', 'AFCAT', 'UPSC-CSE']::text[]) then
     raise exception 'Invalid preparation preferences' using errcode = '22023';
