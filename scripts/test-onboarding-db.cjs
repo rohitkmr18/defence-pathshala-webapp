@@ -142,7 +142,7 @@ test('invalid new setup is rejected with no partial writes', async () => {
   }
 });
 
-for (const exams of [['NDA'], ['NDA','CDS','CAPF-AC','AFCAT']]) {
+for (const exams of [['NDA'], ['CDS','CAPF-AC','AFCAT']]) {
   test(`SQL persists ${exams.join(',')}`, async () => {
     await asUser();
     const result = await save({ exams });
@@ -152,3 +152,13 @@ for (const exams of [['NDA'], ['NDA','CDS','CAPF-AC','AFCAT']]) {
     assert.equal((await snapshot())[1].onboarding_completed, false);
   });
 }
+
+test('NDA mixed with another exam is rejected atomically on setup and edit', async () => {
+  const before = await snapshot();
+  await asUser(); await assert.rejects(save({ exams: ['NDA','CDS'] }), /Invalid preparation/);
+  assert.deepEqual(await snapshot(), before);
+  await asUser(); await save({ exams: ['NDA'] });
+  const completed = await snapshot();
+  await asUser(); await assert.rejects(save({ exams: ['NDA','AFCAT'], edit: true }), /Invalid preparation/);
+  assert.deepEqual(await snapshot(), completed);
+});
