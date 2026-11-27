@@ -138,7 +138,7 @@ test('profile JWT validation retry revalidates the same owner and remains bounde
   }
 });
 
-for (const exams of [['NDA'], ['NDA','CDS','AFCAT','CAPF-AC']]) {
+for (const exams of [['NDA'], ['CDS','AFCAT','CAPF-AC']]) {
   test(`setup accepts ${exams.join(',')}`, async () => {
     const { post, operations } = setup();
     const response = await post(request({ target_exams: exams }));
@@ -147,3 +147,12 @@ for (const exams of [['NDA'], ['NDA','CDS','AFCAT','CAPF-AC']]) {
     assert.deepEqual(Array.from(operations[0].args.p_target_exams), exams);
   });
 }
+
+test('NDA cannot be combined with other targets in setup or profile edits', async () => {
+  for (const setupMode of [true, false]) {
+    const h = setup({ completed: !setupMode, exams: ['CDS'] });
+    const response = await (setupMode ? h.post : h.patch)(request({ target_exams: ['NDA','CDS'] }));
+    assert.equal(response.status, 400);
+    assert.equal(h.operations.length, 0);
+  }
+});
