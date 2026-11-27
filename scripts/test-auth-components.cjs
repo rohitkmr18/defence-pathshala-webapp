@@ -48,7 +48,7 @@ test('failed save keeps all visible inputs, supports retry and prevents rapid du
   assert.equal(elements(tree, n => n.props.id === 'full-name')[0].props.value, 'Available Name');
   elements(tree, n => n.props.id === 'full-name')[0].props.onChange({ target: { value: 'Edited Name' } });
   elements(tree, n => n.props.id === 'target-year')[0].props.onChange({ target: { value: '2028' } });
-  for (const exam of ['CDS', 'AFCAT', 'NDA']) {
+  for (const exam of ['CDS', 'AFCAT']) {
     elements(tree, n => n.props.name === 'target_exams' && n.props.value === exam)[0].props.onChange();
     tree = render();
   }
@@ -61,7 +61,7 @@ test('failed save keeps all visible inputs, supports retry and prevents rapid du
   tree = render();
   assert.equal(elements(tree, n => n.props.id === 'full-name')[0].props.value, 'Edited Name');
   assert.equal(elements(tree, n => n.props.id === 'target-year')[0].props.value, '2028');
-  for (const exam of ['CDS', 'AFCAT', 'NDA']) assert.equal(elements(tree, n => n.props.name === 'target_exams' && n.props.value === exam)[0].props.checked, true);
+  for (const exam of ['CDS', 'AFCAT']) assert.equal(elements(tree, n => n.props.name === 'target_exams' && n.props.value === exam)[0].props.checked, true);
   assert.equal(elements(tree, n => n.props.role === 'alert').length, 1);
   assert.equal(elements(tree, n => n.props.type === 'submit')[0].props.disabled, false);
   assert.deepEqual(navigations, []);
@@ -152,4 +152,22 @@ test('with the flag on, switching tabs swaps hero/catalogue and persists fp=dp',
 test('?fp=dp opens the DP Mock Tests tab on load', t => {
   const p = practiceWithFlag('true', 'fp=dp'); t.after(p.restore);
   assert.equal(elements(p.tree(), n => n.type === 'mock-catalogue').length, 1);
+});
+
+test('onboarding NDA selection clears other targets and locks them until deselected', () => {
+  const h = hooks();
+  const Form = createLoader({ react: h.react, 'next/link': 'a' })('frontend/src/app/onboarding/OnboardingForm.tsx').default;
+  const props = { profile: { full_name: null, target_year: null, target_exams: [] }, next: '/dashboard' };
+  const render = () => { h.begin(); return Form(props); };
+  let tree = render();
+  const choice = id => elements(tree, n => n.props.name === 'target_exams' && n.props.value === id)[0];
+  choice('CDS').props.onChange(); tree = render();
+  choice('AFCAT').props.onChange(); tree = render();
+  choice('NDA').props.onChange(); tree = render();
+  assert.equal(choice('NDA').props.checked, true);
+  for (const id of ['CDS','AFCAT','CAPF-AC']) { assert.equal(choice(id).props.checked, false); assert.equal(choice(id).props.disabled, true); }
+  choice('CDS').props.onChange(); tree = render(); assert.equal(choice('CDS').props.checked, false);
+  choice('NDA').props.onChange(); tree = render(); assert.equal(choice('CDS').props.disabled, false);
+  choice('CDS').props.onChange(); tree = render(); choice('AFCAT').props.onChange(); tree = render();
+  assert.equal(choice('CDS').props.checked, true); assert.equal(choice('AFCAT').props.checked, true);
 });
