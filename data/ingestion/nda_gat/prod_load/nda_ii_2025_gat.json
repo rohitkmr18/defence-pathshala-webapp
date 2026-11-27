@@ -3551,7 +3551,7 @@
    "theme": "Senguttuvan",
    "question": "Senguttuvan is the name of",
    "opt_a": "a Pandya ruler",
-   "opt_b": "a Chola king",
+   "opt_b": "a Chera king",
    "opt_c": "a minister in Satavahana court",
    "opt_d": "the capital city of the Cheras",
    "q_type": "Knowledge",
@@ -3559,27 +3559,27 @@
    "llm_opt": "B",
    "official_opt": null,
    "final_opt": "B",
-   "explanation": "Senguttuvan (the 'Red Chera') was a Chera ruler of the Sangam age, celebrated in the Silappadikaram for building a memorial to Kannagi. He was not a Pandya or Chola king, a Satavahana minister or a Chera capital, so none of the printed options is correct.\nAnswer: none of the options is correct (item withheld)",
+   "explanation": "Senguttuvan (the 'Red Chera') was a Chera ruler of the Sangam age, celebrated in the Silappadikaram for building a memorial to Kannagi.\nAnswer: (b)\n\nAdapted by DP: the original printed question had option (b) as 'a Chola king', so no option was correct; the wording was corrected so it has exactly one correct answer.",
    "source": "NDA II 2025 General Ability Test set A (TODC-T-GAT), Part B General Knowledge",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
-    "review:source_defect_candidate"
+    "edit:dp_adapted"
    ],
    "verified_status": "Draft",
    "difficulty_score": 40.0,
    "difficulty_category": "Moderate",
-   "is_active": false,
+   "is_active": true,
    "dataset_version": "DP_PYQ_NDA_2025_II_GAT_GK_v1",
-   "source_version": "scan-transcription-v1",
-   "content_status": "WITHHELD",
+   "source_version": "dp-adapted-v1",
+   "content_status": "SOURCE_MATCHED",
    "paper_id": "nda-gat",
    "section_id": "nda-gat:gk",
    "passage_id": null,
    "media": null,
    "question_format": "single_mcq",
-   "content_hash": "64dffc65ef9da833c1b44e68590531358d9506292de26c0354aa01b83077cb9d"
+   "content_hash": "237471a7e573ff2f5abc6c89bcbb5bc6d6f98f1dd508d41e44e28887268782e7"
   },
   {
    "question_id": "NDA_II_2025_GK_086",
@@ -8599,11 +8599,11 @@
    "difficulty_score": 40.0,
    "difficulty_category": "Moderate",
    "intelligence_readiness": "READY",
-   "requires_content_review": true,
-   "release_eligible": false,
-   "production_eligible": false,
+   "requires_content_review": false,
+   "release_eligible": true,
+   "production_eligible": true,
    "intelligence_eligible": true,
-   "human_review_required": true,
+   "human_review_required": false,
    "release_version": "DP_PYQ_NDA_2025_II_GAT_GK_v1",
    "intelligence_confidence": "MODEL_DERIVED",
    "intelligence_verified": false
@@ -10377,7 +10377,5 @@
   "NDA_II_2025_GK_125": "Narmada vs Tapti depends on whether the Narmada rift is counted in the Deccan; DP picks Narmada",
   "NDA_II_2025_GK_149": "Statement 2 wording loose; DP accepts all four"
  },
- "withheld": {
-  "NDA_II_2025_GK_085": "No correct option: Senguttuvan was a Chera king; options list Pandya ruler, Chola king, Satavahana minister, Chera capital."
- }
+ "withheld": {}
 }

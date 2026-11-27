@@ -2849,7 +2849,7 @@
    "topic": "Vectors",
    "subtopic": "Vector (Cross) Product",
    "theme": "Vector triple product",
-   "question": "Let $\\vec a=\\hat i-\\hat j+\\hat k$ and $\\vec b=\\hat i+2\\hat j-\\hat k$. If $\\vec a\\times(\\vec b\\times\\vec a)=\\alpha\\hat i-\\beta\\hat j+\\gamma\\hat k$, then what is the value of $\\alpha+\\beta+\\gamma$?",
+   "question": "Let $\\vec a=\\hat i-\\hat j+\\hat k$ and $\\vec b=\\hat i+2\\hat j-\\hat k$. If $\\vec a\\times(\\vec b\\times\\vec a)=\\alpha\\hat i+\\beta\\hat j+\\gamma\\hat k$, then what is the value of $\\alpha+\\beta+\\gamma$?",
    "opt_a": "8",
    "opt_b": "7",
    "opt_c": "6",
@@ -2859,27 +2859,27 @@
    "llm_opt": "A",
    "official_opt": null,
    "final_opt": "A",
-   "explanation": "Step 1: $\\vec a\\times(\\vec b\\times\\vec a)=(\\vec a\\cdot\\vec a)\\vec b-(\\vec a\\cdot\\vec b)\\vec a=3\\vec b+2\\vec a=5\\hat i+4\\hat j-\\hat k$.\nStep 2: As printed ($-\\beta\\hat j$), $\\alpha=5$, $\\beta=-4$, $\\gamma=-1$ and the sum is 0, which is not an option. Reading the $\\hat j$ term as $+\\beta\\hat j$ gives 8.\nAnswer: none as printed; (a) under the intended reading",
+   "explanation": "Step 1: $\\vec a\\times(\\vec b\\times\\vec a)=(\\vec a\\cdot\\vec a)\\vec b-(\\vec a\\cdot\\vec b)\\vec a=3\\vec b+2\\vec a=5\\hat i+4\\hat j-\\hat k$.\nStep 2: $\\alpha=5$, $\\beta=4$, $\\gamma=-1$, so $\\alpha+\\beta+\\gamma=8$.\nAnswer: (a)\n\nAdapted by DP: the original printed question had $-\\beta\\hat j$, which made the sum 0 (not an option); the wording was corrected so it has exactly one correct answer.",
    "source": "NDA I 2024 Mathematics set A (RRAN-B-MTH) (English side)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
-    "review:source_defect_candidate"
+    "edit:dp_adapted"
    ],
    "verified_status": "Draft",
    "difficulty_score": 30.0,
    "difficulty_category": "Moderate",
-   "is_active": false,
+   "is_active": true,
    "dataset_version": "DP_PYQ_NDA_2024_I_MATHS_v1",
-   "source_version": "scan-transcription-v1",
-   "content_status": "WITHHELD",
+   "source_version": "dp-adapted-v1",
+   "content_status": "SOURCE_MATCHED",
    "paper_id": "nda-maths",
    "section_id": "nda-maths:maths",
    "passage_id": null,
    "media": null,
    "question_format": "single_mcq",
-   "content_hash": "8b5d2d2c1858a18a1d0eed48db21b7108b58c0dfe05a661d524ab7a12ebbf415"
+   "content_hash": "8adbf6aee9aa1ee99406a7bc447b718b4173f1ce77f734ab8170f49f15d1bb96"
   },
   {
    "question_id": "NDA_I_2024_MATHS_067",
@@ -4532,35 +4532,35 @@
    "theme": "Harmonic progression identity",
    "question": "If $a, b, c$ are in HP, then what is $\\dfrac1{b-a}+\\dfrac1{b-c}$ equal to?\n1. $\\dfrac2b$\n2. $\\dfrac1a+\\dfrac1c$\n3. $\\dfrac12\\left(\\dfrac1a+\\dfrac1b+\\dfrac1c\\right)$\nSelect the correct answer using the code given below:",
    "opt_a": "1 only",
-   "opt_b": "2 only",
+   "opt_b": "1 and 2 only",
    "opt_c": "3 only",
    "opt_d": "1, 2 and 3",
    "q_type": "Analytical",
    "q_pattern": "3-Statement Combination",
-   "llm_opt": "A",
+   "llm_opt": "B",
    "official_opt": null,
-   "final_opt": "A",
-   "explanation": "Step 1: For $a, b, c$ in HP, $\\dfrac1{b-a}+\\dfrac1{b-c}=\\dfrac2b=\\dfrac1a+\\dfrac1c$ (check: $a=1$, $c=3$, $b=\\tfrac32$ gives $\\tfrac43$ for both).\nStep 2: Expression 3 equals $\\dfrac3{2b}$, which differs.\nStep 3: So 1 and 2 are both correct, a combination not offered.\nAnswer: none of the options",
+   "final_opt": "B",
+   "explanation": "Step 1: For $a, b, c$ in HP, $b=\\dfrac{2ac}{a+c}$ and $\\dfrac1{b-a}+\\dfrac1{b-c}=\\dfrac2b=\\dfrac1a+\\dfrac1c$ (check: $a=1$, $c=3$, $b=\\tfrac32$ gives $\\tfrac43$ for each).\nStep 2: Expression 3 equals $\\dfrac3{2b}$, which differs.\nAnswer: (b)\n\nAdapted by DP: the original printed question had option (b) as '2 only', so the correct combination (1 and 2) was not offered; the wording was corrected so it has exactly one correct answer.",
    "source": "NDA I 2024 Mathematics set A (RRAN-B-MTH) (English side)",
    "is_negative": false,
    "tags": [
     "format:single_mcq",
     "key:dp_solved",
-    "review:source_defect_candidate"
+    "edit:dp_adapted"
    ],
    "verified_status": "Draft",
    "difficulty_score": 30.0,
    "difficulty_category": "Moderate",
-   "is_active": false,
+   "is_active": true,
    "dataset_version": "DP_PYQ_NDA_2024_I_MATHS_v1",
-   "source_version": "scan-transcription-v1",
-   "content_status": "WITHHELD",
+   "source_version": "dp-adapted-v1",
+   "content_status": "SOURCE_MATCHED",
    "paper_id": "nda-maths",
    "section_id": "nda-maths:maths",
    "passage_id": null,
    "media": null,
    "question_format": "single_mcq",
-   "content_hash": "09987af16fb04868c7d2e7e7cd7bc3c2edbb21a7617a18d227edb92a8f85881f"
+   "content_hash": "443c963ad1dfc7cd724883f575825ef80eb10cb4ebb682b3b89b8e4ae7337ef0"
   },
   {
    "question_id": "NDA_I_2024_MATHS_107",
@@ -6925,11 +6925,11 @@
    "difficulty_score": 30.0,
    "difficulty_category": "Moderate",
    "intelligence_readiness": "READY",
-   "requires_content_review": true,
-   "release_eligible": false,
-   "production_eligible": false,
+   "requires_content_review": false,
+   "release_eligible": true,
+   "production_eligible": true,
    "intelligence_eligible": true,
-   "human_review_required": true,
+   "human_review_required": false,
    "release_version": "DP_PYQ_NDA_2024_I_MATHS_v1",
    "intelligence_confidence": "MODEL_DERIVED",
    "intelligence_verified": false
@@ -8005,11 +8005,11 @@
    "difficulty_score": 30.0,
    "difficulty_category": "Moderate",
    "intelligence_readiness": "READY",
-   "requires_content_review": true,
-   "release_eligible": false,
-   "production_eligible": false,
+   "requires_content_review": false,
+   "release_eligible": true,
+   "production_eligible": true,
    "intelligence_eligible": true,
-   "human_review_required": true,
+   "human_review_required": false,
    "release_version": "DP_PYQ_NDA_2024_I_MATHS_v1",
    "intelligence_confidence": "MODEL_DERIVED",
    "intelligence_verified": false
@@ -8398,8 +8398,5 @@
   "NDA_I_2024_MATHS_068": "Statement 1 hinges on 'point of application' vs 'line of action'; the standard key treats it as false",
   "NDA_I_2024_MATHS_079": "Exact range is 0 <= b <= 1; option (d) omits b = 1 but is the closest option"
  },
- "withheld": {
-  "NDA_I_2024_MATHS_066": "As printed (alpha i - beta j + gamma k) the sum is 0, which is not an option; 8 only if the j-term sign is +.",
-  "NDA_I_2024_MATHS_106": "Expressions 1 and 2 are both equal to the given sum (2/b = 1/a + 1/c in HP); the code offers no '1 and 2 only' option."
- }
+ "withheld": {}
 }

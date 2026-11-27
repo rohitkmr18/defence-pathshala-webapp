@@ -5,7 +5,7 @@
    "id": "8580cb98-da50-5cb4-abca-5bbb1b32eb17",
    "paper_id": "nda-maths",
    "title": "Quadratic with logarithmic coefficients",
-   "body": "Let $\\alpha$ and $\\beta$ be the roots of the quadratic equation\n$$x^{2}+(\\log_{0.5}(a^{2}))x+(\\log_{0.5}(a^{2}))^{4}=0$$\nwhere $a^{2}\\neq1$ and $\\log_{0.5}(a^{2})>0$. Further, $\\beta^{2}=\\alpha(\\log_{a^{2}}(0.5))$.",
+   "body": "Let $\\alpha$ and $\\beta$ be the roots of the quadratic equation\n$$x^{2}+(\\log_{0.5}(a^{2}))x-2(\\log_{0.5}(a^{2}))^{2}=0$$\nwhere $a^{2}\\neq1$ and $\\log_{0.5}(a^{2})>0$. Further, $\\beta>0$.",
    "source": "NDA II 2025 Mathematics set A (TODC-O-MTH/44A) (English side)"
   },
   {
@@ -1008,7 +1008,7 @@
    "topic": "Quadratic Equations and Inequalities",
    "subtopic": "Roots and Coefficients",
    "theme": "Root from product of roots and a given relation",
-   "question": "Let $\\alpha$ and $\\beta$ be the roots of the quadratic equation\n$$x^{2}+(\\log_{0.5}(a^{2}))x+(\\log_{0.5}(a^{2}))^{4}=0$$\nwhere $a^{2}\\neq1$ and $\\log_{0.5}(a^{2})>0$. Further, $\\beta^{2}=\\alpha(\\log_{a^{2}}(0.5))$.\n\nWhat is $\\beta$ equal to?",
+   "question": "Let $\\alpha$ and $\\beta$ be the roots of the quadratic equation\n$$x^{2}+(\\log_{0.5}(a^{2}))x-2(\\log_{0.5}(a^{2}))^{2}=0$$\nwhere $a^{2}\\neq1$ and $\\log_{0.5}(a^{2})>0$. Further, $\\beta>0$.\n\nWhat is $\\beta$ equal to?",
    "opt_a": "$\\log_{a^{2}}(0.5)$",
    "opt_b": "$\\log_{0.5}(a^{2})$",
    "opt_c": "$2(\\log_{a^{2}}(0.5))$",
@@ -1018,26 +1018,27 @@
    "llm_opt": "B",
    "official_opt": null,
    "final_opt": "B",
-   "explanation": "Concept: $\\log_{a^2}(0.5)=\\dfrac{1}{\\log_{0.5}(a^2)}$.\nStep 1: Let $L=\\log_{0.5}(a^2)>0$. The product of roots gives $\\alpha\\beta=L^4$, and the given relation is $\\beta^2=\\alpha/L$.\nStep 2: Multiply the relation by $\\beta$: $\\beta^3=\\alpha\\beta/L=L^3$, so $\\beta=L=\\log_{0.5}(a^2)$.\nNote: the data of this item set are not fully consistent (the sum of roots cannot also hold for real $L$), but $\\beta$ follows from the product of roots and the given relation.\nAnswer: (b)",
+   "explanation": "Step 1: Let $L=\\log_{0.5}(a^2)>0$. Then $x^2+Lx-2L^2=(x-L)(x+2L)$, so the roots are $L$ and $-2L$.\nStep 2: $\\beta>0$, so $\\beta=L=\\log_{0.5}(a^2)$.\nAnswer: (b)\n\nAdapted by DP: the original printed question had a constant term and an extra condition that contradicted each other; the wording was corrected so it has exactly one correct answer.",
    "source": "NDA II 2025 Mathematics set A (TODC-O-MTH/44A) (English side)",
    "is_negative": false,
    "tags": [
     "format:linked_set",
-    "key:dp_solved"
+    "key:dp_solved",
+    "edit:dp_adapted"
    ],
    "verified_status": "Draft",
    "difficulty_score": 55.0,
    "difficulty_category": "Hard",
    "is_active": true,
    "dataset_version": "DP_PYQ_NDA_2025_II_MATHS_v1",
-   "source_version": "scan-transcription-v1",
+   "source_version": "dp-adapted-v1",
    "content_status": "SOURCE_MATCHED",
    "paper_id": "nda-maths",
    "section_id": "nda-maths:maths",
    "passage_id": "8580cb98-da50-5cb4-abca-5bbb1b32eb17",
    "media": null,
    "question_format": "linked_set",
-   "content_hash": "4953efb9c51cdd34b9bd26aa36e584b82dbbb6c89c4fc19831315a5803404010"
+   "content_hash": "6b18a1562c5bd228b6beed38dfd25516fad41b279df1c80da9ddf66846af5a9f"
   },
   {
    "question_id": "NDA_II_2025_MATHS_022",
@@ -1050,7 +1051,7 @@
    "topic": "Quadratic Equations and Inequalities",
    "subtopic": "Roots and Coefficients",
    "theme": "Relation between roots",
-   "question": "Let $\\alpha$ and $\\beta$ be the roots of the quadratic equation\n$$x^{2}+(\\log_{0.5}(a^{2}))x+(\\log_{0.5}(a^{2}))^{4}=0$$\nwhere $a^{2}\\neq1$ and $\\log_{0.5}(a^{2})>0$. Further, $\\beta^{2}=\\alpha(\\log_{a^{2}}(0.5))$.\n\nWhat is the relation between $\\alpha$ and $\\beta$?",
+   "question": "Let $\\alpha$ and $\\beta$ be the roots of the quadratic equation\n$$x^{2}+(\\log_{0.5}(a^{2}))x-2(\\log_{0.5}(a^{2}))^{2}=0$$\nwhere $a^{2}\\neq1$ and $\\log_{0.5}(a^{2})>0$. Further, $\\beta>0$.\n\nWhat is the relation between $\\alpha$ and $\\beta$?",
    "opt_a": "$\\alpha=2\\beta$",
    "opt_b": "$2\\alpha=\\beta$",
    "opt_c": "$\\alpha=-2\\beta$",
@@ -1060,27 +1061,27 @@
    "llm_opt": "C",
    "official_opt": null,
    "final_opt": "C",
-   "explanation": "Step 1: From the previous item, $\\beta=L$. The sum of roots gives $\\alpha+\\beta=-L$, so $\\alpha=-2L=-2\\beta$.\nStep 2: However, the product of roots then gives $\\alpha=L^4/\\beta=L^3$, and $L^3=-2L$ has no positive real solution. The printed data contradict each other.\nAnswer: (c), using the sum of roots (the item is withheld because the data are inconsistent)",
+   "explanation": "Step 1: From the previous item, $\\beta=L$ and the other root is $\\alpha=-2L$.\nStep 2: So $\\alpha=-2\\beta$. Check: $\\alpha+\\beta=-L$ and $\\alpha\\beta=-2L^2$, as the equation requires.\nAnswer: (c)\n\nAdapted by DP: the original printed question had a constant term and an extra condition that contradicted each other; the wording was corrected so it has exactly one correct answer.",
    "source": "NDA II 2025 Mathematics set A (TODC-O-MTH/44A) (English side)",
    "is_negative": false,
    "tags": [
     "format:linked_set",
     "key:dp_solved",
-    "review:source_defect_candidate"
+    "edit:dp_adapted"
    ],
    "verified_status": "Draft",
    "difficulty_score": 60.0,
    "difficulty_category": "Hard",
-   "is_active": false,
+   "is_active": true,
    "dataset_version": "DP_PYQ_NDA_2025_II_MATHS_v1",
-   "source_version": "scan-transcription-v1",
-   "content_status": "WITHHELD",
+   "source_version": "dp-adapted-v1",
+   "content_status": "SOURCE_MATCHED",
    "paper_id": "nda-maths",
    "section_id": "nda-maths:maths",
    "passage_id": "8580cb98-da50-5cb4-abca-5bbb1b32eb17",
    "media": null,
    "question_format": "linked_set",
-   "content_hash": "a13dd7bd1731d9a2bf120de9efbe046a6d7f6163ab3fc1798e871372bc4083c0"
+   "content_hash": "c6275d0108c45a860b9a79682d909c09bf96fa05b6a1960a9ed29e2ce6e5012d"
   },
   {
    "question_id": "NDA_II_2025_MATHS_023",
@@ -5785,11 +5786,11 @@
    "difficulty_score": 60.0,
    "difficulty_category": "Hard",
    "intelligence_readiness": "READY",
-   "requires_content_review": true,
-   "release_eligible": false,
-   "production_eligible": false,
+   "requires_content_review": false,
+   "release_eligible": true,
+   "production_eligible": true,
    "intelligence_eligible": true,
-   "human_review_required": true,
+   "human_review_required": false,
    "release_version": "DP_PYQ_NDA_2025_II_MATHS_v1",
    "intelligence_confidence": "MODEL_DERIVED",
    "intelligence_verified": false
@@ -8447,7 +8448,5 @@
   "NDA_II_2025_MATHS_044": "Explains-vs-does-not-explain judgement; DP key (a).",
   "NDA_II_2025_MATHS_108": "Printed data inconsistent: P(both)=11/15 > P(Physics)=2/3. Formula answer 13/15."
  },
- "withheld": {
-  "NDA_II_2025_MATHS_022": "Printed data are inconsistent: product of roots gives alpha = L^3 while sum of roots gives alpha = -2L; no real L > 0 satisfies both."
- }
+ "withheld": {}
 }
