@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const { PGlite } = require('../frontend/node_modules/@electric-sql/pglite');
 const migration = fs.readFileSync('supabase/migrations/20261003184207_atomic_onboarding.sql', 'utf8');
+const ndaMigration = fs.readFileSync('supabase/migrations/20261127130000_nda_onboarding.sql', 'utf8');
 const uid = '11111111-1111-4111-8111-111111111111';
 const other = '22222222-2222-4222-8222-222222222222';
 let db;
@@ -22,7 +23,7 @@ before(async () => {
     grant usage on schema public to anon, authenticated, service_role;
     grant select, update on public.profiles to authenticated;
     grant select, insert, delete on public.user_exam_preferences to authenticated;`);
-  await db.exec(migration);
+  await db.exec(migration); await db.exec(ndaMigration);
 });
 beforeEach(async () => {
   await db.exec(`reset role;
@@ -79,7 +80,7 @@ test('legacy completed user, role, old exam and year are unchanged by setup or m
   const result = await save({ name: 'New', exams: ['CDS'] });
   assert.equal(result.full_name, 'Legacy'); assert.equal(result.target_year, 2025);
   assert.deepEqual(result.target_exams, ['NDA']);
-  await db.exec('reset role'); await db.exec(migration);
+  await db.exec('reset role'); await db.exec(migration); await db.exec(ndaMigration);
   assert.deepEqual(await snapshot(), before);
 });
 
@@ -135,8 +136,19 @@ test('ownership stays intact and dashboard target edits work only after setup', 
 
 test('invalid new setup is rejected with no partial writes', async () => {
   const before = await snapshot();
-  for (const args of [{ exams: [] }, { exams: ['NDA'] }, { exams: [null] }, { year: 2099 }, { name: 'x'.repeat(201) }]) {
+  for (const args of [{ exams: [] }, { exams: ['UPSC-CSE'] }, { exams: [null] }, { year: 2099 }, { name: 'x'.repeat(201) }]) {
     await asUser(); await assert.rejects(save(args), /Invalid preparation/);
     assert.deepEqual(await snapshot(), before);
   }
 });
+
+for (const exams of [['NDA'], ['NDA','CDS','CAPF-AC','AFCAT']]) {
+  test(`SQL persists ${exams.join(',')}`, async () => {
+    await asUser();
+    const result = await save({ exams });
+    assert.equal(result.onboarding_completed, true);
+    assert.deepEqual(result.target_exams, [...exams].sort());
+    assert.deepEqual((await snapshot())[0].exams, [...exams].sort());
+    assert.equal((await snapshot())[1].onboarding_completed, false);
+  });
+}
