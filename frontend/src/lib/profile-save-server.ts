@@ -26,7 +26,7 @@ export async function savePreparation(request: NextRequest, setup: boolean) {
     const targetYear = rawYear == null || rawYear === "" ? null :
       (typeof rawYear === "number" || typeof rawYear === "string" ? Number(rawYear) : NaN);
     const exams = body.target_exams ?? existing?.target_exams;
-    const allowedExams = setup ? ["CDS", "CAPF-AC", "AFCAT"] : ["CDS", "CAPF-AC", "NDA", "AFCAT", "UPSC-CSE"];
+    const allowedExams = setup ? ["CDS", "CAPF-AC", "AFCAT", "NDA"] : ["CDS", "CAPF-AC", "NDA", "AFCAT", "UPSC-CSE"];
     if ((fullName !== null && (typeof fullName !== "string" || fullName.trim().length > 200)) ||
         (targetYear !== null && (!Number.isInteger(targetYear) ||
           ((targetYear < 2026 || targetYear > 2032) && (setup || targetYear !== existing?.target_year)))) ||
