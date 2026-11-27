@@ -34,6 +34,9 @@ export async function savePreparation(request: NextRequest, setup: boolean) {
         exams.some((exam: unknown) => typeof exam !== "string" || !allowedExams.includes(exam))) {
       return NextResponse.json({ error: "Choose at least one available exam and a valid optional target year." }, { status: 400 });
     }
+    if (exams.includes("NDA") && exams.some((exam: string) => exam !== "NDA")) {
+      return NextResponse.json({ error: "NDA must be selected alone." }, { status: 400 });
+    }
     // One authenticated transaction owns all writes; no backend service-role fallback.
     const { data: result, error: saveError } = await supabase.rpc(setup ? "complete_onboarding" : "update_preparation_profile", {
       p_full_name: typeof fullName === "string" ? fullName.trim() || null : null,
