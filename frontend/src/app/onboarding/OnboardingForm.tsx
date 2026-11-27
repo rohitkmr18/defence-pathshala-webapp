@@ -9,6 +9,7 @@ import { createSetupSaver } from "@/lib/onboarding-save";
 import DPLogo from "@/components/common/DPLogo";
 
 const EXAMS = [
+  { id: "NDA", name: "NDA", description: "National Defence Academy", icon: GraduationCap },
   { id: "CDS", name: "CDS", description: "Combined Defence Services", icon: GraduationCap },
   { id: "CAPF-AC", name: "CAPF AC", description: "Assistant Commandant", icon: Shield },
   { id: "AFCAT", name: "AFCAT", description: "Air Force Common Admission Test", icon: Compass },
