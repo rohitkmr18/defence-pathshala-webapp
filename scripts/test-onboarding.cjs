@@ -143,7 +143,7 @@ for (const exams of [['NDA'], ['NDA','CDS','AFCAT','CAPF-AC']]) {
     const { post, operations } = setup();
     const response = await post(request({ target_exams: exams }));
     assert.equal(response.status, 200);
-    assert.deepEqual(response.body.target_exams, exams);
-    assert.deepEqual(operations[0].args.p_target_exams, exams);
+    assert.deepEqual(Array.from(response.body.target_exams), exams);
+    assert.deepEqual(Array.from(operations[0].args.p_target_exams), exams);
   });
 }
