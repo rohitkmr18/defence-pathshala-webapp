@@ -39,11 +39,14 @@ test('word count handles English and Hindi', () => {
   assert.equal(countWords(''), 0);
 });
 
-test('bands follow strict UPSC-style calibration', () => {
-  assert.equal(bandFor(7.5), 'Needs work');
-  assert.equal(bandFor(8), 'Average');
-  assert.equal(bandFor(12), 'Good');
-  assert.equal(bandFor(15), 'Excellent');
+test('bands follow the founder calibration: average 6–8, good 8–11, excellent 11–15', () => {
+  assert.equal(bandFor(5.5), 'Needs work');
+  assert.equal(bandFor(6), 'Average');
+  assert.equal(bandFor(7.5), 'Average');
+  assert.equal(bandFor(8), 'Good');
+  assert.equal(bandFor(10.5), 'Good');
+  assert.equal(bandFor(11), 'Excellent');
+  assert.match(systemPrompt(), /average answer earns 6–8 of 20, a good answer 8–11, an excellent answer 11–15/);
 });
 
 const essayRaw = (scores, extra = {}) => ({
