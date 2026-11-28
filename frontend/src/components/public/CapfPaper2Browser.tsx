@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Shuffle } from "lucide-react";
+import Link from "next/link";
+import { PenLine, Shuffle } from "lucide-react";
 import { capfP2Anchor, type CapfP2Theme, type CapfP2Year } from "@/lib/capf-paper2-pyqs";
 
 type Show = "all" | "q1" | "q2";
@@ -95,7 +96,13 @@ export default function CapfPaper2Browser({ years, themes }: Props) {
                           <div className="min-w-0 flex-1">
                             <p className="text-[15px] font-medium leading-6 text-slate-900">{item.en}</p>
                             {hindi && item.hi && <p className="mt-1 text-sm leading-6 text-slate-600" lang="hi">{item.hi}</p>}
-                            <p className="mt-1.5 text-[11px] font-semibold uppercase tracking-wide text-slate-400">{item.theme}</p>
+                            <div className="mt-1.5 flex flex-wrap items-center justify-between gap-2">
+                              <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">{item.theme}</p>
+                              <Link href={`/dashboard/capf-paper-2?y=${y.year}&q=${q.number}&p=${item.part}`}
+                                className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-bold text-blue-700 hover:bg-blue-50">
+                                <PenLine className="h-3.5 w-3.5" /> Write &amp; get it evaluated
+                              </Link>
+                            </div>
                           </div>
                         </div>
                       </li>

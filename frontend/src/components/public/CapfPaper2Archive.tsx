@@ -62,6 +62,9 @@ export default function CapfPaper2Archive() {
           Every Q1 essay topic and Q2 for-and-against statement from CAPF (AC) Paper II, {range}, exactly as UPSC printed them.
           Filter by question or theme, switch on Hindi for the essays, or pick a random topic to practise with.
         </p>
+        <Link href="/dashboard/capf-paper-2" className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-xl bg-blue-600 px-5 text-sm font-bold text-white hover:bg-blue-700">
+          <PenLine className="h-4 w-4" /> Write an answer and get it evaluated
+        </Link>
       </header>
 
       <section aria-label="Paper II at a glance" className="mb-8 grid gap-3 sm:grid-cols-3">
