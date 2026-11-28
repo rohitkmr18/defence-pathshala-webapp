@@ -17,7 +17,7 @@ const EXAMS = [
 
 export default function OnboardingForm({ profile, next }: { profile: Profile; next: string }) {
   const [fullName, setFullName] = useState(profile.full_name ?? "");
-  const [targetYear, setTargetYear] = useState(profile.target_year?.toString() ?? "");
+  const [targetYear, setTargetYear] = useState(profile.target_year === 2026 ? "" : profile.target_year?.toString() ?? "");
   const [selectedExams, setSelectedExams] = useState<string[]>(
     profile.target_exams.includes("NDA") ? ["NDA"] : EXAMS.map(({ id }) => id).filter((id) => profile.target_exams.includes(id)),
   );
@@ -133,7 +133,7 @@ export default function OnboardingForm({ profile, next }: { profile: Profile; ne
                 <select id="target-year" value={targetYear} disabled={saving} onChange={(event) => setTargetYear(event.target.value)}
                   className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
                   <option value="">Not decided yet</option>
-                  {[2026, 2027, 2028, 2029, 2030, 2031, 2032].map((year) => <option key={year} value={year}>{year}</option>)}
+                  {[2027, 2028, 2029, 2030, 2031, 2032].map((year) => <option key={year} value={year}>{year}</option>)}
                 </select>
               </div>
             </div>
