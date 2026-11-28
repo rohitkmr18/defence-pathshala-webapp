@@ -6,13 +6,14 @@ import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { createRequire } from 'node:module';
 import { buildPublishingRequest } from './publish-approved-current-affairs.mjs';
-import { reportingWindow, rubric, runEditorial } from './run-current-affairs-editorial.mjs';
+import { reportingWindow, rubric, runEditorial, verifyPrimarySources } from './run-current-affairs-editorial.mjs';
 
 const require = createRequire(import.meta.url);
 const execute = promisify(execFile);
 const { edition } = require('./test-support/editorial-fixture.cjs');
 const load = require('./test-support/load-ts.cjs')({}, { Request, Response, Buffer });
 const { handlePublishingRequest } = load('frontend/src/lib/current-affairs/automation-handler.ts');
+const { handleEditorialReview } = load('frontend/src/lib/current-affairs/editorial-review.ts');
 const date = '2026-11-28';
 const now = Date.parse('2026-11-28T04:30Z');
 const hash = source => createHash('sha256').update(source).digest('hex');
@@ -58,12 +59,14 @@ async function database(t) {
   const schema = sql('scripts/test-current-affairs-db-rollback.cjs').match(/const schema = `([\s\S]*?)`;/)[1]
     .replace(/^create role .*;$/gm, '');
   await db.exec(schema);
+  await db.exec(`alter default privileges in schema public grant execute on functions to anon, authenticated;
+    alter default privileges in schema public grant all on tables to anon, authenticated, service_role;`);
   await db.exec(`
-    create table public.questions(id uuid primary key, question_id text unique, is_active boolean, content_eligible boolean, paper text);
+    create table public.questions(id uuid primary key, question_id text unique, is_active boolean, content_eligible boolean, production_eligible boolean, paper text);
     create view public.v_dp_question_intelligence_v2 as select * from public.questions where is_active;
     grant select, update on public.questions to service_role;
     grant select on public.v_dp_question_intelligence_v2 to service_role;
-    insert into public.questions values (gen_random_uuid(), 'CDS_II_2026_GK_011', true, true, 'General Knowledge');
+    insert into public.questions values (gen_random_uuid(), 'CDS_II_2026_GK_011', true, true, true, 'General Knowledge');
   `);
   for (const migration of ['20261008060157_atomic_current_affairs_publish', '20261009170716_approved_editorial_source', '20261128050329_current_affairs_editorial_workflow']) {
     const directory = migration.startsWith('20261128') ? 'pending' : 'migrations';
@@ -168,6 +171,68 @@ test('daily orchestration resumes validated checkpoints and publishes only the a
   assert.equal((await handler(build(body))).status, 409);
 });
 
+test('private review authenticates before lookup and delivers exact bytes with no cache', async t => {
+  const db = await database(t);
+  const snapshot = JSON.stringify({ edition: edition(date), evidence: 'private' });
+  await save(db, snapshot);
+  let reads = 0;
+  const review = authorized => handleEditorialReview(new Request('https://local.example/review?date=' + date), {
+    isFounder: async () => authorized,
+    async read() {
+      reads++;
+      return (await db.query('select sha256, package from ca_editorial_drafts order by revision desc limit 1')).rows[0];
+    },
+  });
+  assert.equal((await review(false)).status, 401);
+  assert.equal(reads, 0);
+  const response = await review(true);
+  assert.equal(response.headers.get('cache-control'), 'private, no-store');
+  assert.deepEqual(await response.json(), { draftId: date + '-' + hash(snapshot), sha256: hash(snapshot), snapshot });
+});
+
+test('canonical PYQ checks and bounded legacy exceptions enforce the database boundary', async t => {
+  const db = await database(t);
+  const eligible = async () => (await db.query("select ca_check_editorial_pyqs(array['CDS_II_2026_GK_011']) eligible")).rows[0].eligible;
+  assert.equal(await eligible(), true);
+  for (const flag of ['production_eligible', 'content_eligible', 'is_active']) {
+    await db.exec('reset role; update questions set ' + flag + '=false; set role service_role');
+    assert.equal(await eligible(), false);
+    await db.exec('reset role; update questions set ' + flag + '=true; set role service_role');
+  }
+  const legacy = edition(date);
+  const args = [date, JSON.stringify(legacy)];
+  const publish = () => db.query('select ca_publish_editorial($1,null,$2) id', args);
+  await assert.rejects(publish(), /legacy exception missing or expired/);
+  const digest = legacy.approvedEditorial.sha256;
+  const addException = (granted, expires) => `insert into ca_legacy_publish_exceptions
+    values ('${date}', '${digest}', 'isolated legacy exception', ${granted}, ${expires});`;
+  await assert.rejects(db.exec(addException('now()', "now()+interval '1 hour'")), /permission denied/);
+  await db.exec('reset role; ' + addException("now()-interval '6 hours'", "now()-interval '1 hour'") + 'set role service_role');
+  await assert.rejects(publish(), /legacy exception missing or expired/);
+  await db.exec("reset role; update ca_legacy_publish_exceptions set granted_at=now(), expires_at=now()+interval '1 hour'; set role service_role");
+  assert.ok((await publish()).rows[0].id);
+  await db.exec('reset role; grant execute on function ca_check_editorial_pyqs(text[]) to authenticated; set role authenticated');
+  await assert.rejects(eligible(), /Only service_role/);
+});
+
+test('primary verification rejects unsupported facts and ambiguous MCQ answers', async () => {
+  const url = 'https://pib.gov.in/release';
+  const excerpt = 'The official result records growth of 8.2 percent in the second quarter.';
+  const eventAt = '2026-11-28T01:00:00Z';
+  const story = { sourceUrl: url, keyFacts: ['growth of 8.2 percent'],
+    mcqs: [{ sourceUrl: url, correctOption: 'A', options: { A: '8.2 percent', B: '3.4 percent' } }] };
+  const evidence = { stories: [{ eventAt, sources: [{ url, excerpt }] }] };
+  const discovery = { candidates: [{ url, publishedAt: eventAt }] };
+  const fetchPages = async () => ({ [url]: { text: excerpt, sha256: hash(excerpt), checkedAt: '2026-11-28T07:00:00Z' } });
+  await verifyPrimarySources({ stories: [story] }, evidence, discovery, ['pib.gov.in'], fetchPages);
+  assert.equal(evidence.stories[0].sources[0].responseSha256, hash(excerpt));
+  story.keyFacts = ['growth of 18.2 percent'];
+  await assert.rejects(verifyPrimarySources({ stories: [story] }, evidence, discovery, ['pib.gov.in'], fetchPages), /Key fact/);
+  story.keyFacts = [];
+  story.mcqs[0].correctOption = 'B';
+  await assert.rejects(verifyPrimarySources({ stories: [story] }, evidence, discovery, ['pib.gov.in'], fetchPages), /MCQ key/);
+});
+
 test('persistent leases fence lost attempts and cap retries', async t => {
   const db = await database(t);
   const stage = transition(db);
@@ -184,4 +249,60 @@ test('persistent leases fence lost attempts and cap retries', async t => {
   }
   assert.equal((await op('claim', randomUUID())).status, 'exhausted');
   assert.equal((await db.query("select * from ca_editorial_events where event='expired'")).rows.length, 1);
+});
+
+test('isolated rehearsal using exported historical primary-source evidence', { skip: !process.env.DP_EDITORIAL_SOURCE_REPLAY }, async t => {
+  const db = await database(t);
+  const source = JSON.parse(readFileSync(process.env.DP_EDITORIAL_SOURCE_REPLAY, 'utf8'));
+  const day = source.date;
+  const window = reportingWindow(day);
+  const { approvedEditorial, ...fields } = edition(day);
+  const story = fields.stories[0];
+  fields.title = source.headline;
+  fields.summary = source.summary;
+  fields.stories = [story];
+  Object.assign(story, {
+    headline: source.headline, summary: source.summary, whatHappened: source.summary,
+    whyItMatters: 'The release distinguishes constant-price growth from nominal output.',
+    editorialMarkdown: source.markdown, sourceUrl: source.url, sourceDate: source.sourceDate,
+    keyFacts: source.facts, linkedPyqIds: [],
+    mcqs: source.questions.map(q => ({ ...story.mcqs[0], ...q,
+      sourceUrl: source.url, examEdge: 'Compare period definitions and the constant-price basis.' })),
+  });
+  const discovered = { window, coverage: [{ status: 'replay', group: 'india' }],
+    candidates: [{ url: source.url, publishedAt: source.eventAt }] };
+  const verified = { warnings: ['Historical excerpt replay only; no PYQ eligibility asserted.'],
+    stories: [{ headline: source.headline, eventAt: source.eventAt, context: [],
+      scores: { ...rubric, pyqLikelihood: 15 }, penalties: [],
+      sources: source.excerpts.map(excerpt => ({ url: source.url, supports: 'Extractive evidence', excerpt })) }] };
+  const exportedText = source.excerpts.join(' ');
+  const result = await runEditorial({
+    date: day, stage: transition(db), checkPyqs: async ids => assert.deepEqual(ids, []),
+    run: async name => ({ discover: discovered, verify: verified, assemble: fields })[name],
+    checkSources: (manuscript, evidence, discovery) => verifyPrimarySources(manuscript, evidence, discovery,
+      [new URL(source.url).hostname], async () => ({ [source.url]: {
+        text: exportedText, sha256: hash(exportedText), checkedAt: new Date().toISOString(),
+      } })),
+  });
+  const privateRequest = new Request('https://local.example/review?date=' + day);
+  const read = async () => (await db.query('select sha256, package from ca_editorial_drafts where edition_date=$1', [day])).rows[0];
+  const reviewed = await (await handleEditorialReview(privateRequest, { isFounder: async () => true, read })).json();
+  assert.deepEqual(reviewed, result);
+  const { draftId, sha256 } = reviewed;
+  assert.equal(hash(reviewed.snapshot), sha256);
+  const event = { ...fakeEvent, issue: { ...fakeEvent.issue, title: 'DP Current Affairs: publish ' + day,
+    body: JSON.stringify({ schemaVersion: 2, operation: 'publish', approved: true, draftId, sha256 }) } };
+  const authorization = buildPublishingRequest(event, '1234');
+  const response = await handlePublishingRequest(new Request('https://local.example', {
+    method: 'POST', headers: { Authorization: 'Bearer synthetic' }, body: JSON.stringify(authorization),
+  }), {
+    verify: async () => ({ actor: 'founder', runId: '1234', runAttempt: '1' }),
+    ready: () => true, production: true, audit: () => {},
+    publishDraft: async (date, digest) => (await db.query('select ca_publish_editorial($1,$2) id', [date, digest])).rows[0],
+  });
+  assert.equal(response.status, 200);
+  const { rows } = await db.query('select approved_editorial_source, published from current_affairs_posts');
+  assert.equal(rows[0].approved_editorial_source, JSON.parse(reviewed.snapshot).edition.approvedEditorial.source);
+  assert.equal(rows[0].published, true);
+  t.diagnostic('Isolated replay: ' + day + ', package SHA-256 ' + sha256);
 });

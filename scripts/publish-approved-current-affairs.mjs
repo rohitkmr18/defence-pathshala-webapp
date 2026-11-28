@@ -33,7 +33,9 @@ export async function runPublisher(env = process.env, fetcher = fetch) {
     if (env.GITHUB_REF !== 'refs/heads/main') throw new Error('Publisher must run from main');
     const request = buildPublishingRequest(event, env.GITHUB_RUN_ID);
     const raw = JSON.stringify(request);
-    audit.request = request;
+    // Public repository artifacts must never contain a legacy full manuscript.
+    const { edition, ...reference } = request;
+    audit.request = reference;
     audit.payloadHash = createHash('sha256').update(raw).digest('hex');
     const oidcUrl = new URL(env.ACTIONS_ID_TOKEN_REQUEST_URL);
     if (oidcUrl.protocol !== 'https:' || !oidcUrl.hostname.endsWith('.actions.githubusercontent.com')) throw new Error('Invalid OIDC request host');

@@ -9,6 +9,8 @@ on:
       - 'scripts/prepare-approved-editorial.mjs'
       - 'scripts/*current-affairs*'
       - 'scripts/test-support/**'
+      - 'scripts/*current-affairs-sources.py'
+      - 'frontend/src/app/api/current-affairs/editorial-review/route.ts'
       - 'frontend/src/lib/current-affairs/**'
       - 'frontend/src/app/api/current-affairs/automation/route.ts'
       - 'supabase/migrations/*current_affairs*'
@@ -28,6 +30,7 @@ jobs:
         with:
           node-version: '22'
       - run: npm ci --prefix frontend
+      - run: python3 scripts/test-current-affairs-sources.py
       - name: Start isolated PostgreSQL
         run: |
           docker run -d --rm --name dp-ca-ci -e POSTGRES_HOST_AUTH_METHOD=trust postgres:17-alpine

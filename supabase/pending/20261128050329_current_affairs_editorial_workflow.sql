@@ -40,6 +40,9 @@ grant select, insert, update on public.ca_editorial_stages to service_role;
 create function public.ca_save_editorial_draft(day date, digest text, snapshot text)
 returns void language plpgsql security invoker set search_path = '' as $$
 begin
+  if current_user <> 'service_role' then
+    raise exception 'Only service_role may access editorial RPCs' using errcode = '42501';
+  end if;
   perform pg_advisory_xact_lock(21056, day - date '2000-01-01');
   insert into public.ca_editorial_drafts(edition_date, sha256, package)
     values (day, digest, snapshot) on conflict (edition_date, sha256) do nothing;
@@ -56,6 +59,9 @@ declare
   state public.ca_editorial_stages;
   current_time_at timestamptz;
 begin
+  if current_user <> 'service_role' then
+    raise exception 'Only service_role may access editorial RPCs' using errcode = '42501';
+  end if;
   if step not between 1 and 4 or token is null or action not in ('claim', 'complete', 'fail') then
     raise exception 'Invalid stage operation';
   end if;
@@ -107,6 +113,43 @@ begin
 end;
 $$;
 
+-- The publisher and runner share the exact canonical production eligibility gate.
+create function public.ca_check_editorial_pyqs(ids text[])
+returns boolean language plpgsql security invoker set search_path = '' as $$
+declare
+  eligible_count integer;
+begin
+  if current_user <> 'service_role' then
+    raise exception 'Only service_role may access editorial RPCs' using errcode = '42501';
+  end if;
+  if ids is null or cardinality(ids) > 256 or array_position(ids, null) is not null then
+    return false;
+  end if;
+  perform 1 from public.questions where question_id = any(ids) and is_active is true
+    order by question_id for share;
+  select count(distinct eligible.question_id) into eligible_count
+    from public.v_dp_question_intelligence_v2 eligible
+    join public.questions question on question.question_id = eligible.question_id
+    where eligible.question_id = any(ids) and question.is_active is true
+      and eligible.production_eligible is true and eligible.content_eligible is true;
+  return eligible_count = (select count(distinct id) from unnest(ids) as items(id));
+end;
+$$;
+
+-- Legacy authorizations are deliberately administered by the database owner.
+-- Service role may read them, and each exception expires within 48 hours.
+create table public.ca_legacy_publish_exceptions (
+  edition_date date primary key,
+  source_sha256 text not null check (source_sha256 ~ '^[a-f0-9]{64}$'),
+  reason text not null check (length(btrim(reason)) >= 12),
+  granted_at timestamptz not null default clock_timestamp(),
+  expires_at timestamptz not null,
+  check (expires_at > granted_at and expires_at <= granted_at + interval '48 hours')
+);
+alter table public.ca_legacy_publish_exceptions enable row level security;
+revoke all on public.ca_legacy_publish_exceptions from public, anon, authenticated, service_role;
+grant select on public.ca_legacy_publish_exceptions to service_role;
+
 -- Serialize the stale-revision check with draft insertion and keep the existing
 -- publisher's source, exact PYQ, uniqueness and atomic transaction checks.
 create function public.ca_publish_editorial(day date, digest text, legacy_payload jsonb default null)
@@ -114,26 +157,42 @@ returns uuid language plpgsql security invoker set search_path = '' as $$
 declare
   draft public.ca_editorial_drafts;
 begin
+  if current_user <> 'service_role' then
+    raise exception 'Only service_role may access editorial RPCs' using errcode = '42501';
+  end if;
   perform pg_advisory_xact_lock(21056, day - date '2000-01-01');
   select * into draft from public.ca_editorial_drafts where edition_date = day
     order by revision desc limit 1;
   if digest is null then
-    if found or (legacy_payload->>'date')::date is distinct from day then
-      raise exception 'Exact draft approval required';
+    if found or (legacy_payload->>'date')::date is distinct from day or not exists (
+      select 1 from public.ca_legacy_publish_exceptions
+      where edition_date = day and expires_at > clock_timestamp() and granted_at <= clock_timestamp()
+        and source_sha256 = legacy_payload #>> '{approvedEditorial,sha256}'
+    ) then
+      raise exception 'Exact draft approval required; legacy exception missing or expired';
     end if;
-    return public.publish_current_affairs_edition_atomic(legacy_payload);
+  else
+    if not found or draft.sha256 is distinct from digest
+      or encode(sha256(convert_to(draft.package, 'UTF8')), 'hex') is distinct from digest then
+      raise exception 'Missing, stale or mismatched draft approval';
+    end if;
+    legacy_payload := draft.package::jsonb->'edition';
   end if;
-  if not found or draft.sha256 is distinct from digest
-    or encode(sha256(convert_to(draft.package, 'UTF8')), 'hex') is distinct from digest then
-    raise exception 'Missing, stale or mismatched draft approval';
+  if not public.ca_check_editorial_pyqs(array(
+    select id from jsonb_array_elements(legacy_payload->'stories') story,
+      lateral jsonb_array_elements_text(story->'linkedPyqIds') ids(id)
+  )) then
+    raise exception 'Linked PYQ is not eligible for production';
   end if;
-  return public.publish_current_affairs_edition_atomic(draft.package::jsonb->'edition');
+  return public.publish_current_affairs_edition_atomic(legacy_payload);
 end;
 $$;
 
 revoke all on function public.ca_save_editorial_draft(date, text, text),
   public.ca_editorial_stage(date, smallint, uuid, text, jsonb),
-  public.ca_publish_editorial(date, text, jsonb) from public, anon, authenticated;
+  public.ca_publish_editorial(date, text, jsonb),
+  public.ca_check_editorial_pyqs(text[]) from public, anon, authenticated, service_role;
 grant execute on function public.ca_save_editorial_draft(date, text, text),
   public.ca_editorial_stage(date, smallint, uuid, text, jsonb),
-  public.ca_publish_editorial(date, text, jsonb) to service_role;
+  public.ca_publish_editorial(date, text, jsonb),
+  public.ca_check_editorial_pyqs(text[]) to service_role;
