@@ -125,7 +125,7 @@ test('migration: RLS, own-row reads and an atomic daily limit (PGlite)', async (
     grant execute on function auth.uid() to anon, authenticated;
     insert into auth.users values ('00000000-0000-0000-0000-000000000001'), ('00000000-0000-0000-0000-000000000002');
   `);
-  await db.exec(readFileSync(new URL('../../../supabase/migrations/20261127083000_capf_p2_answer_evaluations.sql', import.meta.url), 'utf8'));
+  await db.exec(readFileSync(new URL('../../../supabase/pending/20261127083000_capf_p2_answer_evaluations.sql', import.meta.url), 'utf8'));
   await db.exec('grant all on public.capf_p2_evaluations to service_role; -- Supabase default privileges');
   const U1 = '00000000-0000-0000-0000-000000000001';
   const U2 = '00000000-0000-0000-0000-000000000002';
