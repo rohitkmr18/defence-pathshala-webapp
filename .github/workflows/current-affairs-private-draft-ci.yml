@@ -7,13 +7,19 @@ on:
       - 'scripts/current-affairs-private-draft.mjs'
       - 'scripts/test-current-affairs-private-draft.mjs'
       - 'scripts/prepare-approved-editorial.mjs'
+      - 'scripts/*current-affairs*'
+      - 'scripts/test-support/**'
+      - 'frontend/src/lib/current-affairs/**'
+      - 'frontend/src/app/api/current-affairs/automation/route.ts'
+      - 'supabase/migrations/*current_affairs*'
+      - 'supabase/pending/*current_affairs*'
       - '.github/workflows/current-affairs-private-draft-ci.yml'
 permissions:
   contents: read
 jobs:
   draft-regression:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
@@ -21,4 +27,17 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node --test scripts/test-current-affairs-private-draft.mjs
+      - run: npm ci --prefix frontend
+      - name: Start isolated PostgreSQL
+        run: |
+          docker run -d --rm --name dp-ca-ci -e POSTGRES_HOST_AUTH_METHOD=trust postgres:17-alpine
+          for attempt in {1..30}; do
+            if docker exec dp-ca-ci pg_isready -h 127.0.0.1 -U postgres; then break; fi
+            sleep 1
+          done
+          docker exec dp-ca-ci psql -v ON_ERROR_STOP=1 -U postgres -c 'create role service_role bypassrls; create role authenticated; create role anon;'
+      - run: node --test scripts/test-current-affairs-private-draft.mjs scripts/test-current-affairs-editorial-workflow.mjs
+        env:
+          DP_EDITORIAL_TEST_DB: dp-ca-ci
+      - if: always()
+        run: docker rm -f dp-ca-ci || true

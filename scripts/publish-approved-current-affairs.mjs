@@ -10,6 +10,15 @@ export function buildPublishingRequest(event, runId) {
       || event.issue.pull_request || !/^\d+$/.test(runId)) throw new Error('Unauthorised publication request');
   if (typeof event.issue.body !== 'string' || Buffer.byteLength(event.issue.body) > 55000) throw new Error('Invalid issue payload');
   const body = JSON.parse(event.issue.body);
+  if (body.schemaVersion === 2 && body.operation === 'publish') {
+    const { draftId, sha256 } = body;
+    if (body.approved !== true || typeof draftId !== 'string' || typeof sha256 !== 'string' ||
+        !/^\d{4}-\d{2}-\d{2}-[a-f0-9]{64}$/.test(draftId) || draftId.slice(11) !== sha256 ||
+        event.issue.title !== 'DP Current Affairs: publish ' + draftId.slice(0, 10) ||
+        Object.keys(body).length !== 5) throw new Error('Exact founder draft approval required');
+    return { schemaVersion: 2, operation: 'publish', approved: true, draftId, sha256,
+      issueNumber: event.issue.number, runId };
+  }
   if (body.schemaVersion !== 1 || !['publish', 'connectivity_check'].includes(body.operation)) throw new Error('Invalid publication operation');
   if (body.operation === 'publish' && body.approved !== true) throw new Error('Explicit editorial approval required');
   return { schemaVersion: 1, operation: body.operation, approved: body.approved === true,
