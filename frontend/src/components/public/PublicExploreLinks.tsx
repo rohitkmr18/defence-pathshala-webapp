@@ -74,6 +74,8 @@ export default async function PublicExploreLinks({
           <div className="rounded-2xl border border-slate-200 bg-white p-5">
             <h3 className="font-bold text-slate-900">Mocks and daily practice</h3>
             <ul className="mt-3 space-y-2 text-sm">
+              <li><Link href="/mock-tests" className="font-semibold text-blue-700 hover:underline">Free defence mock tests</Link></li>
+              <li><Link href="/mock-tests/cds" className="font-semibold text-blue-700 hover:underline">Free CDS GK mock test with analysis</Link></li>
               <li>
                 <Link href="/afcat" className="font-semibold text-blue-700 hover:underline">
                   Free AFCAT full mock test with analysis

@@ -32,11 +32,11 @@ function validMock(value: unknown): value is PublishedMock {
     && Number.isFinite(mock.max_marks);
 }
 
-export default function AfcatMockCatalogue() {
-  const [state, setState] = useState<CatalogState>({ status: "loading" });
+export default function AfcatMockCatalogue({ initialTests = null }: { initialTests?: PublishedMock[] | null } = {}) {
+  const [state, setState] = useState<CatalogState>(initialTests === null ? { status: "loading" } : { status: "ready", tests: initialTests });
 
   const load = useCallback(async (signal?: AbortSignal) => {
-    setState({ status: "loading" });
+    if (!signal) setState({ status: "loading" });
     try {
       const response = await fetch("/api/afcat/tests", { cache: "no-store", signal });
       if (!response.ok) throw new Error("Mock catalogue unavailable");

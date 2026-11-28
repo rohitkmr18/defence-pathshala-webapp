@@ -1,4 +1,7 @@
 import Link from "next/link";
+import { loadAfcatPublicMocks } from "@/lib/public-mock-inventory";
+
+export const dynamic = "force-dynamic";
 import type { Metadata } from "next";
 import ExamModeSwitcher from "@/components/layout/ExamModeSwitcher";
 import AfcatCtaLink from "@/components/afcat/AfcatCtaLink";
@@ -12,7 +15,7 @@ export const metadata: Metadata = {
   title: "Free AFCAT Mock Test 2027 Online",
   description: "Explore free AFCAT mock tests online with timed full-length practice, exam-pattern scoring and detailed performance analysis on Defence Pathshala.",
   alternates: { canonical: "/afcat" },
-  robots: { index: true, follow: true },
+  robots: { index: process.env.VERCEL_ENV !== "preview", follow: true },
   openGraph: {
     type: "website",
     url: "https://www.defencepathshala.in/afcat",
@@ -42,7 +45,8 @@ const sections = [
   "Reasoning & Military Aptitude",
 ];
 
-export default function AfcatPage() {
+export default async function AfcatPage() {
+  const publishedMocks = await loadAfcatPublicMocks();
   return (
     <main className="min-h-screen overflow-x-clip bg-slate-50 text-slate-900">
       <AfcatLandingTracker />
@@ -90,7 +94,7 @@ export default function AfcatPage() {
       </section>
 
       <div className="mx-auto max-w-6xl space-y-16 px-4 py-12 sm:px-6 sm:py-16">
-        <AfcatMockCatalogue />
+        <AfcatMockCatalogue initialTests={publishedMocks} />
 
         <section aria-labelledby="afcat-method-heading">
           <div className="max-w-2xl">
@@ -130,6 +134,17 @@ export default function AfcatPage() {
               </li>
             ))}
           </ul>
+        </section>
+
+        <section aria-labelledby="afcat-faq-heading" className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-8">
+          <h2 id="afcat-faq-heading" className="text-2xl font-black">AFCAT mock test FAQs</h2>
+          <dl className="mt-5 space-y-5">
+            <div><dt className="font-bold">Where can I attempt a free AFCAT mock test online?</dt><dd className="mt-1 text-sm leading-6 text-slate-700">Defence Pathshala offers free published AFCAT full mocks. Choose an available test above and sign in to start or resume.</dd></div>
+            <div><dt className="font-bold">What is the AFCAT written exam pattern?</dt><dd className="mt-1 text-sm leading-6 text-slate-700">The standard AFCAT written paper has 100 questions, 300 marks and two hours, with +3 for correct answers, −1 for incorrect answers and zero for unanswered questions. Refer to the applicable <a href="https://afcat.cdac.in/" className="font-semibold text-blue-700 underline">official AFCAT notification</a> for current rules.</dd></div>
+            <div><dt className="font-bold">Can I analyse my performance after an AFCAT mock?</dt><dd className="mt-1 text-sm leading-6 text-slate-700">Yes. Review your score, section accuracy, answers, question timing and topic-level results after submitting.</dd></div>
+            <div><dt className="font-bold">Are these official AFCAT papers?</dt><dd className="mt-1 text-sm leading-6 text-slate-700">No. They are independent AFCAT-pattern practice mocks, not official papers or predicted exam results.</dd></div>
+          </dl>
+          <p className="mt-5 text-sm text-slate-600">Explore <Link href="/mock-tests" className="font-semibold text-blue-700 underline">all defence mock tests</Link> or <Link href="/about" className="font-semibold text-blue-700 underline">learn about Defence Pathshala</Link>.</p>
         </section>
 
         <section aria-labelledby="afcat-final-cta" className="rounded-3xl bg-[#0b2444] px-6 py-9 text-white sm:px-10">

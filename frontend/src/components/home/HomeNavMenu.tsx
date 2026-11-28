@@ -7,8 +7,9 @@ import { Menu, X } from "lucide-react";
 const MENU_LINKS = [
   { href: "/dashboard/practice?paper=gs", label: "Start Practicing Free" },
   ...(process.env.NEXT_PUBLIC_MOCK_CDS_ENABLED === "true"
-    ? [{ href: "/dashboard/practice?mode=full_paper&fp=dp", label: "DP Free Mocks" }]
+    ? [{ href: "/mock-tests/cds", label: "Free CDS Mock Tests" }]
     : []),
+  { href: "/mock-tests", label: "All Mock Tests" },
   { href: "/library", label: "Free Library" },
   { href: "/current-affairs", label: "Current Affairs" },
   { href: "/afcat", label: "AFCAT Free Mocks" },

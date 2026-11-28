@@ -83,6 +83,8 @@ export default function HomePage() {
             <Link href="/exams/capf" className="hover:text-blue-600 transition">
               CAPF Exam
             </Link>
+            <Link href="/mock-tests/cds" className="hover:text-blue-600 transition">CDS Mock Tests</Link>
+            <Link href="/mock-tests" className="hover:text-blue-600 transition">All Mock Tests</Link>
             <Link href="/afcat" className="hover:text-blue-600 transition">
               AFCAT Free Mocks
             </Link>
