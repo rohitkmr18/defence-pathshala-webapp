@@ -1,0 +1,24 @@
+name: Current Affairs Private Draft CI
+on:
+  push:
+    branches: [feature/current-affairs-2-1]
+  pull_request:
+    paths:
+      - 'scripts/current-affairs-private-draft.mjs'
+      - 'scripts/test-current-affairs-private-draft.mjs'
+      - 'scripts/prepare-approved-editorial.mjs'
+      - '.github/workflows/current-affairs-private-draft-ci.yml'
+permissions:
+  contents: read
+jobs:
+  draft-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test scripts/test-current-affairs-private-draft.mjs
