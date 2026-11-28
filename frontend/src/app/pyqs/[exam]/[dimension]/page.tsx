@@ -12,6 +12,9 @@ import {
   topicToSlug,
 } from "@/lib/seo-data";
 import Breadcrumbs from "@/components/public/Breadcrumbs";
+import CapfPaper2Archive from "@/components/public/CapfPaper2Archive";
+import { CAPF_P2_PATH, capfP2Stats } from "@/lib/capf-paper2-pyqs";
+import { pageMetadata } from "@/lib/seo-metadata";
 import {
   Calendar,
   ChevronRight,
@@ -30,8 +33,24 @@ interface PageProps {
 
 // ─── Metadata Generation ──────────────────────────────────────────────────────
 
+/** CAPF Paper II (descriptive) has its own static archive, separate from the MCQ question bank. */
+function isCapfPaper2(exam: string, dimension: string): boolean {
+  return exam.toLowerCase().trim() === "capf" && dimension.toLowerCase().trim() === "paper-2";
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { exam, dimension } = await params;
+  if (isCapfPaper2(exam, dimension)) {
+    const s = capfP2Stats();
+    return {
+      ...pageMetadata({
+        title: `CAPF AC Paper II Essay Topics & Arguments PYQs (${s.firstYear}–${s.lastYear})`,
+        description: `All ${s.essays} essay topics (Q1) and ${s.arguments} for-and-against statements (Q2) from UPSC CAPF AC Paper II, ${s.firstYear}–${s.lastYear}, as printed in the official papers, with Hindi essay topics and theme-wise trends.`,
+        path: CAPF_P2_PATH,
+      }),
+      robots: { index: true, follow: true },
+    };
+  }
   const examDb = slugToExam(exam);
   if (!examDb) return {};
 
@@ -133,6 +152,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function DimensionPyqPage({ params }: PageProps) {
   const { exam, dimension } = await params;
+  if (isCapfPaper2(exam, dimension)) {
+    return <CapfPaper2Archive />;
+  }
   const examDb = slugToExam(exam);
   if (!examDb) {
     notFound();

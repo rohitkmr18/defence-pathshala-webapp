@@ -4,6 +4,7 @@ import { getPublishedCurrentAffairsEditions, toLastModified } from "@/lib/curren
 import { summariseMonths } from "@/lib/current-affairs-calendar";
 import { MONTHLY_CAPSULES } from "@/lib/monthly-capsules";
 import { LIBRARY_BOOKS } from "@/lib/library/books";
+import { CAPF_P2_PATH } from "@/lib/capf-paper2-pyqs";
 import { getPublishedKnowledgeInventory } from "@/lib/knowledge-hub";
 
 export const dynamic = "force-dynamic";
@@ -17,6 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/current-affairs`, changeFrequency: "daily", priority: 0.9 },
     { url: `${base}/about`, changeFrequency: "monthly", priority: 0.6 },
     { url: `${base}/learn`, changeFrequency: "weekly", priority: 0.7 },
+    { url: `${base}${CAPF_P2_PATH}`, changeFrequency: "yearly", priority: 0.8 },
     {
       url: `${base}/library`,
       lastModified: new Date(`${LIBRARY_BOOKS.map((b) => b.publishedOn).sort().at(-1)}T00:00:00Z`),
