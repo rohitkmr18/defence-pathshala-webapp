@@ -109,6 +109,7 @@ export default async function ExamPyqArchivePage({ params }: PageProps) {
         <div className="mt-5 flex flex-wrap items-center gap-4">
           <Link href={coverage.slug === "cds" ? "#choose-cds-paper" : practiceHref} className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white">{coverage.slug === "cds" ? "Choose CDS paper" : `Start ${label} PYQ practice`}</Link>
           <Link href={`/exams/${coverage.slug}`} className="text-sm font-semibold text-blue-700">Read the {label} exam guide</Link>
+          {coverage.slug === "cds" && <Link href="/mock-tests/cds" className="text-sm font-semibold text-blue-700 underline">Attempt a free CDS GK mock test</Link>}
         </div>
       </div>
 
