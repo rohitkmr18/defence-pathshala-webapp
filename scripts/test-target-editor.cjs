@@ -77,3 +77,13 @@ test('failed initial load keeps target editing disabled and exposes recovery mes
   await save(tree).props.onClick();
   assert.equal(h.saves.length, 0);
 });
+
+test('target editor enforces standalone NDA while retaining other multi-select', async () => {
+  const h = harness(Promise.resolve({ target_exams: ['CDS','AFCAT'], target_year: 2028 }));
+  h.render(); await flush(); let tree = h.render();
+  choice(tree, 'NDA').props.onClick(); tree = h.render();
+  assert.equal(choice(tree, 'NDA').props['aria-pressed'], true);
+  for (const id of ['CDS','AFCAT','CAPF-AC']) { assert.equal(choice(tree,id).props.disabled,true); assert.equal(choice(tree,id).props['aria-pressed'],false); }
+  await save(tree).props.onClick();
+  assert.deepEqual(JSON.parse(JSON.stringify(h.saves)), [{ target_exams: ['NDA'], target_year: 2028 }]);
+});

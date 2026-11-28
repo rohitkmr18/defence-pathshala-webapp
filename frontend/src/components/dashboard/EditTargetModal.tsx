@@ -87,12 +87,16 @@ function TargetEditor({
 
   const toggleExam = (examId: string) => {
     setSelectedExams((prev) =>
-      prev.includes(examId) ? prev.filter((id) => id !== examId) : [...prev, examId]
+      prev.includes(examId) ? prev.filter((id) => id !== examId) : examId === "NDA" ? ["NDA"] : prev.includes("NDA") ? prev : [...prev, examId]
     );
   };
 
   const handleSave = async () => {
     if (loading || saving) return;
+    if (selectedExams.includes("NDA") && selectedExams.some(id => id !== "NDA")) {
+      setError("NDA must be selected alone. Deselect NDA or the other exams.");
+      return;
+    }
     if (selectedExams.length === 0) {
       setError("Please select at least one target exam.");
       return;
@@ -167,7 +171,7 @@ function TargetEditor({
               Modify Target Preparation
             </h2>
             <p className="mt-1 text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-              Update your target exams and year anytime. You can target multiple exams simultaneously.
+              Update your target exams and year anytime. NDA must be selected alone; other exams support multi-select.
             </p>
           </div>
         </div>
@@ -194,14 +198,15 @@ function TargetEditor({
             <div className="grid grid-cols-2 gap-2.5">
               {TARGET_EXAMS_OPTIONS.map((exam) => {
                 const isSelected = selectedExams.includes(exam.id);
+                const blocked = exam.id !== "NDA" && selectedExams.includes("NDA") && !isSelected;
                 return (
                   <button
                     key={exam.id}
                     type="button"
-                    disabled={loading || saving}
+                    disabled={loading || saving || blocked}
                     aria-pressed={isSelected}
                     onClick={() => toggleExam(exam.id)}
-                    className={`flex flex-col items-start rounded-2xl p-3.5 text-left border transition-all ${
+                    className={`disabled:opacity-50 disabled:cursor-not-allowed flex flex-col items-start rounded-2xl p-3.5 text-left border transition-all ${
                       isSelected
                         ? "border-blue-600 bg-blue-50/70 text-blue-900 ring-2 ring-blue-500/20 dark:bg-blue-950/50 dark:border-blue-500 dark:text-blue-100"
                         : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50/80 dark:border-slate-800 dark:bg-slate-800/40 dark:text-slate-300 dark:hover:bg-slate-800"
@@ -229,7 +234,7 @@ function TargetEditor({
               })}
             </div>
             <p className="mt-2 text-[11px] text-slate-400">
-              💡 Tip: Aspirants targeting both CDS & CAPF AC can select both.
+              Deselect NDA to choose other exams. CDS, CAPF AC and AFCAT can be combined.
             </p>
           </div>
 

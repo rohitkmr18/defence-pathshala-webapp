@@ -153,3 +153,21 @@ test('?fp=dp opens the DP Mock Tests tab on load', t => {
   const p = practiceWithFlag('true', 'fp=dp'); t.after(p.restore);
   assert.equal(elements(p.tree(), n => n.type === 'mock-catalogue').length, 1);
 });
+
+test('onboarding NDA selection clears other targets and locks them until deselected', () => {
+  const h = hooks();
+  const Form = createLoader({ react: h.react, 'next/link': 'a' })('frontend/src/app/onboarding/OnboardingForm.tsx').default;
+  const props = { profile: { full_name: null, target_year: null, target_exams: [] }, next: '/dashboard' };
+  const render = () => { h.begin(); return Form(props); };
+  let tree = render();
+  const choice = id => elements(tree, n => n.props.name === 'target_exams' && n.props.value === id)[0];
+  choice('CDS').props.onChange(); tree = render();
+  choice('AFCAT').props.onChange(); tree = render();
+  choice('NDA').props.onChange(); tree = render();
+  assert.equal(choice('NDA').props.checked, true);
+  for (const id of ['CDS','AFCAT','CAPF-AC']) { assert.equal(choice(id).props.checked, false); assert.equal(choice(id).props.disabled, true); }
+  choice('CDS').props.onChange(); tree = render(); assert.equal(choice('CDS').props.checked, false);
+  choice('NDA').props.onChange(); tree = render(); assert.equal(choice('CDS').props.disabled, false);
+  choice('CDS').props.onChange(); tree = render(); choice('AFCAT').props.onChange(); tree = render();
+  assert.equal(choice('CDS').props.checked, true); assert.equal(choice('AFCAT').props.checked, true);
+});
