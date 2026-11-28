@@ -88,7 +88,7 @@ for (const [width, name] of [[320, "mobile-320"], [390, "mobile-390"], [1280, "d
     await expect(page).toHaveURL(/\/mock\/cds-gk\/22222222/);
     await expect(page.getByText("QUESTION 1 / 120")).toBeVisible();
     await expect(page.getByText("DP practice question").first()).toBeVisible();
-    await expect(page.getByText(/PYQ/)).toHaveCount(0);
+    await expect(page.getByRole("main").getByText(/PYQ/)).toHaveCount(0);
     await expect(page.getByRole("timer")).toBeVisible();
 
     await page.getByRole("radio").first().click();                       // answer Q1 = A

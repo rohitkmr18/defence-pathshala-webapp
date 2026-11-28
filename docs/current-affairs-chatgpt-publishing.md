@@ -1,5 +1,8 @@
 # ChatGPT-first Current Affairs publishing
 
+For the pending Current Affairs 2.1 private runner and reference-only founder
+approval, see [private editorial workflow](current-affairs-editorial-workflow.md).
+
 For the Issue 47 source/hash contract, complete Markdown and exact PYQ workflow,
 see [approved source and acceptance](current-affairs-issue-47.md). New publications
 require this complete approval package; the earlier subset-only payload is rejected.

@@ -8,6 +8,7 @@ type Dependencies = {
   ready: () => boolean;
   production: boolean;
   publish: (payload: Record<string, unknown>) => Promise<PublishResult>;
+  publishDraft?: (date: string, sha256: string) => Promise<PublishResult>;
   connectivity: () => Promise<boolean>;
   audit: (record: Record<string, unknown>) => void;
 };
@@ -42,22 +43,39 @@ export async function handlePublishingRequest(req: Request, deps: Dependencies) 
   };
   let envelope;
   try { envelope = JSON.parse(raw); } catch { return finish(400, { error: "Invalid JSON" }); }
-  if (!envelope || envelope.schemaVersion !== 1 || envelope.runId !== identity.runId
+  if (!envelope || ![1, 2].includes(envelope.schemaVersion) || envelope.runId !== identity.runId
       || !Number.isSafeInteger(envelope.issueNumber) || envelope.issueNumber < 1) return finish(400, { error: "Invalid publishing envelope" });
   if (!deps.ready()) return finish(503, { error: "Atomic publishing is not configured" });
-  if (envelope.operation === "connectivity_check") {
+  if (envelope.schemaVersion === 1 && envelope.operation === "connectivity_check") {
     try { return finish(await deps.connectivity() ? 200 : 503, { operation: "connectivity_check", writes: 0 }); }
     catch { return finish(503, { error: "Publisher connectivity unavailable", writes: 0 }); }
   }
   if (envelope.operation !== "publish" || envelope.approved !== true) return finish(403, { error: "Explicit editorial approval required" });
   if (!deps.production) return finish(403, { error: "Publication is disabled outside production" });
-  try { validateEditorialEdition(envelope.edition); }
-  catch (e) { return finish(422, { error: e instanceof Error ? e.message : "Invalid edition" }); }
-  deps.audit({ ...audit, issueNumber: envelope.issueNumber, date: envelope.edition.date, status: "publication_requested" });
+  let date: string;
+  let publish: () => Promise<PublishResult>;
+  if (envelope.schemaVersion === 2) {
+    const { draftId, sha256 } = envelope;
+    if (typeof draftId !== "string" || !/^\d{4}-\d{2}-\d{2}-[a-f0-9]{64}$/.test(draftId)
+        || draftId.slice(11) !== sha256 || Object.keys(envelope).length !== 7) {
+      return finish(422, { error: "Exact founder draft approval required" });
+    }
+    const publishDraft = deps.publishDraft;
+    if (!publishDraft) return finish(503, { error: "Editorial draft publishing is not configured" });
+    date = draftId.slice(0, 10);
+    publish = () => publishDraft(date, sha256);
+  } else {
+    try { validateEditorialEdition(envelope.edition); }
+    catch (e) { return finish(422, { error: e instanceof Error ? e.message : "Invalid edition" }); }
+    date = envelope.edition.date;
+    publish = () => deps.publish(envelope.edition);
+  }
+  deps.audit({ ...audit, issueNumber: envelope.issueNumber, date, status: "publication_requested" });
   try {
-    const result = await deps.publish(envelope.edition);
+    const result = await publish();
+    if (result.errorCode === "draft_approval") return finish(409, { error: "Missing, stale or mismatched draft approval" });
     if (result.errorCode) return finish(result.errorCode === "23505" ? 409 : 422, { error: result.errorCode === "23505" ? "Edition or story already exists" : "Atomic publication rejected" });
     if (!result.id || !/^[a-f0-9-]{36}$/i.test(result.id)) return finish(502, { error: "Publication outcome requires independent verification" });
-    return finish(200, { success: true, postId: result.id, date: envelope.edition.date, issueNumber: envelope.issueNumber });
+    return finish(200, { success: true, postId: result.id, date, issueNumber: envelope.issueNumber });
   } catch { return finish(502, { error: "Publication outcome requires independent verification" }); }
 }
